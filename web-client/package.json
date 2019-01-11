@@ -1,6 +1,10 @@
 {
   "private": true,
   "license": "UNLICENSED",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "lint": "prettier 'src/**/*' --no-semi --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix"
+  },
   "devDependencies": {
     "@types/history": "^4.7.2",
     "@types/jest": "^23.3.12",
