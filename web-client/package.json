@@ -1,4 +1,15 @@
 {
   "private": true,
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/jest": "^23.3.12",
+    "@types/parcel-bundler": "^1.10.1",
+    "@types/prettier": "^1.15.2",
+    "jest": "^23.6.0",
+    "lynt": "^0.5.4",
+    "parcel-bundler": "^1.11.0",
+    "prettier": "^1.15.3",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2"
+  }
 }
