@@ -1,8 +1,4 @@
 {
-  "name": "k2-webfront",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:***REMOVED***/k2-webfront.git",
-  "author": "***REMOVED*** <***REMOVED***@me.com>",
-  "license": "MIT"
+  "private": true,
+  "license": "UNLICENSED"
 }
