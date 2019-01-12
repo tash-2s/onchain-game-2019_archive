@@ -29,7 +29,7 @@ export class App extends React.Component<AppProps> {
     history.push("/test")
   }
 
-  route() {
+  route = () => {
     switch (this.props.app.routeId) {
       case "/":
         return <div>index</div>
