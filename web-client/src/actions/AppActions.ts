@@ -1,5 +1,5 @@
 import actionCreatorFactory from "typescript-fsa"
-import { RouteId } from "../types/appTypes"
+import { RouteIdWithParams } from "../types/appTypes"
 
 export class AppActions {
   private static readonly actionCreator = actionCreatorFactory("AppActions")
@@ -14,8 +14,10 @@ export class AppActions {
     this.dispatch(AppActions.test())
   }
 
-  static readonly changeRoute = AppActions.actionCreator<RouteId>("changeRoute")
-  changeRoute = (routeId: RouteId) => {
-    this.dispatch(AppActions.changeRoute(routeId))
+  static readonly changeRoute = AppActions.actionCreator<RouteIdWithParams>(
+    "changeRoute"
+  )
+  changeRoute = (routeIdWithParams: RouteIdWithParams) => {
+    this.dispatch(AppActions.changeRoute(routeIdWithParams))
   }
 }

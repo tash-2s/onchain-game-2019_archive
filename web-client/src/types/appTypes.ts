@@ -1,6 +1,11 @@
 export interface AppState {
   test: string
-  routeId: RouteId
+  route: RouteIdWithParams
+}
+
+export interface RouteIdWithParams {
+  id: RouteId
+  params: Array<string>
 }
 
 // ref. https://stackoverflow.com/questions/44480644/typescript-string-union-to-string-array

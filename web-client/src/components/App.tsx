@@ -22,7 +22,7 @@ export class App extends React.Component<AppProps> {
   }
 
   route = () => {
-    switch (this.props.app.routeId) {
+    switch (this.props.app.route.id) {
       case "/":
         return <div>index</div>
       case "/test":
@@ -32,7 +32,7 @@ export class App extends React.Component<AppProps> {
           </div>
         )
       case "/users/:id":
-        return <div>user page</div>
+        return <div>user page: {this.props.app.route.params[0]}</div>
       case "/not_found":
       default:
         return <div>not found</div>
