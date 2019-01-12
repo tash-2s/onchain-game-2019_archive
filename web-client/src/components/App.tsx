@@ -1,23 +1,13 @@
 import * as React from "react"
 import { AppProps } from "../containers/AppContainer"
-import { InternalLink } from "./utils/InternalLink"
-import { InternalLinkButton } from "./utils/InternalLinkButton"
+import { Template } from './Template'
 
 export class App extends React.Component<AppProps> {
   render = () => {
     return (
-      <div>
-        <ul>
-          <li>
-            <InternalLink to={"/"}>index</InternalLink>
-          </li>
-          <li>
-            <InternalLinkButton to={"/test"}>test</InternalLinkButton>
-          </li>
-          <hr />
-        </ul>
+      <Template>
         {this.route()}
-      </div>
+      </Template>
     )
   }
 
