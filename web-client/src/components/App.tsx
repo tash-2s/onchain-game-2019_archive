@@ -1,7 +1,7 @@
 import * as React from "react"
 import { AppProps } from "../containers/AppContainer"
-import { history } from "../utils/history"
-import { RouteId } from "../types/appTypes"
+import { InternalLink } from "./utils/InternalLink"
+import { InternalLinkButton } from "./utils/InternalLinkButton"
 
 export class App extends React.Component<AppProps> {
   render = () => {
@@ -9,24 +9,16 @@ export class App extends React.Component<AppProps> {
       <div>
         <ul>
           <li>
-            <button onClick={this.goIndex}>index</button>
+            <InternalLink to={"/"}>index</InternalLink>
           </li>
           <li>
-            <button onClick={this.goTest}>test</button>
+            <InternalLinkButton to={"/test"}>test</InternalLinkButton>
           </li>
           <hr />
         </ul>
         {this.route()}
       </div>
     )
-  }
-
-  goIndex = () => {
-    history.push("/")
-  }
-
-  goTest = () => {
-    history.push("/test")
   }
 
   route = () => {
