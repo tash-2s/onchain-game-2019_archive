@@ -8,7 +8,8 @@ const getInitialRoute = (): RouteIdWithParams => {
 }
 
 const initialState: AppState = {
-  route: getInitialRoute()
+  route: getInitialRoute(),
+  error: null
 }
 
 export const appReducer = reducerWithInitialState(initialState)

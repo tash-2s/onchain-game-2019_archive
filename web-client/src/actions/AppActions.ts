@@ -1,15 +1,9 @@
-import actionCreatorFactory from "typescript-fsa"
+import { AbstractActions } from "./AbstractActions"
 import { RouteIdWithParams } from "../types/appTypes"
 
-export class AppActions {
-  private static readonly actionCreator = actionCreatorFactory("AppActions")
-  private dispatch: (action: any) => any
-
-  constructor(dispatch: (action: any) => any) {
-    this.dispatch = dispatch
-  }
-
-  static readonly changeRoute = AppActions.actionCreator<RouteIdWithParams>(
+export class AppActions extends AbstractActions {
+  private static creator = AppActions.actionCreator()
+  static readonly changeRoute = AppActions.creator<RouteIdWithParams>(
     "changeRoute"
   )
   changeRoute = (routeIdWithParams: RouteIdWithParams) => {

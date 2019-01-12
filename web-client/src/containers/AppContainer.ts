@@ -4,12 +4,16 @@ import { Dispatch, AnyAction } from "redux"
 import { State } from "../types/types"
 import { App } from "../components/App"
 import { AppActions } from "../actions/AppActions"
+import { CommonActions } from "../actions/CommonActions"
 
 const mapStateToProps = (state: State) => {
-  return { app: state.app }
+  return { common: state.common, app: state.app }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
-  return { actions: new AppActions(dispatch) }
+  return {
+    commonActions: new CommonActions(dispatch),
+    actions: new AppActions(dispatch)
+  }
 }
 
 export type AppProps = ReturnType<typeof mapStateToProps> &

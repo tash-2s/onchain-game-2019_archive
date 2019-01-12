@@ -1,5 +1,6 @@
 export interface AppState {
   route: RouteIdWithParams
+  error: string | null
 }
 
 export interface RouteIdWithParams {

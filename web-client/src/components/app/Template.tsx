@@ -1,7 +1,8 @@
 import * as React from "react"
-import { InternalLink } from "./utils/InternalLink"
-import { InternalLinkButton } from "./utils/InternalLinkButton"
+import { InternalLink } from "../utils/InternalLink"
+import { InternalLinkButton } from "../utils/InternalLinkButton"
 
+// This component will contain navbar and error message section
 export class Template extends React.Component {
   render = () => {
     return (
