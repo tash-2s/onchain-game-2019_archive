@@ -1,10 +1,15 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { AppActions } from "../actions/AppActions"
-import { AppState } from "../types/appTypes"
+import { RouteId, AppState } from "../types/appTypes"
+import { history, convertPathnameToRouteId } from "../utils/history"
+
+const getInitialRouteId = (): RouteId => {
+  return convertPathnameToRouteId(history.location.pathname)
+}
 
 const initialState: AppState = {
   test: "",
-  routeId: "/"
+  routeId: getInitialRouteId()
 }
 
 export const appReducer = reducerWithInitialState(initialState)

@@ -31,9 +31,11 @@ export class App extends React.Component<AppProps> {
             test<button onClick={this.clickTest}>test</button>
           </div>
         )
-      // case "notfound":
-      // default:
-      //   return <div>not found</div>
+      case "/users/:id":
+        return <div>user page</div>
+      case "/not_found":
+      default:
+        return <div>not found</div>
     }
   }
 
