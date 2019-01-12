@@ -28,7 +28,7 @@ export class App extends React.Component<AppProps> {
       case "/test":
         return (
           <div>
-            test<button onClick={this.clickTest}>test</button>
+            test
           </div>
         )
       case "/users/:id":
@@ -37,9 +37,5 @@ export class App extends React.Component<AppProps> {
       default:
         return <div>not found</div>
     }
-  }
-
-  clickTest = () => {
-    this.props.actions.test()
   }
 }

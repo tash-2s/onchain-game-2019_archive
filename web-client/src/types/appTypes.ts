@@ -1,5 +1,4 @@
 export interface AppState {
-  test: string
   route: RouteIdWithParams
 }
 

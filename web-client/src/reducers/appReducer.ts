@@ -8,14 +8,10 @@ const getInitialRoute = (): RouteIdWithParams => {
 }
 
 const initialState: AppState = {
-  test: "",
   route: getInitialRoute()
 }
 
 export const appReducer = reducerWithInitialState(initialState)
-  .case(AppActions.test, state => {
-    return { ...state, test: "abc" }
-  })
   .case(AppActions.changeRoute, (state, payload) => {
     return { ...state, route: payload }
   })

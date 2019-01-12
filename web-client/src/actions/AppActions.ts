@@ -9,11 +9,6 @@ export class AppActions {
     this.dispatch = dispatch
   }
 
-  static readonly test = AppActions.actionCreator("test")
-  test = () => {
-    this.dispatch(AppActions.test())
-  }
-
   static readonly changeRoute = AppActions.actionCreator<RouteIdWithParams>(
     "changeRoute"
   )
