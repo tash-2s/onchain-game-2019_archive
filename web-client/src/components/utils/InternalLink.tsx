@@ -16,7 +16,7 @@ export class InternalLink extends React.Component<InternalLinkProps> {
   }
 
   go = e => {
-    event.preventDefault()
+    e.preventDefault()
     history.push(this.props.to)
   }
 }
