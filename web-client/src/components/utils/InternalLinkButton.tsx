@@ -1,5 +1,5 @@
 import * as React from "react"
-import { history } from "../../utils/history"
+import { history } from "../../utils/route"
 import { InternalLinkProps } from "./InternalLink"
 
 interface InternalLinkButtonProps extends InternalLinkProps {}

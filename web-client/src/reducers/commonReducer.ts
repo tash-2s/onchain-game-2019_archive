@@ -1,7 +1,7 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { CommonActions } from "../actions/CommonActions"
 import { CommonState, RouteIdWithParams } from "../types/commonTypes"
-import { history, convertPathnameToRouteIdWithParams } from "../utils/history"
+import { history, convertPathnameToRouteIdWithParams } from "../utils/route"
 
 const getInitialRoute = (): RouteIdWithParams => {
   return convertPathnameToRouteIdWithParams(history.location.pathname)

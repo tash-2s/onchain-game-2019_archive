@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 
 import { buildStore } from "./store"
-import { registerStore } from "./utils/history"
+import { registerStore } from "./utils/route"
 import { AppContainer } from "./containers/AppContainer"
 
 const store = buildStore()
