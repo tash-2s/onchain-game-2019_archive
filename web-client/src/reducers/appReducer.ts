@@ -1,19 +1,9 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { AppActions } from "../actions/AppActions"
-import { RouteId, AppState, RouteIdWithParams } from "../types/appTypes"
-import { history, convertPathnameToRouteIdWithParams } from "../utils/history"
-
-const getInitialRoute = (): RouteIdWithParams => {
-  return convertPathnameToRouteIdWithParams(history.location.pathname)
-}
+import { AppState } from "../types/appTypes"
 
 const initialState: AppState = {
-  route: getInitialRoute(),
   error: null
 }
 
-export const appReducer = reducerWithInitialState(initialState)
-  .case(AppActions.changeRoute, (state, payload) => {
-    return { ...state, route: payload }
-  })
-  .build()
+export const appReducer = reducerWithInitialState(initialState).build()

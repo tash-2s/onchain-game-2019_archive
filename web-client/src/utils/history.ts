@@ -1,14 +1,28 @@
 import { createBrowserHistory } from "history"
-import { routes } from "../constants/appConstants"
-import { RouteId, RouteIdWithParams } from "../types/appTypes"
-import { AppActions } from "../actions/AppActions"
+import { _routeIds, RouteId, RouteIdWithParams } from "../types/commonTypes"
+import { CommonActions } from "../actions/CommonActions"
+const pathToRegexp = require("path-to-regexp")
+
+class Route {
+  constructor(
+    public readonly routeId: RouteId,
+    public readonly regExp: RegExp
+  ) {}
+}
+const routes = ((): Array<Route> => {
+  const rs: Array<Route> = []
+  _routeIds.forEach(routeId => {
+    rs.push(new Route(routeId, pathToRegexp(routeId)))
+  })
+  return rs
+})()
 
 export const history = createBrowserHistory()
 
 export const registerStore = store => {
   history.listen((location, action) => {
     const rwp = convertPathnameToRouteIdWithParams(location.pathname)
-    new AppActions(store.dispatch).changeRoute(rwp)
+    new CommonActions(store.dispatch).changeRoute(rwp)
   })
 }
 

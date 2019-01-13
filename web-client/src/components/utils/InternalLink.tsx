@@ -1,5 +1,5 @@
 import * as React from "react"
-import { RouteId } from "../../types/appTypes"
+import { RouteId } from "../../types/commonTypes"
 import { history } from "../../utils/history"
 
 export interface InternalLinkProps {

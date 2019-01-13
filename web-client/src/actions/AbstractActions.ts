@@ -1,7 +1,7 @@
-import actionCreatorFactory from "typescript-fsa"
+import { actionCreatorFactory } from "typescript-fsa"
 
 export class AbstractActions {
-  protected static actionCreator() {
+  protected static getActionCreator() {
     return actionCreatorFactory(this.name)
   }
   protected dispatch: (action: any) => any
