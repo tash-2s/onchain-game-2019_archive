@@ -12,7 +12,7 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
     commonActions: new CommonActions(dispatch),
-    actions: new AppActions(dispatch)
+    appActions: new AppActions(dispatch)
   }
 }
 
