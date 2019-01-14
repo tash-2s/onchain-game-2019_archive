@@ -14,6 +14,11 @@ export class Template extends React.Component {
           <li>
             <InternalLinkButton to={"/test"}>test</InternalLinkButton>
           </li>
+          <li>
+            <InternalLink to={["/users/:id", { id: "test" }]}>
+              /users/test
+            </InternalLink>
+          </li>
           <hr />
         </ul>
         {this.props.children}

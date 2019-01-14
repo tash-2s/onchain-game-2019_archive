@@ -43,3 +43,7 @@ export const convertPathnameToRouteIdWithParams = (
 
   return { id: routeId, params: params }
 }
+
+export const combineRouteIdAndParams = (id: RouteId, obj: object): string => {
+  return pathToRegexp.compile(id)(obj)
+}
