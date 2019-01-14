@@ -15,7 +15,7 @@ export class InternalLink extends React.Component<InternalLinkProps> {
     )
   }
 
-  go = e => {
+  go = (e: React.FormEvent) => {
     e.preventDefault()
     history.push(this.props.to)
   }
