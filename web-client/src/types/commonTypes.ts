@@ -1,6 +1,7 @@
 export interface CommonState {
   route: RouteIdWithParams
   currentUser: "todo user info"
+  isError: boolean
 }
 
 export interface RouteIdWithParams {

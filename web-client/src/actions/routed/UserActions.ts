@@ -3,7 +3,7 @@ import { AbstractActions } from "../AbstractActions"
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static readonly getTargetUser = UserActions.creator.async<
+  static getTargetUser = UserActions.creator.async<
     { id: string },
     { id: string },
     Error

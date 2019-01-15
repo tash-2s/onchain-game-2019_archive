@@ -1,4 +1,5 @@
 import { actionCreatorFactory } from "typescript-fsa"
+import { CommonActions } from "./CommonActions"
 
 export class AbstractActions {
   protected static getActionCreator() {
@@ -10,8 +11,8 @@ export class AbstractActions {
     this.dispatch = dispatch
   }
 
-  handleError = (e: Error) => {
-    console.error(e)
-    // TODO: kick the method to show this error to the user on the template, and log
+  protected handleError = (error: Error) => {
+    // is this ok?
+    new CommonActions(this.dispatch).throwError(error)
   }
 }

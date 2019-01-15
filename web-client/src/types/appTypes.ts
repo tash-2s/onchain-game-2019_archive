@@ -1,3 +1,1 @@
-export interface AppState {
-  error: string | null
-}
+export interface AppState {}

@@ -2,18 +2,14 @@ import * as React from "react"
 import { InternalLink } from "../utils/InternalLink"
 import { InternalLinkButton } from "../utils/InternalLinkButton"
 
-export class Template extends React.Component<{}, { hasError: boolean }> {
-  constructor(props: any) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true }
-  }
-
+export class Template extends React.Component<{
+  isError: boolean
+  throwError: (e: Error, b: boolean, info?: any) => void
+}> {
   componentDidCatch(error: Error, info: any) {
-    // TODO: log error
+    if (!this.props.isError) {
+      this.props.throwError(error, false, info)
+    }
   }
 
   render = () => {
@@ -26,6 +22,7 @@ export class Template extends React.Component<{}, { hasError: boolean }> {
   }
 
   getNav = () => {
+    // when an error occurs, this should be un-clickable, because the store will continue to have the error state
     return (
       <ul>
         <li>
@@ -45,7 +42,7 @@ export class Template extends React.Component<{}, { hasError: boolean }> {
   }
 
   getErrorOrChildren = () => {
-    if (this.state.hasError) {
+    if (this.props.isError) {
       const clickHandle = () => window.location.replace("/")
       return (
         <div>

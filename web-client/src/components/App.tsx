@@ -5,7 +5,14 @@ import { UserContainer } from "../containers/routed/UserContainer"
 
 export class App extends React.Component<AppProps> {
   render = () => {
-    return <Template>{this.getRouted()}</Template>
+    return (
+      <Template
+        isError={this.props.common.isError}
+        throwError={this.props.commonActions.throwError}
+      >
+        {this.getRouted()}
+      </Template>
+    )
   }
 
   getRouted = () => {
