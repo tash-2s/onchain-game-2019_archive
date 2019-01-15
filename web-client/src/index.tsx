@@ -6,6 +6,7 @@ import { Provider } from "react-redux"
 import { reducer } from "./reducers/reducer"
 import { registerStore } from "./utils/route"
 import { AppContainer } from "./containers/AppContainer"
+import { TopLevelErrorBoundary } from "./components/TopLevelErrorBoundary"
 
 const store = createStore(
   reducer,
@@ -14,8 +15,10 @@ const store = createStore(
 )
 registerStore(store)
 ReactDOM.render(
-  <Provider store={store}>
-    <AppContainer />
-  </Provider>,
+  <TopLevelErrorBoundary>
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
+  </TopLevelErrorBoundary>,
   document.getElementById("js-connector")
 )
