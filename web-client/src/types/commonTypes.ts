@@ -1,10 +1,10 @@
 export interface CommonState {
-  route: RouteIdWithParams
+  route: RouteState
   currentUser: "todo user info"
   isError: boolean
 }
 
-export interface RouteIdWithParams {
+export interface RouteState {
   id: RouteId
   params: Array<string>
 }

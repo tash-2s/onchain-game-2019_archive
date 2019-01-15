@@ -1,6 +1,6 @@
 import { createBrowserHistory } from "history"
 import { Store } from "redux"
-import { _routeIds, RouteId, RouteIdWithParams } from "../types/commonTypes"
+import { _routeIds, RouteId, RouteState } from "../types/commonTypes"
 import { CommonActions } from "../actions/CommonActions"
 const pathToRegexp = require("path-to-regexp")
 
@@ -29,7 +29,7 @@ export const registerStore = (store: Store) => {
 
 export const convertPathnameToRouteIdWithParams = (
   pathname: string
-): RouteIdWithParams => {
+): RouteState => {
   let routeId: RouteId = "/not_found"
   let params: string[] = []
 

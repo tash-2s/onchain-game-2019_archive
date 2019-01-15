@@ -1,12 +1,14 @@
 import { AbstractActions } from "../AbstractActions"
-import { User } from "../../types/routed/userTypes"
+import { TargetUserState } from "../../types/routed/userTypes"
 
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static getTargetUser = UserActions.creator.async<{ id: string }, User, Error>(
-    "getTargetUser"
-  )
+  static getTargetUser = UserActions.creator.async<
+    { id: string },
+    TargetUserState,
+    Error
+  >("getTargetUser")
   async getTargetUser(id: string) {
     const params = { id: id }
     this.dispatch(UserActions.getTargetUser.started(params))

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { UserProps } from "../../containers/routed/UserContainer"
-import { User as UserType } from "../../types/routed/userTypes"
+import { TargetUserState } from "../../types/routed/userTypes"
 
 export class User extends React.Component<UserProps> {
   render = () => {
@@ -19,7 +19,7 @@ export class User extends React.Component<UserProps> {
     this.props.userActions.clearTargetUser()
   }
 
-  getTargetUserData = (user: UserType) => {
+  getTargetUserData = (user: TargetUserState) => {
     return (
       <div>
         target user is {user.id}
