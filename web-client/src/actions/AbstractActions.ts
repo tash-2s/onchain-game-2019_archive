@@ -12,7 +12,6 @@ export class AbstractActions {
   }
 
   protected handleError = (error: Error) => {
-    // is this ok?
     new CommonActions(this.dispatch).throwError(error)
   }
 }
