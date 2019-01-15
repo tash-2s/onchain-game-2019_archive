@@ -5,10 +5,10 @@ import { UserContainer } from "../containers/routed/UserContainer"
 
 export class App extends React.Component<AppProps> {
   render = () => {
-    return <Template>{this.route()}</Template>
+    return <Template>{this.getRouted()}</Template>
   }
 
-  route = () => {
+  getRouted = () => {
     switch (this.props.common.route.id) {
       case "/":
         return <div>index</div>

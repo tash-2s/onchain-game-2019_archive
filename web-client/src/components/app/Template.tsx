@@ -19,13 +19,13 @@ export class Template extends React.Component<{}, { hasError: boolean }> {
   render = () => {
     return (
       <div>
-        {this.showNav()}
-        {this.showErrorOrChildren()}
+        {this.getNav()}
+        {this.getErrorOrChildren()}
       </div>
     )
   }
 
-  showNav = () => {
+  getNav = () => {
     return (
       <ul>
         <li>
@@ -44,7 +44,7 @@ export class Template extends React.Component<{}, { hasError: boolean }> {
     )
   }
 
-  showErrorOrChildren = () => {
+  getErrorOrChildren = () => {
     if (this.state.hasError) {
       const clickHandle = () => window.location.replace("/")
       return (
