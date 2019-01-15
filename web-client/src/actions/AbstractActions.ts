@@ -9,4 +9,9 @@ export class AbstractActions {
   constructor(dispatch: (action: any) => any) {
     this.dispatch = dispatch
   }
+
+  handleError = (e: Error) => {
+    console.error(e)
+    // TODO: kick the method to show this error to the user on the template, and log
+  }
 }

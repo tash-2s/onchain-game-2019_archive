@@ -10,10 +10,9 @@ export const userReducer = reducerWithInitialState(initialState)
   .case(UserActions.getTargetUser.started, (state, params) => ({
     ...state
   }))
-  // todo: error handling
-  .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
-    ...state
-  }))
+  // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
+  //   ...state
+  // }))
   .case(UserActions.getTargetUser.done, (state, { params, result }) => ({
     ...state,
     targetUser: { id: result.id }

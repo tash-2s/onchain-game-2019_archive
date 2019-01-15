@@ -27,8 +27,7 @@ export class UserActions extends AbstractActions {
         })
       )
     } catch (e) {
-      console.error(e.message)
-      this.dispatch(UserActions.getTargetUser.failed(e))
+      this.handleError(e)
       // this.dispatch(UserActions.getTargetUser.failed({params: params, error: e}))
     }
   }
