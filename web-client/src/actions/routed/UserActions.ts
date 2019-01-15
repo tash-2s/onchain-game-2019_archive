@@ -15,7 +15,11 @@ export class UserActions extends AbstractActions {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
-      const tmpResult = { id: "test", gold: 100 }
+      const tmpResult = {
+        id: "test",
+        gold: 100,
+        normalPlanets: [{ normalPlanetId: 1 }]
+      }
 
       if (false) {
         throw new Error("test error")
