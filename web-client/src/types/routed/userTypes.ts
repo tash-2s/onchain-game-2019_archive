@@ -1,3 +1,8 @@
 export interface UserState {
-  targetUser: { id: string } | null
+  targetUser: User | null
+}
+
+export interface User {
+  id: string
+  gold: number
 }

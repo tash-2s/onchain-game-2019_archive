@@ -1,13 +1,11 @@
 import * as React from "react"
 import { UserProps } from "../../containers/routed/UserContainer"
+import { User as UserType } from "../../types/routed/userTypes"
 
 export class User extends React.Component<UserProps> {
   render = () => {
-    if (
-      this.props.user.targetUser &&
-      this.props.user.targetUser.id === this.props.common.route.params[0]
-    ) {
-      return <div>target user is {this.props.user.targetUser.id}</div>
+    if (this.props.user.targetUser) {
+      return this.getTargetUserData(this.props.user.targetUser)
     } else {
       return <div>loading...</div>
     }
@@ -15,5 +13,18 @@ export class User extends React.Component<UserProps> {
 
   componentDidMount = () => {
     this.props.userActions.getTargetUser(this.props.common.route.params[0])
+  }
+
+  componentWillUnmount = () => {
+    this.props.userActions.clearTargetUser()
+  }
+
+  getTargetUserData = (user: UserType) => {
+    return (
+      <div>
+        target user is {user.id}
+        <p>gold: {user.gold}</p>
+      </div>
+    )
   }
 }

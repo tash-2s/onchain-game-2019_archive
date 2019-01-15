@@ -15,6 +15,10 @@ export const userReducer = reducerWithInitialState(initialState)
   // }))
   .case(UserActions.getTargetUser.done, (state, { params, result }) => ({
     ...state,
-    targetUser: { id: result.id }
+    targetUser: result
+  }))
+  .case(UserActions.clearTargetUser, state => ({
+    ...state,
+    targetUser: null
   }))
   .build()
