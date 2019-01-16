@@ -30,6 +30,27 @@ export const userReducer = reducerWithInitialState(initialState)
     ...state,
     targetUser: null
   }))
+  .case(UserActions.updateTargetUserOngoings, state => {
+    if (state.targetUser) {
+      return {
+        ...state,
+        targetUser: {
+          id: state.targetUser.id,
+          gold: {
+            confirmed: state.targetUser.gold.confirmed,
+            confirmedAt: state.targetUser.gold.confirmedAt,
+            ongoing: calculateOngoingGold(
+              state.targetUser.gold,
+              state.targetUser.userNormalPlanets
+            )
+          },
+          userNormalPlanets: state.targetUser.userNormalPlanets
+        }
+      }
+    } else {
+      return state
+    }
+  })
   .build()
 
 const calculateOngoingGold = (

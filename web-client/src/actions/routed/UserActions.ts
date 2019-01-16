@@ -42,10 +42,12 @@ export class UserActions extends AbstractActions {
     }
   }
 
-  //static updateTargetUserOngoings = UserActions.creator("updateTargetUserOngoings")
-  //updateTargetUserOngoings = () => {
-  //  this.dispatch(UserActions.updateTargetUserOngoings())
-  //}
+  static updateTargetUserOngoings = UserActions.creator(
+    "updateTargetUserOngoings"
+  )
+  updateTargetUserOngoings = () => {
+    this.dispatch(UserActions.updateTargetUserOngoings())
+  }
 
   static clearTargetUser = UserActions.creator("clearTargetUser")
   clearTargetUser = () => {
