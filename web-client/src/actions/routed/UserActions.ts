@@ -14,7 +14,7 @@ export class UserActions extends AbstractActions {
     TargetUserApiResponse,
     Error
   >("setTargetUser")
-  async setTargetUser(id: string) {
+  setTargetUser = async (id: string) => {
     const params = { id: id }
     this.dispatch(UserActions.setTargetUser.started(params))
 
