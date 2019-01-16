@@ -1,6 +1,6 @@
 export interface CommonState {
   route: RouteState
-  currentUser: "todo user info"
+  currentUser: { id: string } | null
   isError: boolean
 }
 

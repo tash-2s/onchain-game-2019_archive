@@ -18,4 +18,9 @@ export class CommonActions extends AbstractActions {
     }
     this.dispatch(CommonActions.throwError(error))
   }
+
+  static login = CommonActions.creator<string>("login")
+  login = () => {
+    this.dispatch(CommonActions.login("tmp guest user"))
+  }
 }

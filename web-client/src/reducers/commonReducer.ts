@@ -9,7 +9,7 @@ const getInitialRoute = (): RouteState => {
 
 const initialState: CommonState = {
   route: getInitialRoute(),
-  currentUser: "todo user info",
+  currentUser: null,
   isError: false
 }
 
@@ -20,4 +20,8 @@ export const commonReducer = reducerWithInitialState(initialState)
   .case(CommonActions.throwError, (state, error) => {
     return { ...state, isError: true }
   })
+  .case(CommonActions.login, (state, payload) => ({
+    ...state,
+    currentUser: { id: payload }
+  }))
   .build()

@@ -5,6 +5,8 @@ import { InternalLinkButton } from "../utils/InternalLinkButton"
 export class Template extends React.Component<{
   isError: boolean
   throwError: (e: Error, b: boolean, info?: any) => void
+  currentUser: { id: string } | null
+  login: () => void
 }> {
   componentDidCatch(error: Error, info: any) {
     if (!this.props.isError) {
@@ -24,21 +26,35 @@ export class Template extends React.Component<{
   getNav = () => {
     // when an error occurs, this should be un-clickable, because the store will continue to have the error state
     return (
-      <ul>
-        <li>
-          <InternalLink to={"/"}>index</InternalLink>
-        </li>
-        <li>
-          <InternalLinkButton to={"/test"}>test</InternalLinkButton>
-        </li>
-        <li>
-          <InternalLink to={["/users/:id", { id: "test" }]}>
-            /users/test
-          </InternalLink>
-        </li>
+      <div>
+        <ul>
+          <li>
+            <InternalLink to={"/"}>index</InternalLink>
+          </li>
+          <li>
+            <InternalLinkButton to={"/test"}>test</InternalLinkButton>
+          </li>
+          <li>
+            <InternalLink to={["/users/:id", { id: "test" }]}>
+              /users/test
+            </InternalLink>
+          </li>
+          {this.getAccountMenu()}
+        </ul>
         <hr />
-      </ul>
+      </div>
     )
+  }
+
+  getAccountMenu = () => {
+    if (this.props.currentUser) {
+      return <div>My userId: {this.props.currentUser.id}</div>
+    } else {
+      const login = () => {
+        this.props.login()
+      }
+      return <button onClick={login}>login</button>
+    }
   }
 
   getErrorOrChildren = () => {

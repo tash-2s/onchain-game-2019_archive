@@ -9,6 +9,8 @@ export class App extends React.Component<AppProps> {
       <Template
         isError={this.props.common.isError}
         throwError={this.props.commonActions.throwError}
+        currentUser={this.props.common.currentUser}
+        login={this.props.commonActions.login}
       >
         {this.getRouted()}
       </Template>
