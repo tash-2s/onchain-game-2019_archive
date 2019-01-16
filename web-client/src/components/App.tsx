@@ -2,6 +2,7 @@ import * as React from "react"
 import { AppProps } from "../containers/AppContainer"
 import { Template } from "./app/Template"
 import { UserContainer } from "../containers/routed/UserContainer"
+import { UsersContainer } from "../containers/routed/UsersContainer"
 
 export class App extends React.Component<AppProps> {
   render = () => {
@@ -21,8 +22,8 @@ export class App extends React.Component<AppProps> {
     switch (this.props.common.route.id) {
       case "/":
         return <div>index</div>
-      case "/test":
-        return <div>test</div>
+      case "/users":
+        return <UsersContainer />
       case "/users/:id":
         return <UserContainer />
       case "/not_found":

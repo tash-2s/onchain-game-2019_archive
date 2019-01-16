@@ -1,6 +1,5 @@
 import * as React from "react"
 import { InternalLink } from "../utils/InternalLink"
-import { InternalLinkButton } from "../utils/InternalLinkButton"
 
 export class Template extends React.Component<{
   isError: boolean
@@ -32,12 +31,7 @@ export class Template extends React.Component<{
             <InternalLink to={"/"}>index</InternalLink>
           </li>
           <li>
-            <InternalLinkButton to={"/test"}>test</InternalLinkButton>
-          </li>
-          <li>
-            <InternalLink to={["/users/:id", { id: "test" }]}>
-              /users/test
-            </InternalLink>
+            <InternalLink to={"/users"}>/users</InternalLink>
           </li>
           {this.getAccountMenu()}
         </ul>

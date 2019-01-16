@@ -29,6 +29,6 @@ export type NormalPlanet = NormalNonMagicPlanet | NormalMagicPlanet
 type Lit = string | number | boolean | undefined | null | void | {}
 const tuple = <T extends Lit[]>(...args: T) => args
 // this is a type file, so this is added `_` to name
-export const _routeIds = tuple("/", "/test", "/users/:id", "/not_found")
+export const _routeIds = tuple("/", "/users", "/users/:id", "/not_found")
 type RouteTuple = typeof _routeIds
 export type RouteId = RouteTuple[number]
