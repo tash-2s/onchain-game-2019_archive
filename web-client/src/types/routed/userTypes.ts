@@ -4,6 +4,6 @@ export interface UserState {
 
 export interface TargetUserState {
   id: string
-  gold: number
-  normalPlanets: Array<{ normalPlanetId: number }>
+  gold: { confirmed: number; confirmedAt: number; ongoing: number }
+  userNormalPlanets: Array<{ normalPlanetId: number }>
 }

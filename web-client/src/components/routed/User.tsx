@@ -23,10 +23,11 @@ export class User extends React.Component<UserProps> {
     return (
       <div>
         target user is {user.id}
-        <p>gold: {user.gold}</p>
+        <p>confirmed gold: {user.gold.confirmed}</p>
+        <p>ongoing gold: {user.gold.ongoing}</p>
         <p>
           normalPlanets:
-          {user.normalPlanets.map(p => p.normalPlanetId).join()}
+          {user.userNormalPlanets.map(p => p.normalPlanetId).join()}
         </p>
       </div>
     )
