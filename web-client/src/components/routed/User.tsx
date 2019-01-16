@@ -2,7 +2,6 @@ import * as React from "react"
 import { UserProps } from "../../containers/routed/UserContainer"
 import { TargetUserState } from "../../types/routed/userTypes"
 
-// TODO: when targetUser is changed without unmount, this will be go wrong
 export class User extends React.Component<UserProps> {
   private timerId: NodeJS.Timeout | null
 
@@ -27,23 +26,32 @@ export class User extends React.Component<UserProps> {
   }
 
   componentDidUpdate(prevProps: UserProps) {
-    if (
-      !prevProps.user.targetUser &&
-      !!this.props.user.targetUser &&
-      !this.timerId
-    ) {
+    if (this.props.user.targetUser && !this.timerId) {
       this.timerId = setInterval(
         () => this.props.userActions.updateTargetUserOngoings(),
         1000
       )
     }
+
+    if (
+      this.props.user.targetUser &&
+      this.props.user.targetUser.id !== this.props.common.route.params[0]
+    ) {
+      this.clearTimer()
+      this.props.userActions.getTargetUser(this.props.common.route.params[0])
+    }
   }
 
   componentWillUnmount = () => {
+    this.clearTimer()
+    this.props.userActions.clearTargetUser()
+  }
+
+  clearTimer = () => {
     if (this.timerId) {
       clearInterval(this.timerId)
+      this.timerId = null
     }
-    this.props.userActions.clearTargetUser()
   }
 
   getTargetUserData = (user: TargetUserState) => {
