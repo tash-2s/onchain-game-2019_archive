@@ -3,11 +3,14 @@ import { UserProps } from "../../containers/routed/UserContainer"
 import { TargetUserState } from "../../types/routed/userTypes"
 
 // TODO: when targetUser is changed without unmount, this will be go wrong
-// the timerId's change doesn't need render, so this is not good...
-export class User extends React.Component<
-  UserProps,
-  { timerId: NodeJS.Timeout }
-> {
+export class User extends React.Component<UserProps> {
+  private timerId: NodeJS.Timeout | null
+
+  constructor(props: UserProps) {
+    super(props)
+    this.timerId = null
+  }
+
   render = () => {
     if (
       this.props.user.targetUser &&
@@ -24,19 +27,21 @@ export class User extends React.Component<
   }
 
   componentDidUpdate(prevProps: UserProps) {
-    if (!prevProps.user.targetUser && !!this.props.user.targetUser) {
-      this.setState({
-        timerId: setInterval(
-          () => this.props.userActions.updateTargetUserOngoings(),
-          1000
-        )
-      })
+    if (
+      !prevProps.user.targetUser &&
+      !!this.props.user.targetUser &&
+      !this.timerId
+    ) {
+      this.timerId = setInterval(
+        () => this.props.userActions.updateTargetUserOngoings(),
+        1000
+      )
     }
   }
 
   componentWillUnmount = () => {
-    if (this.state.timerId) {
-      clearInterval(this.state.timerId)
+    if (this.timerId) {
+      clearInterval(this.timerId)
     }
     this.props.userActions.clearTargetUser()
   }
