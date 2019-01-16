@@ -42,7 +42,16 @@ export class Template extends React.Component<{
 
   getAccountMenu = () => {
     if (this.props.currentUser) {
-      return <div>My userId: {this.props.currentUser.id}</div>
+      const user = this.props.currentUser
+      return (
+        <div>
+          My userId: {user.id}
+          <br />
+          <InternalLink to={["/users/:id", { id: user.id }]}>
+            my page
+          </InternalLink>
+        </div>
+      )
     } else {
       const login = () => {
         this.props.login()

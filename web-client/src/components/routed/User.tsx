@@ -55,9 +55,16 @@ export class User extends React.Component<UserProps> {
   }
 
   getTargetUserData = (user: TargetUserState) => {
+    let msg = <span />
+    if (
+      this.props.common.currentUser &&
+      this.props.common.currentUser.id === user.id
+    ) {
+      msg = <span>!!!this is me!!!</span>
+    }
     return (
       <div>
-        target user is {user.id}
+        target user is {user.id} {msg}
         <p>confirmed gold: {user.gold.confirmed}</p>
         <p>ongoing gold: {user.gold.ongoing}</p>
         <p>
