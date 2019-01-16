@@ -8,13 +8,13 @@ const initialState: UserState = {
 }
 
 export const userReducer = reducerWithInitialState(initialState)
-  .case(UserActions.getTargetUser.started, (state, params) => ({
+  .case(UserActions.setTargetUser.started, (state, params) => ({
     ...state
   }))
   // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
   //   ...state
   // }))
-  .case(UserActions.getTargetUser.done, (state, { params, result }) => ({
+  .case(UserActions.setTargetUser.done, (state, { params, result }) => ({
     ...state,
     targetUser: {
       id: result.id,

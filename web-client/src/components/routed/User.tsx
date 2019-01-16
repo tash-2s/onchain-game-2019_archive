@@ -22,7 +22,7 @@ export class User extends React.Component<UserProps> {
   }
 
   componentDidMount = () => {
-    this.props.userActions.getTargetUser(this.props.common.route.params[0])
+    this.props.userActions.setTargetUser(this.props.common.route.params[0])
   }
 
   componentDidUpdate(prevProps: UserProps) {
@@ -38,7 +38,7 @@ export class User extends React.Component<UserProps> {
       this.props.user.targetUser.id !== this.props.common.route.params[0]
     ) {
       this.clearTimer()
-      this.props.userActions.getTargetUser(this.props.common.route.params[0])
+      this.props.userActions.setTargetUser(this.props.common.route.params[0])
     }
   }
 

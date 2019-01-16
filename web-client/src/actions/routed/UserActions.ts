@@ -9,14 +9,14 @@ interface TargetUserApiResponse {
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static getTargetUser = UserActions.creator.async<
+  static setTargetUser = UserActions.creator.async<
     { id: string },
     TargetUserApiResponse,
     Error
-  >("getTargetUser")
-  async getTargetUser(id: string) {
+  >("setTargetUser")
+  async setTargetUser(id: string) {
     const params = { id: id }
-    this.dispatch(UserActions.getTargetUser.started(params))
+    this.dispatch(UserActions.setTargetUser.started(params))
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -31,7 +31,7 @@ export class UserActions extends AbstractActions {
       }
 
       this.dispatch(
-        UserActions.getTargetUser.done({
+        UserActions.setTargetUser.done({
           params: params,
           result: tmpResult
         })
