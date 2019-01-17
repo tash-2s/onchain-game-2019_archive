@@ -26,10 +26,6 @@ export const userReducer = reducerWithInitialState(initialState)
       userNormalPlanets: result.userNormalPlanets
     }
   }))
-  .case(UserActions.clearTargetUser, state => ({
-    ...state,
-    targetUser: null
-  }))
   .case(UserActions.updateTargetUserOngoings, state => {
     if (state.targetUser) {
       return {
@@ -51,6 +47,10 @@ export const userReducer = reducerWithInitialState(initialState)
       return state
     }
   })
+  .case(UserActions.clearTargetUser, state => ({
+    ...state,
+    targetUser: null
+  }))
   .build()
 
 const calculateOngoingGold = (
@@ -66,10 +66,10 @@ const calculateOngoingGold = (
         const rate = 1 * 1.2 ** (up.rank - 1)
         switch (p.kind) {
           case "residence":
-            totalResidenceParam += p.param * rate
+            totalResidenceParam += Math.floor(p.param * rate)
             break
           case "goldvein":
-            totalGoldveinParam += p.param * rate
+            totalGoldveinParam += Math.floor(p.param * rate)
             break
         }
       } else {
@@ -79,7 +79,7 @@ const calculateOngoingGold = (
     return totalResidenceParam * totalGoldveinParam
   })(userNormalPlanets)
 
-  const diffSec = Date.now() / 1000 - gold.confirmedAt
+  const diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
 
-  return Math.floor(gold.confirmed + goldPerSec * diffSec)
+  return gold.confirmed + goldPerSec * diffSec
 }
