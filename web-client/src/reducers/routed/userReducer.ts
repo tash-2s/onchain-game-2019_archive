@@ -63,12 +63,13 @@ const calculateOngoingGold = (
     ups.forEach(up => {
       const p = NormalPlanetsData.find(p => p.id === up.normalPlanetId)
       if (p) {
+        const rate = 1 * 1.2 ** (up.rank - 1)
         switch (p.kind) {
           case "residence":
-            totalResidenceParam += p.param
+            totalResidenceParam += p.param * rate
             break
           case "goldvein":
-            totalGoldveinParam += p.param
+            totalGoldveinParam += p.param * rate
             break
         }
       } else {
@@ -78,7 +79,7 @@ const calculateOngoingGold = (
     return totalResidenceParam * totalGoldveinParam
   })(userNormalPlanets)
 
-  const diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
+  const diffSec = Date.now() / 1000 - gold.confirmedAt
 
-  return gold.confirmed + goldPerSec * diffSec
+  return Math.floor(gold.confirmed + goldPerSec * diffSec)
 }
