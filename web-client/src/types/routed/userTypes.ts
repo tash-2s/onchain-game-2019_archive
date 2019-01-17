@@ -1,3 +1,5 @@
+import { PlanetKind } from "../commonTypes"
+
 export interface UserState {
   targetUser: TargetUserState | null
 }
@@ -9,5 +11,10 @@ export interface TargetUserState {
     normalPlanetId: number
     rank: number
     rankupedAt: number | null
+    paramMemo: number
+    planetKindMirror: PlanetKind
   }>
+  population: number
+  goldPower: number
+  goldPerSec: number
 }

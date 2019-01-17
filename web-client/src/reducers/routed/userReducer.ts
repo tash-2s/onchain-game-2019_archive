@@ -1,5 +1,8 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
-import { UserActions } from "../../actions/routed/UserActions"
+import {
+  UserActions,
+  TargetUserApiResponse
+} from "../../actions/routed/UserActions"
 import { UserState, TargetUserState } from "../../types/routed/userTypes"
 import { NormalPlanetsData } from "../../data/planets"
 
@@ -16,35 +19,25 @@ export const userReducer = reducerWithInitialState(initialState)
   // }))
   .case(UserActions.setTargetUser.done, (state, { params, result }) => ({
     ...state,
-    targetUser: {
-      id: result.id,
-      gold: {
-        confirmed: result.gold.confirmed,
-        confirmedAt: result.gold.confirmedAt,
-        ongoing: calculateOngoingGold(result.gold, result.userNormalPlanets)
-      },
-      userNormalPlanets: result.userNormalPlanets
-    }
+    targetUser: getTargetUser(result)
   }))
   .case(UserActions.updateTargetUserOngoings, state => {
-    if (state.targetUser) {
-      return {
-        ...state,
-        targetUser: {
-          id: state.targetUser.id,
-          gold: {
-            confirmed: state.targetUser.gold.confirmed,
-            confirmedAt: state.targetUser.gold.confirmedAt,
-            ongoing: calculateOngoingGold(
-              state.targetUser.gold,
-              state.targetUser.userNormalPlanets
-            )
-          },
-          userNormalPlanets: state.targetUser.userNormalPlanets
+    if (!state.targetUser) {
+      return state
+    }
+
+    return {
+      ...state,
+      targetUser: {
+        ...state.targetUser,
+        gold: {
+          ...state.targetUser.gold,
+          ongoing: calculateOngoingGold(
+            state.targetUser.gold,
+            state.targetUser.userNormalPlanets
+          )
         }
       }
-    } else {
-      return state
     }
   })
   .case(UserActions.clearTargetUser, state => ({
@@ -52,6 +45,71 @@ export const userReducer = reducerWithInitialState(initialState)
     targetUser: null
   }))
   .build()
+
+const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {
+  const [userResidencePlanets, userGoldveinPlanets] = processUserNormalPlanets(
+    result.userNormalPlanets
+  )
+  const userPlanets = userResidencePlanets.concat(userGoldveinPlanets)
+  const population = userResidencePlanets
+    .map(up => up.paramMemo)
+    .reduce((acc, cur) => acc + cur, 0)
+  const goldPower = userGoldveinPlanets
+    .map(up => up.paramMemo)
+    .reduce((acc, cur) => acc + cur, 0)
+
+  return {
+    ...result,
+    gold: {
+      ...result.gold,
+      ongoing: calculateOngoingGold(result.gold, userPlanets)
+    },
+    userNormalPlanets: userPlanets,
+    population: population,
+    goldPower: goldPower,
+    goldPerSec: population * goldPower
+  }
+}
+
+const processUserNormalPlanets = (
+  userPlanets: TargetUserApiResponse["userNormalPlanets"]
+): [
+  TargetUserState["userNormalPlanets"],
+  TargetUserState["userNormalPlanets"]
+] => {
+  const userResidencePlanets: TargetUserState["userNormalPlanets"] = []
+  const userGoldveinPlanets: TargetUserState["userNormalPlanets"] = []
+
+  userPlanets.forEach(up => {
+    const p = NormalPlanetsData.find(p => p.id === up.normalPlanetId)
+
+    if (!p) {
+      throw new Error("unknown planet: " + up.normalPlanetId)
+    }
+
+    const rate = 1 * 1.2 ** (up.rank - 1)
+    let param = 0
+
+    switch (p.kind) {
+      case "residence":
+      case "goldvein":
+        param = Math.floor(p.param * rate)
+    }
+
+    const newUp = { ...up, paramMemo: param, planetKindMirror: p.kind }
+
+    switch (p.kind) {
+      case "residence":
+        userResidencePlanets.push(newUp)
+        break
+      case "goldvein":
+        userGoldveinPlanets.push(newUp)
+        break
+    }
+  })
+
+  return [userResidencePlanets, userGoldveinPlanets]
+}
 
 const calculateOngoingGold = (
   gold: { confirmed: number; confirmedAt: number },
@@ -61,19 +119,13 @@ const calculateOngoingGold = (
     let totalResidenceParam = 0
     let totalGoldveinParam = 0
     ups.forEach(up => {
-      const p = NormalPlanetsData.find(p => p.id === up.normalPlanetId)
-      if (p) {
-        const rate = 1 * 1.2 ** (up.rank - 1)
-        switch (p.kind) {
-          case "residence":
-            totalResidenceParam += Math.floor(p.param * rate)
-            break
-          case "goldvein":
-            totalGoldveinParam += Math.floor(p.param * rate)
-            break
-        }
-      } else {
-        throw new Error("unknown planet: " + up.normalPlanetId)
+      switch (up.planetKindMirror) {
+        case "residence":
+          totalResidenceParam += up.paramMemo
+          break
+        case "goldvein":
+          totalGoldveinParam += up.paramMemo
+          break
       }
     })
     return totalResidenceParam * totalGoldveinParam

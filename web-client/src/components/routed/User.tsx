@@ -62,15 +62,29 @@ export class User extends React.Component<UserProps> {
     ) {
       msg = <span>!!!this is me!!!</span>
     }
-    const str = user.userNormalPlanets
-      .map(up => `${up.normalPlanetId} (rank: ${up.rank})`)
-      .join()
+    const str = user.userNormalPlanets.map((up, i) => (
+      <div key={i}>
+        {`${up.normalPlanetId} (kind: ${up.planetKindMirror})`}
+        <br />
+        rank: {up.rank}, param: {up.paramMemo}
+      </div>
+    ))
     return (
       <div>
-        target user is {user.id} {msg}
+        <p>
+          target user is {user.id} {msg}
+        </p>
         <p>confirmed gold: {user.gold.confirmed}</p>
         <p>ongoing gold: {user.gold.ongoing}</p>
-        <p>normalPlanets: {str}</p>
+        <div>
+          population: {user.population}
+          <br />
+          gold power: {user.goldPower}
+          <br />
+          gold per sec: {user.goldPerSec}
+        </div>
+        <br />
+        <div>normalPlanets: {str}</div>
       </div>
     )
   }

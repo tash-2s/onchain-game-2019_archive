@@ -1,6 +1,6 @@
 import { AbstractActions } from "../AbstractActions"
 
-interface TargetUserApiResponse {
+export interface TargetUserApiResponse {
   id: string
   gold: { confirmed: number; confirmedAt: number }
   userNormalPlanets: Array<{
