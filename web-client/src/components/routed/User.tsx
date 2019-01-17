@@ -62,15 +62,15 @@ export class User extends React.Component<UserProps> {
     ) {
       msg = <span>!!!this is me!!!</span>
     }
+    const str = user.userNormalPlanets
+      .map(up => `${up.normalPlanetId} (rank: ${up.rank})`)
+      .join()
     return (
       <div>
         target user is {user.id} {msg}
         <p>confirmed gold: {user.gold.confirmed}</p>
         <p>ongoing gold: {user.gold.ongoing}</p>
-        <p>
-          normalPlanets:
-          {user.userNormalPlanets.map(p => p.normalPlanetId).join()}
-        </p>
+        <p>normalPlanets: {str}</p>
       </div>
     )
   }

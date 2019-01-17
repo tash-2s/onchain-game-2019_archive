@@ -3,7 +3,11 @@ import { AbstractActions } from "../AbstractActions"
 interface TargetUserApiResponse {
   id: string
   gold: { confirmed: number; confirmedAt: number }
-  userNormalPlanets: Array<{ normalPlanetId: number }>
+  userNormalPlanets: Array<{
+    normalPlanetId: number
+    rank: number
+    rankupedAt: number | null
+  }>
 }
 
 export class UserActions extends AbstractActions {
@@ -23,7 +27,10 @@ export class UserActions extends AbstractActions {
       const tmpResult = {
         id: id,
         gold: { confirmed: 100, confirmedAt: 1547606752 },
-        userNormalPlanets: [{ normalPlanetId: 1 }, { normalPlanetId: 2 }]
+        userNormalPlanets: [
+          { normalPlanetId: 1, rank: 1, rankupedAt: null },
+          { normalPlanetId: 2, rank: 1, rankupedAt: null }
+        ]
       }
 
       if (false) {
