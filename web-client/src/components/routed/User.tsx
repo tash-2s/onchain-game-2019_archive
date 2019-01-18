@@ -1,6 +1,6 @@
 import * as React from "react"
 import { UserProps } from "../../containers/routed/UserContainer"
-import { TargetUserState } from "../../types/routed/userTypes"
+import { ExtendedTargetUserState } from "../../models/UserNormalPlanet"
 
 export class User extends React.Component<UserProps> {
   private timerId: NodeJS.Timeout | null
@@ -54,25 +54,24 @@ export class User extends React.Component<UserProps> {
     }
   }
 
-  getTargetUserData = (user: TargetUserState) => {
-    let msg = <span />
-    if (
+  getTargetUserData = (user: ExtendedTargetUserState) => {
+    const isMine =
       this.props.common.currentUser &&
       this.props.common.currentUser.id === user.id
-    ) {
-      msg = <span>!!!this is me!!!</span>
-    }
-    const str = user.userNormalPlanets.map((up, i) => (
+    const planets = user.userNormalPlanets.map((up, i) => (
       <div key={i}>
         {`${up.normalPlanetId} (kind: ${up.planetKindMirror})`}
         <br />
         rank: {up.rank}, param: {up.paramMemo}
+        <br />
+        <button disabled={!up.isRankupable}>rankup (xxx gold)</button>
       </div>
     ))
+
     return (
       <div>
         <p>
-          target user is {user.id} {msg}
+          target user is {user.id} {isMine ? "[this is me]" : ""}
         </p>
         <p>confirmed gold: {user.gold.confirmed}</p>
         <p>ongoing gold: {user.gold.ongoing}</p>
@@ -84,7 +83,7 @@ export class User extends React.Component<UserProps> {
           gold per sec: {user.goldPerSec}
         </div>
         <br />
-        <div>normalPlanets: {str}</div>
+        <div>normalPlanets: {planets}</div>
       </div>
     )
   }

@@ -48,7 +48,7 @@ export class Template extends React.Component<{
           My userId: {user.id}
           <br />
           <InternalLink to={["/users/:id", { id: user.id }]}>
-            my page
+            my planets
           </InternalLink>
         </div>
       )
