@@ -96,7 +96,13 @@ const processUserNormalPlanets = (
         param = Math.floor(p.param * rate)
     }
 
-    const newUp = { ...up, paramMemo: param, planetKindMirror: p.kind }
+    const newUp = {
+      ...up,
+      rateMemo: rate,
+      paramMemo: param,
+      planetKindMirror: p.kind,
+      planetPriceGoldMirror: p.priceGold
+    }
 
     switch (p.kind) {
       case "residence":

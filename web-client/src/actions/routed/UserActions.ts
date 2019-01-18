@@ -7,6 +7,8 @@ export interface TargetUserApiResponse {
     normalPlanetId: number
     rank: number
     rankupedAt: number | null
+    createdAt: number
+    isProcessing: boolean
   }>
 }
 
@@ -28,8 +30,20 @@ export class UserActions extends AbstractActions {
         id: id,
         gold: { confirmed: 100, confirmedAt: 1547606752 },
         userNormalPlanets: [
-          { normalPlanetId: 1, rank: 1, rankupedAt: null },
-          { normalPlanetId: 2, rank: 1, rankupedAt: null }
+          {
+            normalPlanetId: 1,
+            rank: 1,
+            rankupedAt: null,
+            createdAt: 1547206752,
+            isProcessing: false
+          },
+          {
+            normalPlanetId: 2,
+            rank: 1,
+            rankupedAt: null,
+            createdAt: 1547206752,
+            isProcessing: false
+          }
         ]
       }
 

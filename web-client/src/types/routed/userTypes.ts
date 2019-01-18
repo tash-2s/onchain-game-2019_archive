@@ -15,19 +15,18 @@ export interface TargetUserState {
 
 // This is used as object's type for store, and used as class for elsewhere
 export class UserNormalPlanetType {
-  normalPlanetId: number
-  rank: number
-  rankupedAt: number | null
-  paramMemo: number
-  planetKindMirror: PlanetKind
-  // isProcessing: boolean // this is used for waiting tx and so on
+  normalPlanetId!: number
+  rank!: number
+  createdAt!: number
+  rankupedAt!: number | null
+  isProcessing!: boolean // this is used for waiting tx and so on
+  rateMemo!: number
+  paramMemo!: number
+  planetKindMirror!: PlanetKind
+  planetPriceGoldMirror!: number
 
   // this is not used when this behave as a type
   constructor(obj: UserNormalPlanetType) {
-    this.normalPlanetId = obj.normalPlanetId
-    this.rank = obj.rank
-    this.rankupedAt = obj.rankupedAt
-    this.paramMemo = obj.paramMemo
-    this.planetKindMirror = obj.planetKindMirror
+    Object.assign(this, obj)
   }
 }

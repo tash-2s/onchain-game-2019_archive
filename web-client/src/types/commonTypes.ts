@@ -9,14 +9,17 @@ export interface RouteState {
   params: Array<string>
 }
 
-interface NormalNonMagicPlanet {
+interface NormalPlanetBase {
   id: number
+  priceGold: number
+}
+
+interface NormalNonMagicPlanet extends NormalPlanetBase {
   kind: "residence" | "goldvein" | "technology"
   param: number
 }
 
-interface NormalMagicPlanet {
-  id: number
+interface NormalMagicPlanet extends NormalPlanetBase {
   kind: "magic"
   hogeParam: "todo"
 }

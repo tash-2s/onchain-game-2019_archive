@@ -64,7 +64,9 @@ export class User extends React.Component<UserProps> {
         <br />
         rank: {up.rank}, param: {up.paramMemo}
         <br />
-        <button disabled={!up.isRankupable}>rankup (xxx gold)</button>
+        <button disabled={!up.isRankupButtonAvailable()}>
+          rankup (xxx gold)
+        </button>
       </div>
     ))
 
