@@ -4,6 +4,7 @@ export interface TargetUserApiResponse {
   id: string
   gold: { confirmed: number; confirmedAt: number }
   userNormalPlanets: Array<{
+    id: string
     normalPlanetId: number
     rank: number
     rankupedAt: number | null
@@ -31,6 +32,7 @@ export class UserActions extends AbstractActions {
         gold: { confirmed: 100, confirmedAt: 1547606752 },
         userNormalPlanets: [
           {
+            id: "unp1",
             normalPlanetId: 1,
             rank: 1,
             rankupedAt: null,
@@ -38,6 +40,7 @@ export class UserActions extends AbstractActions {
             isProcessing: false
           },
           {
+            id: "unp2",
             normalPlanetId: 2,
             rank: 1,
             rankupedAt: null,

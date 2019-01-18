@@ -5,26 +5,46 @@ import {
 } from "../types/routed/userTypes"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
-  isRankupButtonAvailable = (): boolean => {
-    return this.isMaxRank()
-  }
-
-  isRankupable = (gold: number): boolean => {
+  isRankupable = (gold: number, date: number): boolean => {
     return (
-      this.isMaxRank() &&
-      this.remainingSecForRankup() <= 0 &&
+      !this.isMaxRank() &&
+      this.remainingSecForRankup(date) <= 0 &&
       !this.isProcessing &&
       this.requiredGoldForRankup() <= gold
     )
   }
 
-  isMaxRank = (): boolean => {
-    return this.rank >= 30
+  maxRank = (): number => {
+    return 30
   }
 
-  remainingSecForRankup = (): number => {
-    const prevDiffSec =
-      Math.floor(Date.now() / 1000) - (this.rankupedAt || this.createdAt)
+  isMaxRank = (): boolean => {
+    return this.rank >= this.maxRank()
+  }
+
+  rankupAvailableDateString = (): string => {
+    const unixtime =
+      (this.rankupedAt || this.createdAt) + this.requiredSecForRankup()
+    const date = new Date(unixtime * 1000)
+    const dateStringOption = {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: false,
+      timeZoneName: "long"
+    }
+    const dateString = new Intl.DateTimeFormat(
+      undefined,
+      dateStringOption
+    ).format(date)
+    return dateString
+  }
+
+  remainingSecForRankup = (now: number): number => {
+    const prevDiffSec = now - (this.rankupedAt || this.createdAt)
     const remainingSec = this.requiredSecForRankup() - prevDiffSec
 
     if (remainingSec <= 0) {

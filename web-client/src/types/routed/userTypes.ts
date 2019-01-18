@@ -15,6 +15,7 @@ export interface TargetUserState {
 
 // This is used as object's type for store, and used as class for elsewhere
 export class UserNormalPlanetType {
+  id!: string
   normalPlanetId!: number
   rank!: number
   createdAt!: number
