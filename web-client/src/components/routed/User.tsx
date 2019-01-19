@@ -79,6 +79,14 @@ export class User extends React.Component<UserProps> {
         getOngoingGold={this.getOngoingGold}
       />
     ))
+    const getPlanet = isMine ? (
+      <GetNewPlanet
+        getOngoingGold={this.getOngoingGold}
+        getPlanet={this.props.userActions.getPlanet}
+      />
+    ) : (
+      <></>
+    )
     return (
       <div>
         <p>
@@ -93,7 +101,7 @@ export class User extends React.Component<UserProps> {
           <br />
           gold per sec: {user.goldPerSec}
         </div>
-        {isMine ? <GetNewPlanet getOngoingGold={this.getOngoingGold} /> : <></>}
+        {getPlanet}
         <br />
         <br />
         <div>normalPlanets: {planets}</div>
@@ -104,6 +112,7 @@ export class User extends React.Component<UserProps> {
 
 interface GetNewPlanetProps {
   getOngoingGold: () => number
+  getPlanet: (planetId: number) => void
 }
 class GetNewPlanet extends React.Component<
   GetNewPlanetProps,
@@ -118,11 +127,11 @@ class GetNewPlanet extends React.Component<
     if (this.state.isButtonClicked) {
       return this.planetsList()
     } else {
-      return <button onClick={this.onClickHandler}>get planet</button>
+      return <button onClick={this.showPlanetsButtonHandler}>get planet</button>
     }
   }
 
-  onClickHandler = () => {
+  showPlanetsButtonHandler = () => {
     this.setState({ isButtonClicked: true })
   }
 
@@ -132,7 +141,9 @@ class GetNewPlanet extends React.Component<
     return NormalPlanetsData.map(p => {
       let button
       if (gold >= p.priceGold) {
-        button = <button>get!</button>
+        button = (
+          <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
+        )
       } else {
         button = <button disabled={true}>get!</button>
       }
@@ -143,6 +154,13 @@ class GetNewPlanet extends React.Component<
         </div>
       )
     })
+  }
+
+  getPlanetButtonHandler = (planetId: number) => {
+    return () => {
+      this.props.getPlanet(planetId)
+      this.setState({ isButtonClicked: false })
+    }
   }
 }
 

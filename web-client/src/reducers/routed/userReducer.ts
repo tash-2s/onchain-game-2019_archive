@@ -44,6 +44,22 @@ export const userReducer = reducerWithInitialState(initialState)
     ...state,
     targetUser: null
   }))
+  .case(UserActions.getPlanet, (state, payload) => {
+    if (!state.targetUser) {
+      return state
+    }
+
+    const userPlanets = state.targetUser.userNormalPlanets
+      .map(up => up as TargetUserApiResponse["userNormalPlanets"][number])
+      .concat([payload])
+    return {
+      ...state,
+      targetUser: getTargetUser({
+        ...state.targetUser,
+        userNormalPlanets: userPlanets
+      })
+    }
+  })
   .build()
 
 const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {

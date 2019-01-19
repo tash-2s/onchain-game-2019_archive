@@ -77,4 +77,19 @@ export class UserActions extends AbstractActions {
   clearTargetUser = () => {
     this.dispatch(UserActions.clearTargetUser())
   }
+
+  static getPlanet = UserActions.creator<
+    TargetUserApiResponse["userNormalPlanets"][number]
+  >("getPlanet")
+  getPlanet = (planetId: number) => {
+    const tmp = {
+      id: "unp3",
+      normalPlanetId: planetId,
+      rank: 2,
+      rankupedAt: 1547878452,
+      createdAt: 1547206752,
+      isProcessing: false
+    }
+    this.dispatch(UserActions.getPlanet(tmp))
+  }
 }
