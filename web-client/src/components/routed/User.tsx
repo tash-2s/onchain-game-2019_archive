@@ -4,6 +4,7 @@ import {
   ExtendedTargetUserState,
   UserNormalPlanet
 } from "../../models/UserNormalPlanet"
+import { NormalPlanetsData } from "../../data/planets"
 
 export class User extends React.Component<UserProps> {
   private timerId: NodeJS.Timeout | null
@@ -92,10 +93,56 @@ export class User extends React.Component<UserProps> {
           <br />
           gold per sec: {user.goldPerSec}
         </div>
+        {isMine ? <GetNewPlanet getOngoingGold={this.getOngoingGold} /> : <></>}
+        <br />
         <br />
         <div>normalPlanets: {planets}</div>
       </div>
     )
+  }
+}
+
+interface GetNewPlanetProps {
+  getOngoingGold: () => number
+}
+class GetNewPlanet extends React.Component<
+  GetNewPlanetProps,
+  { isButtonClicked: boolean }
+> {
+  constructor(props: GetNewPlanetProps) {
+    super(props)
+    this.state = { isButtonClicked: false }
+  }
+
+  render = () => {
+    if (this.state.isButtonClicked) {
+      return this.planetsList()
+    } else {
+      return <button onClick={this.onClickHandler}>get planet</button>
+    }
+  }
+
+  onClickHandler = () => {
+    this.setState({ isButtonClicked: true })
+  }
+
+  planetsList = () => {
+    const gold = this.props.getOngoingGold()
+
+    return NormalPlanetsData.map(p => {
+      let button
+      if (gold >= p.priceGold) {
+        button = <button>get!</button>
+      } else {
+        button = <button disabled={true}>get!</button>
+      }
+      return (
+        <div key={p.id}>
+          id: {p.id}, kind: {p.kind}, price: {p.priceGold} gold
+          {button}
+        </div>
+      )
+    })
   }
 }
 
