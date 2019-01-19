@@ -11,9 +11,9 @@ const initialState: UserState = {
 }
 
 export const userReducer = reducerWithInitialState(initialState)
-  .case(UserActions.setTargetUser.started, (state, params) => ({
-    ...state
-  }))
+  // .case(UserActions.setTargetUser.started, (state, params) => ({
+  //   ...state
+  // }))
   // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
   //   ...state
   // }))

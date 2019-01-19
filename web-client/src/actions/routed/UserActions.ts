@@ -23,7 +23,7 @@ export class UserActions extends AbstractActions {
   >("setTargetUser")
   setTargetUser = async (id: string) => {
     const params = { id: id }
-    this.dispatch(UserActions.setTargetUser.started(params))
+    //this.dispatch(UserActions.setTargetUser.started(params))
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
