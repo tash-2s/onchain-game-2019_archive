@@ -10,6 +10,7 @@ export interface TargetUserApiResponse {
     rankupedAt: number | null
     createdAt: number
     isProcessing: boolean
+    axialCoordinates: [number, number] // [q, r]
   }>
 }
 
@@ -37,7 +38,8 @@ export class UserActions extends AbstractActions {
             rank: 1,
             rankupedAt: null,
             createdAt: 1547206752,
-            isProcessing: false
+            isProcessing: false,
+            axialCoordinates: [0, 0] as [number, number]
           },
           {
             id: "unp2",
@@ -45,7 +47,8 @@ export class UserActions extends AbstractActions {
             rank: 1,
             rankupedAt: null,
             createdAt: 1547206752,
-            isProcessing: false
+            isProcessing: false,
+            axialCoordinates: [1, 0] as [number, number]
           }
         ]
       }
@@ -88,7 +91,8 @@ export class UserActions extends AbstractActions {
       rank: 2,
       rankupedAt: 1547878452,
       createdAt: 1547206752,
-      isProcessing: false
+      isProcessing: false,
+      axialCoordinates: [0, 1] as [number, number]
     }
     this.dispatch(UserActions.getPlanet(tmp))
   }

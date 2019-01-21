@@ -21,6 +21,7 @@ export class UserNormalPlanetType {
   createdAt!: number
   rankupedAt!: number | null
   isProcessing!: boolean // this is used for waiting tx and so on
+  axialCoordinates!: [number, number] // [q, r]
   rateMemo!: number
   paramMemo!: number
   planetKindMirror!: PlanetKind
