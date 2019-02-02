@@ -3,7 +3,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "truffle": "truffle",
-    "loom": "./loom"
+    "loom": "./loom",
+    "lint": "solium -d contracts/ --fix"
   },
   "devDependencies": {
     "ethlint": "^1.2.2",
