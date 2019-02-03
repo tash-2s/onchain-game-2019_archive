@@ -1,27 +1,36 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { CommonActions } from "../actions/CommonActions"
-import { CommonState, RouteState } from "../types/commonTypes"
-import { history, convertPathnameToRouteIdWithParams } from "../utils/route"
+import { CommonState } from "../types/commonTypes"
+import { historyLib, convertPathnameToRouteIdWithParams } from "../misc/route"
+import { LoomWeb3 } from "../misc/loom"
 
-const getInitialRoute = (): RouteState => {
-  return convertPathnameToRouteIdWithParams(history.location.pathname)
+const getInitialRoute = (): CommonState["route"] => {
+  return convertPathnameToRouteIdWithParams(historyLib.location.pathname)
 }
 
-const initialState: CommonState = {
+const getCurrentUser = (): CommonState["currentUser"] => {
+  if (LoomWeb3.isGuest) {
+    return null
+  }
+  return { address: LoomWeb3.accountAddress }
+}
+
+const createInitialState: () => CommonState = () => ({
   route: getInitialRoute(),
-  currentUser: null,
+  currentUser: getCurrentUser(),
   isError: false
-}
+})
 
-export const commonReducer = reducerWithInitialState(initialState)
-  .case(CommonActions.changeRoute, (state, payload) => {
-    return { ...state, route: payload }
-  })
-  .case(CommonActions.throwError, (state, error) => {
-    return { ...state, isError: true }
-  })
-  .case(CommonActions.login, (state, payload) => ({
-    ...state,
-    currentUser: { id: payload }
-  }))
-  .build()
+export const createCommonReducer = () =>
+  reducerWithInitialState(createInitialState())
+    .case(CommonActions.changeRoute, (state, payload) => {
+      return { ...state, route: payload }
+    })
+    .case(CommonActions.throwError, (state, error) => {
+      return { ...state, isError: true }
+    })
+    .case(CommonActions.signup, (state, payload) => ({
+      ...state,
+      currentUser: { address: payload }
+    }))
+    .build()

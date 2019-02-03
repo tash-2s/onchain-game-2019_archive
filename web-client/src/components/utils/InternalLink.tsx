@@ -1,6 +1,6 @@
 import * as React from "react"
 import { RouteId } from "../../types/commonTypes"
-import { history, combineRouteIdAndParams } from "../../utils/route"
+import { historyLib, combineRouteIdAndParams } from "../../misc/route"
 
 type RouteIdWithParamsObj = [RouteId, { id: string }]
 const isRouteIdWithParamsObj = (arg: any): arg is RouteIdWithParamsObj => {
@@ -31,6 +31,6 @@ export class InternalLink extends React.Component<InternalLinkProps> {
 
   go = (e: React.FormEvent) => {
     e.preventDefault()
-    history.push(this.getPath())
+    historyLib.push(this.getPath())
   }
 }

@@ -18,10 +18,10 @@ const routes = ((): Array<Route> => {
   return rs
 })()
 
-export const history = createBrowserHistory()
+export const historyLib = createBrowserHistory()
 
 export const registerStore = (store: Store) => {
-  history.listen((location, action) => {
+  historyLib.listen((location, action) => {
     const rwp = convertPathnameToRouteIdWithParams(location.pathname)
     new CommonActions(store.dispatch).changeRoute(rwp)
   })

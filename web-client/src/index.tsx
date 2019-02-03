@@ -3,13 +3,15 @@ import * as ReactDOM from "react-dom"
 import { createStore } from "redux"
 import { Provider } from "react-redux"
 
-import { reducer } from "./reducers/reducer"
-import { registerStore } from "./utils/route"
+import { createReducer } from "./reducers/reducer"
+import { registerStore } from "./misc/route"
+import { LoomWeb3 } from "./misc/loom"
 import { AppContainer } from "./containers/AppContainer"
 import { TopLevelErrorBoundary } from "./components/TopLevelErrorBoundary"
 
+LoomWeb3.setup()
 const store = createStore(
-  reducer,
+  createReducer(),
   (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
     (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 )

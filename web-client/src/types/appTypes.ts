@@ -1,1 +1,3 @@
-export interface AppState {}
+export interface AppState {
+  balance: number
+}

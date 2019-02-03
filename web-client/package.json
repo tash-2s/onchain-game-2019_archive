@@ -2,8 +2,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "parcel src/index.html",
-    "lint": "prettier 'src/**/*' --no-semi --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix"
+    "dev": "parcel src/index.html --no-hmr --no-autoinstall",
+    "lint": "prettier 'src/**/*' --no-semi --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/contracts/*'",
+    "copy-contracts-jsons": "cp ../k2-loomchain/build/contracts/*.json src/contracts/",
+    "generate-contracts-types": "yarn web3x-codegen contracts_types_generator.json"
   },
   "devDependencies": {
     "@types/history": "^4.7.2",
@@ -17,10 +19,12 @@
     "parcel-bundler": "^1.11.0",
     "prettier": "^1.15.3",
     "ts-jest": "^23.10.5",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "web3x-es": "^2.0.3"
   },
   "dependencies": {
     "history": "^4.7.2",
+    "loom-js": "1.38.0",
     "path-to-regexp": "^2.4.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

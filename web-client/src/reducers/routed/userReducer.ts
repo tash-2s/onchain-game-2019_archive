@@ -10,57 +10,58 @@ const initialState: UserState = {
   targetUser: null
 }
 
-export const userReducer = reducerWithInitialState(initialState)
-  // .case(UserActions.setTargetUser.started, (state, params) => ({
-  //   ...state
-  // }))
-  // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
-  //   ...state
-  // }))
-  .case(UserActions.setTargetUser.done, (state, { params, result }) => ({
-    ...state,
-    targetUser: getTargetUser(result)
-  }))
-  .case(UserActions.updateTargetUserOngoings, state => {
-    if (!state.targetUser) {
-      return state
-    }
-
-    return {
+export const createUserReducer = () =>
+  reducerWithInitialState(initialState)
+    // .case(UserActions.setTargetUser.started, (state, params) => ({
+    //   ...state
+    // }))
+    // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
+    //   ...state
+    // }))
+    .case(UserActions.setTargetUser.done, (state, { params, result }) => ({
       ...state,
-      targetUser: {
-        ...state.targetUser,
-        gold: {
-          ...state.targetUser.gold,
-          ongoing: calculateOngoingGold(
-            state.targetUser.gold,
-            state.targetUser.userNormalPlanets
-          )
+      targetUser: getTargetUser(result)
+    }))
+    .case(UserActions.updateTargetUserOngoings, state => {
+      if (!state.targetUser) {
+        return state
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          gold: {
+            ...state.targetUser.gold,
+            ongoing: calculateOngoingGold(
+              state.targetUser.gold,
+              state.targetUser.userNormalPlanets
+            )
+          }
         }
       }
-    }
-  })
-  .case(UserActions.clearTargetUser, state => ({
-    ...state,
-    targetUser: null
-  }))
-  .case(UserActions.getPlanet, (state, payload) => {
-    if (!state.targetUser) {
-      return state
-    }
-
-    const userPlanets = state.targetUser.userNormalPlanets
-      .map(up => up as TargetUserApiResponse["userNormalPlanets"][number])
-      .concat([payload])
-    return {
+    })
+    .case(UserActions.clearTargetUser, state => ({
       ...state,
-      targetUser: getTargetUser({
-        ...state.targetUser,
-        userNormalPlanets: userPlanets
-      })
-    }
-  })
-  .build()
+      targetUser: null
+    }))
+    .case(UserActions.getPlanet, (state, payload) => {
+      if (!state.targetUser) {
+        return state
+      }
+
+      const userPlanets = state.targetUser.userNormalPlanets
+        .map(up => up as TargetUserApiResponse["userNormalPlanets"][number])
+        .concat([payload])
+      return {
+        ...state,
+        targetUser: getTargetUser({
+          ...state.targetUser,
+          userNormalPlanets: userPlanets
+        })
+      }
+    })
+    .build()
 
 const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {
   const [userResidencePlanets, userGoldveinPlanets] = processUserNormalPlanets(
