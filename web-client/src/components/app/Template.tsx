@@ -1,10 +1,11 @@
 import * as React from "react"
 import { InternalLink } from "../utils/InternalLink"
+import { CommonState } from "../../types/commonTypes"
 
 export class Template extends React.Component<{
   isError: boolean
   throwError: (e: Error, b: boolean, info?: any) => void
-  currentUser: { address: string } | null
+  currentUser: CommonState["currentUser"]
   signup: () => void
 }> {
   componentDidCatch(error: Error, info: any) {
