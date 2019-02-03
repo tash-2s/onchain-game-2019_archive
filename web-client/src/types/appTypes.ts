@@ -1,3 +1,3 @@
 export interface AppState {
-  balance: number
+  balance: number // this value is for test
 }
