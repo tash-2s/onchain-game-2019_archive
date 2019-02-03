@@ -1,0 +1,6 @@
+{
+  "outputPath": "./src/contracts",
+  "contracts": {
+    "TestNFT": "./src/contracts/TestNFT.json"
+  }
+}

@@ -1,11 +1,12 @@
 import * as React from "react"
 import { InternalLink } from "../utils/InternalLink"
+import { CommonState } from "../../types/commonTypes"
 
 export class Template extends React.Component<{
   isError: boolean
   throwError: (e: Error, b: boolean, info?: any) => void
-  currentUser: { id: string } | null
-  login: () => void
+  currentUser: CommonState["currentUser"]
+  signup: () => void
 }> {
   componentDidCatch(error: Error, info: any) {
     if (!this.props.isError) {
@@ -45,18 +46,23 @@ export class Template extends React.Component<{
       const user = this.props.currentUser
       return (
         <div>
-          My userId: {user.id}
+          My userId: {user.address}
           <br />
-          <InternalLink to={["/users/:id", { id: user.id }]}>
+          <InternalLink to={["/users/:id", { id: user.address }]}>
             my planets
           </InternalLink>
         </div>
       )
     } else {
-      const login = () => {
-        this.props.login()
+      const signup = () => {
+        this.props.signup()
       }
-      return <button onClick={login}>login</button>
+      return (
+        <div>
+          <button onClick={signup}>signup</button>
+          <button disabled={true}>login</button>
+        </div>
+      )
     }
   }
 

@@ -70,7 +70,7 @@ export class User extends React.Component<UserProps> {
   getTargetUserData = (user: ExtendedTargetUserState) => {
     const isMine = !!(
       this.props.common.currentUser &&
-      this.props.common.currentUser.id === user.id
+      this.props.common.currentUser.address === user.id
     )
     const planets = user.userNormalPlanets.map(up => (
       <ListedUserPlanet

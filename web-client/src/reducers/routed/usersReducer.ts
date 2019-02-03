@@ -6,9 +6,10 @@ const initialState: UsersState = {
   users: []
 }
 
-export const usersReducer = reducerWithInitialState(initialState)
-  .case(UsersActions.setUsers, (state, payload) => ({
-    ...state,
-    users: payload
-  }))
-  .build()
+export const createUsersReducer = () =>
+  reducerWithInitialState(initialState)
+    .case(UsersActions.setUsers, (state, payload) => ({
+      ...state,
+      users: payload
+    }))
+    .build()
