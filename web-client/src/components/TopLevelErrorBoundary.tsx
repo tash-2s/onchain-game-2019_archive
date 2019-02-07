@@ -5,10 +5,7 @@ export class TopLevelErrorBoundary extends React.Component<
   {},
   { hasError: boolean }
 > {
-  constructor(props: any) {
-    super(props)
-    this.state = { hasError: false }
-  }
+  state = { hasError: false }
 
   static getDerivedStateFromError(error: Error) {
     return { hasError: true }

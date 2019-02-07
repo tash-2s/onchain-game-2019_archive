@@ -8,12 +8,7 @@ import { NormalPlanetsData } from "../../data/planets"
 import styled from "styled-components"
 
 export class User extends React.Component<UserProps> {
-  private timerId: NodeJS.Timeout | null
-
-  constructor(props: UserProps) {
-    super(props)
-    this.timerId = null
-  }
+  private timerId: NodeJS.Timeout | null = null
 
   render = () => {
     if (
@@ -175,10 +170,7 @@ class GetNewPlanet extends React.Component<
   GetNewPlanetProps,
   { isButtonClicked: boolean }
 > {
-  constructor(props: GetNewPlanetProps) {
-    super(props)
-    this.state = { isButtonClicked: false }
-  }
+  state = { isButtonClicked: false }
 
   render = () => {
     if (this.state.isButtonClicked) {
