@@ -3,10 +3,12 @@ const CheatForDevelopment = artifacts.require("./CheatForDevelopment.sol")
 
 module.exports = function(deployer, network) {
   deployer.deploy(Gold).then(function(gold) {
-    if (network === 'development') {
-      return deployer.deploy(CheatForDevelopment, gold.address).then(function(cheat) {
-        return gold.addMinter(cheat.address)
-      })
+    if (network === "development") {
+      return deployer
+        .deploy(CheatForDevelopment, gold.address)
+        .then(function(cheat) {
+          return gold.addMinter(cheat.address)
+        })
     }
   })
 }
