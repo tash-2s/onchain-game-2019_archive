@@ -28,11 +28,8 @@ export class LoomWeb3 {
 }
 
 export const getLoomContracts = () => {
-  const networkAddress = Object.values(TestNFTJson.networks)[0]["address"]
-  const testNFT = new LoomWeb3.web3.eth.Contract(
-    TestNFTJson.abi,
-    networkAddress
-  )
+  const address = Object.values(TestNFTJson.networks)[0]["address"]
+  const testNFT = new LoomWeb3.web3.eth.Contract(TestNFTJson.abi, address)
 
   return { testNFT }
 }
