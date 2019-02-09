@@ -5,8 +5,8 @@ import "./NormalPlanet.sol";
 
 contract UserNormalPlanet is MinterRole {
   NormalPlanet public normalPlanet;
-  mapping (address => uint16) private _idGenerator;
-  mapping (address => UserPlanet[]) private _userPlanets;
+  mapping(address => uint16) private _idGenerator;
+  mapping(address => UserPlanet[]) private _userPlanets;
 
   constructor(address normalPlanetContractAddress) public {
     normalPlanet = NormalPlanet(normalPlanetContractAddress);
@@ -35,12 +35,14 @@ contract UserNormalPlanet is MinterRole {
       counter += 3;
     }
 
-    return(arrayedUserPlanets);
+    return (arrayedUserPlanets);
   }
 
   function mint(address account, uint16 normalPlanetId) public onlyMinter {
     require(normalPlanet.isPlanet(normalPlanetId), "planet is not found");
-    _userPlanets[account].push(UserPlanet(_idGenerator[account]++, normalPlanetId, 1));
+    _userPlanets[account].push(
+      UserPlanet(_idGenerator[account]++, normalPlanetId, 1)
+    );
   }
 
   function remove(address account, uint16 id) public onlyMinter {
@@ -51,7 +53,7 @@ contract UserNormalPlanet is MinterRole {
 
     _userPlanets[account].length--;
     for (uint16 i = 0; i < oldUserPlanets.length; i++) {
-      if(oldUserPlanets[i].id != id) {
+      if (oldUserPlanets[i].id != id) {
         _userPlanets[account][counter] = oldUserPlanets[i];
         counter++;
       }

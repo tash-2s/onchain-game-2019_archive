@@ -10,9 +10,9 @@ contract NormalPlanet is Ownable {
     bool _exists;
   }
 
-  mapping (uint16 => Planet) private _planets;
+  mapping(uint16 => Planet) private _planets;
 
-  function isPlanet(uint16 id) public view returns(bool) {
+  function isPlanet(uint16 id) public view returns (bool) {
     return _planets[id]._exists;
   }
 
@@ -21,7 +21,10 @@ contract NormalPlanet is Ownable {
     return (_planets[id].kind, _planets[id].param, _planets[id].priceGold);
   }
 
-  function create(uint16 id, uint8 kind, uint16 param, uint200 priceGold) public onlyOwner {
+  function create(uint16 id, uint8 kind, uint16 param, uint200 priceGold)
+    public
+    onlyOwner
+  {
     require(!isPlanet(id), "id is already used");
     _planets[id] = Planet(kind, param, priceGold, true);
   }
