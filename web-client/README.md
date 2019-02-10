@@ -1,8 +1,7 @@
 # Install
 ```
 yarn install
-yarn copy-contracts-jsons
-yarn generate-contracts-types
+yarn setup-contracts
 ```
 
 # Run

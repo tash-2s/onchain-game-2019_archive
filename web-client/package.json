@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "parcel src/index.html --no-hmr --no-autoinstall",
     "lint": "prettier 'src/**/*' '!src/contracts/*' --no-semi --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/contracts/*'",
+    "setup-contracts": "yarn copy-contracts-jsons && yarn generate-contracts-types",
     "copy-contracts-jsons": "cp ../k2-loomchain/build/contracts/*.json src/contracts/",
     "generate-contracts-types": "yarn web3x-codegen contracts_types_generator.json"
   },
