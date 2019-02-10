@@ -16,7 +16,7 @@ contract NormalPlanet is Ownable {
     return _planets[id]._exists;
   }
 
-  function planet(uint16 id) public view returns (uint8, uint16, uint256) {
+  function planet(uint16 id) public view returns (uint8, uint16, uint200) {
     require(isPlanet(id), "planet is not found");
     return (_planets[id].kind, _planets[id].param, _planets[id].priceGold);
   }

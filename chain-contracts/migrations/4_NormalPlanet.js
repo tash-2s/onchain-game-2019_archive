@@ -8,6 +8,7 @@ module.exports = function(deployer, network) {
       UserNormalPlanet,
       normalPlanet.address
     )
-    await normalPlanet.create(1, 2, 3, 4)
+    await normalPlanet.create(1, 1, 1, 5)
+    await normalPlanet.create(2, 2, 1, 5)
   })
 }
