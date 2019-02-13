@@ -1,8 +1,5 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
-import {
-  UserActions,
-  TargetUserApiResponse
-} from "../../actions/routed/UserActions"
+import { UserActions, GetUserResponse } from "../../actions/routed/UserActions"
 import { UserState, TargetUserState } from "../../types/routed/userTypes"
 import { NormalPlanetsData } from "../../data/planets"
 
@@ -12,15 +9,9 @@ const initialState: UserState = {
 
 export const createUserReducer = () =>
   reducerWithInitialState(initialState)
-    // .case(UserActions.setTargetUser.started, (state, params) => ({
-    //   ...state
-    // }))
-    // .case(UserActions.getTargetUser.failed, (state, { params, error }) => ({
-    //   ...state
-    // }))
-    .case(UserActions.setTargetUser.done, (state, { params, result }) => ({
+    .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
-      targetUser: getTargetUser(result)
+      targetUser: buildTargetUser(payload.address, payload.response)
     }))
     .case(UserActions.updateTargetUserOngoings, state => {
       if (!state.targetUser) {
@@ -45,25 +36,79 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, (state, payload) => {
-      if (!state.targetUser) {
-        return state
-      }
+    //.case(UserActions.getPlanet, (state, payload) => {
+    //  if (!state.targetUser) {
+    //    return state
+    //  }
 
-      const userPlanets = state.targetUser.userNormalPlanets
-        .map(up => up as TargetUserApiResponse["userNormalPlanets"][number])
-        .concat([payload])
-      return {
-        ...state,
-        targetUser: getTargetUser({
-          ...state.targetUser,
-          userNormalPlanets: userPlanets
-        })
-      }
-    })
+    //  const userPlanets = state.targetUser.userNormalPlanets
+    //    .map(up => up as TargetUserApiResponse["userNormalPlanets"][number])
+    //    .concat([payload])
+    //  return {
+    //    ...state,
+    //    targetUser: getTargetUser({
+    //      ...state.targetUser,
+    //      userNormalPlanets: userPlanets
+    //    })
+    //  }
+    //})
     .build()
 
-const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {
+const strToNum = (str: string): number => parseInt(str, 10)
+
+interface User {
+  gold: { confirmed: number; confirmedAt: number }
+  userNormalPlanets: Array<{
+    id: number
+    normalPlanetId: number
+    rank: number
+    rankupedAt: number
+    createdAt: number
+    axialCoordinates: [number, number]
+  }>
+}
+const restructureUserFromResponse = (response: GetUserResponse): User => {
+  const confirmedGold = response[0]
+  const goldConfirmedAt = response[1]
+  const unpIds = response[2]
+  const unpRanks = response[3]
+  const unpTimes = response[4]
+  const unpAxialCoordinates = response[5]
+
+  const unps: User["userNormalPlanets"] = []
+  let i = 0
+  let counter = 0
+
+  while (i < unpRanks.length) {
+    unps.push({
+      id: strToNum(unpIds[counter]),
+      normalPlanetId: strToNum(unpIds[counter + 1]),
+      rank: strToNum(unpRanks[i]),
+      rankupedAt: strToNum(unpTimes[counter]),
+      createdAt: strToNum(unpTimes[counter + 1]),
+      axialCoordinates: [
+        strToNum(unpAxialCoordinates[counter]),
+        strToNum(unpAxialCoordinates[counter + 1])
+      ]
+    })
+
+    i += 1
+    counter += 2
+  }
+  return {
+    gold: {
+      confirmed: strToNum(confirmedGold),
+      confirmedAt: strToNum(goldConfirmedAt)
+    },
+    userNormalPlanets: unps
+  }
+}
+
+const buildTargetUser = (
+  address: string,
+  response: GetUserResponse
+): TargetUserState => {
+  const result = restructureUserFromResponse(response)
   const [userResidencePlanets, userGoldveinPlanets] = processUserNormalPlanets(
     result.userNormalPlanets
   )
@@ -76,7 +121,7 @@ const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {
     .reduce((acc, cur) => acc + cur, 0)
 
   return {
-    ...result,
+    address: address,
     gold: {
       ...result.gold,
       ongoing: calculateOngoingGold(result.gold, userPlanets)
@@ -89,7 +134,7 @@ const getTargetUser = (result: TargetUserApiResponse): TargetUserState => {
 }
 
 const processUserNormalPlanets = (
-  userPlanets: TargetUserApiResponse["userNormalPlanets"]
+  userPlanets: User["userNormalPlanets"]
 ): [
   TargetUserState["userNormalPlanets"],
   TargetUserState["userNormalPlanets"]
@@ -115,6 +160,7 @@ const processUserNormalPlanets = (
 
     const newUp = {
       ...up,
+      isPending: false,
       rateMemo: rate,
       paramMemo: param,
       planetKindMirror: p.kind,

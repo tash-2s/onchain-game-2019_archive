@@ -1,12 +1,12 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { State } from "../types/types"
+import { RootState } from "../types/rootTypes"
 import { App } from "../components/App"
 import { AppActions } from "../actions/AppActions"
 import { CommonActions } from "../actions/CommonActions"
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   return { common: state.common, app: state.app }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {

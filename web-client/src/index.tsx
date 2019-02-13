@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom"
 import { createStore } from "redux"
 import { Provider } from "react-redux"
 
-import { createReducer } from "./reducers/reducer"
+import { createReducer } from "./reducers/rootReducer"
 import { registerStore } from "./misc/route"
 import { LoomWeb3 } from "./misc/loom"
 import { AppContainer } from "./containers/AppContainer"

@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { State } from "../../types/types"
+import { RootState } from "../../types/rootTypes"
 import { CommonState } from "../../types/commonTypes"
 
 import {
@@ -13,7 +13,7 @@ import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"
 
 const mapStateToProps = (
-  state: State
+  state: RootState
 ): { common: CommonState; user: ExtendedUserState } => {
   if (!state.routed.user.targetUser) {
     return {

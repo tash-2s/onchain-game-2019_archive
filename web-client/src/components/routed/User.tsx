@@ -13,7 +13,7 @@ export class User extends React.Component<UserProps> {
   render = () => {
     if (
       this.props.user.targetUser &&
-      this.props.user.targetUser.id === this.props.common.route.params[0]
+      this.props.user.targetUser.address === this.props.common.route.params[0]
     ) {
       return this.getTargetUserData(this.props.user.targetUser)
     } else {
@@ -35,7 +35,7 @@ export class User extends React.Component<UserProps> {
 
     if (
       this.props.user.targetUser &&
-      this.props.user.targetUser.id !== this.props.common.route.params[0]
+      this.props.user.targetUser.address !== this.props.common.route.params[0]
     ) {
       this.clearTimer()
       this.props.userActions.setTargetUser(this.props.common.route.params[0])
@@ -65,7 +65,7 @@ export class User extends React.Component<UserProps> {
   getTargetUserData = (user: ExtendedTargetUserState) => {
     const isMine = !!(
       this.props.common.currentUser &&
-      this.props.common.currentUser.address === user.id
+      this.props.common.currentUser.address === user.address
     )
     const planets = user.userNormalPlanets.map(up => (
       <ListedUserPlanet
@@ -86,7 +86,7 @@ export class User extends React.Component<UserProps> {
     return (
       <div>
         <p>
-          target user is {user.id} {isMine ? "[this is me]" : ""}
+          target user is {user.address} {isMine ? "[this is me]" : ""}
         </p>
         <p>confirmed gold: {user.gold.confirmed}</p>
         <p>ongoing gold: {user.gold.ongoing}</p>
@@ -229,7 +229,7 @@ class ListedUserPlanet extends React.Component<{
         <br />
         param: {up.paramMemo}
         <br />
-        processing?: {up.isProcessing ? "yes" : "no"}
+        processing?: {up.isPending ? "yes" : "no"}
         <br />
         rankup available: {up.rankupAvailableDateString()}
         <br />

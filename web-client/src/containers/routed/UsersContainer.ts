@@ -1,12 +1,12 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { State } from "../../types/types"
+import { RootState } from "../../types/rootTypes"
 import { Users } from "../../components/routed/Users"
 import { UsersActions } from "../../actions/routed/UsersActions"
 import { CommonActions } from "../../actions/CommonActions"
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   return { common: state.common, users: state.routed.users }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {

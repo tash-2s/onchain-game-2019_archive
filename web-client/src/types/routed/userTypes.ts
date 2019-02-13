@@ -5,7 +5,7 @@ export interface UserState {
 }
 
 export interface TargetUserState {
-  id: string
+  address: string
   gold: { confirmed: number; confirmedAt: number; ongoing: number }
   userNormalPlanets: Array<UserNormalPlanetType>
   population: number
@@ -15,12 +15,12 @@ export interface TargetUserState {
 
 // This is used as object's type for store, and used as class for elsewhere
 export class UserNormalPlanetType {
-  id!: string
+  id!: number
   normalPlanetId!: number
   rank!: number
   createdAt!: number
   rankupedAt!: number | null
-  isProcessing!: boolean // this is used for waiting tx and so on
+  isPending!: boolean // this is used for waiting tx and so on
   axialCoordinates!: [number, number] // [q, r]
   rateMemo!: number
   paramMemo!: number
