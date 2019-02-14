@@ -79,8 +79,12 @@ contract UserNormalPlanet is MinterRole {
     }
   }
 
-  // TODO: coordinates
-  function mint(address account, uint16 normalPlanetId) public onlyMinter {
+  function mint(
+    address account,
+    uint16 normalPlanetId,
+    uint16 axialCoordinateQ,
+    uint16 axialCoordinateR
+  ) public onlyMinter {
     require(normalPlanet.isPlanet(normalPlanetId), "planet is not found");
     _userPlanets[account].push(
       UserPlanet(
@@ -89,8 +93,8 @@ contract UserNormalPlanet is MinterRole {
         1,
         block.timestamp,
         block.timestamp,
-        0,
-        0
+        axialCoordinateQ,
+        axialCoordinateR
       )
     );
   }

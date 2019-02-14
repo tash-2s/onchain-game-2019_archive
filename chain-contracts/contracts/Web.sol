@@ -24,7 +24,7 @@ contract Web {
     uint16[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
     uint256[] unpTimes, // [rankupedAt, createdAt, ...]
-    uint16[] unpAxialCorrdinates // [q, r, ...]
+    uint16[] unpAxialCoordinates // [q, r, ...]
   )
   {
     confirmedGold = gold.balanceOf(account);
@@ -39,7 +39,7 @@ contract Web {
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
     unpTimes = new uint[](userPlanetsCount * 2);
-    unpAxialCorrdinates = new uint16[](userPlanetsCount * 2);
+    unpAxialCoordinates = new uint16[](userPlanetsCount * 2);
     uint counter = 0;
     uint userPlanetCounter = 0;
 
@@ -49,8 +49,8 @@ contract Web {
       unpRanks[i] = uint8(userPlanets[userPlanetCounter + 2]);
       unpTimes[counter] = userPlanets[userPlanetCounter + 3];
       unpTimes[counter + 1] = userPlanets[userPlanetCounter + 4];
-      unpAxialCorrdinates[counter] = uint16(userPlanets[userPlanetCounter + 5]);
-      unpAxialCorrdinates[counter + 1] = uint16(
+      unpAxialCoordinates[counter] = uint16(userPlanets[userPlanetCounter + 5]);
+      unpAxialCoordinates[counter + 1] = uint16(
         userPlanets[userPlanetCounter + 6]
       );
 

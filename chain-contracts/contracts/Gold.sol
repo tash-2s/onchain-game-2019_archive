@@ -17,4 +17,8 @@ contract Gold is MinterRole {
     balances[to] = balances[to].add(value);
     return true;
   }
+
+  function unmint(address to, uint256 value) public onlyMinter {
+    balances[to] = balances[to].sub(value);
+  }
 }
