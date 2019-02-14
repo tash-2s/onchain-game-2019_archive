@@ -19,7 +19,7 @@ export class UserNormalPlanetType {
   normalPlanetId!: number
   rank!: number
   createdAt!: number
-  rankupedAt!: number | null
+  rankupedAt!: number
   isPending!: boolean // this is used for waiting tx and so on
   axialCoordinates!: [number, number] // [q, r]
   rateMemo!: number
