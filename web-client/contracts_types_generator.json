@@ -1,8 +1,7 @@
 {
   "outputPath": "./src/contracts",
   "contracts": {
-    "TestNFT": "./src/contracts/TestNFT.json",
-    "HexLogic": "./src/contracts/HexLogic.json",
+    "Logic": "./src/contracts/Logic.json",
     "Web": "./src/contracts/Web.json"
   }
 }

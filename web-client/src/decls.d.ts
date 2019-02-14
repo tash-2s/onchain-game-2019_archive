@@ -7,7 +7,6 @@ declare module "*/_loom.js" {
   }
 
   export const getLoomContracts: () => {
-    testNFT: import("./contracts/TestNFT").TestNFT
     Web: import("./contracts/Web").Web
   }
 }

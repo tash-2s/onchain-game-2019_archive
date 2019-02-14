@@ -36,7 +36,7 @@ export class UserActions extends AbstractActions {
     id: string
     normalPlanetId: number
     rank: number
-    rankupedAt: number | null
+    rankupedAt: number
     createdAt: number
     axialCoordinates: [number, number] // [q, r]
   }>("getPlanet")
@@ -47,7 +47,6 @@ export class UserActions extends AbstractActions {
       rank: 2,
       rankupedAt: 1547878452,
       createdAt: 1547206752,
-      isProcessing: false,
       axialCoordinates: [0, 1] as [number, number]
     }
     this.dispatch(UserActions.getPlanet(tmp))

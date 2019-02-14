@@ -1,6 +1,5 @@
 import { Client, LocalAddress, CryptoUtils, LoomProvider } from "loom-js"
 import Web3 from "web3"
-import TestNFTJson from "../contracts/TestNFT.json"
 import Web from "../contracts/Web.json"
 
 export class LoomWeb3 {
@@ -29,10 +28,6 @@ export class LoomWeb3 {
 }
 
 export const getLoomContracts = () => ({
-  testNFT: new LoomWeb3.web3.eth.Contract(
-    TestNFTJson.abi,
-    Object.values(TestNFTJson.networks)[0]["address"]
-  ),
   Web: new LoomWeb3.web3.eth.Contract(
     Web.abi,
     Object.values(Web.networks)[0]["address"]
