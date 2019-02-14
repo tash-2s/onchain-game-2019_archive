@@ -1,14 +1,9 @@
 import { AbstractActions } from "../AbstractActions"
-import { callLoomContractMethod } from "../../misc/loom"
+import { callLoomContractMethod, TxCallGenericsType } from "../../misc/loom"
 
-export type GetUserResponse = [
-  string,
-  string,
-  string[],
-  string[],
-  string[],
-  string[]
-]
+export type GetUserResponse = TxCallGenericsType<
+  ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
+>
 
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
