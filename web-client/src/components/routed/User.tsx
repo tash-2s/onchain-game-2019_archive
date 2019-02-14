@@ -164,7 +164,7 @@ class Hex extends React.Component<{
 
 interface GetNewPlanetProps {
   getOngoingGold: () => number
-  getPlanet: (planetId: number) => void
+  getPlanet: (planetId: number, q: number, r: number) => any
 }
 class GetNewPlanet extends React.Component<
   GetNewPlanetProps,
@@ -189,7 +189,7 @@ class GetNewPlanet extends React.Component<
 
     return NormalPlanetsData.map(p => {
       let button
-      if (gold >= p.priceGold) {
+      if (gold === 0 || gold >= p.priceGold) {
         button = (
           <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
         )
@@ -207,7 +207,7 @@ class GetNewPlanet extends React.Component<
 
   getPlanetButtonHandler = (planetId: number) => {
     return () => {
-      this.props.getPlanet(planetId)
+      this.props.getPlanet(planetId, 0, 0) // TODO: coordinate
       this.setState({ isButtonClicked: false })
     }
   }

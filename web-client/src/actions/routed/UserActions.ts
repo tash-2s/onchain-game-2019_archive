@@ -1,9 +1,22 @@
 import { AbstractActions } from "../AbstractActions"
-import { callLoomContractMethod, TxCallGenericsType } from "../../misc/loom"
+import {
+  callLoomContractMethod,
+  sendLoomContractMethod,
+  TxCallGenericsType
+} from "../../misc/loom"
 
 export type GetUserResponse = TxCallGenericsType<
   ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
 >
+
+export interface GetPlanetArgs {
+  planetId: number
+  axialCoordinateQ: number
+  axialCoordinateR: number
+  userPlanetId: number
+  createdAt: number
+  confirmedGold: number
+}
 
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
@@ -32,23 +45,30 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  static getPlanet = UserActions.creator<{
-    id: string
-    normalPlanetId: number
-    rank: number
-    rankupedAt: number
-    createdAt: number
-    axialCoordinates: [number, number] // [q, r]
-  }>("getPlanet")
-  getPlanet = (planetId: number) => {
-    const tmp = {
-      id: "unp3",
-      normalPlanetId: planetId,
-      rank: 2,
-      rankupedAt: 1547878452,
-      createdAt: 1547206752,
-      axialCoordinates: [0, 1] as [number, number]
-    }
-    this.dispatch(UserActions.getPlanet(tmp))
+  static getPlanet = UserActions.creator<GetPlanetArgs>("getPlanet")
+  getPlanet = async (
+    planetId: number,
+    axialCoordinateQ: number,
+    axialCoordinateR: number
+  ) => {
+    const receipt = await sendLoomContractMethod(cs =>
+      cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+    ).then(receipt => receipt)
+
+    // TODO: fix
+    const userPlanetId = 123
+    const createdAt = 123
+    const confirmedGold = 123
+
+    this.dispatch(
+      UserActions.getPlanet({
+        planetId,
+        axialCoordinateQ,
+        axialCoordinateR,
+        userPlanetId,
+        createdAt,
+        confirmedGold
+      })
+    )
   }
 }
