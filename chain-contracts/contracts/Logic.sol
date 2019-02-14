@@ -23,6 +23,7 @@ contract Logic {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
   }
 
+  // TODO: confirm gold / coordinate dup check
   function setPlanet(
     uint16 planetId,
     uint16 axialCoordinateQ,
