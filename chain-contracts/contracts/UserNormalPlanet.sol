@@ -16,8 +16,8 @@ contract UserNormalPlanet is MinterRole {
     uint16 id;
     uint16 normalPlanetId;
     uint8 rank;
-    uint256 rankupedAt;
-    uint256 createdAt;
+    uint40 rankupedAt;
+    uint40 createdAt;
     uint16 axialCoordinateQ;
     uint16 axialCoordinateR;
   }
@@ -26,9 +26,9 @@ contract UserNormalPlanet is MinterRole {
     return (_userPlanets[account].length);
   }
 
-  function userPlanets(address account) public view returns (uint256[]) {
+  function userPlanets(address account) public view returns (uint40[]) {
     UserPlanet[] storage ups = _userPlanets[account];
-    uint256[] memory arrayedUserPlanets = new uint256[](ups.length * 7);
+    uint40[] memory arrayedUserPlanets = new uint40[](ups.length * 7);
     uint counter = 0;
 
     for (uint16 i = 0; i < ups.length; i++) {
@@ -52,8 +52,8 @@ contract UserNormalPlanet is MinterRole {
     uint16[] ids,
     uint16[] normalPlanetIds,
     uint8[] ranks,
-    uint256[] rankupedAts,
-    uint256[] createdAts,
+    uint40[] rankupedAts,
+    uint40[] createdAts,
     uint16[] axialCoordinateQs,
     uint16[] axialCoordinateRs
   )
@@ -63,8 +63,8 @@ contract UserNormalPlanet is MinterRole {
     ids = new uint16[](ups.length);
     normalPlanetIds = new uint16[](ups.length);
     ranks = new uint8[](ups.length);
-    rankupedAts = new uint256[](ups.length);
-    createdAts = new uint256[](ups.length);
+    rankupedAts = new uint40[](ups.length);
+    createdAts = new uint40[](ups.length);
     axialCoordinateQs = new uint16[](ups.length);
     axialCoordinateRs = new uint16[](ups.length);
 
@@ -86,13 +86,22 @@ contract UserNormalPlanet is MinterRole {
     uint16 axialCoordinateR
   ) public onlyMinter {
     require(normalPlanet.isPlanet(normalPlanetId), "planet is not found");
+
+    UserPlanet[] storage ups = _userPlanets[account];
+    for (uint16 i = 0; i < ups.length; i++) {
+      // TODO: for big planets
+      if ((ups[i].axialCoordinateQ == axialCoordinateQ) && (ups[i].axialCoordinateR == axialCoordinateR)) {
+        revert("the coordinates are already used");
+      }
+    }
+
     _userPlanets[account].push(
       UserPlanet(
         _idGenerator[account]++,
         normalPlanetId,
         1,
-        block.timestamp,
-        block.timestamp,
+        uint40(block.timestamp),
+        uint40(block.timestamp),
         axialCoordinateQ,
         axialCoordinateR
       )

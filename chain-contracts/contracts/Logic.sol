@@ -7,8 +7,6 @@ import "./NormalPlanet.sol";
 import "./UserNormalPlanet.sol";
 
 contract Logic {
-  using SafeMath for uint256;
-
   Gold public gold;
   NormalPlanet public normalPlanet;
   UserNormalPlanet public userNormalPlanet;
@@ -23,7 +21,7 @@ contract Logic {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
   }
 
-  // TODO: confirm gold / coordinate dup check
+  // TODO: confirm gold
   function setPlanet(
     uint16 planetId,
     uint16 axialCoordinateQ,
@@ -50,7 +48,6 @@ contract Logic {
     );
   }
 
-  // TODO: coordinates
   // this is executable after delete all user planets, maybe I should create start-flag data.
   function setFirstPlanets(uint16 planetId1, uint16 planetId2) public {
     require(
@@ -65,6 +62,6 @@ contract Logic {
     (_1, _2, planet2Price) = normalPlanet.planet(planetId2);
     require(planet1Price + planet2Price == 10, "not defined price");
     userNormalPlanet.mint(msg.sender, planetId1, 0, 0);
-    userNormalPlanet.mint(msg.sender, planetId2, 0, 0);
+    userNormalPlanet.mint(msg.sender, planetId2, 0, 1);
   }
 }

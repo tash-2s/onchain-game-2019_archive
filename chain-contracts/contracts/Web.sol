@@ -23,13 +23,13 @@ contract Web {
     uint40 goldConfirmedAt,
     uint16[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
-    uint256[] unpTimes, // [rankupedAt, createdAt, ...]
+    uint40[] unpTimes, // [rankupedAt, createdAt, ...]
     uint16[] unpAxialCoordinates // [q, r, ...]
   )
   {
     (confirmedGold, goldConfirmedAt) = gold.userGold(account);
 
-    uint256[] memory userPlanets = new uint256[](
+    uint40[] memory userPlanets = new uint40[](
       userNormalPlanet.balanceOf(account)
     );
     userPlanets = userNormalPlanet.userPlanets(account);
@@ -37,7 +37,7 @@ contract Web {
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
-    unpTimes = new uint[](userPlanetsCount * 2);
+    unpTimes = new uint40[](userPlanetsCount * 2);
     unpAxialCoordinates = new uint16[](userPlanetsCount * 2);
     uint counter = 0;
     uint userPlanetCounter = 0;
