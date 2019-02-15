@@ -19,7 +19,7 @@ contract Web {
     external
     view
     returns (
-    uint256 confirmedGold,
+    uint200 confirmedGold,
     uint40 goldConfirmedAt,
     uint16[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
@@ -27,8 +27,7 @@ contract Web {
     uint16[] unpAxialCoordinates // [q, r, ...]
   )
   {
-    confirmedGold = gold.balanceOf(account);
-    goldConfirmedAt = 0; // TODO
+    (confirmedGold, goldConfirmedAt) = gold.userGold(account);
 
     uint256[] memory userPlanets = new uint256[](
       userNormalPlanet.balanceOf(account)

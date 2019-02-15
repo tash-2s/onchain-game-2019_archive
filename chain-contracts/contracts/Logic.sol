@@ -37,7 +37,7 @@ contract Logic {
     if (userNormalPlanet.balanceOf(msg.sender) == 0 && gold.balanceOf(
       msg.sender
     ) == 0) {
-      gold.mint(msg.sender, SafeMath.sub(10, planetPrice));
+      gold.mint(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
     } else {
       gold.unmint(msg.sender, planetPrice);
     }

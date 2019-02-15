@@ -91,8 +91,8 @@ contract UserNormalPlanet is MinterRole {
         _idGenerator[account]++,
         normalPlanetId,
         1,
-        block.timestamp, // solium-disable-line security/no-block-members
-        block.timestamp, // solium-disable-line security/no-block-members
+        block.timestamp,
+        block.timestamp,
         axialCoordinateQ,
         axialCoordinateR
       )
