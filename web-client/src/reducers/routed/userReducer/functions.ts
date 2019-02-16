@@ -102,13 +102,13 @@ const processUserNormalPlanets = (
       throw new Error("unknown planet: " + up.normalPlanetId)
     }
 
-    const rate = 1 * 1.2 ** (up.rank - 1)
+    const rate = 2 ** (up.rank - 1)
     let param = 0
 
     switch (p.kind) {
       case "residence":
       case "goldvein":
-        param = Math.floor(p.param * rate)
+        param = p.param * rate
     }
 
     const newUp = {
@@ -174,6 +174,7 @@ export const mergeNewPlanet = (
         axialCoordinates: [args.axialCoordinateQ, args.axialCoordinateR]
       }
     ])
+
   return {
     gold: { confirmed: args.confirmedGold, confirmedAt: args.createdAt },
     userNormalPlanets: newUps
