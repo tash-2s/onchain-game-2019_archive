@@ -8,10 +8,7 @@ contract Web {
   UserNormalPlanet public userNormalPlanet;
   Gold public gold;
 
-  constructor(
-    address userNormalPlanetContractAddress,
-    address goldContractAddress
-  ) public {
+  constructor(address userNormalPlanetContractAddress, address goldContractAddress) public {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
     gold = Gold(goldContractAddress);
   }
@@ -35,7 +32,7 @@ contract Web {
     //);
     //userPlanets = userNormalPlanet.userPlanets(account);
     uint40[] memory userPlanets = userNormalPlanet.userPlanets(account);
-    uint userPlanetsCount = userPlanets.length / 7;
+    uint userPlanetsCount = UserNormalPlanetArrayReader.userPlanetsCount(userPlanets);
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
@@ -45,27 +42,12 @@ contract Web {
 
     for (uint i = 0; i < userPlanetsCount; i++) {
       unpIds[counter] = UserNormalPlanetArrayReader.id(userPlanets, i);
-      unpIds[counter + 1] = UserNormalPlanetArrayReader.planetId(
-        userPlanets,
-        i
-      );
+      unpIds[counter + 1] = UserNormalPlanetArrayReader.normalPlanetId(userPlanets, i);
       unpRanks[i] = UserNormalPlanetArrayReader.rank(userPlanets, i);
-      unpTimes[counter] = UserNormalPlanetArrayReader.rankupedAt(
-        userPlanets,
-        i
-      );
-      unpTimes[counter + 1] = UserNormalPlanetArrayReader.createdAt(
-        userPlanets,
-        i
-      );
-      unpAxialCoordinates[counter] = UserNormalPlanetArrayReader.axialCoordinateQ(
-        userPlanets,
-        i
-      );
-      unpAxialCoordinates[counter + 1] = UserNormalPlanetArrayReader.axialCoordinateR(
-        userPlanets,
-        i
-      );
+      unpTimes[counter] = UserNormalPlanetArrayReader.rankupedAt(userPlanets, i);
+      unpTimes[counter + 1] = UserNormalPlanetArrayReader.createdAt(userPlanets, i);
+      unpAxialCoordinates[counter] = UserNormalPlanetArrayReader.axialCoordinateQ(userPlanets, i);
+      unpAxialCoordinates[counter + 1] = UserNormalPlanetArrayReader.axialCoordinateR(userPlanets, i);
 
       counter += 2;
     }

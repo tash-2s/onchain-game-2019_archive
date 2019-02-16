@@ -9,12 +9,7 @@ module.exports = function(deployer, network) {
     const normalPlanet = await NormalPlanet.deployed()
     const userNormalPlanet = await UserNormalPlanet.deployed()
 
-    const logic = await deployer.deploy(
-      Logic,
-      gold.address,
-      normalPlanet.address,
-      userNormalPlanet.address
-    )
+    const logic = await deployer.deploy(Logic, gold.address, normalPlanet.address, userNormalPlanet.address)
 
     await gold.addMinter(logic.address)
     await userNormalPlanet.addMinter(logic.address)

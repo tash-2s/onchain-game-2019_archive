@@ -36,10 +36,7 @@ contract Gold is MinterRole {
     UserGold storage _userGold = _addressToUserGold[account];
 
     if ((_userGold.quantity + quantity) >= _userGold.quantity) {
-      _addressToUserGold[account] = UserGold(
-        _userGold.quantity + quantity,
-        Util.uint40now()
-      );
+      _addressToUserGold[account] = UserGold(_userGold.quantity + quantity, Util.uint40now());
     } else {
       _addressToUserGold[account] = UserGold(UINT200_MAX, Util.uint40now());
     }
@@ -48,9 +45,6 @@ contract Gold is MinterRole {
   // You must "confirm" before calling this function.
   function unmint(address account, uint200 quantity) public onlyMinter {
     UserGold storage _userGold = _addressToUserGold[account];
-    _addressToUserGold[account] = UserGold(
-      uint200(_userGold.quantity.sub(quantity)),
-      Util.uint40now()
-    );
+    _addressToUserGold[account] = UserGold(uint200(_userGold.quantity.sub(quantity)), Util.uint40now());
   }
 }

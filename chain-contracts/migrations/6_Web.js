@@ -6,10 +6,6 @@ module.exports = function(deployer, network) {
   deployer.then(async function() {
     const userNormalPlanet = await UserNormalPlanet.deployed()
     const gold = await Gold.deployed()
-    const hexLogic = await deployer.deploy(
-      Web,
-      userNormalPlanet.address,
-      gold.address
-    )
+    const hexLogic = await deployer.deploy(Web, userNormalPlanet.address, gold.address)
   })
 }
