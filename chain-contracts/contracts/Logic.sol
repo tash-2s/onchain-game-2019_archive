@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Gold.sol";
 import "./NormalPlanet.sol";
 import "./UserNormalPlanet.sol";
+import "./lib/Util.sol";
 
 contract Logic {
   Gold public gold;
@@ -21,7 +22,6 @@ contract Logic {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
   }
 
-  // TODO: confirm gold
   function setPlanet(
     uint16 planetId,
     uint16 axialCoordinateQ,
@@ -37,6 +37,7 @@ contract Logic {
     ) == 0) {
       gold.mint(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
     } else {
+      confirm(msg.sender);
       gold.unmint(msg.sender, planetPrice);
     }
 
@@ -46,6 +47,22 @@ contract Logic {
       axialCoordinateQ,
       axialCoordinateR
     );
+  }
+
+  function confirm(address account) private {
+    //uint totalResidenceParam = 0;
+    //uint totalGoldveinParam = 0;
+    //uint40[] memory userPlanets = userNormalPlanet.userPlanets(account);
+    //uint userPlanetCounter = 0;
+    //for (uint i = 0; i < (userPlanets.length / 7); i++) {
+    //  userPlanetCounter += 7;
+    //}
+    //uint200 goldPerSec = totalResidenceParam * totalGoldveinParam;
+    //uint40 diffSec = Util.uint40now - gold.userGoldConfirmedAt;
+    //uint200 diffGold = goldPerSec * diffSec;
+    //if (diffGold > 0) {
+    //  gold.mint(account, diffGold)
+    //}
   }
 
   // this is executable after delete all user planets, maybe I should create start-flag data.

@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 import "./NormalPlanet.sol";
+import "./lib/Util.sol";
 
 contract UserNormalPlanet is MinterRole {
   NormalPlanet public normalPlanet;
@@ -100,8 +101,8 @@ contract UserNormalPlanet is MinterRole {
         _idGenerator[account]++,
         normalPlanetId,
         1,
-        uint40(block.timestamp),
-        uint40(block.timestamp),
+        Util.uint40now(),
+        Util.uint40now(),
         axialCoordinateQ,
         axialCoordinateR
       )
