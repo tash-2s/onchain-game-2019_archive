@@ -16,10 +16,7 @@ export const createUserReducer = () =>
   reducerWithInitialState(initialState)
     .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
-      targetUser: buildTargetUser(
-        payload.address,
-        restructureUserFromResponse(payload.response)
-      )
+      targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))
     }))
     .case(UserActions.updateTargetUserOngoings, state => {
       if (!state.targetUser) {
@@ -32,10 +29,7 @@ export const createUserReducer = () =>
           ...state.targetUser,
           gold: {
             ...state.targetUser.gold,
-            ongoing: calculateOngoingGold(
-              state.targetUser.gold,
-              state.targetUser.userNormalPlanets
-            )
+            ongoing: calculateOngoingGold(state.targetUser.gold, state.targetUser.userNormalPlanets)
           }
         }
       }

@@ -4,5 +4,4 @@ import { AppState } from "../types/appTypes"
 
 const initialState: AppState = {}
 
-export const createAppReducer = () =>
-  reducerWithInitialState(initialState).build()
+export const createAppReducer = () => reducerWithInitialState(initialState).build()

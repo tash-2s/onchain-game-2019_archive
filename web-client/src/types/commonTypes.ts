@@ -26,9 +26,7 @@ interface NormalMagicPlanet extends NormalPlanetBase {
 
 export type NormalPlanet = NormalNonMagicPlanet | NormalMagicPlanet
 
-export type PlanetKind =
-  | NormalNonMagicPlanet["kind"]
-  | NormalMagicPlanet["kind"]
+export type PlanetKind = NormalNonMagicPlanet["kind"] | NormalMagicPlanet["kind"]
 
 // ref. https://stackoverflow.com/questions/44480644/typescript-string-union-to-string-array
 type Lit = string | number | boolean | undefined | null | void | {}

@@ -1,7 +1,4 @@
-import {
-  GetUserResponse,
-  GetPlanetArgs
-} from "../../../actions/routed/UserActions"
+import { GetUserResponse, GetPlanetArgs } from "../../../actions/routed/UserActions"
 import { TargetUserState } from "../../../types/routed/userTypes"
 import { NormalPlanetsData } from "../../../data/planets"
 
@@ -19,9 +16,7 @@ interface _User {
   }>
 }
 
-export const restructureUserFromResponse = (
-  response: GetUserResponse
-): _User => {
+export const restructureUserFromResponse = (response: GetUserResponse): _User => {
   const confirmedGold = response[0]
   const goldConfirmedAt = response[1]
   const unpIds = response[2]
@@ -58,20 +53,13 @@ export const restructureUserFromResponse = (
   }
 }
 
-export const buildTargetUser = (
-  address: string,
-  user: _User
-): TargetUserState => {
+export const buildTargetUser = (address: string, user: _User): TargetUserState => {
   const [userResidencePlanets, userGoldveinPlanets] = processUserNormalPlanets(
     user.userNormalPlanets
   )
   const userPlanets = userResidencePlanets.concat(userGoldveinPlanets)
-  const population = userResidencePlanets
-    .map(up => up.paramMemo)
-    .reduce((acc, cur) => acc + cur, 0)
-  const goldPower = userGoldveinPlanets
-    .map(up => up.paramMemo)
-    .reduce((acc, cur) => acc + cur, 0)
+  const population = userResidencePlanets.map(up => up.paramMemo).reduce((acc, cur) => acc + cur, 0)
+  const goldPower = userGoldveinPlanets.map(up => up.paramMemo).reduce((acc, cur) => acc + cur, 0)
 
   return {
     address: address,
@@ -88,10 +76,7 @@ export const buildTargetUser = (
 
 const processUserNormalPlanets = (
   userPlanets: _User["userNormalPlanets"]
-): [
-  TargetUserState["userNormalPlanets"],
-  TargetUserState["userNormalPlanets"]
-] => {
+): [TargetUserState["userNormalPlanets"], TargetUserState["userNormalPlanets"]] => {
   const userResidencePlanets: TargetUserState["userNormalPlanets"] = []
   const userGoldveinPlanets: TargetUserState["userNormalPlanets"] = []
 

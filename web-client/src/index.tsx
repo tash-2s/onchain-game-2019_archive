@@ -12,8 +12,7 @@ import { TopLevelErrorBoundary } from "./components/TopLevelErrorBoundary"
 LoomWeb3.setup()
 const store = createStore(
   createReducer(),
-  (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+  (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 )
 registerStore(store)
 ReactDOM.render(

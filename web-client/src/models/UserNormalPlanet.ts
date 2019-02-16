@@ -1,8 +1,4 @@
-import {
-  UserState,
-  TargetUserState,
-  UserNormalPlanetType
-} from "../types/routed/userTypes"
+import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
   isRankupable = (gold: number, date: number): boolean => {
@@ -23,8 +19,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   rankupAvailableDateString = (): string => {
-    const unixtime =
-      (this.rankupedAt || this.createdAt) + this.requiredSecForRankup()
+    const unixtime = (this.rankupedAt || this.createdAt) + this.requiredSecForRankup()
     const date = new Date(unixtime * 1000)
     const dateStringOption = {
       year: "numeric",
@@ -36,10 +31,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
       hour12: false,
       timeZoneName: "long"
     }
-    const dateString = new Intl.DateTimeFormat(
-      undefined,
-      dateStringOption
-    ).format(date)
+    const dateString = new Intl.DateTimeFormat(undefined, dateStringOption).format(date)
     return dateString
   }
 

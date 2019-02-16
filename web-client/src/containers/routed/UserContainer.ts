@@ -4,17 +4,12 @@ import { Dispatch, AnyAction } from "redux"
 import { RootState } from "../../types/rootTypes"
 import { CommonState } from "../../types/commonTypes"
 
-import {
-  UserNormalPlanet,
-  ExtendedUserState
-} from "../../models/UserNormalPlanet"
+import { UserNormalPlanet, ExtendedUserState } from "../../models/UserNormalPlanet"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"
 
-const mapStateToProps = (
-  state: RootState
-): { common: CommonState; user: ExtendedUserState } => {
+const mapStateToProps = (state: RootState): { common: CommonState; user: ExtendedUserState } => {
   if (!state.routed.user.targetUser) {
     return {
       common: state.common,
@@ -42,8 +37,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   }
 }
 
-export type UserProps = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+export type UserProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 export const UserContainer = connect(
   mapStateToProps,

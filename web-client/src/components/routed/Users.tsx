@@ -7,9 +7,7 @@ export class Users extends React.Component<UsersProps> {
     const users = this.props.users.users.map(user => {
       return (
         <div key={user.id}>
-          <InternalLink to={["/users/:id", { id: user.id }]}>
-            {user.id}
-          </InternalLink>
+          <InternalLink to={["/users/:id", { id: user.id }]}>{user.id}</InternalLink>
         </div>
       )
     })

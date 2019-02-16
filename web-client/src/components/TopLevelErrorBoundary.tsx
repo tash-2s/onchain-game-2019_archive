@@ -1,10 +1,7 @@
 import * as React from "react"
 
 // most errors should be caught in Template's error handling
-export class TopLevelErrorBoundary extends React.Component<
-  {},
-  { hasError: boolean }
-> {
+export class TopLevelErrorBoundary extends React.Component<{}, { hasError: boolean }> {
   state = { hasError: false }
 
   static getDerivedStateFromError(error: Error) {

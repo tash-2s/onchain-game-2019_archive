@@ -5,10 +5,7 @@ import { CommonActions } from "../actions/CommonActions"
 const pathToRegexp = require("path-to-regexp")
 
 class Route {
-  constructor(
-    public readonly routeId: RouteId,
-    public readonly regExp: RegExp
-  ) {}
+  constructor(public readonly routeId: RouteId, public readonly regExp: RegExp) {}
 }
 const routes = ((): Array<Route> => {
   const rs: Array<Route> = []
@@ -27,9 +24,7 @@ export const registerStore = (store: Store) => {
   })
 }
 
-export const convertPathnameToRouteIdWithParams = (
-  pathname: string
-): RouteState => {
+export const convertPathnameToRouteIdWithParams = (pathname: string): RouteState => {
   let routeId: RouteId = "/not_found"
   let params: string[] = []
 

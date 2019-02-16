@@ -1,9 +1,6 @@
 import * as React from "react"
 import { UserProps } from "../../containers/routed/UserContainer"
-import {
-  ExtendedTargetUserState,
-  UserNormalPlanet
-} from "../../models/UserNormalPlanet"
+import { ExtendedTargetUserState, UserNormalPlanet } from "../../models/UserNormalPlanet"
 import { NormalPlanetsData } from "../../data/planets"
 import styled from "styled-components"
 
@@ -27,10 +24,7 @@ export class User extends React.Component<UserProps> {
 
   componentDidUpdate(prevProps: UserProps) {
     if (this.props.user.targetUser && !this.timerId) {
-      this.timerId = setInterval(
-        () => this.props.userActions.updateTargetUserOngoings(),
-        1000
-      )
+      this.timerId = setInterval(() => this.props.userActions.updateTargetUserOngoings(), 1000)
     }
 
     if (
@@ -64,8 +58,7 @@ export class User extends React.Component<UserProps> {
 
   getTargetUserData = (user: ExtendedTargetUserState) => {
     const isMine = !!(
-      this.props.common.currentUser &&
-      this.props.common.currentUser.address === user.address
+      this.props.common.currentUser && this.props.common.currentUser.address === user.address
     )
     const planets = user.userNormalPlanets.map(up => (
       <ListedUserPlanet
@@ -110,15 +103,7 @@ export class User extends React.Component<UserProps> {
 
 class Map extends React.Component<UserProps> {
   render = () => {
-    const hexes = [
-      [0, 0],
-      [0, -1],
-      [1, -1],
-      [1, 0],
-      [0, 1],
-      [-1, 1],
-      [-1, 0]
-    ].map(h => {
+    const hexes = [[0, 0], [0, -1], [1, -1], [1, 0], [0, 1], [-1, 1], [-1, 0]].map(h => {
       const q = h[0]
       const r = h[1]
       const userPlanet =
@@ -141,8 +126,7 @@ class Hex extends React.Component<{
 }> {
   render = () => {
     const x = 50 * ((3 / 2) * this.props.q)
-    const y =
-      50 * ((Math.sqrt(3) / 2) * this.props.q + Math.sqrt(3) * this.props.r)
+    const y = 50 * ((Math.sqrt(3) / 2) * this.props.q + Math.sqrt(3) * this.props.r)
     return (
       <this.Styled style={{ left: x, top: y }}>
         {this.props.userPlanet ? this.props.userPlanet.id : ""}
@@ -166,10 +150,7 @@ interface GetNewPlanetProps {
   getOngoingGold: () => number
   getPlanet: (planetId: number, q: number, r: number) => any
 }
-class GetNewPlanet extends React.Component<
-  GetNewPlanetProps,
-  { isButtonClicked: boolean }
-> {
+class GetNewPlanet extends React.Component<GetNewPlanetProps, { isButtonClicked: boolean }> {
   state = { isButtonClicked: false }
 
   render = () => {
@@ -190,9 +171,7 @@ class GetNewPlanet extends React.Component<
     return NormalPlanetsData.map(p => {
       let button
       if (gold === 0 || gold >= p.priceGold) {
-        button = (
-          <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
-        )
+        button = <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
       } else {
         button = <button disabled={true}>get!</button>
       }
@@ -252,9 +231,7 @@ class ListedUserPlanet extends React.Component<{
 
   rankupButtonHandler = () => {
     const gold = this.props.getOngoingGold()
-    if (
-      this.props.userPlanet.isRankupable(gold, Math.floor(Date.now() / 1000))
-    ) {
+    if (this.props.userPlanet.isRankupable(gold, Math.floor(Date.now() / 1000))) {
       alert("you can")
     } else {
       alert("you can't")

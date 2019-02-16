@@ -29,14 +29,8 @@ export class LoomWeb3 {
 }
 
 export const getLoomContracts = () => ({
-  Logic: new LoomWeb3.web3.eth.Contract(
-    Logic.abi,
-    Object.values(Logic.networks)[0]["address"]
-  ),
-  Web: new LoomWeb3.web3.eth.Contract(
-    Web.abi,
-    Object.values(Web.networks)[0]["address"]
-  )
+  Logic: new LoomWeb3.web3.eth.Contract(Logic.abi, Object.values(Logic.networks)[0]["address"]),
+  Web: new LoomWeb3.web3.eth.Contract(Web.abi, Object.values(Web.networks)[0]["address"])
 })
 
 const PRIVATE_KEY_NAME = "privateKey"
@@ -52,10 +46,7 @@ class LoomKeyStorage {
   }
 
   static writePrivateKey(privateKey) {
-    localStorage.setItem(
-      PRIVATE_KEY_NAME,
-      Buffer.from(privateKey).toString("hex")
-    )
+    localStorage.setItem(PRIVATE_KEY_NAME, Buffer.from(privateKey).toString("hex"))
   }
 }
 
