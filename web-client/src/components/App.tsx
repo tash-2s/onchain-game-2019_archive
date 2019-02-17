@@ -1,6 +1,6 @@
 import * as React from "react"
 import { AppProps } from "../containers/AppContainer"
-import { Template } from "./app/Template"
+import { Template } from "./App/Template"
 import { UserContainer } from "../containers/routed/UserContainer"
 import { UsersContainer } from "../containers/routed/UsersContainer"
 

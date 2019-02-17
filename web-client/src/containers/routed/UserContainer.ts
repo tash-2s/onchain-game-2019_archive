@@ -37,7 +37,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   }
 }
 
-export type UserProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+export type UserDispatchProps = ReturnType<typeof mapDispatchToProps>
+export type UserProps = ReturnType<typeof mapStateToProps> & UserDispatchProps
 
 export const UserContainer = connect(
   mapStateToProps,
