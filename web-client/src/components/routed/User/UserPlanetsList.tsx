@@ -1,19 +1,19 @@
 import * as React from "react"
 
-import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
+import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
-export class UserPlanetsList extends React.Component<{
-  userPlanets: Array<UserNormalPlanet>
+export class UserPlanetsList extends OngoingGoldTimerComponent<{
+  user: ExtendedTargetUserState
   isMine: boolean
-  getOngoingGold: () => number
 }> {
   render = () => {
-    return this.props.userPlanets.map(up => (
+    return this.props.user.userNormalPlanets.map(up => (
       <UserPlanet
         key={up.id}
         userPlanet={up}
         isMine={this.props.isMine}
-        getOngoingGold={this.props.getOngoingGold}
+        ongoingGold={this.state.ongoingGold}
       />
     ))
   }
@@ -22,7 +22,7 @@ export class UserPlanetsList extends React.Component<{
 class UserPlanet extends React.Component<{
   userPlanet: UserNormalPlanet
   isMine: boolean
-  getOngoingGold: () => number
+  ongoingGold: number
 }> {
   render = () => {
     const up = this.props.userPlanet
@@ -39,29 +39,21 @@ class UserPlanet extends React.Component<{
         <br />
         rankup available: {up.rankupAvailableDateString()}
         <br />
-        {this.rankupButtonIfMine()}
+        {this.props.isMine ? this.rankupButton() : <></>}
       </div>
     )
   }
 
-  rankupButtonIfMine = () => {
-    if (this.props.isMine) {
-      return (
-        <button onClick={this.rankupButtonHandler}>
-          rankup ({this.props.userPlanet.requiredGoldForRankup()} gold)
-        </button>
-      )
-    } else {
-      return ""
-    }
-  }
+  rankupButton = () => {
+    const isRankupable = this.props.userPlanet.isRankupable(
+      this.props.ongoingGold,
+      Math.floor(Date.now() / 1000)
+    )
 
-  rankupButtonHandler = () => {
-    const gold = this.props.getOngoingGold()
-    if (this.props.userPlanet.isRankupable(gold, Math.floor(Date.now() / 1000))) {
-      alert("you can")
-    } else {
-      alert("you can't")
-    }
+    return (
+      <button disabled={!isRankupable}>
+        rankup ({this.props.userPlanet.requiredGoldForRankup()} gold)
+      </button>
+    )
   }
 }

@@ -4,10 +4,10 @@ import styled from "styled-components"
 import { CommonState } from "../../../types/commonTypes"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
-import { NormalPlanetsData } from "../../../data/planets"
 
-import { OngoingUserStatus } from "./OngoingUserStatus"
+import { UserProfile } from "./UserProfile"
 import { UserPlanetsList } from "./UserPlanetsList"
+import { PlanetsList } from "./PlanetsList"
 
 // targetUser is not null
 type TargetUserProps = {
@@ -16,50 +16,24 @@ type TargetUserProps = {
 } & UserDispatchProps
 
 export class TargetUser extends React.Component<TargetUserProps> {
-  getOngoingGold = (): number => 777 // TODO: impl
-
   render = () => {
     const user = this.props.user.targetUser
-    const isMine = this.isMine(user.address)
+    const isMine = this.isMine()
+    const getPlanet = this.props.userActions.getPlanet
 
-    const getPlanet = isMine ? (
-      <GetNewPlanet
-        getOngoingGold={this.getOngoingGold}
-        getPlanet={this.props.userActions.getPlanet}
-      />
-    ) : (
-      <></>
-    )
     return (
       <div>
-        <p>
-          target user is {user.address} {isMine ? "[this is me]" : ""}
-        </p>
-        <OngoingUserStatus gold={user.gold} userNormalPlanets={user.userNormalPlanets} />
-        <div>
-          population: {user.population}
-          <br />
-          gold power: {user.goldPower}
-          <br />
-          gold per sec: {user.goldPerSec}
-        </div>
-        {getPlanet}
-        <br />
-        <br />
-        <UserPlanetsList
-          userPlanets={user.userNormalPlanets}
-          isMine={isMine}
-          getOngoingGold={this.getOngoingGold}
-        />
-        <hr />
+        <UserProfile user={user} isMine={isMine} />
+        <UserPlanetsList user={user} isMine={isMine} />
         <Map {...this.props} />
+        {isMine ? <PlanetsList user={user} getPlanet={getPlanet} /> : <></>}
       </div>
     )
   }
 
-  isMine = (address: string): boolean => {
+  isMine = (): boolean => {
     if (this.props.common.currentUser) {
-      return this.props.common.currentUser.address === address
+      return this.props.common.currentUser.address === this.props.user.targetUser.address
     } else {
       return false
     }
@@ -109,50 +83,4 @@ class Hex extends React.Component<{
     align-items: center;
     position: absolute;
   `
-}
-
-interface GetNewPlanetProps {
-  getOngoingGold: () => number
-  getPlanet: (planetId: number, q: number, r: number) => any
-}
-class GetNewPlanet extends React.Component<GetNewPlanetProps, { isButtonClicked: boolean }> {
-  state = { isButtonClicked: false }
-
-  render = () => {
-    if (this.state.isButtonClicked) {
-      return this.planetsList()
-    } else {
-      return <button onClick={this.showPlanetsButtonHandler}>get planet</button>
-    }
-  }
-
-  showPlanetsButtonHandler = () => {
-    this.setState({ isButtonClicked: true })
-  }
-
-  planetsList = () => {
-    const gold = this.props.getOngoingGold()
-
-    return NormalPlanetsData.map(p => {
-      let button
-      if (gold === 0 || gold >= p.priceGold) {
-        button = <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
-      } else {
-        button = <button disabled={true}>get!</button>
-      }
-      return (
-        <div key={p.id}>
-          id: {p.id}, kind: {p.kind}, price: {p.priceGold} gold
-          {button}
-        </div>
-      )
-    })
-  }
-
-  getPlanetButtonHandler = (planetId: number) => {
-    return () => {
-      this.props.getPlanet(planetId, 0, 0) // TODO: coordinate
-      this.setState({ isButtonClicked: false })
-    }
-  }
 }
