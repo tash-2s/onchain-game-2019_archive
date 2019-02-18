@@ -98,4 +98,27 @@ contract UserNormalPlanet is MinterRole {
       }
     }
   }
+
+  function rankup(address account, uint16 userNormalPlanetId) public onlyMinter {
+    UserPlanet[] storage ups = _userPlanets[account];
+
+    for (uint16 i = 0; i < ups.length; i++) {
+      UserPlanet storage up = ups[i];
+      if (up.id == userNormalPlanetId) {
+        uint8 newRank = up.rank + 1;
+        require(newRank <= 30, "max rank");
+        _userPlanets[account][i] = UserPlanet(
+          up.id,
+          up.normalPlanetId,
+          up.kind,
+          up.originalParam,
+          newRank,
+          Util.uint40now(),
+          up.createdAt,
+          up.axialCoordinateQ,
+          up.axialCoordinateR
+        );
+      }
+    }
+  }
 }

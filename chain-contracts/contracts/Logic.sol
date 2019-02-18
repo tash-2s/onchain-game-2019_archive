@@ -60,4 +60,9 @@ contract Logic {
       gold.mint(account, uint200(diffGold));
     }
   }
+
+  function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
+    confirm(msg.sender);
+    userNormalPlanet.rankup(msg.sender, userNormalPlanetId);
+  }
 }
