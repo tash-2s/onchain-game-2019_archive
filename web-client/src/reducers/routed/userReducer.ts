@@ -4,7 +4,6 @@ import { UserState } from "../../types/routed/userTypes"
 import {
   buildTargetUser,
   restructureUserFromResponse,
-  calculateOngoingGold,
   mergeNewPlanet
 } from "./userReducer/functions"
 
@@ -18,22 +17,6 @@ export const createUserReducer = () =>
       ...state,
       targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))
     }))
-    .case(UserActions.updateTargetUserOngoings, state => {
-      if (!state.targetUser) {
-        return state
-      }
-
-      return {
-        ...state,
-        targetUser: {
-          ...state.targetUser,
-          gold: {
-            ...state.targetUser.gold,
-            ongoing: calculateOngoingGold(state.targetUser.gold, state.targetUser.userNormalPlanets)
-          }
-        }
-      }
-    })
     .case(UserActions.clearTargetUser, state => ({
       ...state,
       targetUser: null

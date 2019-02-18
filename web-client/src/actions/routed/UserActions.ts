@@ -27,11 +27,6 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
-  static updateTargetUserOngoings = UserActions.creator("updateTargetUserOngoings")
-  updateTargetUserOngoings = () => {
-    this.dispatch(UserActions.updateTargetUserOngoings())
-  }
-
   static clearTargetUser = UserActions.creator("clearTargetUser")
   clearTargetUser = () => {
     this.dispatch(UserActions.clearTargetUser())

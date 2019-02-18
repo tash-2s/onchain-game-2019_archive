@@ -8,6 +8,7 @@ export class User extends React.Component<UserProps> {
       this.props.user.targetUser &&
       this.props.user.targetUser.address === this.props.common.route.params[0]
     ) {
+      // targetUser is not null
       const props = {
         ...this.props,
         user: { ...this.props.user, targetUser: this.props.user.targetUser }

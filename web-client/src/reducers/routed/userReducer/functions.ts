@@ -63,10 +63,7 @@ export const buildTargetUser = (address: string, user: _User): TargetUserState =
 
   return {
     address: address,
-    gold: {
-      ...user.gold,
-      ongoing: calculateOngoingGold(user.gold, userPlanets)
-    },
+    gold: user.gold,
     userNormalPlanets: userPlanets,
     population: population,
     goldPower: goldPower,
@@ -116,31 +113,6 @@ const processUserNormalPlanets = (
   })
 
   return [userResidencePlanets, userGoldveinPlanets]
-}
-
-export const calculateOngoingGold = (
-  gold: { confirmed: number; confirmedAt: number },
-  userNormalPlanets: TargetUserState["userNormalPlanets"]
-): number => {
-  const goldPerSec = (ups => {
-    let totalResidenceParam = 0
-    let totalGoldveinParam = 0
-    ups.forEach(up => {
-      switch (up.planetKindMirror) {
-        case "residence":
-          totalResidenceParam += up.paramMemo
-          break
-        case "goldvein":
-          totalGoldveinParam += up.paramMemo
-          break
-      }
-    })
-    return totalResidenceParam * totalGoldveinParam
-  })(userNormalPlanets)
-
-  const diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
-
-  return gold.confirmed + goldPerSec * diffSec
 }
 
 export const mergeNewPlanet = (

@@ -6,7 +6,7 @@ export interface UserState {
 
 export interface TargetUserState {
   address: string
-  gold: { confirmed: number; confirmedAt: number; ongoing: number }
+  gold: { confirmed: number; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanetType>
   population: number
   goldPower: number

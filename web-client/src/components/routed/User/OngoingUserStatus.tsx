@@ -1,8 +1,10 @@
 import * as React from "react"
-import { TargetUserState } from "../../../types/routed/userTypes"
+
+import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { OngoingGoldCalculator } from "../../../models/OngoingGoldCalculator"
 
 export class OngoingUserStatus extends React.Component<
-  Pick<TargetUserState, "gold" | "userNormalPlanets">,
+  Pick<ExtendedTargetUserState, "gold" | "userNormalPlanets">,
   { ongoingGold: number }
 > {
   state = { ongoingGold: 0 }
@@ -24,9 +26,9 @@ export class OngoingUserStatus extends React.Component<
     }
   }
 
-  // TODO: impl
   updateOngoings = () => {
-    const ongoing = 0
-    this.setState({ ongoingGold: ongoing })
+    this.setState({
+      ongoingGold: OngoingGoldCalculator.calculate(this.props.gold, this.props.userNormalPlanets)
+    })
   }
 }

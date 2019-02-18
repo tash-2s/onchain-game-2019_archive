@@ -9,10 +9,12 @@ import { NormalPlanetsData } from "../../../data/planets"
 import { OngoingUserStatus } from "./OngoingUserStatus"
 import { UserPlanetsList } from "./UserPlanetsList"
 
+// targetUser is not null
 type TargetUserProps = {
   common: CommonState
   user: { targetUser: ExtendedTargetUserState }
 } & UserDispatchProps
+
 export class TargetUser extends React.Component<TargetUserProps> {
   getOngoingGold = (): number => 777 // TODO: impl
 
