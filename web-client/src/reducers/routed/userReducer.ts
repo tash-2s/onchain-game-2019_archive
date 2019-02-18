@@ -34,4 +34,8 @@ export const createUserReducer = () =>
         )
       }
     })
+    .case(UserActions.rankupUserNormalPlanet, (state, result) => ({
+      ...state,
+      targetUser: buildTargetUser(result.address, restructureUserFromResponse(result.response))
+    }))
     .build()

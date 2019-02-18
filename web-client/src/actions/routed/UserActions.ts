@@ -1,5 +1,10 @@
 import { AbstractActions } from "../AbstractActions"
-import { callLoomContractMethod, sendLoomContractMethod, TxCallGenericsType } from "../../misc/loom"
+import {
+  callLoomContractMethod,
+  sendLoomContractMethod,
+  TxCallGenericsType,
+  LoomWeb3
+} from "../../misc/loom"
 
 export type GetUserResponse = TxCallGenericsType<
   ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
@@ -53,5 +58,19 @@ export class UserActions extends AbstractActions {
         confirmedGold
       })
     )
+  }
+
+  static rankupUserNormalPlanet = UserActions.creator<{
+    address: string
+    response: GetUserResponse
+  }>("rankupUserNormalPlanet")
+  rankupUserNormalPlanet = async (userPlanetId: number) => {
+    this.overallLoading()
+
+    const address = LoomWeb3.accountAddress
+
+    await sendLoomContractMethod(cs => cs.Logic.methods.rankupUserNormalPlanet(userPlanetId))
+    const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
+    this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
   }
 }

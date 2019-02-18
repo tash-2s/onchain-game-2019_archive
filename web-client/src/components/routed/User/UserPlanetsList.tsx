@@ -6,6 +6,7 @@ import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 export class UserPlanetsList extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
   isMine: boolean
+  rankup: (userPlanetId: number) => void
 }> {
   render = () => {
     return this.props.user.userNormalPlanets.map(up => (
@@ -14,6 +15,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<{
         userPlanet={up}
         isMine={this.props.isMine}
         ongoingGold={this.state.ongoingGold}
+        rankup={this.props.rankup}
       />
     ))
   }
@@ -23,6 +25,7 @@ class UserPlanet extends React.Component<{
   userPlanet: UserNormalPlanet
   isMine: boolean
   ongoingGold: number
+  rankup: (userPlanetId: number) => void
 }> {
   render = () => {
     const up = this.props.userPlanet
@@ -45,15 +48,20 @@ class UserPlanet extends React.Component<{
   }
 
   rankupButton = () => {
+    const rankupButtonText = `rankup (${this.props.userPlanet.requiredGoldForRankup()} gold)`
     const isRankupable = this.props.userPlanet.isRankupable(
       this.props.ongoingGold,
       Math.floor(Date.now() / 1000)
     )
 
-    return (
-      <button disabled={!isRankupable}>
-        rankup ({this.props.userPlanet.requiredGoldForRankup()} gold)
-      </button>
-    )
+    if (isRankupable) {
+      return <button onClick={this.rankupButtonHandler}>{rankupButtonText}</button>
+    } else {
+      return <button disabled={true}>{rankupButtonText}</button>
+    }
+  }
+
+  rankupButtonHandler = () => {
+    this.props.rankup(this.props.userPlanet.id)
   }
 }

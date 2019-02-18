@@ -14,4 +14,8 @@ export class AbstractActions {
   protected handleError = (error: Error) => {
     new CommonActions(this.dispatch).throwError(error)
   }
+
+  protected overallLoading = () => {
+    new CommonActions(this.dispatch).overallLoading()
+  }
 }

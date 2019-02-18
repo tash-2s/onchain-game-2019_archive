@@ -25,4 +25,9 @@ export class CommonActions extends AbstractActions {
     const address = LoomWeb3.resetWithNewAccount()
     this.dispatch(CommonActions.signup(address))
   }
+
+  static overallLoading = CommonActions.creator("overallLoading")
+  overallLoading = () => {
+    this.dispatch(CommonActions.overallLoading())
+  }
 }

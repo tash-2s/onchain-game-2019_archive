@@ -1,6 +1,7 @@
 export interface CommonState {
   route: RouteState
   currentUser: { address: string } | null
+  isLoading: boolean
   isError: boolean
 }
 

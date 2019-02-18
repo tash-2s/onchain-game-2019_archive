@@ -3,6 +3,7 @@ import { InternalLink } from "../utils/InternalLink"
 import { CommonState } from "../../types/commonTypes"
 
 export class Template extends React.Component<{
+  isLoading: boolean
   isError: boolean
   throwError: (e: Error, b: boolean, info?: any) => void
   currentUser: CommonState["currentUser"]
@@ -17,6 +18,7 @@ export class Template extends React.Component<{
   render = () => {
     return (
       <div>
+        {this.props.isLoading ? <div style={{ color: "red" }}>LOADING</div> : <></>}
         {this.getNav()}
         {this.getErrorOrChildren()}
       </div>

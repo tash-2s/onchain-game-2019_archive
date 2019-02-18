@@ -18,6 +18,7 @@ const getCurrentUser = (): CommonState["currentUser"] => {
 const createInitialState: () => CommonState = () => ({
   route: getInitialRoute(),
   currentUser: getCurrentUser(),
+  isLoading: false,
   isError: false
 })
 
@@ -28,6 +29,9 @@ export const createCommonReducer = () =>
     })
     .case(CommonActions.throwError, (state, error) => {
       return { ...state, isError: true }
+    })
+    .case(CommonActions.overallLoading, state => {
+      return { ...state, isLoading: true }
     })
     .case(CommonActions.signup, (state, payload) => ({
       ...state,
