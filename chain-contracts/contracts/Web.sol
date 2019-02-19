@@ -27,10 +27,6 @@ contract Web {
   {
     (confirmedGold, goldConfirmedAt) = gold.userGold(account);
 
-    //uint40[] memory userPlanets = new uint40[](
-    //  userNormalPlanet.balanceOf(account)
-    //);
-    //userPlanets = userNormalPlanet.userPlanets(account);
     uint40[] memory userPlanets = userNormalPlanet.userPlanets(account);
     uint userPlanetsCount = UserNormalPlanetArrayReader.userPlanetsCount(userPlanets);
 

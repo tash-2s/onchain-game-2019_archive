@@ -61,6 +61,7 @@ contract Logic {
     }
   }
 
+  // TODO: rankup fee/cooldown check
   function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
     confirm(msg.sender);
     userNormalPlanet.rankup(msg.sender, userNormalPlanetId);
