@@ -12,7 +12,7 @@ module.exports = function(deployer, network) {
 
     const normalPlanet = await deployer.deploy(NormalPlanet)
     const userNormalPlanet = await deployer.deploy(UserNormalPlanet, normalPlanet.address)
-    await normalPlanet.create(1, 1, 1, 5)
-    await normalPlanet.create(2, 2, 1, 5)
+    await normalPlanet.create(1, 1, 10, 5)
+    await normalPlanet.create(2, 2, 10, 5)
   })
 }
