@@ -1,11 +1,7 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { UserActions } from "../../actions/routed/UserActions"
 import { UserState } from "../../types/routed/userTypes"
-import {
-  buildTargetUser,
-  restructureUserFromResponse,
-  mergeNewPlanet
-} from "./userReducer/functions"
+import { buildTargetUser, restructureUserFromResponse } from "./userReducer/functions"
 
 const initialState: UserState = {
   targetUser: null
@@ -21,21 +17,12 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, (state, payload) => {
-      if (!state.targetUser) {
-        return state
-      }
-
-      return {
-        ...state,
-        targetUser: buildTargetUser(
-          state.targetUser.address,
-          mergeNewPlanet(state.targetUser.userNormalPlanets, payload)
-        )
-      }
-    })
-    .case(UserActions.rankupUserNormalPlanet, (state, result) => ({
+    .case(UserActions.getPlanet, (state, payload) => ({
       ...state,
-      targetUser: buildTargetUser(result.address, restructureUserFromResponse(result.response))
+      targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))
+    }))
+    .case(UserActions.rankupUserNormalPlanet, (state, payload) => ({
+      ...state,
+      targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))
     }))
     .build()

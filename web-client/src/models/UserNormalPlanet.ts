@@ -19,7 +19,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   rankupAvailableDateString = (): string => {
-    const unixtime = (this.rankupedAt || this.createdAt) + this.requiredSecForRankup()
+    const unixtime = this.rankupedAt + this.requiredSecForRankup()
     const date = new Date(unixtime * 1000)
     const dateStringOption = {
       year: "numeric",

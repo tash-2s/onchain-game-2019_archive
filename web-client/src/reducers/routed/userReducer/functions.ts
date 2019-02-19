@@ -1,4 +1,4 @@
-import { GetUserResponse, GetPlanetArgs } from "../../../actions/routed/UserActions"
+import { GetUserResponse } from "../../../actions/routed/UserActions"
 import { TargetUserState } from "../../../types/routed/userTypes"
 import { NormalPlanetsData } from "../../../data/planets"
 
@@ -113,27 +113,4 @@ const processUserNormalPlanets = (
   })
 
   return [userResidencePlanets, userGoldveinPlanets]
-}
-
-export const mergeNewPlanet = (
-  ups: TargetUserState["userNormalPlanets"],
-  args: GetPlanetArgs
-): _User => {
-  const newUps = ups
-    .map(up => up as _User["userNormalPlanets"][number])
-    .concat([
-      {
-        id: args.userPlanetId,
-        normalPlanetId: args.planetId,
-        rank: 1,
-        createdAt: args.createdAt,
-        rankupedAt: args.createdAt,
-        axialCoordinates: [args.axialCoordinateQ, args.axialCoordinateR]
-      }
-    ])
-
-  return {
-    gold: { confirmed: args.confirmedGold, confirmedAt: args.createdAt },
-    userNormalPlanets: newUps
-  }
 }

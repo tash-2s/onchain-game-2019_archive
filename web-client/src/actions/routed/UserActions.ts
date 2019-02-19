@@ -10,25 +10,17 @@ export type GetUserResponse = TxCallGenericsType<
   ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
 >
 
-export interface GetPlanetArgs {
-  planetId: number
-  axialCoordinateQ: number
-  axialCoordinateR: number
-  userPlanetId: number
-  createdAt: number
-  confirmedGold: number
+interface GetUser {
+  address: string
+  response: GetUserResponse
 }
 
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static setTargetUser = UserActions.creator<{
-    address: string
-    response: GetUserResponse
-  }>("setTargetUser")
+  static setTargetUser = UserActions.creator<GetUser>("setTargetUser")
   setTargetUser = async (address: string) => {
     const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
-
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
@@ -37,33 +29,26 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  static getPlanet = UserActions.creator<GetPlanetArgs>("getPlanet")
+  static getPlanet = UserActions.creator<GetUser>("getPlanet")
   getPlanet = async (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
-    const receipt = await sendLoomContractMethod(cs =>
-      cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
-    ).then(receipt => receipt)
+    this.overallLoading()
 
-    // TODO: fix
-    const userPlanetId = 123
-    const createdAt = 123
-    const confirmedGold = 123
+    await sendLoomContractMethod(cs =>
+      cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+    )
+
+    const address = LoomWeb3.accountAddress
+    const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
 
     this.dispatch(
       UserActions.getPlanet({
-        planetId,
-        axialCoordinateQ,
-        axialCoordinateR,
-        userPlanetId,
-        createdAt,
-        confirmedGold
+        address,
+        response
       })
     )
   }
 
-  static rankupUserNormalPlanet = UserActions.creator<{
-    address: string
-    response: GetUserResponse
-  }>("rankupUserNormalPlanet")
+  static rankupUserNormalPlanet = UserActions.creator<GetUser>("rankupUserNormalPlanet")
   rankupUserNormalPlanet = async (userPlanetId: number) => {
     this.overallLoading()
 
