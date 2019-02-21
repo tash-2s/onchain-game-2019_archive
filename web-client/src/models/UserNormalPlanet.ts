@@ -5,7 +5,6 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     return (
       !this.isMaxRank() &&
       this.remainingSecForRankup(date) <= 0 &&
-      !this.isPending &&
       this.requiredGoldForRankup() <= gold
     )
   }

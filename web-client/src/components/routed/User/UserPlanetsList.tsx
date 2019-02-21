@@ -38,8 +38,6 @@ class UserPlanet extends React.Component<{
         <br />
         param: {up.paramMemo}
         <br />
-        pending?: {up.isPending ? "yes" : "no"}
-        <br />
         rankup available: {up.rankupAvailableDateString()}
         <br />
         {this.props.isMine ? this.rankupButton() : <></>}

@@ -5,31 +5,84 @@ import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserN
 
 export class UserPlanetsMap extends React.Component<{ user: ExtendedTargetUserState }> {
   render = () => {
-    const hexes = [[0, 0], [0, -1], [1, -1], [1, 0], [0, 1], [-1, 1], [-1, 0]].map(h => {
+    const o: { [key: string]: ExtendedTargetUserState["userNormalPlanets"][number] | null } = {}
+    let biggestRadius = 0
+    this.props.user.userNormalPlanets.forEach(up => {
+      o[`${up.axialCoordinateQ}/${up.axialCoordinateR}`] = up
+
+      if (biggestRadius < Math.abs(up.axialCoordinateQ)) {
+        biggestRadius = Math.abs(up.axialCoordinateQ)
+      }
+      if (biggestRadius < Math.abs(up.axialCoordinateR)) {
+        biggestRadius = Math.abs(up.axialCoordinateR)
+      }
+    })
+    const usableRadius = (gold => {
+      if (gold < 1) {
+        return 1
+      }
+      let digit = 0
+      let g = gold
+      while (g !== 0) {
+        g = Math.floor(g / 10)
+        digit++
+      }
+      return digit
+    })(this.props.user.gold.confirmed)
+    const shownRadius = Math.max(biggestRadius, usableRadius)
+
+    const hexes = mapHexesFromRadius(shownRadius).map(h => {
       const q = h[0]
       const r = h[1]
-      const userPlanet =
-        this.props.user.userNormalPlanets.find(
-          up => up.axialCoordinates[0] === q && up.axialCoordinates[1] === r
-        ) || null
-      return <Hex key={`${q}-${r}`} q={q} r={r} userPlanet={userPlanet} />
+      const userPlanet = o[`${q}/${r}`]
+      return (
+        <Hex
+          key={`${q}/${r}`}
+          q={q}
+          r={r}
+          userPlanet={userPlanet}
+          shiftTop={shownRadius * 86.6}
+          shiftLeft={shownRadius * 75}
+        />
+      )
     })
 
-    // TODO: set hight
-    return <div style={{ position: "relative", margin: 200 }}>{hexes}</div>
+    const height = (shownRadius * 2 + 1) * 86.6
+    return <div style={{ position: "relative", height: height }}>{hexes}</div>
   }
+}
+
+const mapHexesFromRadius = (radius: number) => {
+  const arr: Array<Array<number>> = []
+  range(-radius, radius).forEach(q => {
+    range(Math.max(-radius, -q - radius), Math.min(radius, -q + radius)).forEach(r => {
+      arr.push([q, r])
+    })
+  })
+
+  return arr
+}
+
+const range = (from: number, to: number) => {
+  const arr: Array<number> = []
+  for (let i = from; i <= to; i++) {
+    arr.push(i)
+  }
+  return arr
 }
 
 class Hex extends React.Component<{
   q: number
   r: number
   userPlanet: UserNormalPlanet | null
+  shiftTop: number
+  shiftLeft: number
 }> {
   render = () => {
     const x = 50 * ((3 / 2) * this.props.q)
     const y = 50 * ((Math.sqrt(3) / 2) * this.props.q + Math.sqrt(3) * this.props.r)
     return (
-      <this.Styled style={{ left: x, top: y }}>
+      <this.Styled style={{ left: x + this.props.shiftLeft, top: y + this.props.shiftTop }}>
         {this.props.userPlanet ? this.props.userPlanet.id : ""}
       </this.Styled>
     )

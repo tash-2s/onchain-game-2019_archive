@@ -12,7 +12,8 @@ interface _User {
     rank: number
     rankupedAt: number
     createdAt: number
-    axialCoordinates: [number, number]
+    axialCoordinateQ: number
+    axialCoordinateR: number
   }>
 }
 
@@ -35,10 +36,8 @@ export const restructureUserFromResponse = (response: GetUserResponse): _User =>
       rank: strToNum(unpRanks[i]),
       rankupedAt: strToNum(unpTimes[counter]),
       createdAt: strToNum(unpTimes[counter + 1]),
-      axialCoordinates: [
-        strToNum(unpAxialCoordinates[counter]),
-        strToNum(unpAxialCoordinates[counter + 1])
-      ]
+      axialCoordinateQ: strToNum(unpAxialCoordinates[counter]),
+      axialCoordinateR: strToNum(unpAxialCoordinates[counter + 1])
     })
 
     i += 1
@@ -95,7 +94,6 @@ const processUserNormalPlanets = (
 
     const newUp = {
       ...up,
-      isPending: false,
       rateMemo: rate,
       paramMemo: param,
       planetKindMirror: p.kind,
