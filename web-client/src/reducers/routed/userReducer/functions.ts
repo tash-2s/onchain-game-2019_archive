@@ -1,5 +1,5 @@
 import { GetUserResponse } from "../../../actions/routed/UserActions"
-import { TargetUserState } from "../../../types/routed/userTypes"
+import { UserState, TargetUserState } from "../../../types/routed/userTypes"
 import { NormalPlanetsData } from "../../../data/planets"
 
 const strToNum = (str: string): number => parseInt(str, 10)
@@ -52,7 +52,11 @@ export const restructureUserFromResponse = (response: GetUserResponse): _User =>
   }
 }
 
-export const buildTargetUser = (address: string, user: _User): TargetUserState => {
+export const buildTargetUser = (
+  address: string,
+  user: _User,
+  tab: TargetUserState["selectedUserPlanetsTab"]
+): TargetUserState => {
   const [userResidencePlanets, userGoldveinPlanets] = processUserNormalPlanets(
     user.userNormalPlanets
   )
@@ -68,7 +72,7 @@ export const buildTargetUser = (address: string, user: _User): TargetUserState =
     goldPower: goldPower,
     goldPerSec: population * goldPower,
     normalPlanetIdToGet: null,
-    selectedUserPlanetsTab: "map"
+    selectedUserPlanetsTab: tab
   }
 }
 
@@ -113,4 +117,14 @@ const processUserNormalPlanets = (
   })
 
   return [userResidencePlanets, userGoldveinPlanets]
+}
+
+export const currentTabFromState = (
+  state: UserState
+): TargetUserState["selectedUserPlanetsTab"] => {
+  if (!state.targetUser) {
+    return "map"
+  }
+
+  return state.targetUser.selectedUserPlanetsTab
 }
