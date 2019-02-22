@@ -43,32 +43,31 @@ export class UserActions extends AbstractActions {
   }
 
   static getPlanet = UserActions.creator<GetUser>("getPlanet")
-  getPlanet = async (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
-    this.overallLoading() // TODO: stop loading
+  getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
+    this.withLoading(async () => {
+      await sendLoomContractMethod(cs =>
+        cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+      )
 
-    await sendLoomContractMethod(cs =>
-      cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
-    )
+      const address = LoomWeb3.accountAddress
+      const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
 
-    const address = LoomWeb3.accountAddress
-    const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
-
-    this.dispatch(
-      UserActions.getPlanet({
-        address,
-        response
-      })
-    )
+      this.dispatch(
+        UserActions.getPlanet({
+          address,
+          response
+        })
+      )
+    })
   }
 
   static rankupUserNormalPlanet = UserActions.creator<GetUser>("rankupUserNormalPlanet")
-  rankupUserNormalPlanet = async (userPlanetId: number) => {
-    this.overallLoading()
-
-    const address = LoomWeb3.accountAddress
-
-    await sendLoomContractMethod(cs => cs.Logic.methods.rankupUserNormalPlanet(userPlanetId))
-    const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
-    this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
+  rankupUserNormalPlanet = (userPlanetId: number) => {
+    this.withLoading(async () => {
+      const address = LoomWeb3.accountAddress
+      await sendLoomContractMethod(cs => cs.Logic.methods.rankupUserNormalPlanet(userPlanetId))
+      const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
+      this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
+    })
   }
 }

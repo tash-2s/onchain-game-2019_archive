@@ -26,8 +26,13 @@ export class CommonActions extends AbstractActions {
     this.dispatch(CommonActions.signup(address))
   }
 
-  static overallLoading = CommonActions.creator("overallLoading")
-  overallLoading = () => {
-    this.dispatch(CommonActions.overallLoading())
+  static startLoading = CommonActions.creator("startLoading")
+  startLoading = () => {
+    this.dispatch(CommonActions.startLoading())
+  }
+
+  static stopLoading = CommonActions.creator("stopLoading")
+  stopLoading = () => {
+    this.dispatch(CommonActions.stopLoading())
   }
 }

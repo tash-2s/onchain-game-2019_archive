@@ -15,7 +15,9 @@ export class AbstractActions {
     new CommonActions(this.dispatch).throwError(error)
   }
 
-  protected overallLoading = () => {
-    new CommonActions(this.dispatch).overallLoading()
+  protected withLoading = async (fn: () => void) => {
+    new CommonActions(this.dispatch).startLoading()
+    await fn()
+    new CommonActions(this.dispatch).stopLoading()
   }
 }
