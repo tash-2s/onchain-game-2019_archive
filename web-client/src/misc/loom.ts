@@ -4,12 +4,20 @@ export * from "./_loom.js"
 type TxCall<T> = import("web3x-es/contract").TxCall<T>
 type TxSend<T> = import("web3x-es/contract").TxSend<T>
 
-export const callLoomContractMethod = <T>(
+export const callLoomContractMethod = async <T>(
   f: (cs: ReturnType<typeof getLoomContracts>) => TxCall<T>
-) => f(getLoomContracts()).call({ from: LoomWeb3.accountAddress })
+) => {
+  const r = await f(getLoomContracts()).call({ from: LoomWeb3.accountAddress })
+  console.log(r)
+  return r
+}
 
-export const sendLoomContractMethod = <T>(
+export const sendLoomContractMethod = async <T>(
   f: (cs: ReturnType<typeof getLoomContracts>) => TxSend<T>
-) => f(getLoomContracts()).send({ from: LoomWeb3.accountAddress })
+) => {
+  const r = await f(getLoomContracts()).send({ from: LoomWeb3.accountAddress })
+  console.log(r)
+  return r
+}
 
 export type TxCallGenericsType<T> = T extends TxCall<infer R> ? R : any
