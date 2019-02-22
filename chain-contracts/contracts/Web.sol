@@ -22,18 +22,18 @@ contract Web {
     uint16[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
     uint40[] unpTimes, // [rankupedAt, createdAt, ...]
-    uint16[] unpAxialCoordinates // [q, r, ...]
+    int16[] unpAxialCoordinates // [q, r, ...]
   )
   {
     (confirmedGold, goldConfirmedAt) = gold.userGold(account);
 
-    uint40[] memory userPlanets = userNormalPlanet.userPlanets(account);
+    int48[] memory userPlanets = userNormalPlanet.userPlanets(account);
     uint userPlanetsCount = UserNormalPlanetArrayReader.userPlanetsCount(userPlanets);
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
     unpTimes = new uint40[](userPlanetsCount * 2);
-    unpAxialCoordinates = new uint16[](userPlanetsCount * 2);
+    unpAxialCoordinates = new int16[](userPlanetsCount * 2);
     uint counter = 0;
 
     for (uint i = 0; i < userPlanetsCount; i++) {

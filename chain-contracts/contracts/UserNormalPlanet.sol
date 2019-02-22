@@ -24,17 +24,17 @@ contract UserNormalPlanet is MinterRole {
     uint8 rank;
     uint40 rankupedAt;
     uint40 createdAt;
-    uint16 axialCoordinateQ;
-    uint16 axialCoordinateR;
+    int16 axialCoordinateQ;
+    int16 axialCoordinateR;
   }
 
   function balanceOf(address account) public view returns (uint256) {
     return (_userPlanets[account].length);
   }
 
-  function userPlanets(address account) public view returns (uint40[]) {
+  function userPlanets(address account) public view returns (int48[]) {
     UserPlanet[] storage ups = _userPlanets[account];
-    uint40[] memory arrUps = new uint40[](ups.length * UserNormalPlanetArrayReader.userPlanetFieldCount());
+    int48[] memory arrUps = new int48[](ups.length * UserNormalPlanetArrayReader.userPlanetFieldCount());
     uint c = 0;
 
     for (uint16 i = 0; i < ups.length; i++) {
@@ -54,7 +54,7 @@ contract UserNormalPlanet is MinterRole {
     return (arrUps);
   }
 
-  function mint(address account, uint16 normalPlanetId, uint16 axialCoordinateQ, uint16 axialCoordinateR)
+  function mint(address account, uint16 normalPlanetId, int16 axialCoordinateQ, int16 axialCoordinateR)
     public
     onlyMinter
   {

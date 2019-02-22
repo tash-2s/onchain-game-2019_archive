@@ -23,7 +23,7 @@ contract Logic {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
   }
 
-  function setPlanet(uint16 planetId, uint16 axialCoordinateQ, uint16 axialCoordinateR) public {
+  function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
     (, , uint200 planetPrice) = normalPlanet.planet(planetId);
 
     // this is not precise
@@ -40,7 +40,7 @@ contract Logic {
   function confirm(address account) private {
     uint totalResidenceParam = 0;
     uint totalGoldveinParam = 0;
-    uint40[] memory userPlanets = userNormalPlanet.userPlanets(account);
+    int48[] memory userPlanets = userNormalPlanet.userPlanets(account);
     for (uint i = 0; i < UserNormalPlanetArrayReader.userPlanetsCount(userPlanets); i++) {
       if (UserNormalPlanetArrayReader.kind(userPlanets, i) == 1) {
         totalResidenceParam += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);

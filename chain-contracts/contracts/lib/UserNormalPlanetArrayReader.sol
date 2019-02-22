@@ -46,55 +46,55 @@ library UserNormalPlanetArrayReader {
     return USER_PLANET_AXIAL_COORDINATE_R_INDEX;
   }
 
-  function id(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
+  function id(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
     return uint16(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_ID_INDEX]);
   }
 
-  function normalPlanetId(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
+  function normalPlanetId(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
     return uint16(
       userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_NORMAL_PLANET_ID_INDEX]
     );
   }
 
-  function originalParam(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
+  function originalParam(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
     return uint16(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_ORIGINAL_PARAM_INDEX]);
   }
 
-  function kind(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint8) {
+  function kind(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint8) {
     return uint8(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_KIND_INDEX]);
   }
 
-  function rank(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint8) {
+  function rank(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint8) {
     return uint8(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_RANK_INDEX]);
   }
 
-  function rankupedAt(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint40) {
+  function rankupedAt(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint40) {
     return uint40(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_RANKUPED_AT_INDEX]);
   }
 
-  function createdAt(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint40) {
+  function createdAt(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint40) {
     return uint40(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_CREATED_AT_INDEX]);
   }
 
-  function axialCoordinateQ(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
-    return uint16(
+  function axialCoordinateQ(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (int16) {
+    return int16(
       userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_AXIAL_COORDINATE_Q_INDEX]
     );
   }
 
-  function axialCoordinateR(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
-    return uint16(
+  function axialCoordinateR(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (int16) {
+    return int16(
       userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_AXIAL_COORDINATE_R_INDEX]
     );
   }
 
-  function ratedParam(uint40[] userPlanets, uint256 userPlanetIndex) public pure returns (uint) {
+  function ratedParam(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint) {
     return originalParam(userPlanets, userPlanetIndex) * (2 ** (uint256(
       rank(userPlanets, userPlanetIndex)
     ) - 1));
   }
 
-  function userPlanetsCount(uint40[] userPlanets) public pure returns (uint) {
+  function userPlanetsCount(int48[] userPlanets) public pure returns (uint) {
     // here?
     require(userPlanets.length % USER_PLANET_FIELD_COUNT == 0, "broken userPlanets");
     return userPlanets.length / USER_PLANET_FIELD_COUNT;
