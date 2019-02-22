@@ -71,7 +71,7 @@ contract Logic {
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
-    (, , uint200 planetPrice) = normalPlanet.planet(UserNormalPlanetArrayReader.id(userPlanet, 0));
+    (, , uint200 planetPrice) = normalPlanet.planet(UserNormalPlanetArrayReader.normalPlanetId(userPlanet, 0));
     uint200 rankupGold = uint200((planetPrice / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)); // TODO: type?
     gold.unmint(msg.sender, rankupGold);
 
