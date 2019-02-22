@@ -29,6 +29,11 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
+  static setPlanetToGet = UserActions.creator<{ planetId: number }>("setPlanetToGet")
+  setPlanetToGet = (planetId: number) => {
+    this.dispatch(UserActions.setPlanetToGet({ planetId }))
+  }
+
   static getPlanet = UserActions.creator<GetUser>("getPlanet")
   getPlanet = async (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.overallLoading()

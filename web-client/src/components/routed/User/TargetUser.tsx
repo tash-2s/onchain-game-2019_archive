@@ -23,7 +23,6 @@ export class TargetUser extends React.Component<TargetUserProps, { selectedTab: 
   render = () => {
     const user = this.props.user.targetUser
     const isMine = this.isMine()
-    const getPlanet = this.props.userActions.getPlanet
     let userPlanets
     switch (this.state.selectedTab) {
       case "map":
@@ -39,13 +38,16 @@ export class TargetUser extends React.Component<TargetUserProps, { selectedTab: 
         )
         break
     }
+    const planetsList = (
+      <PlanetsList user={user} setPlanetToGet={this.props.userActions.setPlanetToGet} />
+    )
 
     return (
       <div>
         <UserProfile user={user} isMine={isMine} />
         <button onClick={this.toggleTab}>toggle type of userPlanets</button>
         {userPlanets}
-        {isMine ? <PlanetsList user={user} getPlanet={getPlanet} /> : <></>}
+        {isMine ? planetsList : <></>}
       </div>
     )
   }

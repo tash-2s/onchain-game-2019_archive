@@ -6,17 +6,18 @@ import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
 export class PlanetsList extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
-  getPlanet: (planetId: number, q: number, r: number) => any
+  setPlanetToGet: (planetId: number) => void
 }> {
   render = () => {
     const gold = this.state.ongoingGold
+    const buttonText = "get"
 
     return NormalPlanetsData.map(p => {
       let button
       if (gold === 0 || gold >= p.priceGold) {
-        button = <button onClick={this.getPlanetButtonHandler(p.id)}>get!</button>
+        button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>
       } else {
-        button = <button disabled={true}>get!</button>
+        button = <button disabled={true}>{buttonText}</button>
       }
       return (
         <div key={p.id}>
@@ -27,9 +28,9 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
     })
   }
 
-  getPlanetButtonHandler = (planetId: number) => {
+  setPlanetToGet = (planetId: number) => {
     return () => {
-      this.props.getPlanet(planetId, 0, 0) // TODO: coordinate
+      this.props.setPlanetToGet(planetId)
     }
   }
 }

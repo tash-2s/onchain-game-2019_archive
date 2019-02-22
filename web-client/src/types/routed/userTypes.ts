@@ -11,6 +11,7 @@ export interface TargetUserState {
   population: number
   goldPower: number
   goldPerSec: number
+  normalPlanetIdToGet: number | null
 }
 
 // This is used as object's type for store, and used as class for elsewhere

@@ -66,7 +66,8 @@ export const buildTargetUser = (address: string, user: _User): TargetUserState =
     userNormalPlanets: userPlanets,
     population: population,
     goldPower: goldPower,
-    goldPerSec: population * goldPower
+    goldPerSec: population * goldPower,
+    normalPlanetIdToGet: null
   }
 }
 

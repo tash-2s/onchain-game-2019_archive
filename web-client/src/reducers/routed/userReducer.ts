@@ -17,6 +17,10 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
+    .case(UserActions.setPlanetToGet, (state, payload) => ({
+      ...state,
+      normalPlanetIdToGet: payload.planetId
+    }))
     .case(UserActions.getPlanet, (state, payload) => ({
       ...state,
       targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))
