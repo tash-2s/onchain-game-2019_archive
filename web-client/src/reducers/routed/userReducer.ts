@@ -17,10 +17,33 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.setPlanetToGet, (state, payload) => ({
-      ...state,
-      normalPlanetIdToGet: payload.planetId
-    }))
+    .case(UserActions.changeSelectedUserPlanetsTab, (state, tab) => {
+      if (!state.targetUser) {
+        return state
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          selectedUserPlanetsTab: tab
+        }
+      }
+    })
+    .case(UserActions.setPlanetToGet, (state, planetId) => {
+      if (!state.targetUser) {
+        return state
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          selectedUserPlanetsTab: "map",
+          normalPlanetIdToGet: planetId
+        }
+      }
+    })
     .case(UserActions.getPlanet, (state, payload) => ({
       ...state,
       targetUser: buildTargetUser(payload.address, restructureUserFromResponse(payload.response))

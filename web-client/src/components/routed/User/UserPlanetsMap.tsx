@@ -2,19 +2,23 @@ import * as React from "react"
 import styled from "styled-components"
 
 import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { UserActions } from "../../../actions/routed/UserActions"
 
-export class UserPlanetsMap extends React.Component<{ user: ExtendedTargetUserState }> {
+// TODO: cleanup
+export class UserPlanetsMap extends React.Component<{
+  user: ExtendedTargetUserState
+  isMine: boolean
+  userActions: UserActions
+}> {
   render = () => {
     const o: { [key: string]: ExtendedTargetUserState["userNormalPlanets"][number] | null } = {}
     let biggestRadius = 0
     this.props.user.userNormalPlanets.forEach(up => {
       o[`${up.axialCoordinateQ}/${up.axialCoordinateR}`] = up
 
-      if (biggestRadius < Math.abs(up.axialCoordinateQ)) {
-        biggestRadius = Math.abs(up.axialCoordinateQ)
-      }
-      if (biggestRadius < Math.abs(up.axialCoordinateR)) {
-        biggestRadius = Math.abs(up.axialCoordinateR)
+      const distance = distanceFromCenter(up.axialCoordinateQ, up.axialCoordinateR)
+      if (biggestRadius < distance) {
+        biggestRadius = distance
       }
     })
     const usableRadius = (gold => {
@@ -35,6 +39,11 @@ export class UserPlanetsMap extends React.Component<{ user: ExtendedTargetUserSt
       const q = h[0]
       const r = h[1]
       const userPlanet = o[`${q}/${r}`]
+      const settable =
+        this.props.isMine &&
+        !!this.props.user.normalPlanetIdToGet &&
+        distanceFromCenter(q, r) <= usableRadius
+
       return (
         <Hex
           key={`${q}/${r}`}
@@ -43,6 +52,8 @@ export class UserPlanetsMap extends React.Component<{ user: ExtendedTargetUserSt
           userPlanet={userPlanet}
           shiftTop={shownRadius * 86.6}
           shiftLeft={shownRadius * 75}
+          planetSettable={settable}
+          setPlanet={!!this.props.user.normalPlanetIdToGet ? this.setPlanet : null}
         />
       )
     })
@@ -50,6 +61,23 @@ export class UserPlanetsMap extends React.Component<{ user: ExtendedTargetUserSt
     const height = (shownRadius * 2 + 1) * 86.6
     return <div style={{ position: "relative", height: height }}>{hexes}</div>
   }
+
+  setPlanet = (q: number, r: number) => {
+    return () => {
+      if (!this.props.user.normalPlanetIdToGet) {
+        throw new Error("this must be called with target")
+      }
+
+      this.props.userActions.getPlanet(this.props.user.normalPlanetIdToGet, q, r)
+    }
+  }
+}
+
+const distanceFromCenter = (q: number, r: number) => {
+  const x = q
+  const z = r
+  const y = -x - z
+  return Math.max(Math.abs(x), Math.abs(y), Math.abs(z))
 }
 
 const mapHexesFromRadius = (radius: number) => {
@@ -77,20 +105,39 @@ class Hex extends React.Component<{
   userPlanet: UserNormalPlanet | null
   shiftTop: number
   shiftLeft: number
+  planetSettable: boolean
+  setPlanet: ((q: number, r: number) => (() => void)) | null
 }> {
   render = () => {
     const x = 50 * ((3 / 2) * this.props.q)
     const y = 50 * ((Math.sqrt(3) / 2) * this.props.q + Math.sqrt(3) * this.props.r)
+    const buttonIfAvailable =
+      this.props.planetSettable && !!this.props.setPlanet ? (
+        <button onClick={this.props.setPlanet(this.props.q, this.props.r)}>set</button>
+      ) : (
+        <></>
+      )
+
+    const css = {
+      left: x + this.props.shiftLeft,
+      top: y + this.props.shiftTop,
+      backgroundColor: this.props.userPlanet ? "cyan" : "red"
+    }
+
     return (
-      <this.Styled style={{ left: x + this.props.shiftLeft, top: y + this.props.shiftTop }}>
-        {this.props.userPlanet ? this.props.userPlanet.id : ""}
+      <this.Styled style={css}>
+        <div>
+          q:{this.props.q}, r:{this.props.r}
+          <br />
+          {this.props.userPlanet ? this.props.userPlanet.id : ""}
+        </div>
+        {buttonIfAvailable}
       </this.Styled>
     )
   }
 
   Styled = styled.div`
     clip-path: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
-    background-color: red;
     width: 100px;
     height: calc(100px * 0.866);
     display: flex;

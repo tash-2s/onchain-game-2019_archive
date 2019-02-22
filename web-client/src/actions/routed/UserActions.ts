@@ -5,6 +5,7 @@ import {
   TxCallGenericsType,
   LoomWeb3
 } from "../../misc/loom"
+import { TargetUserState } from "../../types/routed/userTypes"
 
 export type GetUserResponse = TxCallGenericsType<
   ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
@@ -29,14 +30,21 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  static setPlanetToGet = UserActions.creator<{ planetId: number }>("setPlanetToGet")
+  static changeSelectedUserPlanetsTab = UserActions.creator<
+    TargetUserState["selectedUserPlanetsTab"]
+  >("changeSelectedUserPlanetsTab")
+  changeSelectedUserPlanetsTab = (tab: TargetUserState["selectedUserPlanetsTab"]) => {
+    this.dispatch(UserActions.changeSelectedUserPlanetsTab(tab))
+  }
+
+  static setPlanetToGet = UserActions.creator<number>("setPlanetToGet")
   setPlanetToGet = (planetId: number) => {
-    this.dispatch(UserActions.setPlanetToGet({ planetId }))
+    this.dispatch(UserActions.setPlanetToGet(planetId))
   }
 
   static getPlanet = UserActions.creator<GetUser>("getPlanet")
   getPlanet = async (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
-    this.overallLoading()
+    this.overallLoading() // TODO: stop loading
 
     await sendLoomContractMethod(cs =>
       cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)

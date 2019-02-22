@@ -15,18 +15,16 @@ type TargetUserProps = {
   user: { targetUser: ExtendedTargetUserState }
 } & UserDispatchProps
 
-type tabType = "map" | "list"
-
-export class TargetUser extends React.Component<TargetUserProps, { selectedTab: tabType }> {
-  state = { selectedTab: "map" as tabType }
-
+export class TargetUser extends React.Component<TargetUserProps> {
   render = () => {
     const user = this.props.user.targetUser
     const isMine = this.isMine()
     let userPlanets
-    switch (this.state.selectedTab) {
+    switch (user.selectedUserPlanetsTab) {
       case "map":
-        userPlanets = <UserPlanetsMap user={user} />
+        userPlanets = (
+          <UserPlanetsMap user={user} isMine={isMine} userActions={this.props.userActions} />
+        )
         break
       case "list":
         userPlanets = (
@@ -53,12 +51,12 @@ export class TargetUser extends React.Component<TargetUserProps, { selectedTab: 
   }
 
   toggleTab = () => {
-    switch (this.state.selectedTab) {
+    switch (this.props.user.targetUser.selectedUserPlanetsTab) {
       case "map":
-        this.setState({ selectedTab: "list" })
+        this.props.userActions.changeSelectedUserPlanetsTab("list")
         break
       case "list":
-        this.setState({ selectedTab: "map" })
+        this.props.userActions.changeSelectedUserPlanetsTab("map")
         break
     }
   }
