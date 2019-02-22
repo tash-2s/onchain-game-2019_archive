@@ -35,7 +35,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   remainingSecForRankup = (now: number): number => {
-    const prevDiffSec = now - (this.rankupedAt || this.createdAt)
+    const prevDiffSec = now - this.rankupedAt
     const remainingSec = this.requiredSecForRankup() - prevDiffSec
 
     if (remainingSec <= 0) {
