@@ -46,6 +46,15 @@ library UserNormalPlanetArrayReader {
     return USER_PLANET_AXIAL_COORDINATE_R_INDEX;
   }
 
+  function fields(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (int48[]) {
+    int48[] memory _fields = new int48[](USER_PLANET_FIELD_COUNT);
+    uint headIndex = userPlanetIndex * USER_PLANET_FIELD_COUNT;
+    for (uint i = 0; i < USER_PLANET_FIELD_COUNT; i++) {
+      _fields[i] = userPlanets[headIndex + i];
+    }
+    return _fields;
+  }
+
   function id(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint16) {
     return uint16(userPlanets[userPlanetIndex * USER_PLANET_FIELD_COUNT + USER_PLANET_ID_INDEX]);
   }
@@ -88,10 +97,12 @@ library UserNormalPlanetArrayReader {
     );
   }
 
+  function rate(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint) {
+    return (2 ** (uint256(rank(userPlanets, userPlanetIndex)) - 1));
+  }
+
   function ratedParam(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint) {
-    return originalParam(userPlanets, userPlanetIndex) * (2 ** (uint256(
-      rank(userPlanets, userPlanetIndex)
-    ) - 1));
+    return originalParam(userPlanets, userPlanetIndex) * rate(userPlanets, userPlanetIndex);
   }
 
   function userPlanetsCount(int48[] userPlanets) public pure returns (uint) {

@@ -32,6 +32,20 @@ contract UserNormalPlanet is MinterRole {
     return (_userPlanets[account].length);
   }
 
+  function userPlanet(address account, uint16 userNormalPlanetId) public view returns (int48[]) {
+    int48[] memory ups = userPlanets(account);
+    int48[] memory _userPlanet;
+
+    for (uint i = 0; i < UserNormalPlanetArrayReader.userPlanetsCount(ups); i++) {
+      if (UserNormalPlanetArrayReader.id(ups, i) == userNormalPlanetId) {
+        _userPlanet = UserNormalPlanetArrayReader.fields(ups, i);
+        break;
+      }
+    }
+
+    return _userPlanet;
+  }
+
   function userPlanets(address account) public view returns (int48[]) {
     UserPlanet[] storage ups = _userPlanets[account];
     int48[] memory arrUps = new int48[](ups.length * UserNormalPlanetArrayReader.userPlanetFieldCount());

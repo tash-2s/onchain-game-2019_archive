@@ -61,9 +61,16 @@ contract Logic {
     }
   }
 
-  // TODO: rankup fee/cooldown check
+  // TODO: cooldown check
   function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
     confirm(msg.sender);
+
+    // decrease required gold
+    int48[] memory userPlanet = userNormalPlanet.userPlanet(msg.sender, userNormalPlanetId);
+    (, , uint200 planetPrice) = normalPlanet.planet(UserNormalPlanetArrayReader.id(userPlanet, 0));
+    uint200 rankupGold = uint200((planetPrice / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)); // TODO: type?
+    gold.unmint(msg.sender, rankupGold);
+
     userNormalPlanet.rankup(msg.sender, userNormalPlanetId);
   }
 }
