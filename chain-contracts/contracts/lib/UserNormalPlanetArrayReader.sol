@@ -105,6 +105,10 @@ library UserNormalPlanetArrayReader {
     return originalParam(userPlanets, userPlanetIndex) * rate(userPlanets, userPlanetIndex);
   }
 
+  function requiredSecForRankup(int48[] userPlanets, uint256 userPlanetIndex) public pure returns (uint) {
+    return 10 * 60 * rate(userPlanets, userPlanetIndex);
+  }
+
   function userPlanetsCount(int48[] userPlanets) public pure returns (uint) {
     // here?
     require(userPlanets.length % USER_PLANET_FIELD_COUNT == 0, "broken userPlanets");

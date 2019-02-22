@@ -61,12 +61,16 @@ contract Logic {
     }
   }
 
-  // TODO: cooldown check
   function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
     confirm(msg.sender);
+    int48[] memory userPlanet = userNormalPlanet.userPlanet(msg.sender, userNormalPlanetId);
+
+    // ckeck time
+    uint diffSec = Util.uint40now() - UserNormalPlanetArrayReader.rankupedAt(userPlanet, 0);
+    int remainingSec = int(UserNormalPlanetArrayReader.requiredSecForRankup(userPlanet, 0)) - int(diffSec);
+    require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
-    int48[] memory userPlanet = userNormalPlanet.userPlanet(msg.sender, userNormalPlanetId);
     (, , uint200 planetPrice) = normalPlanet.planet(UserNormalPlanetArrayReader.id(userPlanet, 0));
     uint200 rankupGold = uint200((planetPrice / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)); // TODO: type?
     gold.unmint(msg.sender, rankupGold);
