@@ -5,4 +5,6 @@ genesis.json
 loom
 private_key
 public_key
+extdev_private_key
+extdev_public_key
 build

@@ -24,6 +24,16 @@ module.exports = {
         return loomTruffleProvider
       },
       network_id: "*"
+    },
+    extdev_plasma_us1: {
+      provider: function() {
+        const privateKey = readFileSync(path.join(__dirname, "extdev_private_key"), "utf-8")
+        const chainId = "extdev-plasma-us1"
+        const writeUrl = "http://extdev-plasma-us1.dappchains.com:80/rpc"
+        const readUrl = "http://extdev-plasma-us1.dappchains.com:80/query"
+        return new LoomTruffleProvider(chainId, writeUrl, readUrl, privateKey)
+      },
+      network_id: "9545242630824"
     }
   }
 }
