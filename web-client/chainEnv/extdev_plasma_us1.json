@@ -1,6 +1,6 @@
 {
-  "writeUrl": "ws://extdev-plasma-us1.dappchains.com:80/websocket",
-  "readUrl": "ws://extdev-plasma-us1.dappchains.com:80/queryws",
+  "writeUrl": "wss://extdev-plasma-us1.dappchains.com/websocket",
+  "readUrl": "wss://extdev-plasma-us1.dappchains.com/queryws",
   "chainId": "extdev-plasma-us1",
   "networkId": "9545242630824",
   "contractsAddresses": {

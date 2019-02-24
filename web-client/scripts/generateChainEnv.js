@@ -9,8 +9,8 @@ const envDefs = {
     networkId: "13654820909954"
   },
   extdev_plasma_us1: {
-    writeUrl: "ws://extdev-plasma-us1.dappchains.com:80/websocket",
-    readUrl: "ws://extdev-plasma-us1.dappchains.com:80/queryws",
+    writeUrl: "wss://extdev-plasma-us1.dappchains.com/websocket",
+    readUrl: "wss://extdev-plasma-us1.dappchains.com/queryws",
     chainId: "extdev-plasma-us1",
     networkId: "9545242630824"
   }
