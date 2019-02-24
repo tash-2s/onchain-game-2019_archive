@@ -24,9 +24,10 @@ if (!envDef) {
 
 const fs = require("fs")
 const JSON_PATH = "../k2-loomchain/build/contracts/"
-const obj = {}
+const contractsAddresses = {}
 fs.readdirSync(JSON_PATH).forEach(fileName => {
-  if (fileName === "Migrations.json") {
+  const contractName = fileName.replace(".json", "")
+  if (contractName === "Migrations") {
     return
   }
 
@@ -35,16 +36,14 @@ fs.readdirSync(JSON_PATH).forEach(fileName => {
     return // skip libs
   }
 
-  const json = JSON.parse(file)
-  if (!Object.keys(json.networks).length) {
+  const parsedJson = JSON.parse(file)
+  if (!Object.keys(parsedJson.networks).length) {
     return // skip externals, like contracts of openzeppelin
   }
 
-  obj[fileName.replace(".json", "")] = {
-    address: json.networks[envDef.networkId].address,
-    abi: json.abi
-  }
+  fs.writeFileSync(`./src/chain/abi/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
+  contractsAddresses[contractName] = parsedJson.networks[envDef.networkId].address
 })
 
-const data = Object.assign(envDef, { contracts: obj })
-fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(data, null, 2))
+const chainEnv = Object.assign(envDef, { contractsAddresses })
+fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))

@@ -1,0 +1,105 @@
+[
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userNormalPlanet",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x8720afd0"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "normalPlanet",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xad835940"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "gold",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xfbec6f21"
+  },
+  {
+    "inputs": [
+      {
+        "name": "goldContractAddress",
+        "type": "address"
+      },
+      {
+        "name": "normalPlanetContractAddress",
+        "type": "address"
+      },
+      {
+        "name": "userNormalPlanetContractAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "planetId",
+        "type": "uint16"
+      },
+      {
+        "name": "axialCoordinateQ",
+        "type": "int16"
+      },
+      {
+        "name": "axialCoordinateR",
+        "type": "int16"
+      }
+    ],
+    "name": "setPlanet",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x1866e1ff"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "userNormalPlanetId",
+        "type": "uint16"
+      }
+    ],
+    "name": "rankupUserNormalPlanet",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x1e8a1485"
+  }
+]
