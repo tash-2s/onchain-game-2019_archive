@@ -27,18 +27,11 @@ const JSON_PATH = "../k2-loomchain/build/contracts/"
 const contractsAddresses = {}
 fs.readdirSync(JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
-  if (contractName === "Migrations") {
-    return
-  }
-
   const file = fs.readFileSync(JSON_PATH + fileName)
-  if (file.toString().match(/"contractKind": "library"/)) {
-    return // skip libs
-  }
-
   const parsedJson = JSON.parse(file)
+
   if (!Object.keys(parsedJson.networks).length) {
-    return // skip externals, like contracts of openzeppelin
+    return // skip externals, like imported contracts of openzeppelin
   }
 
   fs.writeFileSync(`./src/chain/abi/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
