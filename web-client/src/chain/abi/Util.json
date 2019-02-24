@@ -1,0 +1,17 @@
+[
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "uint40now",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint40"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x260348a0"
+  }
+]

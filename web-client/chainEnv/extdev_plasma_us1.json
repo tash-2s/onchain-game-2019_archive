@@ -6,8 +6,11 @@
   "contractsAddresses": {
     "Gold": "0xEeDBdf2276fbaaa0f40bb0E516eB1dB8fAfeD8bF",
     "Logic": "0x7d07B216e1364ee71CC84BC1CB2E3bc4d7700174",
+    "Migrations": "0xF7C630E9970f27C2F7C74Eccf7209224E0Cb2301",
     "NormalPlanet": "0x16aC302d81551E440DD9bCFAe7b7A5883b09f75B",
     "UserNormalPlanet": "0x98EBA1634bebCDbB6Fc6Ba39395CE68d71961aF6",
+    "UserNormalPlanetArrayReader": "0xe3dac6cF6bD96A57d7d949679b16a67496e2a5Ec",
+    "Util": "0x5903F3bAb9E84901F2dC3A4A75Db93f4096caB64",
     "Web": "0xe9D9ec0998f06362f9B0C69D4A051c5A326F7620"
   }
 }
