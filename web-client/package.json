@@ -2,7 +2,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "serve": "parcel src/index.html --no-hmr --no-autoinstall",
+    "serve": "parcel src/index.html --no-hmr",
     "serve:local": "cp chainEnv/local.json src/chain/env.json && yarn serve",
     "serve:extdev_plasma_us1": "cp chainEnv/extdev_plasma_us1.json src/chain/env.json && yarn serve",
     "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*' --no-semi --print-width 100 --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
