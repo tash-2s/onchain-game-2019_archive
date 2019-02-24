@@ -1,7 +1,7 @@
 {
-  "outputPath": "./src/contracts",
+  "outputPath": "./src/chain/types",
   "contracts": {
-    "Logic": "./src/contracts/Logic.json",
-    "Web": "./src/contracts/Web.json"
+    "Logic": "./src/chain/abi/Logic.json",
+    "Web": "./src/chain/abi/Web.json"
   }
 }

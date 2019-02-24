@@ -7,7 +7,7 @@ declare module "*/_loom.js" {
   }
 
   export const getLoomContracts: () => {
-    Web: import("./contracts/Web").Web
-    Logic: import("./contracts/Logic").Logic
+    Web: import("./chain/types/Web").Web
+    Logic: import("./chain/types/Logic").Logic
   }
 }

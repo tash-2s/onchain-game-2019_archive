@@ -8,7 +8,7 @@ import {
 import { TargetUserState } from "../../types/routed/userTypes"
 
 export type GetUserResponse = TxCallGenericsType<
-  ReturnType<import("../../contracts/Web").WebDefinition["methods"]["getUser"]>
+  ReturnType<import("../../chain/types/Web").WebDefinition["methods"]["getUser"]>
 >
 
 interface GetUser {

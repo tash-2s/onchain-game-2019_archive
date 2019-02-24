@@ -1,7 +1,8 @@
 import { Client, LocalAddress, CryptoUtils, LoomProvider } from "loom-js"
 import Web3 from "web3"
-import Web from "../contracts/Web.json"
-import Logic from "../contracts/Logic.json"
+import ChainEnv from "../chain/env.json"
+import WebAbi from "../chain/abi/Web.json"
+import LogicAbi from "../chain/abi/Logic.json"
 
 export class LoomWeb3 {
   static setup() {
@@ -29,8 +30,8 @@ export class LoomWeb3 {
 }
 
 export const getLoomContracts = () => ({
-  Logic: new LoomWeb3.web3.eth.Contract(Logic.abi, Object.values(Logic.networks)[0]["address"]),
-  Web: new LoomWeb3.web3.eth.Contract(Web.abi, Object.values(Web.networks)[0]["address"])
+  Logic: new LoomWeb3.web3.eth.Contract(LogicAbi, ChainEnv.contractsAddresses.Logic),
+  Web: new LoomWeb3.web3.eth.Contract(WebAbi, ChainEnv.contractsAddresses.Web)
 })
 
 const PRIVATE_KEY_NAME = "privateKey"
@@ -52,10 +53,7 @@ class LoomKeyStorage {
 
 class LoomUtil {
   static getClient() {
-    const networkId = "default"
-    const writeUrl = "ws://127.0.0.1:46658/websocket"
-    const readUrl = "ws://127.0.0.1:46658/queryws"
-    return new Client(networkId, writeUrl, readUrl)
+    return new Client(ChainEnv.chainId, ChainEnv.writeUrl, ChainEnv.readUrl)
   }
 
   static getAddressFromPrivateKey(privateKey) {

@@ -2,4 +2,6 @@
 dist
 node_modules
 yarn-*.log
-src/contracts/*
+chainEnv/local.json
+src/chain/env.json
+src/chain/types
