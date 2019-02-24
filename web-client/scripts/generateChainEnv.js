@@ -24,7 +24,7 @@ if (!envDef) {
 
 const fs = require("fs")
 const JSON_PATH = "../k2-loomchain/build/contracts/"
-const contractsAddresses = {}
+const contractsAddresses = {} // TODO: save k2-loomchain's commit hash too
 fs.readdirSync(JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
   const file = fs.readFileSync(JSON_PATH + fileName)
