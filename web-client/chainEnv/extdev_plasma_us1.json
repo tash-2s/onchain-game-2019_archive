@@ -1,0 +1,770 @@
+{
+  "writeUrl": "ws://extdev-plasma-us1.dappchains.com:80/websocket",
+  "readUrl": "ws://extdev-plasma-us1.dappchains.com:80/queryws",
+  "chainId": "extdev-plasma-us1",
+  "networkId": "9545242630824",
+  "contracts": {
+    "Gold": {
+      "address": "0xEeDBdf2276fbaaa0f40bb0E516eB1dB8fAfeD8bF",
+      "abi": [
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "addMinter",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x983b2d56"
+        },
+        {
+          "constant": false,
+          "inputs": [],
+          "name": "renounceMinter",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x98650275"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "isMinter",
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xaa271e1a"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "MinterAdded",
+          "type": "event",
+          "signature": "0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "MinterRemoved",
+          "type": "event",
+          "signature": "0xe94479a9f7e1952cc78f2d6baab678adc1b772d936c6583def489e524cb66692"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "userGold",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint200"
+            },
+            {
+              "name": "",
+              "type": "uint40"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x6664189c"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "userGoldConfirmedAt",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint40"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xd3e15b6f"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint200"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x70a08231"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "quantity",
+              "type": "uint200"
+            }
+          ],
+          "name": "mint",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0xdd774eef"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "quantity",
+              "type": "uint200"
+            }
+          ],
+          "name": "unmint",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x752caf6b"
+        }
+      ]
+    },
+    "Logic": {
+      "address": "0x7d07B216e1364ee71CC84BC1CB2E3bc4d7700174",
+      "abi": [
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "userNormalPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x8720afd0"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "normalPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xad835940"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "gold",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xfbec6f21"
+        },
+        {
+          "inputs": [
+            {
+              "name": "goldContractAddress",
+              "type": "address"
+            },
+            {
+              "name": "normalPlanetContractAddress",
+              "type": "address"
+            },
+            {
+              "name": "userNormalPlanetContractAddress",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "signature": "constructor"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "planetId",
+              "type": "uint16"
+            },
+            {
+              "name": "axialCoordinateQ",
+              "type": "int16"
+            },
+            {
+              "name": "axialCoordinateR",
+              "type": "int16"
+            }
+          ],
+          "name": "setPlanet",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x1866e1ff"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "userNormalPlanetId",
+              "type": "uint16"
+            }
+          ],
+          "name": "rankupUserNormalPlanet",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x1e8a1485"
+        }
+      ]
+    },
+    "NormalPlanet": {
+      "address": "0x16aC302d81551E440DD9bCFAe7b7A5883b09f75B",
+      "abi": [
+        {
+          "constant": false,
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x715018a6"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x8da5cb5b"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "isOwner",
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x8f32d59b"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0xf2fde38b"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event",
+          "signature": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "id",
+              "type": "uint16"
+            }
+          ],
+          "name": "isPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xb45906f6"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "id",
+              "type": "uint16"
+            }
+          ],
+          "name": "planet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint8"
+            },
+            {
+              "name": "",
+              "type": "uint16"
+            },
+            {
+              "name": "",
+              "type": "uint200"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xef07e91a"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "id",
+              "type": "uint16"
+            },
+            {
+              "name": "kind",
+              "type": "uint8"
+            },
+            {
+              "name": "param",
+              "type": "uint16"
+            },
+            {
+              "name": "priceGold",
+              "type": "uint200"
+            }
+          ],
+          "name": "create",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x903b0ca0"
+        }
+      ]
+    },
+    "UserNormalPlanet": {
+      "address": "0x98EBA1634bebCDbB6Fc6Ba39395CE68d71961aF6",
+      "abi": [
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "addMinter",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x983b2d56"
+        },
+        {
+          "constant": false,
+          "inputs": [],
+          "name": "renounceMinter",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x98650275"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "isMinter",
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xaa271e1a"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "normalPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xad835940"
+        },
+        {
+          "inputs": [
+            {
+              "name": "normalPlanetContractAddress",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "signature": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "MinterAdded",
+          "type": "event",
+          "signature": "0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "MinterRemoved",
+          "type": "event",
+          "signature": "0xe94479a9f7e1952cc78f2d6baab678adc1b772d936c6583def489e524cb66692"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x70a08231"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "userNormalPlanetId",
+              "type": "uint16"
+            }
+          ],
+          "name": "userPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "int48[]"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x8dedb013"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "userPlanets",
+          "outputs": [
+            {
+              "name": "",
+              "type": "int48[]"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x79e1a00c"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "normalPlanetId",
+              "type": "uint16"
+            },
+            {
+              "name": "axialCoordinateQ",
+              "type": "int16"
+            },
+            {
+              "name": "axialCoordinateR",
+              "type": "int16"
+            }
+          ],
+          "name": "mint",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0x63c03899"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "id",
+              "type": "uint16"
+            }
+          ],
+          "name": "unmint",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0xc0c30adc"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "userNormalPlanetId",
+              "type": "uint16"
+            }
+          ],
+          "name": "rankup",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "signature": "0xbf87c191"
+        }
+      ]
+    },
+    "Web": {
+      "address": "0xe9D9ec0998f06362f9B0C69D4A051c5A326F7620",
+      "abi": [
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "userNormalPlanet",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x8720afd0"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "gold",
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0xfbec6f21"
+        },
+        {
+          "inputs": [
+            {
+              "name": "userNormalPlanetContractAddress",
+              "type": "address"
+            },
+            {
+              "name": "goldContractAddress",
+              "type": "address"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "signature": "constructor"
+        },
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "getUser",
+          "outputs": [
+            {
+              "name": "confirmedGold",
+              "type": "uint200"
+            },
+            {
+              "name": "goldConfirmedAt",
+              "type": "uint40"
+            },
+            {
+              "name": "unpIds",
+              "type": "uint16[]"
+            },
+            {
+              "name": "unpRanks",
+              "type": "uint8[]"
+            },
+            {
+              "name": "unpTimes",
+              "type": "uint40[]"
+            },
+            {
+              "name": "unpAxialCoordinates",
+              "type": "int16[]"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function",
+          "signature": "0x6f77926b"
+        }
+      ]
+    }
+  }
+}
