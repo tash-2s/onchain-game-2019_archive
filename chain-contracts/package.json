@@ -4,7 +4,7 @@
   "scripts": {
     "truffle": "truffle",
     "loom": "./loom",
-    "lint": "prettier '{truffle-config.js,migrations/**/*,scripts/**/*,contracts/**/*}' --no-semi --print-width 110 --write && solium -d contracts/ --fix"
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*}' --no-semi --print-width 110 --write && solium -d contracts/ --fix"
   },
   "devDependencies": {
     "ethlint": "^1.2.2",
