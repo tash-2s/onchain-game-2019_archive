@@ -8,7 +8,7 @@
     "build": "rm -rf ./.cache ./dist && parcel build src/index.html --out-dir dist/build --public-url . --no-source-maps",
     "build:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn build",
     "build:production": "./scripts/cpChainEnv.sh production && yarn build",
-    "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*' --no-semi --print-width 100 --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
+    "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*.js' --no-semi --print-width 100 --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
     "generate-chain-env": "node scripts/generateChainEnv.js",
     "generate-contracts-types": "yarn web3x-codegen contracts_types_generator.json"
   },
