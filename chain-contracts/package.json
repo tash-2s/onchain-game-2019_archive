@@ -4,7 +4,7 @@
   "scripts": {
     "truffle": "truffle",
     "loom": "./loom",
-    "lint": "prettier '{truffle-config.js,migrations/**/*,scripts/**/*,contracts/**/*}' --no-semi --print-width 110 --write && solium -d contracts/ --fix"
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*}' --no-semi --print-width 110 --write && solium -d contracts/ --fix"
   },
   "devDependencies": {
     "ethlint": "^1.2.2",
@@ -12,6 +12,8 @@
     "openzeppelin-solidity": "2.0",
     "prettier": "^1.16.4",
     "prettier-plugin-solidity": "^1.0.0-alpha.18",
-    "truffle": "^5.0.3"
+    "truffle": "^5.0.3",
+    "truffle-contract": "^4.0.6",
+    "truffle-deploy-registry": "^0.5.1"
   }
 }

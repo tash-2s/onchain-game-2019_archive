@@ -1,0 +1,42 @@
+[
+  {
+    "contractName": "Migrations",
+    "address": "0xc2Dc27895ac62364e5F9f29b41E886f00c98FAeF",
+    "transactionHash": "0x3783b0082f52099ea6b5038b3dd216dbf9c26553ddd5caa10beb227711f4088b"
+  },
+  {
+    "contractName": "Util",
+    "address": "0x64d7571c1911EDbC36cF99fEe259d6ba5BC50faa",
+    "transactionHash": "0x8e5a61852aae0e8dd3928040cc5940d930a2f440117e662894f31bcb1cfb18af"
+  },
+  {
+    "contractName": "Gold",
+    "address": "0x0091292F1B2BBE201D2bEbf68D069e628b1212e7",
+    "transactionHash": "0x58dcb401eb6034eccff4a1010a3ee78e9af7f6e9870ad406a62161040518f37c"
+  },
+  {
+    "contractName": "UserNormalPlanetArrayReader",
+    "address": "0xa34bb35FaCABfbdeb6d77977A0bA0Fa820F51fc7",
+    "transactionHash": "0x6e3b3b9efa3386c57fc7a690d4ae8c18dfbce1eede4e7da81036dda1d1af1c71"
+  },
+  {
+    "contractName": "NormalPlanet",
+    "address": "0x7523e0e8BAd072dc2BdA7d00529cD7E2cAb93943",
+    "transactionHash": "0xeddc9333d7fe33bf45909f95a8e21729f8ad85acdc77acfe5b35edf30f79be15"
+  },
+  {
+    "contractName": "UserNormalPlanet",
+    "address": "0xE0177377D72e3fF4651CB10017afa6C551150B66",
+    "transactionHash": "0xfb705cbe0d1af81e06b77a246476da8917fec7f8a307693f81a6070ed1a80e71"
+  },
+  {
+    "contractName": "Logic",
+    "address": "0xD81D55cddda181EDb525C8d900163E12cc6fBa67",
+    "transactionHash": "0xbb97e2619d073335797f9343a397f4a93cf11f0dbdfc9c432a88886cd9aecd22"
+  },
+  {
+    "contractName": "Web",
+    "address": "0xccC1A3A6E0c5971E0373d0940c0BB527Bb300c14",
+    "transactionHash": "0xf714f95a8892c937034b01323b5591afc2bf71995efb1983dfe09ae139c78359"
+  }
+]
