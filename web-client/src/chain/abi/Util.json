@@ -11,7 +11,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0x260348a0"
+    "type": "function"
   }
 ]

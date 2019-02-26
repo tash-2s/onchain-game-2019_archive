@@ -11,8 +11,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0x983b2d56"
+    "type": "function"
   },
   {
     "constant": false,
@@ -21,8 +20,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0x98650275"
+    "type": "function"
   },
   {
     "constant": true,
@@ -41,8 +39,7 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0xaa271e1a"
+    "type": "function"
   },
   {
     "constant": true,
@@ -56,8 +53,7 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0xad835940"
+    "type": "function"
   },
   {
     "inputs": [
@@ -68,8 +64,7 @@
     ],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "constructor",
-    "signature": "constructor"
+    "type": "constructor"
   },
   {
     "anonymous": false,
@@ -81,8 +76,7 @@
       }
     ],
     "name": "MinterAdded",
-    "type": "event",
-    "signature": "0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6"
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -94,8 +88,7 @@
       }
     ],
     "name": "MinterRemoved",
-    "type": "event",
-    "signature": "0xe94479a9f7e1952cc78f2d6baab678adc1b772d936c6583def489e524cb66692"
+    "type": "event"
   },
   {
     "constant": true,
@@ -114,8 +107,7 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0x70a08231"
+    "type": "function"
   },
   {
     "constant": true,
@@ -138,8 +130,7 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0x8dedb013"
+    "type": "function"
   },
   {
     "constant": true,
@@ -158,8 +149,7 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function",
-    "signature": "0x79e1a00c"
+    "type": "function"
   },
   {
     "constant": false,
@@ -185,8 +175,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0x63c03899"
+    "type": "function"
   },
   {
     "constant": false,
@@ -204,8 +193,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0xc0c30adc"
+    "type": "function"
   },
   {
     "constant": false,
@@ -223,7 +211,6 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0xbf87c191"
+    "type": "function"
   }
 ]
