@@ -1,6 +1,15 @@
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
+import { NormalPlanet } from "../types/commonTypes"
+import { getNormalPlanet } from "../data/planets"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
+  normalPlanet: NormalPlanet
+
+  constructor(obj: UserNormalPlanetType) {
+    super(obj)
+    this.normalPlanet = getNormalPlanet(this.normalPlanetId)
+  }
+
   isRankupable = (gold: number, date: number): boolean => {
     return (
       !this.isMaxRank() &&
@@ -50,7 +59,15 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   requiredGoldForRankup = (): number => {
-    return (this.planetPriceGoldMirror / 5) * this.rateMemo
+    return (this.planetPriceGold() / 5) * this.rateMemo
+  }
+
+  planetKind = () => {
+    return this.normalPlanet.kind
+  }
+
+  planetPriceGold = () => {
+    return this.normalPlanet.priceGold
   }
 }
 

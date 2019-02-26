@@ -9,7 +9,7 @@ export class OngoingGoldCalculator {
       let totalResidenceParam = 0
       let totalGoldveinParam = 0
       ups.forEach(up => {
-        switch (up.planetKindMirror) {
+        switch (up.planetKind()) {
           case "residence":
             totalResidenceParam += up.paramMemo
             break

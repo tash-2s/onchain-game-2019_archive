@@ -1,6 +1,6 @@
 import { GetUserResponse } from "../../../actions/routed/UserActions"
 import { UserState, TargetUserState } from "../../../types/routed/userTypes"
-import { NormalPlanetsData } from "../../../data/planets"
+import { getNormalPlanet } from "../../../data/planets"
 
 const strToNum = (str: string): number => parseInt(str, 10)
 
@@ -83,11 +83,7 @@ const processUserNormalPlanets = (
   const userGoldveinPlanets: TargetUserState["userNormalPlanets"] = []
 
   userPlanets.forEach(up => {
-    const p = NormalPlanetsData.find(p => p.id === up.normalPlanetId)
-
-    if (!p) {
-      throw new Error("unknown planet: " + up.normalPlanetId)
-    }
+    const p = getNormalPlanet(up.normalPlanetId)
 
     const rate = 2 ** (up.rank - 1)
     let param = 0
@@ -101,9 +97,7 @@ const processUserNormalPlanets = (
     const newUp = {
       ...up,
       rateMemo: rate,
-      paramMemo: param,
-      planetKindMirror: p.kind,
-      planetPriceGoldMirror: p.priceGold
+      paramMemo: param
     }
 
     switch (p.kind) {

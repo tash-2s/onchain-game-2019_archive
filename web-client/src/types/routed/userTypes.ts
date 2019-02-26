@@ -26,8 +26,6 @@ export class UserNormalPlanetType {
   axialCoordinateR!: number
   rateMemo!: number
   paramMemo!: number
-  planetKindMirror!: PlanetKind
-  planetPriceGoldMirror!: number
 
   // this is not used when this behave as a type
   constructor(obj: UserNormalPlanetType) {

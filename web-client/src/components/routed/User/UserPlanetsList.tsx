@@ -32,7 +32,7 @@ class UserPlanet extends React.Component<{
 
     return (
       <div>
-        {`${up.normalPlanetId} (kind: ${up.planetKindMirror})`}
+        {`${up.normalPlanetId} (kind: ${up.planetKind()})`}
         <br />
         rank: {up.rank}/{up.maxRank()}
         <br />
