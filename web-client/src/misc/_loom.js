@@ -53,7 +53,9 @@ class LoomKeyStorage {
 
 class LoomUtil {
   static getClient() {
-    return new Client(ChainEnv.chainId, ChainEnv.writeUrl, ChainEnv.readUrl)
+    const p = [ChainEnv.chainId, ChainEnv.writeUrl, ChainEnv.readUrl]
+    console.log(...p)
+    return new Client(...p)
   }
 
   static getAddressFromPrivateKey(privateKey) {
