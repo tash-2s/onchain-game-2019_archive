@@ -1,7 +1,7 @@
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { NormalPlanet } from "../types/commonTypes"
 import { getNormalPlanet } from "../data/planets"
-import { Time } from "../misc/time"
+import { Time } from "../models/time"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
   normalPlanet: NormalPlanet

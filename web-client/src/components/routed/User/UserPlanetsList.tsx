@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
-import { Time } from "../../../misc/time"
+import { Time } from "../../../models/time"
 
 export class UserPlanetsList extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
