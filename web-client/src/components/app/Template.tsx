@@ -9,6 +9,21 @@ export class Template extends React.Component<{
   currentUser: CommonState["currentUser"]
   signup: () => void
 }> {
+  dialogRef = React.createRef<HTMLDialogElement>()
+
+  componentDidUpdate() {
+    const dialog = this.dialogRef.current
+    if (!dialog) {
+      return
+    }
+
+    if (this.props.isLoading) {
+      dialog.showModal()
+    } else {
+      dialog.close()
+    }
+  }
+
   componentDidCatch(error: Error, info: any) {
     if (!this.props.isError) {
       this.props.throwError(error, false, info)
@@ -18,7 +33,7 @@ export class Template extends React.Component<{
   render = () => {
     return (
       <div>
-        {this.props.isLoading ? <div style={{ color: "red" }}>LOADING</div> : <></>}
+        <dialog ref={this.dialogRef}>LOADING</dialog>
         {this.getNav()}
         {this.getErrorOrChildren()}
       </div>
