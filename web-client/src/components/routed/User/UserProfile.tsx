@@ -12,6 +12,8 @@ export function UserProfile(props: { user: ExtendedTargetUserState; isMine: bool
       <br />
       gold power: {props.user.goldPower}
       <br />
+      tech power: {props.user.techPower}
+      <br />
       gold per sec: {props.user.goldPerSec}
     </div>
   )

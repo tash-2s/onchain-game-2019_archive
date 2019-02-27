@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
+import { Time } from "../../../misc/time"
 
 export class UserPlanetsList extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
@@ -14,6 +15,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<{
         key={up.id}
         userPlanet={up}
         isMine={this.props.isMine}
+        techPower={this.props.user.techPower}
         ongoingGold={this.state.ongoingGold}
         rankup={this.props.rankup}
       />
@@ -24,6 +26,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<{
 class UserPlanet extends React.Component<{
   userPlanet: UserNormalPlanet
   isMine: boolean
+  techPower: number
   ongoingGold: number
   rankup: (userPlanetId: number) => void
 }> {
@@ -38,24 +41,33 @@ class UserPlanet extends React.Component<{
         <br />
         param: {up.paramMemo}
         <br />
-        rankup available: {up.rankupAvailableDateString()}
+        created: {up.createdAtString()}
         <br />
+        {up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankupedAtString()}</div>}
         {this.props.isMine ? this.rankupButton() : <></>}
       </div>
     )
   }
 
   rankupButton = () => {
-    const rankupButtonText = `rankup (${this.props.userPlanet.requiredGoldForRankup()} gold)`
-    const isRankupable = this.props.userPlanet.isRankupable(
-      this.props.ongoingGold,
-      Math.floor(Date.now() / 1000)
-    )
+    const up = this.props.userPlanet
+    const now = Time.now()
+    const techPower = this.props.techPower
+    const isRankupable = up.isRankupable(this.props.ongoingGold, now, techPower)
 
     if (isRankupable) {
-      return <button onClick={this.rankupButtonHandler}>{rankupButtonText}</button>
+      return (
+        <button onClick={this.rankupButtonHandler}>
+          rankup ({up.requiredGoldForRankup()} gold)
+        </button>
+      )
     } else {
-      return <button disabled={true}>{rankupButtonText}</button>
+      return (
+        <button disabled={true}>
+          remaining sec for next rankup: {up.remainingSecForRankupWithoutTechPower(now)} -{" "}
+          {techPower} = {up.remainingSecForRankup(now, techPower)}
+        </button>
+      )
     }
   }
 

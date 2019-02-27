@@ -10,6 +10,7 @@ export interface TargetUserState {
   userNormalPlanets: Array<UserNormalPlanetType>
   population: number
   goldPower: number
+  techPower: number
   goldPerSec: number
   selectedUserPlanetsTab: "map" | "list"
   normalPlanetIdToGet: number | null

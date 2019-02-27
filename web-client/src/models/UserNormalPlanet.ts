@@ -1,6 +1,7 @@
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { NormalPlanet } from "../types/commonTypes"
 import { getNormalPlanet } from "../data/planets"
+import { Time } from "../misc/time"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
   normalPlanet: NormalPlanet
@@ -10,10 +11,10 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
   }
 
-  isRankupable = (gold: number, date: number): boolean => {
+  isRankupable = (gold: number, time: number, techPower: number): boolean => {
     return (
       !this.isMaxRank() &&
-      this.remainingSecForRankup(date) <= 0 &&
+      this.remainingSecForRankup(time, techPower) <= 0 &&
       this.requiredGoldForRankup() <= gold
     )
   }
@@ -28,30 +29,18 @@ export class UserNormalPlanet extends UserNormalPlanetType {
 
   rankupAvailableDateString = (): string => {
     const unixtime = this.rankupedAt + this.requiredSecForRankup()
-    const date = new Date(unixtime * 1000)
-    const dateStringOption = {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      hour12: false,
-      timeZoneName: "long"
-    }
-    const dateString = new Intl.DateTimeFormat(undefined, dateStringOption).format(date)
-    return dateString
+    return Time.unixtimeToDateString(unixtime)
   }
 
-  remainingSecForRankup = (now: number): number => {
-    const prevDiffSec = now - this.rankupedAt
+  remainingSecForRankup = (time: number, techPower: number) => {
+    return Math.max(this.remainingSecForRankupWithoutTechPower(time) - techPower, 0)
+  }
+
+  remainingSecForRankupWithoutTechPower = (time: number) => {
+    const prevDiffSec = time - this.rankupedAt
     const remainingSec = this.requiredSecForRankup() - prevDiffSec
 
-    if (remainingSec <= 0) {
-      return 0
-    } else {
-      return remainingSec
-    }
+    return Math.max(remainingSec, 0)
   }
 
   requiredSecForRankup = (): number => {
@@ -69,6 +58,9 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   planetPriceGold = () => {
     return this.normalPlanet.priceGold
   }
+
+  createdAtString = () => Time.unixtimeToDateString(this.createdAt)
+  rankupedAtString = () => Time.unixtimeToDateString(this.rankupedAt)
 }
 
 export interface ExtendedUserState extends UserState {
