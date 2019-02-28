@@ -12,7 +12,7 @@ contract Gold is MinterRole {
   uint200 constant UINT200_MAX = ~uint200(0);
 
   struct UserGold {
-    uint200 quantity;
+    uint200 balance;
     uint40 confirmedAt;
   }
 
@@ -20,23 +20,23 @@ contract Gold is MinterRole {
 
   function userGold(address account) public view returns (uint200, uint40) {
     UserGold storage _userGold = _addressToUserGold[account];
-    return (_userGold.quantity, _userGold.confirmedAt);
+    return (_userGold.balance, _userGold.confirmedAt);
   }
 
   function userGoldConfirmedAt(address account) public view returns (uint40) {
     return _addressToUserGold[account].confirmedAt;
   }
 
-  function balanceOf(address account) public view returns (uint200) {
-    return _addressToUserGold[account].quantity;
+  function userGoldBalance(address account) public view returns (uint200) {
+    return _addressToUserGold[account].balance;
   }
 
   // You must "confirm" before calling this function.
   function mint(address account, uint200 quantity) public onlyMinter {
     UserGold storage _userGold = _addressToUserGold[account];
 
-    if ((_userGold.quantity + quantity) >= _userGold.quantity) {
-      _addressToUserGold[account] = UserGold(_userGold.quantity + quantity, Util.uint40now());
+    if ((_userGold.balance + quantity) >= _userGold.balance) {
+      _addressToUserGold[account] = UserGold(_userGold.balance + quantity, Util.uint40now());
     } else {
       _addressToUserGold[account] = UserGold(UINT200_MAX, Util.uint40now());
     }
@@ -45,6 +45,6 @@ contract Gold is MinterRole {
   // You must "confirm" before calling this function.
   function unmint(address account, uint200 quantity) public onlyMinter {
     UserGold storage _userGold = _addressToUserGold[account];
-    _addressToUserGold[account] = UserGold(uint200(_userGold.quantity.sub(quantity)), Util.uint40now());
+    _addressToUserGold[account] = UserGold(uint200(_userGold.balance.sub(quantity)), Util.uint40now());
   }
 }

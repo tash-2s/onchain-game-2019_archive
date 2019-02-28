@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Gold.sol";
 import "./NormalPlanet.sol";
 import "./UserNormalPlanet.sol";
+import "./RemarkableUsers.sol";
 import "./lib/Util.sol";
 import "./lib/UserNormalPlanetArrayReader.sol";
 
@@ -12,22 +13,25 @@ contract Logic {
   Gold public gold;
   NormalPlanet public normalPlanet;
   UserNormalPlanet public userNormalPlanet;
+  RemarkableUsers public remarkableUsers;
 
   constructor(
     address goldContractAddress,
     address normalPlanetContractAddress,
-    address userNormalPlanetContractAddress
+    address userNormalPlanetContractAddress,
+    address remarkableUsersContractAddress
   ) public {
     gold = Gold(goldContractAddress);
     normalPlanet = NormalPlanet(normalPlanetContractAddress);
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
+    remarkableUsers = RemarkableUsers(remarkableUsersContractAddress);
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
     (, , uint200 planetPrice) = normalPlanet.planet(planetId);
 
     // this is not precise
-    if (userNormalPlanet.balanceOf(msg.sender) == 0 && gold.balanceOf(msg.sender) == 0) {
+    if (userNormalPlanet.balanceOf(msg.sender) == 0 && gold.userGoldBalance(msg.sender) == 0) {
       gold.mint(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
     } else {
       confirm(msg.sender);
@@ -63,6 +67,7 @@ contract Logic {
 
     if (diffGold > 0) {
       gold.mint(account, uint200(diffGold));
+      remarkableUsers.tackle(account);
     }
 
     return techPower;
@@ -74,7 +79,9 @@ contract Logic {
 
     // ckeck time
     uint diffSec = Util.uint40now() - UserNormalPlanetArrayReader.rankupedAt(userPlanet, 0);
-    int remainingSec = int(UserNormalPlanetArrayReader.requiredSecForRankup(userPlanet, 0)) - int(diffSec) - int(techPower);
+    int remainingSec = int(UserNormalPlanetArrayReader.requiredSecForRankup(userPlanet, 0)) - int(
+      diffSec
+    ) - int(techPower);
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
