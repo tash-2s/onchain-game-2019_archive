@@ -37,37 +37,44 @@ contract Logic {
     userNormalPlanet.mint(msg.sender, planetId, axialCoordinateQ, axialCoordinateR);
   }
 
-  function confirm(address account) private {
-    uint totalResidenceParam = 0;
-    uint totalGoldveinParam = 0;
+  function confirm(address account) private returns (uint) {
+    uint population = 0;
+    uint goldPower = 0;
+    uint techPower = 0;
+
     int48[] memory userPlanets = userNormalPlanet.userPlanets(account);
+
     for (uint i = 0; i < UserNormalPlanetArrayReader.userPlanetsCount(userPlanets); i++) {
       if (UserNormalPlanetArrayReader.kind(userPlanets, i) == 1) {
-        totalResidenceParam += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);
+        population += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);
       } else if (UserNormalPlanetArrayReader.kind(userPlanets, i) == 2) {
-        totalGoldveinParam += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);
+        goldPower += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);
+      } else if (UserNormalPlanetArrayReader.kind(userPlanets, i) == 3) {
+        techPower += UserNormalPlanetArrayReader.ratedParam(userPlanets, i);
       } else {
         revert("undefined kind");
       }
     }
 
     // TODO: type
-    uint goldPerSec = totalResidenceParam * totalGoldveinParam;
+    uint goldPerSec = population * goldPower;
     uint40 diffSec = Util.uint40now() - gold.userGoldConfirmedAt(account);
     uint diffGold = goldPerSec * diffSec;
 
     if (diffGold > 0) {
       gold.mint(account, uint200(diffGold));
     }
+
+    return techPower;
   }
 
   function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
-    confirm(msg.sender);
+    uint techPower = confirm(msg.sender);
     int48[] memory userPlanet = userNormalPlanet.userPlanet(msg.sender, userNormalPlanetId);
 
     // ckeck time
     uint diffSec = Util.uint40now() - UserNormalPlanetArrayReader.rankupedAt(userPlanet, 0);
-    int remainingSec = int(UserNormalPlanetArrayReader.requiredSecForRankup(userPlanet, 0)) - int(diffSec);
+    int remainingSec = int(UserNormalPlanetArrayReader.requiredSecForRankup(userPlanet, 0)) - int(diffSec) - int(techPower);
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold

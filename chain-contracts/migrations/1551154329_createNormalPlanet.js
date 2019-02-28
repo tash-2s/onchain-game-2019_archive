@@ -153,5 +153,6 @@ module.exports = function(deployer, network) {
 
     await normalPlanet.create(1, 1, 10, 5)
     await normalPlanet.create(2, 2, 10, 5)
+    await normalPlanet.create(3, 3, 10, 5)
   })
 }

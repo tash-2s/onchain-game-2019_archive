@@ -10,4 +10,5 @@ yarn loom genkey -a public_key -k private_key
 ```
 yarn loom run
 yarn truffle migrate
+yarn apply-registry
 ```
