@@ -11,7 +11,8 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0x983b2d56"
   },
   {
     "constant": false,
@@ -20,7 +21,8 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0x98650275"
   },
   {
     "constant": true,
@@ -39,7 +41,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0xaa271e1a"
   },
   {
     "anonymous": false,
@@ -51,7 +54,8 @@
       }
     ],
     "name": "MinterAdded",
-    "type": "event"
+    "type": "event",
+    "signature": "0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6"
   },
   {
     "anonymous": false,
@@ -63,7 +67,8 @@
       }
     ],
     "name": "MinterRemoved",
-    "type": "event"
+    "type": "event",
+    "signature": "0xe94479a9f7e1952cc78f2d6baab678adc1b772d936c6583def489e524cb66692"
   },
   {
     "constant": true,
@@ -86,7 +91,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0x6664189c"
   },
   {
     "constant": true,
@@ -105,7 +111,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0xd3e15b6f"
   },
   {
     "constant": true,
@@ -115,7 +122,7 @@
         "type": "address"
       }
     ],
-    "name": "balanceOf",
+    "name": "userGoldBalance",
     "outputs": [
       {
         "name": "",
@@ -124,7 +131,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0x6251a47e"
   },
   {
     "constant": false,
@@ -142,7 +150,8 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0xdd774eef"
   },
   {
     "constant": false,
@@ -160,6 +169,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0x752caf6b"
   }
 ]

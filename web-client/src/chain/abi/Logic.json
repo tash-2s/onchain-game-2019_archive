@@ -2,6 +2,21 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "remarkableUsers",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x0f3ea16d"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "userNormalPlanet",
     "outputs": [
       {
@@ -11,7 +26,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0x8720afd0"
   },
   {
     "constant": true,
@@ -25,7 +41,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0xad835940"
   },
   {
     "constant": true,
@@ -39,7 +56,8 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "signature": "0xfbec6f21"
   },
   {
     "inputs": [
@@ -54,11 +72,16 @@
       {
         "name": "userNormalPlanetContractAddress",
         "type": "address"
+      },
+      {
+        "name": "remarkableUsersContractAddress",
+        "type": "address"
       }
     ],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "constructor"
+    "type": "constructor",
+    "signature": "constructor"
   },
   {
     "constant": false,
@@ -80,7 +103,8 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0x1866e1ff"
   },
   {
     "constant": false,
@@ -94,6 +118,7 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "signature": "0x1e8a1485"
   }
 ]

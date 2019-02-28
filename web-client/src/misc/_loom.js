@@ -3,6 +3,7 @@ import Web3 from "web3"
 import ChainEnv from "../chain/env.json"
 import WebAbi from "../chain/abi/Web.json"
 import LogicAbi from "../chain/abi/Logic.json"
+import RemarkableUsersAbi from "../chain/abi/RemarkableUsers.json"
 
 export class LoomWeb3 {
   static setup() {
@@ -31,7 +32,11 @@ export class LoomWeb3 {
 
 export const getLoomContracts = () => ({
   Logic: new LoomWeb3.web3.eth.Contract(LogicAbi, ChainEnv.contractsAddresses.Logic),
-  Web: new LoomWeb3.web3.eth.Contract(WebAbi, ChainEnv.contractsAddresses.Web)
+  Web: new LoomWeb3.web3.eth.Contract(WebAbi, ChainEnv.contractsAddresses.Web),
+  RemarkableUsers: new LoomWeb3.web3.eth.Contract(
+    RemarkableUsersAbi,
+    ChainEnv.contractsAddresses.RemarkableUsers
+  )
 })
 
 const PRIVATE_KEY_NAME = "privateKey"

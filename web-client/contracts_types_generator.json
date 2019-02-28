@@ -2,6 +2,7 @@
   "outputPath": "./src/chain/types",
   "contracts": {
     "Logic": "./src/chain/abi/Logic.json",
-    "Web": "./src/chain/abi/Web.json"
+    "Web": "./src/chain/abi/Web.json",
+    "RemarkableUsers": "./src/chain/abi/RemarkableUsers.json"
   }
 }

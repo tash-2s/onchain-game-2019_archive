@@ -9,5 +9,6 @@ declare module "*/_loom.js" {
   export const getLoomContracts: () => {
     Web: import("./chain/types/Web").Web
     Logic: import("./chain/types/Logic").Logic
+    RemarkableUsers: import("./chain/types/RemarkableUsers").RemarkableUsers
   }
 }

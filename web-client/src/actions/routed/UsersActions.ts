@@ -1,12 +1,12 @@
 import { AbstractActions } from "../AbstractActions"
+import { callLoomContractMethod } from "../../misc/loom"
 
 export class UsersActions extends AbstractActions {
   private static creator = UsersActions.getActionCreator()
 
-  static setUsers = UsersActions.creator<Array<{ id: string }>>("setUsers")
+  static setUsers = UsersActions.creator<[string[], string[]]>("setUsers")
   setUsers = async () => {
-    // TODO: implement this
-    // await new Promise(resolve => setTimeout(resolve, 1000))
-    // this.dispatch(UsersActions.setUsers([{ id: "test1" }, { id: "test2" }]))
+    const response = await callLoomContractMethod(cs => cs.RemarkableUsers.methods.getUsers())
+    this.dispatch(UsersActions.setUsers(response))
   }
 }
