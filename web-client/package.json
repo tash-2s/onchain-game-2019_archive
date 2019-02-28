@@ -2,6 +2,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "l": "yarn generate-chain-env local && yarn generate-contracts-types && yarn serve:local",
     "serve": "parcel src/index.html --no-hmr",
     "serve:local": "./scripts/cpChainEnv.sh local && yarn serve",
     "serve:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn serve",

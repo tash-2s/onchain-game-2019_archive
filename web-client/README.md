@@ -13,7 +13,5 @@ yarn serve:extdev_plasma_us1
 ## With local
 Make sure k2-loomchain is running on your local.
 ```
-yarn generate-chain-env local
-yarn generate-contracts-types
-yarn serve:local
+yarn l
 ```
