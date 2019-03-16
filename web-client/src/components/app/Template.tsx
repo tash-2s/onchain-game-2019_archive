@@ -63,9 +63,9 @@ export class Template extends React.Component<{
       const user = this.props.currentUser
       return (
         <div>
-          My userId: {user.address}
+          My useraddress: {user.address}
           <br />
-          <InternalLink to={["/users/:id", { id: user.address }]}>my planets</InternalLink>
+          <InternalLink to={["/:address", { address: user.address }]}>my planets</InternalLink>
         </div>
       )
     } else {

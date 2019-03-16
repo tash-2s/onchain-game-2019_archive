@@ -2,7 +2,7 @@ import * as React from "react"
 import { RouteId } from "../../types/commonTypes"
 import { historyLib, combineRouteIdAndParams } from "../../misc/route"
 
-type RouteIdWithParamsObj = [RouteId, { id: string }]
+type RouteIdWithParamsObj = [RouteId, { address: string }]
 const isRouteIdWithParamsObj = (arg: any): arg is RouteIdWithParamsObj => {
   return "object" === typeof arg && "object" === typeof arg[1]
 }

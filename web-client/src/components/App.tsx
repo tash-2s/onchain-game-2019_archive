@@ -25,7 +25,7 @@ export class App extends React.Component<AppProps> {
         return <p>top</p>
       case "/users":
         return <UsersContainer />
-      case "/users/:id":
+      case "/:address":
         return <UserContainer />
       case "/not_found":
       default:

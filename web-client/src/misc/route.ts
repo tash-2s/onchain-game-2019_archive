@@ -35,13 +35,20 @@ export const convertHashToRouteIdWithParams = (hash: string): RouteState => {
   let routeId: RouteId = "/not_found"
   let params: string[] = []
 
-  routes.forEach(route => {
-    const p = route.regExp.exec(pathname)
-    if (p) {
-      routeId = route.routeId
-      params = p.slice(1) // first element is a matched path, so it's same with routeId
-    }
-  })
+  routes
+    .filter(route => route.routeId !== "/:address")
+    .forEach(route => {
+      const p = route.regExp.exec(pathname)
+      if (p) {
+        routeId = route.routeId
+        params = p.slice(1) // first element is a matched path, so it's same with routeId
+      }
+    })
+
+  if (routeId === "/not_found" && pathname.slice(0, 3) === "/0x") {
+    routeId = "/:address"
+    params = [pathname.slice(1)]
+  }
 
   return { id: routeId, params: params }
 }
