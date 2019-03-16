@@ -83,7 +83,7 @@ export class Template extends React.Component<{
 
   getErrorOrChildren = () => {
     if (this.props.isError) {
-      const clickHandle = () => window.location.replace("/")
+      const clickHandle = () => location.replace(location.pathname)
       return (
         <div>
           <p>Something went wrong.</p>

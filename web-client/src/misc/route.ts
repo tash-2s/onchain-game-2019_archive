@@ -18,13 +18,20 @@ const routes = ((): Array<Route> => {
 export const historyLib = createBrowserHistory()
 
 export const registerStore = (store: Store) => {
-  historyLib.listen((location, action) => {
-    const rwp = convertPathnameToRouteIdWithParams(location.pathname)
+  historyLib.listen((location, _action) => {
+    const rwp = convertHashToRouteIdWithParams(location.hash)
     new CommonActions(store.dispatch).changeRoute(rwp)
   })
 }
 
-export const convertPathnameToRouteIdWithParams = (pathname: string): RouteState => {
+export const convertHashToRouteIdWithParams = (hash: string): RouteState => {
+  let pathname: string
+  if (hash === "") {
+    pathname = "/"
+  } else {
+    pathname = hash.slice(1) // remove '#'
+  }
+
   let routeId: RouteId = "/not_found"
   let params: string[] = []
 

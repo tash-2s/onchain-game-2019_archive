@@ -22,11 +22,20 @@ export class InternalLink extends React.Component<InternalLinkProps> {
 
   getPath = (): string => {
     const to = this.props.to
-    if (isRouteIdWithParamsObj(to)) {
-      return combineRouteIdAndParams(to[0], to[1])
-    } else {
+
+    if (to === "/") {
       return to
     }
+
+    let path: string
+
+    if (isRouteIdWithParamsObj(to)) {
+      path = combineRouteIdAndParams(to[0], to[1])
+    } else {
+      path = to
+    }
+
+    return `#${path}`
   }
 
   go = (e: React.FormEvent) => {

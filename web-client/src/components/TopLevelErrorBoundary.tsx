@@ -14,7 +14,7 @@ export class TopLevelErrorBoundary extends React.Component<{}, { hasError: boole
 
   render = () => {
     if (this.state.hasError) {
-      const clickHandle = () => window.location.replace("/")
+      const clickHandle = () => location.replace(location.pathname)
       return (
         <div>
           <p>Something went wrong on top-level.</p>

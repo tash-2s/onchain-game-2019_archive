@@ -1,11 +1,11 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { CommonActions } from "../actions/CommonActions"
 import { CommonState } from "../types/commonTypes"
-import { historyLib, convertPathnameToRouteIdWithParams } from "../misc/route"
+import { historyLib, convertHashToRouteIdWithParams } from "../misc/route"
 import { LoomWeb3 } from "../misc/loom"
 
 const getInitialRoute = (): CommonState["route"] => {
-  return convertPathnameToRouteIdWithParams(historyLib.location.pathname)
+  return convertHashToRouteIdWithParams(historyLib.location.hash)
 }
 
 const getCurrentUser = (): CommonState["currentUser"] => {
