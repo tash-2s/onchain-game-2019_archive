@@ -65,13 +65,13 @@ class LoomUtil {
 
   static getAddressFromPrivateKey(privateKey) {
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-    return LocalAddress.fromPublicKey(publicKey).toString()
+    return LocalAddress.fromPublicKey(publicKey).toChecksumString()
   }
 
   static generateAccount() {
     const privateKey = CryptoUtils.generatePrivateKey()
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-    const address = LocalAddress.fromPublicKey(publicKey).toString()
+    const address = LocalAddress.fromPublicKey(publicKey).toChecksumString()
     return [privateKey, publicKey, address]
   }
 }
