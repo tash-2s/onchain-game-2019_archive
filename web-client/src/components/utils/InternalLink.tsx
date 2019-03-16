@@ -7,7 +7,7 @@ const isRouteIdWithParamsObj = (arg: any): arg is RouteIdWithParamsObj => {
   return "object" === typeof arg && "object" === typeof arg[1]
 }
 
-export interface InternalLinkProps {
+interface InternalLinkProps {
   to: RouteId | RouteIdWithParamsObj
 }
 
