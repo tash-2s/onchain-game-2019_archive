@@ -1,15 +1,17 @@
 pragma solidity 0.4.24;
 
 import "./controllers/UserGoldControllable.sol";
-import "./UserNormalPlanet.sol";
-import "./lib/UserNormalPlanetArrayReader.sol";
+import "./controllers/UserNormalPlanetControllable.sol";
 
-contract Web is UserGoldControllable {
-  UserNormalPlanet public userNormalPlanet;
-
-  constructor(address userNormalPlanetContractAddress, address userGoldPermanenceAddress) public {
-    userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
+contract Web is UserGoldControllable, UserNormalPlanetControllable {
+  constructor(
+    address userNormalPlanetPermanenceAddress,
+    address userNormalPlanetIdCounterPermanenceAddress,
+    address userGoldPermanenceAddress
+  ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
+    setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
+    setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
   }
 
   function getUser(address account)
@@ -28,8 +30,8 @@ contract Web is UserGoldControllable {
     confirmedGold = goldRecord.balance;
     goldConfirmedAt = goldRecord.confirmedAt;
 
-    int48[] memory userPlanets = userNormalPlanet.userPlanets(account);
-    uint userPlanetsCount = UserNormalPlanetArrayReader.userPlanetsCount(userPlanets);
+    UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
+    uint userPlanetsCount = userPlanetRecords.length;
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
@@ -37,14 +39,18 @@ contract Web is UserGoldControllable {
     unpAxialCoordinates = new int16[](userPlanetsCount * 2);
     uint counter = 0;
 
+    UserNormalPlanetRecord memory userPlanetRecord;
+
     for (uint i = 0; i < userPlanetsCount; i++) {
-      unpIds[counter] = UserNormalPlanetArrayReader.id(userPlanets, i);
-      unpIds[counter + 1] = UserNormalPlanetArrayReader.normalPlanetId(userPlanets, i);
-      unpRanks[i] = UserNormalPlanetArrayReader.rank(userPlanets, i);
-      unpTimes[counter] = UserNormalPlanetArrayReader.rankupedAt(userPlanets, i);
-      unpTimes[counter + 1] = UserNormalPlanetArrayReader.createdAt(userPlanets, i);
-      unpAxialCoordinates[counter] = UserNormalPlanetArrayReader.axialCoordinateQ(userPlanets, i);
-      unpAxialCoordinates[counter + 1] = UserNormalPlanetArrayReader.axialCoordinateR(userPlanets, i);
+      userPlanetRecord = userPlanetRecords[i];
+
+      unpIds[counter] = userPlanetRecord.id;
+      unpIds[counter + 1] = userPlanetRecord.normalPlanetId;
+      unpRanks[i] = userPlanetRecord.rank;
+      unpTimes[counter] = userPlanetRecord.rankupedAt;
+      unpTimes[counter + 1] = userPlanetRecord.createdAt;
+      unpAxialCoordinates[counter] = userPlanetRecord.axialCoordinateQ;
+      unpAxialCoordinates[counter + 1] = userPlanetRecord.axialCoordinateR;
 
       counter += 2;
     }

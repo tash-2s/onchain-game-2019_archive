@@ -29,7 +29,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
     uint16 param = uint16(interpretPermanenceUint256(source, 4, 8));
     uint200 priceGold = uint200(interpretPermanenceUint256(source, 9, 69));
 
-    if (kind == 0 && param == 0 && priceGold == 0) {
+    if (kind == 0) {
       revert("faild to build planet, it's not defined");
     }
 

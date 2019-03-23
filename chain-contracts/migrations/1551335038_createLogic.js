@@ -21,15 +21,6 @@ const minterAdditionAbi = [
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {
-    const utilAddress = await helper.getRegistryContractAddress(deployer.network_id, "Util")
-    const readerAddress = await helper.getRegistryContractAddress(
-      deployer.network_id,
-      "UserNormalPlanetArrayReader"
-    )
-    Logic.setNetwork(deployer.network_id)
-    Logic.link("Util", utilAddress)
-    Logic.link("UserNormalPlanetArrayReader", readerAddress)
-
     const userGoldPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
       "UserGoldPermanence"
@@ -38,9 +29,13 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "NormalPlanetPermanence"
     )
-    const userNormalPlanetAddress = await helper.getRegistryContractAddress(
+    const userNormalPlanetPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "UserNormalPlanet"
+      "UserNormalPlanetPermanence"
+    )
+    const userNormalPlanetIdCounterPermanenceAddress = await helper.getRegistryContractAddress(
+      deployer.network_id,
+      "UserNormalPlanetIdCounterPermanence"
     )
     const remarkableUsersAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
@@ -50,13 +45,19 @@ module.exports = function(deployer, network, accounts) {
     const logic = await helper.deployAndRegister(deployer, network, Logic, [
       userGoldPermanenceAddress,
       normalPlanetPermanenceAddress,
-      userNormalPlanetAddress,
+      userNormalPlanetPermanenceAddress,
+      userNormalPlanetIdCounterPermanenceAddress,
       remarkableUsersAddress
     ])
 
     const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
     await UserGoldPermanence.methods.addMinter(logic.address).send({ from: accounts[0] }) // TODO: 0 is right?
-    const UserNormalPlanet = new web3.eth.Contract(minterAdditionAbi, userNormalPlanetAddress)
+    const UserNormalPlanet = new web3.eth.Contract(minterAdditionAbi, userNormalPlanetPermanenceAddress)
     await UserNormalPlanet.methods.addMinter(logic.address).send({ from: accounts[0] })
+    const UserNormalPlanetIdCounter = new web3.eth.Contract(
+      minterAdditionAbi,
+      userNormalPlanetIdCounterPermanenceAddress
+    )
+    await UserNormalPlanetIdCounter.methods.addMinter(logic.address).send({ from: accounts[0] })
   })
 }
