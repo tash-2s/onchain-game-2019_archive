@@ -4,8 +4,11 @@ const RemarkableUsers = artifacts.require("RemarkableUsers") // TODO: fix
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {
-    const goldAddress = await helper.getRegistryContractAddress(deployer.network_id, "Gold")
+    const userGoldPermanenceAddress = await helper.getRegistryContractAddress(
+      deployer.network_id,
+      "UserGoldPermanence"
+    )
 
-    await helper.deployAndRegister(deployer, network, RemarkableUsers, [goldAddress])
+    await helper.deployAndRegister(deployer, network, RemarkableUsers, [userGoldPermanenceAddress])
   })
 }
