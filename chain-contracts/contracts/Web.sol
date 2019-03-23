@@ -1,16 +1,15 @@
 pragma solidity 0.4.24;
 
-import "./Gold.sol";
+import "./controllers/UserGoldControllable.sol";
 import "./UserNormalPlanet.sol";
 import "./lib/UserNormalPlanetArrayReader.sol";
 
-contract Web {
+contract Web is UserGoldControllable {
   UserNormalPlanet public userNormalPlanet;
-  Gold public gold;
 
-  constructor(address userNormalPlanetContractAddress, address goldContractAddress) public {
+  constructor(address userNormalPlanetContractAddress, address userGoldPermanenceAddress) public {
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
-    gold = Gold(goldContractAddress);
+    setUserGoldPermanence(userGoldPermanenceAddress);
   }
 
   function getUser(address account)
@@ -25,7 +24,9 @@ contract Web {
     int16[] unpAxialCoordinates // [q, r, ...]
   )
   {
-    (confirmedGold, goldConfirmedAt) = gold.userGold(account);
+    UserGoldRecord memory goldRecord = userGoldRecordOf(account);
+    confirmedGold = goldRecord.balance;
+    goldConfirmedAt = goldRecord.confirmedAt;
 
     int48[] memory userPlanets = userNormalPlanet.userPlanets(account);
     uint userPlanetsCount = UserNormalPlanetArrayReader.userPlanetsCount(userPlanets);
