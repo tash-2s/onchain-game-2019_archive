@@ -3,39 +3,38 @@ pragma solidity 0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./controllers/UserGoldControllable.sol";
-import "./NormalPlanet.sol";
+import "./controllers/NormalPlanetControllable.sol";
 import "./UserNormalPlanet.sol";
 import "./RemarkableUsers.sol";
 import "./lib/Util.sol";
 import "./lib/UserNormalPlanetArrayReader.sol";
 
-contract Logic is UserGoldControllable {
-  NormalPlanet public normalPlanet;
+contract Logic is UserGoldControllable, NormalPlanetControllable {
   UserNormalPlanet public userNormalPlanet;
   RemarkableUsers public remarkableUsers;
 
   constructor(
     address userGoldPermanenceAddress,
-    address normalPlanetContractAddress,
+    address normalPlanetPermanenceAddress,
     address userNormalPlanetContractAddress,
     address remarkableUsersContractAddress
   ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
-    normalPlanet = NormalPlanet(normalPlanetContractAddress);
+    setNormalPlanetPermanence(normalPlanetPermanenceAddress);
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
     remarkableUsers = RemarkableUsers(remarkableUsersContractAddress);
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
-    (, , uint200 planetPrice) = normalPlanet.planet(planetId);
+    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
     UserGoldRecord memory goldRecord = userGoldRecordOf(msg.sender);
 
     // this is not precise
     if (userNormalPlanet.balanceOf(msg.sender) == 0 && goldRecord.balance == 0) {
-      mintGold(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
+      mintGold(msg.sender, uint200(SafeMath.sub(10, planetRecord.priceGold)));
     } else {
       confirm(msg.sender);
-      unmintGold(msg.sender, planetPrice);
+      unmintGold(msg.sender, planetRecord.priceGold);
     }
 
     userNormalPlanet.mint(msg.sender, planetId, axialCoordinateQ, axialCoordinateR);
@@ -85,10 +84,12 @@ contract Logic is UserGoldControllable {
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
-    (, , uint200 planetPrice) = normalPlanet.planet(
+    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(
       UserNormalPlanetArrayReader.normalPlanetId(userPlanet, 0)
     );
-    uint200 rankupGold = uint200((planetPrice / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)); // TODO: type?
+    uint200 rankupGold = uint200(
+      (planetRecord.priceGold / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)
+    ); // TODO: type?
     unmintGold(msg.sender, rankupGold);
 
     userNormalPlanet.rankup(msg.sender, userNormalPlanetId);

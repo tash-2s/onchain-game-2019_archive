@@ -34,7 +34,10 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "UserGoldPermanence"
     )
-    const normalPlanetAddress = await helper.getRegistryContractAddress(deployer.network_id, "NormalPlanet")
+    const normalPlanetPermanenceAddress = await helper.getRegistryContractAddress(
+      deployer.network_id,
+      "NormalPlanetPermanence"
+    )
     const userNormalPlanetAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
       "UserNormalPlanet"
@@ -46,7 +49,7 @@ module.exports = function(deployer, network, accounts) {
 
     const logic = await helper.deployAndRegister(deployer, network, Logic, [
       userGoldPermanenceAddress,
-      normalPlanetAddress,
+      normalPlanetPermanenceAddress,
       userNormalPlanetAddress,
       remarkableUsersAddress
     ])

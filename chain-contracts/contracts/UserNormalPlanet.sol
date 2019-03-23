@@ -2,18 +2,16 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 
-import "./NormalPlanet.sol";
+import "./controllers/NormalPlanetControllable.sol";
 import "./lib/Util.sol";
 import "./lib/UserNormalPlanetArrayReader.sol";
 
-contract UserNormalPlanet is MinterRole {
-  NormalPlanet public normalPlanet;
-
+contract UserNormalPlanet is MinterRole, NormalPlanetControllable {
   mapping(address => uint16) private _idGenerator;
   mapping(address => UserPlanet[]) private _userPlanets;
 
-  constructor(address normalPlanetContractAddress) public {
-    normalPlanet = NormalPlanet(normalPlanetContractAddress);
+  constructor(address normalPlanetPermanenceAddress) public {
+    setNormalPlanetPermanence(normalPlanetPermanenceAddress);
   }
 
   struct UserPlanet {
@@ -72,7 +70,7 @@ contract UserNormalPlanet is MinterRole {
     public
     onlyMinter
   {
-    (uint8 kind, uint16 param, ) = normalPlanet.planet(normalPlanetId);
+    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(normalPlanetId);
 
     UserPlanet[] storage ups = _userPlanets[account];
     for (uint16 i = 0; i < ups.length; i++) {
@@ -86,8 +84,8 @@ contract UserNormalPlanet is MinterRole {
       UserPlanet(
         _idGenerator[account]++,
         normalPlanetId,
-        kind,
-        param,
+        planetRecord.kind,
+        planetRecord.param,
         1,
         Util.uint40now(),
         Util.uint40now(),
