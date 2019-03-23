@@ -85,16 +85,23 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
 
   function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
     uint techPower = confirm(msg.sender);
-    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(msg.sender, userNormalPlanetId);
+    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
+      msg.sender,
+      userNormalPlanetId
+    );
 
     // ckeck time
     uint diffSec = uint40now() - userPlanet.rankupedAt;
-    int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(techPower); // TODO: type
+    int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(
+      techPower
+    ); // TODO: type
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint200 rankupGold = uint200((planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1)));
+    uint200 rankupGold = uint200(
+      (planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1))
+    );
     unmintGold(msg.sender, rankupGold);
 
     _rankupUserNormalPlanet(msg.sender, userNormalPlanetId);

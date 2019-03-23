@@ -33,7 +33,10 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     if ((quantity >= UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
       updateUserGoldRecord(account, UserGoldRecord(UINT200_MAX, uint40now()));
     } else {
-      updateUserGoldRecord(account, UserGoldRecord(record.balance + uint200(quantity), uint40now()));
+      updateUserGoldRecord(
+        account,
+        UserGoldRecord(record.balance + uint200(quantity), uint40now())
+      );
     }
   }
 

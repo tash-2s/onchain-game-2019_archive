@@ -13,11 +13,12 @@ contract PermanenceInterpretable {
   }
 
   // ex) (123456789, 4, 6, 999) => 123999789
-  function reinterpretPermanenceUint256(uint256 target, uint256 startDigit, uint256 endDigit, uint256 update)
-    public
-    pure
-    returns (uint256)
-  {
+  function reinterpretPermanenceUint256(
+    uint256 target,
+    uint256 startDigit,
+    uint256 endDigit,
+    uint256 update
+  ) public pure returns (uint256) {
     assertInterpretableDigits(startDigit, endDigit);
 
     uint256 zeroFilledTarget = (target / (10 ** endDigit) * (10 ** endDigit)) + (target % (10 ** (startDigit - 1)));

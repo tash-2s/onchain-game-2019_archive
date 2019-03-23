@@ -29,7 +29,11 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     _userNormalPlanetPermanence = UserNormalPlanetPermanence(permanenceAddress);
   }
 
-  function userNormalPlanetIdCounterPermanence() public view returns (UserNormalPlanetIdCounterPermanence) {
+  function userNormalPlanetIdCounterPermanence()
+    public
+    view
+    returns (UserNormalPlanetIdCounterPermanence)
+  {
     return _userNormalPlanetIdCounterPermanence;
   }
 
@@ -37,7 +41,11 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     _userNormalPlanetIdCounterPermanence = UserNormalPlanetIdCounterPermanence(permanenceAddress);
   }
 
-  function userNormalPlanetRecordsOf(address account) internal view returns (UserNormalPlanetRecord[]) {
+  function userNormalPlanetRecordsOf(address account)
+    internal
+    view
+    returns (UserNormalPlanetRecord[])
+  {
     uint256[] memory us = _userNormalPlanetPermanence.read(account);
     UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](us.length);
 
@@ -73,7 +81,11 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return buildUserNormalPlanetRecord(target);
   }
 
-  function buildUserNormalPlanetRecord(uint256 source) internal pure returns (UserNormalPlanetRecord) {
+  function buildUserNormalPlanetRecord(uint256 source)
+    internal
+    pure
+    returns (UserNormalPlanetRecord)
+  {
     uint16 id = uint16(interpretPermanenceUint256(source, 1, 5));
     uint16 normalPlanetId = uint16(interpretPermanenceUint256(source, 6, 10));
     uint8 kind = uint8(interpretPermanenceUint256(source, 11, 13));
