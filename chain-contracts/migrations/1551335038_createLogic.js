@@ -30,7 +30,10 @@ module.exports = function(deployer, network, accounts) {
     Logic.link("Util", utilAddress)
     Logic.link("UserNormalPlanetArrayReader", readerAddress)
 
-    const goldAddress = await helper.getRegistryContractAddress(deployer.network_id, "Gold")
+    const userGoldPermanenceAddress = await helper.getRegistryContractAddress(
+      deployer.network_id,
+      "UserGoldPermanence"
+    )
     const normalPlanetAddress = await helper.getRegistryContractAddress(deployer.network_id, "NormalPlanet")
     const userNormalPlanetAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
@@ -42,14 +45,14 @@ module.exports = function(deployer, network, accounts) {
     )
 
     const logic = await helper.deployAndRegister(deployer, network, Logic, [
-      goldAddress,
+      userGoldPermanenceAddress,
       normalPlanetAddress,
       userNormalPlanetAddress,
       remarkableUsersAddress
     ])
 
-    const Gold = new web3.eth.Contract(minterAdditionAbi, goldAddress)
-    await Gold.methods.addMinter(logic.address).send({ from: accounts[0] }) // TODO: 0 is right?
+    const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
+    await UserGoldPermanence.methods.addMinter(logic.address).send({ from: accounts[0] }) // TODO: 0 is right?
     const UserNormalPlanet = new web3.eth.Contract(minterAdditionAbi, userNormalPlanetAddress)
     await UserNormalPlanet.methods.addMinter(logic.address).send({ from: accounts[0] })
   })

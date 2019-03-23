@@ -27,7 +27,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     return buildUserGoldRecord(_userGoldPermanence.read(account));
   }
 
-  function mint(address account, uint256 quantity) internal {
+  function mintGold(address account, uint256 quantity) internal {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
     if ((quantity >= UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
@@ -37,7 +37,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     }
   }
 
-  function unmint(address account, uint256 quantity) internal {
+  function unmintGold(address account, uint256 quantity) internal {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
     require(record.balance >= quantity, "not enough gold balance");
@@ -50,8 +50,8 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function transformUserGoldRecordToUint256(UserGoldRecord record) internal pure returns (uint256) {
-    uint256 i = reinterpretPermanenceUint256(0, 61, 1, record.balance);
-    i = reinterpretPermanenceUint256(i, 74, 62, record.confirmedAt);
+    uint256 i = reinterpretPermanenceUint256(0, 1, 61, record.balance);
+    i = reinterpretPermanenceUint256(i, 62, 74, record.confirmedAt);
 
     return i;
   }

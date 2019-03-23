@@ -2,26 +2,25 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./Gold.sol";
+import "./controllers/UserGoldControllable.sol";
 import "./NormalPlanet.sol";
 import "./UserNormalPlanet.sol";
 import "./RemarkableUsers.sol";
 import "./lib/Util.sol";
 import "./lib/UserNormalPlanetArrayReader.sol";
 
-contract Logic {
-  Gold public gold;
+contract Logic is UserGoldControllable {
   NormalPlanet public normalPlanet;
   UserNormalPlanet public userNormalPlanet;
   RemarkableUsers public remarkableUsers;
 
   constructor(
-    address goldContractAddress,
+    address userGoldPermanenceAddress,
     address normalPlanetContractAddress,
     address userNormalPlanetContractAddress,
     address remarkableUsersContractAddress
   ) public {
-    gold = Gold(goldContractAddress);
+    setUserGoldPermanence(userGoldPermanenceAddress);
     normalPlanet = NormalPlanet(normalPlanetContractAddress);
     userNormalPlanet = UserNormalPlanet(userNormalPlanetContractAddress);
     remarkableUsers = RemarkableUsers(remarkableUsersContractAddress);
@@ -29,13 +28,14 @@ contract Logic {
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
     (, , uint200 planetPrice) = normalPlanet.planet(planetId);
+    UserGoldRecord memory goldRecord = userGoldRecordOf(msg.sender);
 
     // this is not precise
-    if (userNormalPlanet.balanceOf(msg.sender) == 0 && gold.userGoldBalance(msg.sender) == 0) {
-      gold.mint(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
+    if (userNormalPlanet.balanceOf(msg.sender) == 0 && goldRecord.balance == 0) {
+      mintGold(msg.sender, uint200(SafeMath.sub(10, planetPrice)));
     } else {
       confirm(msg.sender);
-      gold.unmint(msg.sender, planetPrice);
+      unmintGold(msg.sender, planetPrice);
     }
 
     userNormalPlanet.mint(msg.sender, planetId, axialCoordinateQ, axialCoordinateR);
@@ -62,11 +62,11 @@ contract Logic {
 
     // TODO: type
     uint goldPerSec = population * goldPower;
-    uint40 diffSec = Util.uint40now() - gold.userGoldConfirmedAt(account);
+    uint40 diffSec = Util.uint40now() - userGoldRecordOf(account).confirmedAt;
     uint diffGold = goldPerSec * diffSec;
 
     if (diffGold > 0) {
-      gold.mint(account, uint200(diffGold));
+      mintGold(account, uint200(diffGold));
       remarkableUsers.tackle(account);
     }
 
@@ -89,7 +89,7 @@ contract Logic {
       UserNormalPlanetArrayReader.normalPlanetId(userPlanet, 0)
     );
     uint200 rankupGold = uint200((planetPrice / 5) * UserNormalPlanetArrayReader.rate(userPlanet, 0)); // TODO: type?
-    gold.unmint(msg.sender, rankupGold);
+    unmintGold(msg.sender, rankupGold);
 
     userNormalPlanet.rankup(msg.sender, userNormalPlanetId);
   }
