@@ -1,9 +1,8 @@
 pragma solidity 0.4.24;
 
-import "./Gold.sol";
+import "./controllers/UserGoldControllable.sol";
 
-contract RemarkableUsers {
-  Gold public gold;
+contract RemarkableUsers is UserGoldControllable {
   uint constant USERS_COUNT = 100;
   uint200 public thresholdGold = 0;
 
@@ -11,8 +10,8 @@ contract RemarkableUsers {
   // [user1.account, user1,gold, user2.account, user2.gold, ...]
   uint200[] private _users = new uint200[](USERS_COUNT * 2);
 
-  constructor(address goldContractAddress) public {
-    gold = Gold(goldContractAddress);
+  constructor(address userGoldPermanenceAddress) public {
+    setUserGoldPermanence(userGoldPermanenceAddress);
   }
 
   function getUsers() external view returns (address[] accounts, uint200[] golds) {
@@ -28,7 +27,7 @@ contract RemarkableUsers {
   }
 
   function tackle(address account) public {
-    uint200 newGold = gold.userGoldBalance(account);
+    uint200 newGold = userGoldRecordOf(account).balance;
 
     if (newGold < thresholdGold) {
       return;
