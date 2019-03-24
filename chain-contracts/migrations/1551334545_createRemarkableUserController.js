@@ -9,6 +9,8 @@ module.exports = function(deployer, network, accounts) {
       "UserGoldPermanence"
     )
 
-    await helper.deployAndRegister(deployer, network, RemarkableUserController, [userGoldPermanenceAddress])
+    await helper.deployAndRegister(deployer, network, RemarkableUserController, [
+      userGoldPermanenceAddress
+    ])
   })
 }
