@@ -27,7 +27,12 @@ contract PermanenceInterpretable {
     return zeroFilledTarget + uppedUpdate;
   }
 
-  function assertInterpretableDigits(uint256 startDigit, uint256 endDigit) public pure {
+  function assertInterpretableDigits(uint256 startDigit, uint256 endDigit)
+    public
+    pure
+    returns (bool)
+  {
     require(startDigit <= endDigit, "wrong digits");
+    return true;
   }
 }
