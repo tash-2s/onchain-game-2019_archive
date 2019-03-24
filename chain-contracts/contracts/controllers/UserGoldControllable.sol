@@ -10,7 +10,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
 
   struct UserGoldRecord {
     uint200 balance;
-    uint40 confirmedAt;
+    uint32 confirmedAt;
   }
 
   UserGoldPermanence private _userGoldPermanence;
@@ -31,11 +31,11 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
     if ((quantity >= UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
-      updateUserGoldRecord(account, UserGoldRecord(UINT200_MAX, uint40now()));
+      updateUserGoldRecord(account, UserGoldRecord(UINT200_MAX, uint32now()));
     } else {
       updateUserGoldRecord(
         account,
-        UserGoldRecord(record.balance + uint200(quantity), uint40now())
+        UserGoldRecord(record.balance + uint200(quantity), uint32now())
       );
     }
   }
@@ -45,7 +45,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
 
     require(record.balance >= quantity, "not enough gold balance");
 
-    updateUserGoldRecord(account, UserGoldRecord(record.balance - uint200(quantity), uint40now()));
+    updateUserGoldRecord(account, UserGoldRecord(record.balance - uint200(quantity), uint32now()));
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord record) internal {
@@ -61,7 +61,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
 
   function buildUserGoldRecord(uint256 source) internal pure returns (UserGoldRecord) {
     uint200 balance = uint200(interpretPermanenceUint256(source, 1, 61));
-    uint40 confirmedAt = uint40(interpretPermanenceUint256(source, 62, 74));
+    uint32 confirmedAt = uint32(interpretPermanenceUint256(source, 62, 71));
 
     return UserGoldRecord(balance, confirmedAt);
   }

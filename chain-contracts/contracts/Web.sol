@@ -19,10 +19,10 @@ contract Web is UserGoldControllable, UserNormalPlanetControllable {
     view
     returns (
     uint200 confirmedGold,
-    uint40 goldConfirmedAt,
+    uint32 goldConfirmedAt,
     uint16[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
-    uint40[] unpTimes, // [rankupedAt, createdAt, ...]
+    uint32[] unpTimes, // [rankupedAt, createdAt, ...]
     int16[] unpAxialCoordinates // [q, r, ...]
   )
   {
@@ -35,7 +35,7 @@ contract Web is UserGoldControllable, UserNormalPlanetControllable {
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
-    unpTimes = new uint40[](userPlanetsCount * 2);
+    unpTimes = new uint32[](userPlanetsCount * 2);
     unpAxialCoordinates = new int16[](userPlanetsCount * 2);
     uint counter = 0;
 

@@ -72,7 +72,7 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
 
     // TODO: type
     uint goldPerSec = population * goldPower;
-    uint40 diffSec = uint40now() - userGoldRecordOf(account).confirmedAt;
+    uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
     uint diffGold = goldPerSec * diffSec;
 
     if (diffGold > 0) {
@@ -91,7 +91,7 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
     );
 
     // ckeck time
-    uint diffSec = uint40now() - userPlanet.rankupedAt;
+    uint diffSec = uint32now() - userPlanet.rankupedAt;
     int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(
       techPower
     ); // TODO: type

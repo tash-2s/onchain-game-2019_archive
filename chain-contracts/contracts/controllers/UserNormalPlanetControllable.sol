@@ -12,8 +12,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint8 kind;
     uint16 originalParam;
     uint8 rank;
-    uint40 rankupedAt;
-    uint40 createdAt;
+    uint32 rankupedAt;
+    uint32 createdAt;
     int16 axialCoordinateQ;
     int16 axialCoordinateR;
   }
@@ -91,10 +91,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint8 kind = uint8(interpretPermanenceUint256(source, 11, 13));
     uint16 originalParam = uint16(interpretPermanenceUint256(source, 14, 18));
     uint8 rank = uint8(interpretPermanenceUint256(source, 19, 21));
-    uint40 rankupedAt = uint40(interpretPermanenceUint256(source, 22, 34));
-    uint40 createdAt = uint40(interpretPermanenceUint256(source, 35, 47));
-    int16 axialCoordinateQ = int16(interpretPermanenceUint256(source, 48, 52)); // works well?
-    int16 axialCoordinateR = int16(interpretPermanenceUint256(source, 53, 57));
+    uint32 rankupedAt = uint32(interpretPermanenceUint256(source, 22, 31));
+    uint32 createdAt = uint32(interpretPermanenceUint256(source, 32, 41));
+    int16 axialCoordinateQ = int16(interpretPermanenceUint256(source, 42, 46)); // works well?
+    int16 axialCoordinateR = int16(interpretPermanenceUint256(source, 47, 51));
 
     if (kind == 0) {
       revert("faild to build user normal planet, it's not defined");
@@ -140,8 +140,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         kind,
         param,
         1,
-        uint40now(),
-        uint40now(),
+        uint32now(),
+        uint32now(),
         axialCoordinateQ,
         axialCoordinateR
       )
@@ -157,8 +157,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint8 kind,
     uint16 param,
     uint8 rank,
-    uint40 rankupedAt,
-    uint40 createdAt,
+    uint32 rankupedAt,
+    uint32 createdAt,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) public pure returns (uint256) {
@@ -194,7 +194,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
             record.kind,
             record.originalParam,
             newRank,
-            uint40now(),
+            uint32now(),
             record.createdAt,
             record.axialCoordinateQ,
             record.axialCoordinateR
