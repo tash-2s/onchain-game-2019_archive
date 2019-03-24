@@ -1,9 +1,9 @@
 import { Client, LocalAddress, CryptoUtils, LoomProvider } from "loom-js"
 import Web3 from "web3"
 import ChainEnv from "../chain/env.json"
-import WebAbi from "../chain/abi/Web.json"
-import LogicAbi from "../chain/abi/Logic.json"
-import RemarkableUsersAbi from "../chain/abi/RemarkableUsers.json"
+import UserAbi from "../chain/abi/UserController.json"
+import NormalPlanetAbi from "../chain/abi/NormalPlanetController.json"
+import RemarkableUserAbi from "../chain/abi/RemarkableUserController.json"
 
 export class LoomWeb3 {
   static setup() {
@@ -31,11 +31,17 @@ export class LoomWeb3 {
 }
 
 export const getLoomContracts = () => ({
-  Logic: new LoomWeb3.web3.eth.Contract(LogicAbi, ChainEnv.contractsAddresses.Logic),
-  Web: new LoomWeb3.web3.eth.Contract(WebAbi, ChainEnv.contractsAddresses.Web),
-  RemarkableUsers: new LoomWeb3.web3.eth.Contract(
-    RemarkableUsersAbi,
-    ChainEnv.contractsAddresses.RemarkableUsers
+  UserController: new LoomWeb3.web3.eth.Contract(
+    UserAbi,
+    ChainEnv.contractsAddresses.UserController
+  ),
+  NormalPlanetController: new LoomWeb3.web3.eth.Contract(
+    NormalPlanetAbi,
+    ChainEnv.contractsAddresses.NormalPlanetController
+  ),
+  RemarkableUserController: new LoomWeb3.web3.eth.Contract(
+    RemarkableUserAbi,
+    ChainEnv.contractsAddresses.RemarkableUserController
   )
 })
 

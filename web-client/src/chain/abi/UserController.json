@@ -1,0 +1,278 @@
+[
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "target",
+        "type": "uint256"
+      },
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "update",
+        "type": "uint256"
+      }
+    ],
+    "name": "reinterpretPermanenceUint256",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x115e36e8"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "target",
+        "type": "uint256"
+      },
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      }
+    ],
+    "name": "interpretPermanenceUint256",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x368d8642"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userGoldPermanence",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x5409d82e"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint16"
+      },
+      {
+        "name": "normalPlanetId",
+        "type": "uint16"
+      },
+      {
+        "name": "kind",
+        "type": "uint8"
+      },
+      {
+        "name": "param",
+        "type": "uint16"
+      },
+      {
+        "name": "rank",
+        "type": "uint8"
+      },
+      {
+        "name": "rankupedAt",
+        "type": "uint32"
+      },
+      {
+        "name": "createdAt",
+        "type": "uint32"
+      },
+      {
+        "name": "axialCoordinateQ",
+        "type": "int16"
+      },
+      {
+        "name": "axialCoordinateR",
+        "type": "int16"
+      }
+    ],
+    "name": "transformUserNormalPlanetAttributesToUint256",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x79a8635b"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userNormalPlanetPermanence",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x7ba2d685"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      }
+    ],
+    "name": "assertInterpretableDigits",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0xa3f38ca2"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userNormalPlanetIdCounterPermanence",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xb6d0bbd8"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "uint32now",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xf1d32e7c"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "userNormalPlanetRecordsCountOf",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xfa4e87ad"
+  },
+  {
+    "inputs": [
+      {
+        "name": "userNormalPlanetPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "name": "userNormalPlanetIdCounterPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "name": "userGoldPermanenceAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getUser",
+    "outputs": [
+      {
+        "name": "confirmedGold",
+        "type": "uint200"
+      },
+      {
+        "name": "goldConfirmedAt",
+        "type": "uint32"
+      },
+      {
+        "name": "unpIds",
+        "type": "uint16[]"
+      },
+      {
+        "name": "unpRanks",
+        "type": "uint8[]"
+      },
+      {
+        "name": "unpTimes",
+        "type": "uint32[]"
+      },
+      {
+        "name": "unpAxialCoordinates",
+        "type": "int16[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x6f77926b"
+  }
+]

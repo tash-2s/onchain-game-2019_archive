@@ -6,7 +6,9 @@ export class UsersActions extends AbstractActions {
 
   static setUsers = UsersActions.creator<[string[], string[]]>("setUsers")
   setUsers = async () => {
-    const response = await callLoomContractMethod(cs => cs.RemarkableUsers.methods.getUsers())
+    const response = await callLoomContractMethod(cs =>
+      cs.RemarkableUserController.methods.getUsers()
+    )
     this.dispatch(UsersActions.setUsers(response))
   }
 }

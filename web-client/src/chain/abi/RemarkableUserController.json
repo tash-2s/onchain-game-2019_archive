@@ -1,0 +1,177 @@
+[
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "target",
+        "type": "uint256"
+      },
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "update",
+        "type": "uint256"
+      }
+    ],
+    "name": "reinterpretPermanenceUint256",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x115e36e8"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "thresholdGold",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint200"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x1de68a20"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "target",
+        "type": "uint256"
+      },
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      }
+    ],
+    "name": "interpretPermanenceUint256",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x368d8642"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userGoldPermanence",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x5409d82e"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "startDigit",
+        "type": "uint256"
+      },
+      {
+        "name": "endDigit",
+        "type": "uint256"
+      }
+    ],
+    "name": "assertInterpretableDigits",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0xa3f38ca2"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "uint32now",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xf1d32e7c"
+  },
+  {
+    "inputs": [
+      {
+        "name": "userGoldPermanenceAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getUsers",
+    "outputs": [
+      {
+        "name": "accounts",
+        "type": "address[]"
+      },
+      {
+        "name": "golds",
+        "type": "uint200[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x00ce8e3e"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "tackle",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x54921503"
+  }
+]

@@ -8,7 +8,9 @@ import {
 import { TargetUserState } from "../../types/routed/userTypes"
 
 export type GetUserResponse = TxCallGenericsType<
-  ReturnType<import("../../chain/types/Web").WebDefinition["methods"]["getUser"]>
+  ReturnType<
+    import("../../chain/types/UserController").UserControllerDefinition["methods"]["getUser"]
+  >
 >
 
 interface GetUser {
@@ -21,7 +23,7 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<GetUser>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
+    const response = await callLoomContractMethod(cs => cs.UserController.methods.getUser(address))
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
@@ -46,11 +48,13 @@ export class UserActions extends AbstractActions {
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       await sendLoomContractMethod(cs =>
-        cs.Logic.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+        cs.NormalPlanetController.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
       )
 
       const address = LoomWeb3.accountAddress
-      const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
+      const response = await callLoomContractMethod(cs =>
+        cs.UserController.methods.getUser(address)
+      )
 
       this.dispatch(
         UserActions.getPlanet({
@@ -65,8 +69,12 @@ export class UserActions extends AbstractActions {
   rankupUserNormalPlanet = (userPlanetId: number) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
-      await sendLoomContractMethod(cs => cs.Logic.methods.rankupUserNormalPlanet(userPlanetId))
-      const response = await callLoomContractMethod(cs => cs.Web.methods.getUser(address))
+      await sendLoomContractMethod(cs =>
+        cs.NormalPlanetController.methods.rankupPlanet(userPlanetId)
+      )
+      const response = await callLoomContractMethod(cs =>
+        cs.UserController.methods.getUser(address)
+      )
       this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
     })
   }

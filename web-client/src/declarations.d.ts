@@ -7,8 +7,8 @@ declare module "*/_loom.js" {
   }
 
   export const getLoomContracts: () => {
-    Web: import("./chain/types/Web").Web
-    Logic: import("./chain/types/Logic").Logic
-    RemarkableUsers: import("./chain/types/RemarkableUsers").RemarkableUsers
+    UserController: import("./chain/types/UserController").UserController
+    NormalPlanetController: import("./chain/types/NormalPlanetController").NormalPlanetController
+    RemarkableUserController: import("./chain/types/RemarkableUserController").RemarkableUserController
   }
 }
