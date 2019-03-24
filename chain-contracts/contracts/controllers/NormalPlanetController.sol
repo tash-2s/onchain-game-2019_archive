@@ -8,7 +8,7 @@ import "./modules/UserNormalPlanetControllable.sol";
 import "./RemarkableUserController.sol";
 
 contract NormalPlanetController is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {
-  RemarkableUserController public remarkableController;
+  RemarkableUserController private _remarkableController;
 
   constructor(
     address userGoldPermanenceAddress,
@@ -21,7 +21,11 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
-    remarkableController = RemarkableUserController(remarkableUsersContractAddress);
+    _remarkableController = RemarkableUserController(remarkableUsersContractAddress);
+  }
+
+  function remarkableUserController() public view returns (RemarkableUserController) {
+    return _remarkableController;
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
@@ -101,7 +105,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     if (diffGold > 0) {
       mintGold(account, uint200(diffGold));
-      remarkableController.tackle(account);
+      _remarkableController.tackle(account);
     }
 
     return techPower;
