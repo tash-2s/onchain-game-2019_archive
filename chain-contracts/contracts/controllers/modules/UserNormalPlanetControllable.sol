@@ -167,10 +167,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     i = reinterpretPermanenceUint256(i, 11, 13, kind);
     i = reinterpretPermanenceUint256(i, 14, 18, param);
     i = reinterpretPermanenceUint256(i, 19, 21, rank);
-    i = reinterpretPermanenceUint256(i, 22, 34, rankupedAt);
-    i = reinterpretPermanenceUint256(i, 35, 47, createdAt);
-    i = reinterpretPermanenceUint256(i, 48, 52, uint16(axialCoordinateQ));
-    i = reinterpretPermanenceUint256(i, 53, 57, uint16(axialCoordinateR));
+    i = reinterpretPermanenceUint256(i, 22, 31, rankupedAt);
+    i = reinterpretPermanenceUint256(i, 32, 41, createdAt);
+    i = reinterpretPermanenceUint256(i, 42, 46, uint16(axialCoordinateQ));
+    i = reinterpretPermanenceUint256(i, 47, 51, uint16(axialCoordinateR));
 
     return i;
   }
