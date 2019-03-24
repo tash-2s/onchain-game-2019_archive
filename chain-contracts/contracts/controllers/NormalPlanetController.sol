@@ -71,7 +71,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     );
     unmintGold(msg.sender, rankupGold);
 
-    _rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
+    rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
   }
 
   function _confirm(address account) private returns (uint) {

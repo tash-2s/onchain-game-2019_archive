@@ -53,10 +53,13 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function transformUserGoldRecordToUint256(UserGoldRecord record) internal pure returns (uint256) {
-    uint256 i = reinterpretPermanenceUint256(0, 1, 61, record.balance);
-    i = reinterpretPermanenceUint256(i, 62, 74, record.confirmedAt);
-
-    return i;
+    uint256 n = reinterpretPermanenceUint256(
+      10000000000000000000000000000000000000000000000000000000000000000000000000000,
+      1,
+      61,
+      record.balance
+    );
+    return reinterpretPermanenceUint256(n, 62, 74, record.confirmedAt);
   }
 
   function buildUserGoldRecord(uint256 source) internal pure returns (UserGoldRecord) {

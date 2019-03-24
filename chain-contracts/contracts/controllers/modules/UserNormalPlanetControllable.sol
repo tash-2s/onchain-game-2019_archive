@@ -162,20 +162,23 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) public pure returns (uint256) {
-    uint256 i = reinterpretPermanenceUint256(0, 1, 5, id);
-    i = reinterpretPermanenceUint256(i, 6, 10, normalPlanetId);
-    i = reinterpretPermanenceUint256(i, 11, 13, kind);
-    i = reinterpretPermanenceUint256(i, 14, 18, param);
-    i = reinterpretPermanenceUint256(i, 19, 21, rank);
-    i = reinterpretPermanenceUint256(i, 22, 31, rankupedAt);
-    i = reinterpretPermanenceUint256(i, 32, 41, createdAt);
-    i = reinterpretPermanenceUint256(i, 42, 46, uint16(axialCoordinateQ));
-    i = reinterpretPermanenceUint256(i, 47, 51, uint16(axialCoordinateR));
-
-    return i;
+    uint256 n = reinterpretPermanenceUint256(
+      10000000000000000000000000000000000000000000000000000000000000000000000000000,
+      1,
+      5,
+      id
+    );
+    n = reinterpretPermanenceUint256(n, 6, 10, normalPlanetId);
+    n = reinterpretPermanenceUint256(n, 11, 13, kind);
+    n = reinterpretPermanenceUint256(n, 14, 18, param);
+    n = reinterpretPermanenceUint256(n, 19, 21, rank);
+    n = reinterpretPermanenceUint256(n, 22, 31, rankupedAt);
+    n = reinterpretPermanenceUint256(n, 32, 41, createdAt);
+    n = reinterpretPermanenceUint256(n, 42, 46, uint16(axialCoordinateQ));
+    return reinterpretPermanenceUint256(n, 47, 51, uint16(axialCoordinateR));
   }
 
-  function _rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
+  function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
     UserNormalPlanetRecord memory record;
 
