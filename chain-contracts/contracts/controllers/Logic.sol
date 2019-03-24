@@ -2,9 +2,9 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./controllers/UserGoldControllable.sol";
-import "./controllers/NormalPlanetControllable.sol";
-import "./controllers/UserNormalPlanetControllable.sol";
+import "./modules/UserGoldControllable.sol";
+import "./modules/NormalPlanetControllable.sol";
+import "./modules/UserNormalPlanetControllable.sol";
 import "./RemarkableUsers.sol";
 
 contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {

@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
-import "./controllers/UserGoldControllable.sol";
-import "./controllers/UserNormalPlanetControllable.sol";
+import "./modules/UserGoldControllable.sol";
+import "./modules/UserNormalPlanetControllable.sol";
 
 contract Web is UserGoldControllable, UserNormalPlanetControllable {
   constructor(

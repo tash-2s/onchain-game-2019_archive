@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const RemarkableUsers = artifacts.require("RemarkableUsers") // TODO: fix
+const RemarkableUsers = artifacts.require("./controllers/RemarkableUsers") // TODO: fix
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {

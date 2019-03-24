@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const Logic = artifacts.require("Logic") // TODO: fix
+const Logic = artifacts.require("./controllers/Logic") // TODO: fix
 
 const minterAdditionAbi = [
   {

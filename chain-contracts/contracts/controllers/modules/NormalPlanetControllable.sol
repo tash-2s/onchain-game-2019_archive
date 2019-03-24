@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "./PermanenceInterpretable.sol";
-import "../permanences/NormalPlanetPermanence.sol";
+import "../../permanences/NormalPlanetPermanence.sol";
 
 contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {

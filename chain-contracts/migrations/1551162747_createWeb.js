@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const Web = artifacts.require("Web") // TODO: fix
+const Web = artifacts.require("./controllers/Web") // TODO: fix
 
 module.exports = function(deployer, network) {
   deployer.then(async function() {

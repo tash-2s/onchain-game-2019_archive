@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "./controllers/UserGoldControllable.sol";
+import "./modules/UserGoldControllable.sol";
 
 contract RemarkableUsers is UserGoldControllable {
   uint constant USERS_COUNT = 100;

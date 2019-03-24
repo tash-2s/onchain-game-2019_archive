@@ -1,9 +1,9 @@
 pragma solidity 0.4.24;
 
 import "./PermanenceInterpretable.sol";
-import "../permanences/UserNormalPlanetPermanence.sol";
-import "../permanences/UserNormalPlanetIdCounterPermanence.sol";
 import "./TimeGettable.sol";
+import "../../permanences/UserNormalPlanetPermanence.sol";
+import "../../permanences/UserNormalPlanetIdCounterPermanence.sol";
 
 contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   struct UserNormalPlanetRecord {
