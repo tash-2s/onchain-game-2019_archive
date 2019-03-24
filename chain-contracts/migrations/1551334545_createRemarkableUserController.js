@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const RemarkableUsers = artifacts.require("./controllers/RemarkableUsers") // TODO: fix
+const RemarkableUserController = artifacts.require("./controllers/RemarkableUserController") // TODO: fix
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {
@@ -9,6 +9,6 @@ module.exports = function(deployer, network, accounts) {
       "UserGoldPermanence"
     )
 
-    await helper.deployAndRegister(deployer, network, RemarkableUsers, [userGoldPermanenceAddress])
+    await helper.deployAndRegister(deployer, network, RemarkableUserController, [userGoldPermanenceAddress])
   })
 }

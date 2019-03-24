@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const Web = artifacts.require("./controllers/Web") // TODO: fix
+const UserController = artifacts.require("./controllers/UserController") // TODO: fix
 
 module.exports = function(deployer, network) {
   deployer.then(async function() {
@@ -16,7 +16,7 @@ module.exports = function(deployer, network) {
       deployer.network_id,
       "UserGoldPermanence"
     )
-    await helper.deployAndRegister(deployer, network, Web, [
+    await helper.deployAndRegister(deployer, network, UserController, [
       userNormalPlanetAddress,
       userNormalPlanetIdCounterAddress,
       userGoldPermanenceAddress

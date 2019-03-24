@@ -5,10 +5,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./modules/UserGoldControllable.sol";
 import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserNormalPlanetControllable.sol";
-import "./RemarkableUsers.sol";
+import "./RemarkableUserController.sol";
 
-contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {
-  RemarkableUsers public remarkableUsers;
+contract NormalPlanetController is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {
+  RemarkableUserController public remarkableController;
 
   constructor(
     address userGoldPermanenceAddress,
@@ -21,7 +21,7 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
-    remarkableUsers = RemarkableUsers(remarkableUsersContractAddress);
+    remarkableController = RemarkableUserController(remarkableUsersContractAddress);
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
@@ -32,7 +32,7 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && goldRecord.balance == 0) {
       mintGold(msg.sender, uint200(SafeMath.sub(10, planetRecord.priceGold)));
     } else {
-      confirm(msg.sender);
+      _confirm(msg.sender);
       unmintGold(msg.sender, planetRecord.priceGold);
     }
 
@@ -46,7 +46,31 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
     );
   }
 
-  function confirm(address account) private returns (uint) {
+  function rankupPlanet(uint16 userNormalPlanetId) public {
+    uint techPower = _confirm(msg.sender);
+    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
+      msg.sender,
+      userNormalPlanetId
+    );
+
+    // ckeck time
+    uint diffSec = uint32now() - userPlanet.rankupedAt;
+    int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(
+      techPower
+    ); // TODO: type
+    require(remainingSec <= 0, "need more time to rankup");
+
+    // decrease required gold
+    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
+    uint200 rankupGold = uint200(
+      (planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1))
+    );
+    unmintGold(msg.sender, rankupGold);
+
+    _rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
+  }
+
+  function _confirm(address account) private returns (uint) {
     uint population = 0;
     uint goldPower = 0;
     uint techPower = 0;
@@ -77,33 +101,9 @@ contract Logic is UserGoldControllable, NormalPlanetControllable, UserNormalPlan
 
     if (diffGold > 0) {
       mintGold(account, uint200(diffGold));
-      remarkableUsers.tackle(account);
+      remarkableController.tackle(account);
     }
 
     return techPower;
-  }
-
-  function rankupUserNormalPlanet(uint16 userNormalPlanetId) public {
-    uint techPower = confirm(msg.sender);
-    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
-      msg.sender,
-      userNormalPlanetId
-    );
-
-    // ckeck time
-    uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(
-      techPower
-    ); // TODO: type
-    require(remainingSec <= 0, "need more time to rankup");
-
-    // decrease required gold
-    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint200 rankupGold = uint200(
-      (planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1))
-    );
-    unmintGold(msg.sender, rankupGold);
-
-    _rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
   }
 }

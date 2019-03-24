@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const Logic = artifacts.require("./controllers/Logic") // TODO: fix
+const NormalPlanetController = artifacts.require("./controllers/NormalPlanetController") // TODO: fix
 
 const minterAdditionAbi = [
   {
@@ -39,10 +39,10 @@ module.exports = function(deployer, network, accounts) {
     )
     const remarkableUsersAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "RemarkableUsers"
+      "RemarkableUserController"
     )
 
-    const logic = await helper.deployAndRegister(deployer, network, Logic, [
+    const logic = await helper.deployAndRegister(deployer, network, NormalPlanetController, [
       userGoldPermanenceAddress,
       normalPlanetPermanenceAddress,
       userNormalPlanetPermanenceAddress,

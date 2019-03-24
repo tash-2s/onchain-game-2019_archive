@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "./modules/UserGoldControllable.sol";
 import "./modules/UserNormalPlanetControllable.sol";
 
-contract Web is UserGoldControllable, UserNormalPlanetControllable {
+contract UserController is UserGoldControllable, UserNormalPlanetControllable {
   constructor(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
