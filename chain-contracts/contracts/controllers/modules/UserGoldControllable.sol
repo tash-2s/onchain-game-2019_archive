@@ -13,6 +13,11 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     uint32 confirmedAt;
   }
 
+  uint8 constant USER_GOLD_PERMANENCE_BALANCE_START_DIGIT = 1;
+  uint8 constant USER_GOLD_PERMANENCE_BALANCE_END_DIGIT = 61;
+  uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT = 62;
+  uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT = 71;
+
   UserGoldPermanence private _userGoldPermanence;
 
   function userGoldPermanence() public view returns (UserGoldPermanence) {
@@ -55,16 +60,33 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   function transformUserGoldRecordToUint256(UserGoldRecord record) internal pure returns (uint256) {
     uint256 n = reinterpretPermanenceUint256(
       10000000000000000000000000000000000000000000000000000000000000000000000000000,
-      1,
-      61,
+      USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
+      USER_GOLD_PERMANENCE_BALANCE_END_DIGIT,
       record.balance
     );
-    return reinterpretPermanenceUint256(n, 62, 74, record.confirmedAt);
+    return reinterpretPermanenceUint256(
+      n,
+      USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT,
+      USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT,
+      record.confirmedAt
+    );
   }
 
   function buildUserGoldRecord(uint256 source) internal pure returns (UserGoldRecord) {
-    uint200 balance = uint200(interpretPermanenceUint256(source, 1, 61));
-    uint32 confirmedAt = uint32(interpretPermanenceUint256(source, 62, 71));
+    uint200 balance = uint200(
+      interpretPermanenceUint256(
+        source,
+        USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
+        USER_GOLD_PERMANENCE_BALANCE_END_DIGIT
+      )
+    );
+    uint32 confirmedAt = uint32(
+      interpretPermanenceUint256(
+        source,
+        USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT,
+        USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT
+      )
+    );
 
     return UserGoldRecord(balance, confirmedAt);
   }
