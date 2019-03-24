@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 
-contract AbstractAddressToUint256Permanence is MinterRole {
+contract AddressToUint256Permanence is MinterRole {
   mapping(address => uint256) private _addressToUint256;
 
   function read(address addr) public view returns (uint256) {
