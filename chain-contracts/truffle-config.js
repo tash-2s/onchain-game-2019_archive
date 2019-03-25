@@ -1,3 +1,5 @@
+require("ts-node/register")
+
 const { readFileSync } = require("fs")
 const path = require("path")
 const { join } = require("path")
