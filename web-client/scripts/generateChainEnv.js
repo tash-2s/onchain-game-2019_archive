@@ -27,12 +27,13 @@ const JSON_PATH = "../k2-loomchain/build/contracts/"
 const contractsAddresses = {} // TODO: save k2-loomchain's commit hash too
 fs.readdirSync(JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
+
+  if (contractName.slice(-10) !== "Controller") {
+    return
+  }
+
   const file = fs.readFileSync(JSON_PATH + fileName)
   const parsedJson = JSON.parse(file)
-
-  if (!Object.keys(parsedJson.networks).length) {
-    return // skip externals, like imported contracts of openzeppelin
-  }
 
   fs.writeFileSync(`./src/chain/abi/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
   contractsAddresses[contractName] = parsedJson.networks[envDef.networkId].address
