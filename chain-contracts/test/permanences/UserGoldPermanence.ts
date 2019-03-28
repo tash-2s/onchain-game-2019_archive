@@ -1,12 +1,12 @@
-const NormalPlanetPermanence = artifacts.require("NormalPlanetPermanence")
+const UserGoldPermanence = artifacts.require("UserGoldPermanence")
 
-contract("NormalPlanetPermanence", async accounts => {
-  let instance: PromiseGenericsType<ReturnType<typeof NormalPlanetPermanence.deployed>>
+contract("UserGoldPermanence", async accounts => {
+  let instance: PromiseGenericsType<ReturnType<typeof UserGoldPermanence.deployed>>
   let ownerAccount: string
   let strangerAccount: string
 
   beforeEach(async () => {
-    instance = await NormalPlanetPermanence.deployed()
+    instance = await UserGoldPermanence.deployed()
     ownerAccount = accounts[0]
     strangerAccount = accounts[1]
   })
@@ -28,7 +28,7 @@ contract("NormalPlanetPermanence", async accounts => {
   })
 
   it("should return 0 when data doesn't exist", async () => {
-    const result = await instance.read("123")
+    const result = await instance.read(ownerAccount)
     assert.equal(result.toString(), "0")
   })
 
@@ -36,7 +36,7 @@ contract("NormalPlanetPermanence", async accounts => {
     let failed = false
 
     try {
-      await instance.update("123", "456", { from: strangerAccount })
+      await instance.update(strangerAccount, "123", { from: strangerAccount })
     } catch (_) {
       failed = true
     }
@@ -45,20 +45,20 @@ contract("NormalPlanetPermanence", async accounts => {
   })
 
   it("should allow minters to update data", async () => {
-    const result = await instance.update("123", "456")
+    const result = await instance.update(strangerAccount, "123")
     assert.isOk(result)
   })
 
   it("should return updated data", async () => {
-    const result1 = await instance.read("123")
-    assert.equal(result1.toString(), "456")
+    const result1 = await instance.read(strangerAccount)
+    assert.equal(result1.toString(), "123")
 
-    const result2 = await instance.read("123", { from: strangerAccount })
-    assert.equal(result2.toString(), "456")
+    const result2 = await instance.read(strangerAccount, { from: strangerAccount })
+    assert.equal(result2.toString(), "123")
   })
 
   it("shouldn't affect other data", async () => {
-    const result = await instance.read("1234")
+    const result = await instance.read(ownerAccount)
     assert.equal(result.toString(), "0")
   })
 })
