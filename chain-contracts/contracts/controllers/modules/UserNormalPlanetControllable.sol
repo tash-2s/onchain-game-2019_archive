@@ -211,7 +211,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
     uint16 counter = _userNormalPlanetIdCounterPermanence.read(account);
     _userNormalPlanetIdCounterPermanence.update(account, counter + 1);
-    _userNormalPlanetPermanence.addElement(
+    _userNormalPlanetPermanence.pushElement(
       account,
       transformUserNormalPlanetAttributesToUint256(
         counter,

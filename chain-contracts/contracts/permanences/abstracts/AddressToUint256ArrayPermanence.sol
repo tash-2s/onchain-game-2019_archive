@@ -10,16 +10,17 @@ contract AddressToUint256ArrayPermanence is MinterRole {
   }
 
   function update(address addr, uint256[] ui256Array) public onlyMinter {
-    _addressToUint256Array[addr] = ui256Array; // possible?
+    _addressToUint256Array[addr] = ui256Array;
   }
 
-  function addElement(address addr, uint256 ui256) public onlyMinter {
+  function pushElement(address addr, uint256 ui256) public onlyMinter {
     _addressToUint256Array[addr].push(ui256);
   }
 
-  //function deleteByIndex(address addr, uint256 index) public onlyMinter {
-  //  // ??
-  //}
+  // TODO: with unmint
+  // function deleteByIndex(address addr, uint256 index) public onlyMinter {
+  //
+  // }
 
   function readByIndex(address addr, uint256 index) public view returns (uint256) {
     return _addressToUint256Array[addr][index];
