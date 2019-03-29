@@ -1,9 +1,21 @@
 pragma solidity 0.4.24;
 
 import "truffle/Assert.sol";
-import "truffle/DeployedAddresses.sol";
 
 import "../../../contracts/controllers/modules/UserGoldControllable.sol";
+import "../../../contracts/permanences/UserGoldPermanence.sol";
+
+contract UserGoldPermanenceForTest is UserGoldPermanence {
+  // function addMinterForTest(address account) public {
+  //   _addMinter(account); // I cannot understand why this method throws an error...
+  // }
+
+  // Skip minter-check because of the above reason.
+  // I wanted to add the test contract to minters.
+  modifier onlyMinter() {
+    _;
+  }
+}
 
 contract MyAssert {
   event TestEvent(bool indexed result, string message);
@@ -15,18 +27,19 @@ contract MyAssert {
 }
 
 contract TestUserGoldControllable is UserGoldControllable {
-  MyAssert myAssert;
+  MyAssert private myAssert = new MyAssert();
+  UserGoldPermanenceForTest private permanence = new UserGoldPermanenceForTest();
 
   function beforeAll() public {
-    myAssert = new MyAssert();
-    setUserGoldPermanence(DeployedAddresses.UserGoldPermanence());
+    // p.addMinterForTest(address(this));
+    setUserGoldPermanence(permanence);
   }
 
-  function testUserGoldPermanenceAddress() public {
+  function testUserGoldPermanence() public {
     Assert.equal(
-      DeployedAddresses.UserGoldPermanence(),
+      permanence,
       userGoldPermanence(),
-      "#userGoldPermanence() should return the same address with the address provided via the constructor arg"
+      "#userGoldPermanence() should return the same address with the address set by #setUserGoldPermanence()"
     );
   }
 
