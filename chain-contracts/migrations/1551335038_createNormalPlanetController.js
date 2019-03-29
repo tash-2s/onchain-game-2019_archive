@@ -42,7 +42,7 @@ module.exports = function(deployer, network, accounts) {
       "RemarkableUserController"
     )
 
-    const logic = await helper.deployAndRegister(deployer, network, NormalPlanetController, [
+    const controller = await helper.deployAndRegister(deployer, network, NormalPlanetController, [
       userGoldPermanenceAddress,
       normalPlanetPermanenceAddress,
       userNormalPlanetPermanenceAddress,
@@ -51,16 +51,18 @@ module.exports = function(deployer, network, accounts) {
     ])
 
     const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
-    await UserGoldPermanence.methods.addMinter(logic.address).send({ from: accounts[0] }) // TODO: 0 is right?
+    await UserGoldPermanence.methods.addMinter(controller.address).send({ from: accounts[0] }) // TODO: 0 is right?
     const UserNormalPlanet = new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetPermanenceAddress
     )
-    await UserNormalPlanet.methods.addMinter(logic.address).send({ from: accounts[0] })
+    await UserNormalPlanet.methods.addMinter(controller.address).send({ from: accounts[0] })
     const UserNormalPlanetIdCounter = new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetIdCounterPermanenceAddress
     )
-    await UserNormalPlanetIdCounter.methods.addMinter(logic.address).send({ from: accounts[0] })
+    await UserNormalPlanetIdCounter.methods
+      .addMinter(controller.address)
+      .send({ from: accounts[0] })
   })
 }
