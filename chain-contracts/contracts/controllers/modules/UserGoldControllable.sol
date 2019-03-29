@@ -5,7 +5,6 @@ import "./TimeGettable.sol";
 import "../../permanences/UserGoldPermanence.sol";
 
 contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
-  // https://ethereum.stackexchange.com/questions/27813/max-min-values-of-standard-data-types
   uint200 constant UINT200_MAX = ~uint200(0);
 
   struct UserGoldRecord {
