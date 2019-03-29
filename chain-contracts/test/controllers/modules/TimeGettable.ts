@@ -2,11 +2,9 @@ const TimeGettable = artifacts.require("TimeGettable")
 
 contract("TimeGettable", async accounts => {
   let instance: PromiseGenericsType<ReturnType<typeof TimeGettable.deployed>>
-  const ownerAccount = accounts[0]
-  const strangerAccount = accounts[1]
 
-  beforeEach(async () => {
-    instance = await TimeGettable.new({ from: ownerAccount })
+  before(async () => {
+    instance = await TimeGettable.new({ from: accounts[0] })
   })
 
   describe("#uint32now()", async () => {
