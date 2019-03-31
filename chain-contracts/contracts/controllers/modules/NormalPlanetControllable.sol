@@ -28,10 +28,14 @@ contract NormalPlanetControllable is PermanenceInterpretable {
   }
 
   function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord) {
-    return buildNormalPlanetRecord(_normalPlanetPermanence.read(id));
+    return buildNormalPlanetRecordFromUint256(_normalPlanetPermanence.read(id));
   }
 
-  function buildNormalPlanetRecord(uint256 source) internal pure returns (NormalPlanetRecord) {
+  function buildNormalPlanetRecordFromUint256(uint256 source)
+    internal
+    pure
+    returns (NormalPlanetRecord)
+  {
     uint8 kind = uint8(
       interpretPermanenceUint256(
         source,
@@ -54,8 +58,8 @@ contract NormalPlanetControllable is PermanenceInterpretable {
       )
     );
 
-    if (kind == 0) {
-      revert("faild to build planet, it's not defined");
+    if (kind == 0 && param == 0 && priceGold == 0) {
+      revert("faild to build a planet record, the source is wrong");
     }
 
     return NormalPlanetRecord(kind, param, priceGold);

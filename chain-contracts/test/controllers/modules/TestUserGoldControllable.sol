@@ -8,7 +8,7 @@ import "../../../contracts/permanences/UserGoldPermanence.sol";
 contract AssertionReporter {
   event TestEvent(bool indexed result, string message);
 
-  function report(bool result, string memory message) public {
+  function report(bool result, string message) public {
     if (result) emit TestEvent(true, "");
     else emit TestEvent(false, message);
   }
@@ -221,7 +221,7 @@ contract TestUserGoldControllable is UserGoldControllable {
     );
   }
 
-  function _assertEqual(UserGoldRecord r1, UserGoldRecord r2, string memory message) private {
+  function _assertEqual(UserGoldRecord r1, UserGoldRecord r2, string message) private {
     _reporter.report(r1.balance == r2.balance && r1.confirmedAt == r2.confirmedAt, message);
   }
 
