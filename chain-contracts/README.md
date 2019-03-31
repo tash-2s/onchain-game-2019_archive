@@ -14,5 +14,7 @@ yarn truffle migrate --network loom_local
 
 # Test
 ```
-yarn test
+yarn test # for truffle develop (fast)
+# or
+yarn test --network loom_local # for loom
 ```
