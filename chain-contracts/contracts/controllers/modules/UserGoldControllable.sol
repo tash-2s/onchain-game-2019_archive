@@ -17,6 +17,8 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT = 62;
   uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT = 71;
 
+  uint256 constant USER_GOLD_PERMANENCE_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000;
+
   UserGoldPermanence private _userGoldPermanence;
 
   function userGoldPermanence() public view returns (UserGoldPermanence) {
@@ -28,7 +30,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function userGoldRecordOf(address account) internal view returns (UserGoldRecord) {
-    return buildUserGoldRecord(_userGoldPermanence.read(account));
+    return buildUserGoldRecordFromUint256(_userGoldPermanence.read(account));
   }
 
   function mintGold(address account, uint256 quantity) internal {
@@ -53,12 +55,12 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord record) internal {
-    _userGoldPermanence.update(account, transformUserGoldRecordToUint256(record));
+    _userGoldPermanence.update(account, buildUint256FromUserGoldRecord(record));
   }
 
-  function transformUserGoldRecordToUint256(UserGoldRecord record) internal pure returns (uint256) {
+  function buildUint256FromUserGoldRecord(UserGoldRecord record) internal pure returns (uint256) {
     uint256 n = reinterpretPermanenceUint256(
-      10000000000000000000000000000000000000000000000000000000000000000000000000000,
+      USER_GOLD_PERMANENCE_PLACEHOLDER,
       USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
       USER_GOLD_PERMANENCE_BALANCE_END_DIGIT,
       record.balance
@@ -71,7 +73,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  function buildUserGoldRecord(uint256 source) internal pure returns (UserGoldRecord) {
+  function buildUserGoldRecordFromUint256(uint256 source) internal pure returns (UserGoldRecord) {
     uint200 balance = uint200(
       interpretPermanenceUint256(
         source,
