@@ -81,36 +81,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return _userNormalPlanetPermanence.arrayLength(account);
   }
 
-  function _userNormalPlanetUint256WithIndexOf(address account, uint16 userPlanetId)
-    private
-    view
-    returns (uint256, uint16)
-  {
-    uint256[] memory us = _userNormalPlanetPermanence.read(account);
-    uint256 target = 0;
-    uint16 index;
-
-    for (uint16 i = 0; i < us.length; i++) {
-      if (uint16(
-        interpretPermanenceUint256(
-          us[i],
-          USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
-          USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT
-        )
-      ) == userPlanetId) {
-        target = us[i];
-        index = i;
-        break;
-      }
-    }
-
-    if (target == 0) {
-      revert("user normal planet is not found");
-    }
-
-    return (target, index);
-  }
-
   function userNormalPlanetRecordOf(address account, uint16 userPlanetId)
     internal
     view
@@ -330,5 +300,35 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT,
       uint16(record.axialCoordinateR)
     );
+  }
+
+  function _userNormalPlanetUint256WithIndexOf(address account, uint16 userPlanetId)
+    private
+    view
+    returns (uint256, uint16)
+  {
+    uint256[] memory us = _userNormalPlanetPermanence.read(account);
+    uint256 target = 0;
+    uint16 index;
+
+    for (uint16 i = 0; i < us.length; i++) {
+      if (uint16(
+        interpretPermanenceUint256(
+          us[i],
+          USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
+          USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT
+        )
+      ) == userPlanetId) {
+        target = us[i];
+        index = i;
+        break;
+      }
+    }
+
+    if (target == 0) {
+      revert("user normal planet is not found");
+    }
+
+    return (target, index);
   }
 }
