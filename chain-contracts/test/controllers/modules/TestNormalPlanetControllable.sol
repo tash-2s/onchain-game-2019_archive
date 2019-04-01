@@ -15,7 +15,7 @@ contract AssertionReporter {
   }
 }
 
-contract TestNormalPlanetControllable is NormalPlanetControllable, AssertionReporter {
+contract TestNormalPlanetControllable is NormalPlanetControllable {
   AssertionReporter private _reporter = new AssertionReporter();
 
   function beforeAll() public {
