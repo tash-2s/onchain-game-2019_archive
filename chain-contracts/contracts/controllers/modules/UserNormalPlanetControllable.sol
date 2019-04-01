@@ -81,26 +81,25 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return _userNormalPlanetPermanence.arrayLength(account);
   }
 
-  function userNormalPlanetRecordOf(address account, uint16 userPlanetId)
-    internal
+  function _userNormalPlanetUint256WithIndexOf(address account, uint16 userPlanetId)
+    private
     view
-    returns (UserNormalPlanetRecord)
+    returns (uint256, uint16)
   {
     uint256[] memory us = _userNormalPlanetPermanence.read(account);
     uint256 target = 0;
-    uint16 tmpId;
+    uint16 index;
 
     for (uint16 i = 0; i < us.length; i++) {
-      tmpId = uint16(
+      if (uint16(
         interpretPermanenceUint256(
           us[i],
           USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
           USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT
         )
-      );
-
-      if (tmpId == userPlanetId) {
+      ) == userPlanetId) {
         target = us[i];
+        index = i;
         break;
       }
     }
@@ -109,6 +108,15 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       revert("user normal planet is not found");
     }
 
+    return (target, index);
+  }
+
+  function userNormalPlanetRecordOf(address account, uint16 userPlanetId)
+    internal
+    view
+    returns (UserNormalPlanetRecord)
+  {
+    (uint256 target, ) = _userNormalPlanetUint256WithIndexOf(account, userPlanetId);
     return buildUserNormalPlanetRecordFromUint256(target);
   }
 
@@ -153,35 +161,28 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
 
   function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
-    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
-    UserNormalPlanetRecord memory record;
+    (uint256 target, uint16 index) = _userNormalPlanetUint256WithIndexOf(account, userPlanetId);
+    UserNormalPlanetRecord memory record = buildUserNormalPlanetRecordFromUint256(target);
 
-    for (uint16 i = 0; i < records.length; i++) {
-      record = records[i];
-
-      if (record.id == userPlanetId) {
-        uint8 newRank = record.rank + 1;
-        require(newRank <= 30, "max rank");
-        _userNormalPlanetPermanence.updateByIndex(
-          account,
-          i,
-          buildUint256FromUserNormalPlanetRecord(
-            UserNormalPlanetRecord(
-              record.id,
-              record.normalPlanetId,
-              record.kind,
-              record.originalParam,
-              newRank,
-              uint32now(),
-              record.createdAt,
-              record.axialCoordinateQ,
-              record.axialCoordinateR
-            )
-          )
-        );
-        break;
-      }
-    }
+    uint8 newRank = record.rank + 1;
+    require(newRank <= 30, "max rank");
+    _userNormalPlanetPermanence.updateByIndex(
+      account,
+      index,
+      buildUint256FromUserNormalPlanetRecord(
+        UserNormalPlanetRecord(
+          record.id,
+          record.normalPlanetId,
+          record.kind,
+          record.originalParam,
+          newRank,
+          uint32now(),
+          record.createdAt,
+          record.axialCoordinateQ,
+          record.axialCoordinateR
+        )
+      )
+    );
   }
 
   function buildUserNormalPlanetRecordFromUint256(uint256 source)
