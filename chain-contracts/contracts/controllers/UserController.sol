@@ -31,26 +31,22 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     goldConfirmedAt = goldRecord.confirmedAt;
 
     UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
-    uint userPlanetsCount = userPlanetRecords.length;
+    uint16 userPlanetsCount = uint16(userPlanetRecords.length);
 
     unpIds = new uint16[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
     unpTimes = new uint32[](userPlanetsCount * 2);
     unpAxialCoordinates = new int16[](userPlanetsCount * 2);
-    uint counter = 0;
+    uint24 counter = 0;
 
-    UserNormalPlanetRecord memory userPlanetRecord;
-
-    for (uint i = 0; i < userPlanetsCount; i++) {
-      userPlanetRecord = userPlanetRecords[i];
-
-      unpIds[counter] = userPlanetRecord.id;
-      unpIds[counter + 1] = userPlanetRecord.normalPlanetId;
-      unpRanks[i] = userPlanetRecord.rank;
-      unpTimes[counter] = userPlanetRecord.rankupedAt;
-      unpTimes[counter + 1] = userPlanetRecord.createdAt;
-      unpAxialCoordinates[counter] = userPlanetRecord.axialCoordinateQ;
-      unpAxialCoordinates[counter + 1] = userPlanetRecord.axialCoordinateR;
+    for (uint16 i = 0; i < userPlanetsCount; i++) {
+      unpIds[counter] = userPlanetRecords[i].id;
+      unpIds[counter + 1] = userPlanetRecords[i].normalPlanetId;
+      unpRanks[i] = userPlanetRecords[i].rank;
+      unpTimes[counter] = userPlanetRecords[i].rankupedAt;
+      unpTimes[counter + 1] = userPlanetRecords[i].createdAt;
+      unpAxialCoordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
+      unpAxialCoordinates[counter + 1] = userPlanetRecords[i].axialCoordinateR;
 
       counter += 2;
     }

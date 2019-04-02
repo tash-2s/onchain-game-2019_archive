@@ -77,8 +77,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return records;
   }
 
-  function userNormalPlanetRecordsCountOf(address account) public view returns (uint256) {
-    return _userNormalPlanetPermanence.arrayLength(account);
+  function userNormalPlanetRecordsCountOf(address account) public view returns (uint16) {
+    return uint16(_userNormalPlanetPermanence.arrayLength(account));
   }
 
   function userNormalPlanetRecordOf(address account, uint16 userPlanetId)
