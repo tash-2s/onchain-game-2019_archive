@@ -49,15 +49,15 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   function testUserNormalPlanetRecordsCountOf() public {
     address account = address(2);
 
-    Assert.equal(userNormalPlanetRecordsCountOf(account), 0, "initial");
+    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(0), "initial");
     _permanence.pushElement(account, 10000100001);
     _permanence.pushElement(account, 20000200002);
     _permanence.pushElement(account, 30000300003);
-    Assert.equal(userNormalPlanetRecordsCountOf(account), 3, "added");
+    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(3), "added");
     uint256[] memory a = new uint256[](1);
     a[0] = 10000100001;
     _permanence.update(account, a);
-    Assert.equal(userNormalPlanetRecordsCountOf(account), 1, "deleted");
+    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(1), "deleted");
   }
 
   function testUserNormalPlanetRecordOf() public {
