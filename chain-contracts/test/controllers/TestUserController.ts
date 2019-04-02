@@ -1,7 +1,7 @@
-const UserController = artifacts.require("UserController")
-const NormalPlanetController = artifacts.require("NormalPlanetController")
-
 contract("UserController", async accounts => {
+  const UserController = artifacts.require("UserController")
+  const NormalPlanetController = artifacts.require("NormalPlanetController")
+
   let instance: PromiseGenericsType<ReturnType<typeof UserController.deployed>>
   let ownerAccount: string
   let strangerAccount: string

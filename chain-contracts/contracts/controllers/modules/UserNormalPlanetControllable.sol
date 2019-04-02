@@ -90,6 +90,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return buildUserNormalPlanetRecordFromUint256(target);
   }
 
+  // TODO: check the coordinate size limit (based on the user gold)
   function mintUserNormalPlanet(
     address account,
     uint16 normalPlanetId,

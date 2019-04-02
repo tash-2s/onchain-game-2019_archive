@@ -8,7 +8,7 @@ import "./modules/UserNormalPlanetControllable.sol";
 import "./RemarkableUserController.sol";
 
 contract NormalPlanetController is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {
-  RemarkableUserController private _remarkableController;
+  RemarkableUserController private _remarkableUserController;
 
   constructor(
     address userGoldPermanenceAddress,
@@ -21,19 +21,19 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
-    _remarkableController = RemarkableUserController(remarkableUsersContractAddress);
+    _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
   }
 
   function remarkableUserController() public view returns (RemarkableUserController) {
-    return _remarkableController;
+    return _remarkableUserController;
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
-    UserGoldRecord memory goldRecord = userGoldRecordOf(msg.sender);
+    UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
 
-    // this is not precise
-    if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && goldRecord.balance == 0) {
+    // TODO: this is not precise
+    if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
       mintGold(msg.sender, uint200(SafeMath.sub(10, planetRecord.priceGold)));
     } else {
       _confirm(msg.sender);
@@ -68,7 +68,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
     uint200 rankupGold = uint200(
       (planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1))
-    );
+    ); // TODO: is this right spec?
     unmintGold(msg.sender, rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
@@ -105,7 +105,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     if (diffGold > 0) {
       mintGold(account, uint200(diffGold));
-      _remarkableController.tackle(account);
+      _remarkableUserController.tackle(account);
     }
 
     return techPower;
