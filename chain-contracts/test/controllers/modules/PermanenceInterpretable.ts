@@ -1,6 +1,5 @@
-const PermanenceInterpretable = artifacts.require("PermanenceInterpretable")
-
 contract("PermanenceInterpretable", async accounts => {
+  const PermanenceInterpretable = artifacts.require("PermanenceInterpretable")
   let instance: PromiseGenericsType<ReturnType<typeof PermanenceInterpretable.deployed>>
 
   before(async () => {

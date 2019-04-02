@@ -1,6 +1,5 @@
-const UserGoldPermanence = artifacts.require("UserGoldPermanence")
-
 contract("UserGoldPermanence", async accounts => {
+  const UserGoldPermanence = artifacts.require("UserGoldPermanence")
   let instance: PromiseGenericsType<ReturnType<typeof UserGoldPermanence.deployed>>
   let ownerAccount: string
   let strangerAccount: string

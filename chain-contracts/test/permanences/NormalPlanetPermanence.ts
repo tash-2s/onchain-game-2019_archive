@@ -1,6 +1,5 @@
-const NormalPlanetPermanence = artifacts.require("NormalPlanetPermanence")
-
 contract("NormalPlanetPermanence", async accounts => {
+  const NormalPlanetPermanence = artifacts.require("NormalPlanetPermanence")
   let instance: PromiseGenericsType<ReturnType<typeof NormalPlanetPermanence.deployed>>
   let ownerAccount: string
   let strangerAccount: string

@@ -1,6 +1,5 @@
-const TimeGettable = artifacts.require("TimeGettable")
-
 contract("TimeGettable", async accounts => {
+  const TimeGettable = artifacts.require("TimeGettable")
   let instance: PromiseGenericsType<ReturnType<typeof TimeGettable.deployed>>
 
   before(async () => {

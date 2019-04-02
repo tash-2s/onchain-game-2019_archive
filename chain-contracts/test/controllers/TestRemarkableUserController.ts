@@ -1,6 +1,6 @@
-const RemarkableUserController = artifacts.require("RemarkableUserController")
-
 contract("RemarkableUserController", async accounts => {
+  const RemarkableUserController = artifacts.require("RemarkableUserController")
+
   let instance: PromiseGenericsType<ReturnType<typeof RemarkableUserController.deployed>>
   let ownerAccount: string
   let strangerAccount: string
