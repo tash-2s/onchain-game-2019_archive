@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "./modules/UserGoldControllable.sol";
 
 contract RemarkableUserController is UserGoldControllable {
-  uint constant USERS_COUNT = 100;
+  uint8 constant USERS_COUNT = 100;
   uint200 public thresholdGold = 0;
 
   // address <=> uint160
@@ -17,12 +17,10 @@ contract RemarkableUserController is UserGoldControllable {
   function getUsers() external view returns (address[] accounts, uint200[] golds) {
     accounts = new address[](USERS_COUNT);
     golds = new uint200[](USERS_COUNT);
-    uint j = 0;
 
-    for (uint i = 0; i < USERS_COUNT; i++) {
-      accounts[i] = address(_users[j]);
-      golds[i] = _users[j + 1];
-      j += 2;
+    for (uint8 i = 0; i < USERS_COUNT; i++) {
+      accounts[i] = address(_users[i * 2]);
+      golds[i] = _users[i * 2 + 1];
     }
   }
 
@@ -33,7 +31,7 @@ contract RemarkableUserController is UserGoldControllable {
       return;
     }
 
-    uint rand = block.number % USERS_COUNT;
+    uint8 rand = uint8(block.number % USERS_COUNT);
 
     uint200 oldGold = _users[rand * 2 + 1];
 
