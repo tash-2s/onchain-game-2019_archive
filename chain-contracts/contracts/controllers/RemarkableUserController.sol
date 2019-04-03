@@ -24,7 +24,7 @@ contract RemarkableUserController is UserGoldControllable {
     }
   }
 
-  function tackle(address account) public {
+  function tackle(address account) external {
     uint200 newGold = userGoldRecordOf(account).balance;
 
     if (newGold < thresholdGold) {

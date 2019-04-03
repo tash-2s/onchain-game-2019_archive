@@ -24,11 +24,11 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
   }
 
-  function remarkableUserController() public view returns (RemarkableUserController) {
+  function remarkableUserController() external view returns (RemarkableUserController) {
     return _remarkableUserController;
   }
 
-  function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) public {
+  function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
     UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
 
@@ -50,7 +50,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     );
   }
 
-  function rankupPlanet(uint16 userNormalPlanetId) public {
+  function rankupPlanet(uint16 userNormalPlanetId) external {
     uint techPower = _confirm(msg.sender);
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
