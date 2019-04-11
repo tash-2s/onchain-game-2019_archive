@@ -86,8 +86,9 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     view
     returns (UserNormalPlanetRecord)
   {
-    (uint256 target, ) = _userNormalPlanetUint256WithIndexOf(account, userPlanetId);
-    return buildUserNormalPlanetRecordFromUint256(target);
+    UserNormalPlanetRecord memory record;
+    (record, ) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
+    return record;
   }
 
   // TODO: check the coordinate size limit (based on the user gold)
@@ -132,8 +133,9 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
 
   function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
-    (uint256 target, uint16 index) = _userNormalPlanetUint256WithIndexOf(account, userPlanetId);
-    UserNormalPlanetRecord memory record = buildUserNormalPlanetRecordFromUint256(target);
+    UserNormalPlanetRecord memory record;
+    uint16 index;
+    (record, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
     uint8 newRank = record.rank + 1;
     require(newRank <= 30, "max rank");
@@ -303,10 +305,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  function _userNormalPlanetUint256WithIndexOf(address account, uint16 userPlanetId)
+  function _userNormalPlanetRecordWithIndexOf(address account, uint16 userPlanetId)
     private
     view
-    returns (uint256, uint16)
+    returns (UserNormalPlanetRecord, uint16)
   {
     uint256[] memory us = _userNormalPlanetPermanence.read(account);
     uint256 target = 0;
@@ -330,6 +332,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       revert("user normal planet is not found");
     }
 
-    return (target, index);
+    return (buildUserNormalPlanetRecordFromUint256(target), index);
   }
 }
