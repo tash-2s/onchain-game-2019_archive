@@ -5,9 +5,9 @@ import "./modules/UserNormalPlanetControllable.sol";
 
 contract UserController is UserGoldControllable, UserNormalPlanetControllable {
   constructor(
+    address userGoldPermanenceAddress,
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress,
-    address userGoldPermanenceAddress
+    address userNormalPlanetIdCounterPermanenceAddress
   ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);

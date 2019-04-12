@@ -17,9 +17,9 @@ module.exports = function(deployer, network) {
       "UserGoldPermanence"
     )
     await helper.deployAndRegister(deployer, network, UserController, [
+      userGoldPermanenceAddress,
       userNormalPlanetAddress,
-      userNormalPlanetIdCounterAddress,
-      userGoldPermanenceAddress
+      userNormalPlanetIdCounterAddress
     ])
   })
 }
