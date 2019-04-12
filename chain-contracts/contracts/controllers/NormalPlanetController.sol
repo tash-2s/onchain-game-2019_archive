@@ -34,10 +34,10 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint200(SafeMath.sub(10, planetRecord.priceGold)));
+      mintGold(msg.sender, uint200(SafeMath.sub(11, 10 ** planetRecord.priceGold)));
     } else {
       _confirm(msg.sender);
-      unmintGold(msg.sender, planetRecord.priceGold);
+      unmintGold(msg.sender, 10 ** planetRecord.priceGold);
     }
 
     mintUserNormalPlanet(
@@ -59,7 +59,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // ckeck time
     uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = int(10 * 60 * (2 ** (uint256(userPlanet.rank) - 1))) - int(diffSec) - int(
+    int remainingSec = int(5 * 60 * userPlanet.rank * 30) - int(diffSec) - int(
       techPower
     ); // TODO: type
     require(remainingSec <= 0, "need more time to rankup");
@@ -67,9 +67,9 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
     uint200 rankupGold = uint200(
-      (planetRecord.priceGold / 5) * (2 ** (uint256(userPlanet.rank) - 1))
-    ); // TODO: is this right spec?
-    unmintGold(msg.sender, rankupGold);
+      10 ** planetRecord.priceGold * userPlanet.rank
+    );
+    unmintGold(msg.sender, 10 ** rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
   }
@@ -86,7 +86,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     for (uint i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = userPlanet.originalParam * (2 ** (uint256(userPlanet.rank) - 1));
+      rated = 10 ** userPlanet.originalParam * userPlanet.rank;
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
