@@ -85,20 +85,20 @@ const processUserNormalPlanets = (
   userPlanets.forEach(up => {
     const p = getNormalPlanet(up.normalPlanetId)
 
-    const rate = 2 ** (up.rank - 1)
+    const rate = up.rank
     let param = 0
 
     switch (p.kind) {
       case "residence":
-        param = p.param * rate
+        param = 10 ** p.param * rate
         population += param
         break
       case "goldvein":
-        param = p.param * rate
+        param = 10 ** p.param * rate
         goldPower += param
         break
       case "technology":
-        param = p.param * rate
+        param = 10 ** p.param * rate
         techPower += param
         break
     }

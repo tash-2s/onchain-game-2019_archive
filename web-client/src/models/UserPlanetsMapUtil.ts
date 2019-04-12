@@ -37,7 +37,7 @@ export class UserPlanetsMapUtil {
       g = Math.floor(g / 10)
       digit++
     }
-    return digit
+    return Math.min(digit, 17)
   }
 
   static userPlanetsAndThierBiggestRadius = (userNormalPlanets: Array<UserNormalPlanet>) => {
