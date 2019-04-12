@@ -77,7 +77,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
 
         arr[i++] = buildUint256FromUserNormalPlanetRecord(
           UserNormalPlanetRecord(
-            ++counter,
+            counter++,
             normalPlanetId,
             kind,
             param,
