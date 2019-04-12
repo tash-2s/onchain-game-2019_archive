@@ -59,16 +59,12 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // ckeck time
     uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = int(5 * 60 * userPlanet.rank * 30) - int(diffSec) - int(
-      techPower
-    ); // TODO: type
+    int remainingSec = int(5 * 60 * userPlanet.rank * 30) - int(diffSec) - int(techPower); // TODO: type
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint200 rankupGold = uint200(
-      10 ** planetRecord.priceGold * userPlanet.rank
-    );
+    uint200 rankupGold = uint200(10 ** planetRecord.priceGold * userPlanet.rank);
     unmintGold(msg.sender, 10 ** rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
