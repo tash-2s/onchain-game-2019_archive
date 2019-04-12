@@ -32,6 +32,10 @@ fs.readdirSync(JSON_PATH).forEach(fileName => {
     return
   }
 
+  if (contractName.slice(-15) === "DebugController") {
+    return
+  }
+
   const file = fs.readFileSync(JSON_PATH + fileName)
   const parsedJson = JSON.parse(file)
 

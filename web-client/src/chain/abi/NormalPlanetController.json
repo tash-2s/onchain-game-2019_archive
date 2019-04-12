@@ -91,58 +91,6 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint16"
-      },
-      {
-        "name": "normalPlanetId",
-        "type": "uint16"
-      },
-      {
-        "name": "kind",
-        "type": "uint8"
-      },
-      {
-        "name": "param",
-        "type": "uint16"
-      },
-      {
-        "name": "rank",
-        "type": "uint8"
-      },
-      {
-        "name": "rankupedAt",
-        "type": "uint32"
-      },
-      {
-        "name": "createdAt",
-        "type": "uint32"
-      },
-      {
-        "name": "axialCoordinateQ",
-        "type": "int16"
-      },
-      {
-        "name": "axialCoordinateR",
-        "type": "int16"
-      }
-    ],
-    "name": "transformUserNormalPlanetAttributesToUint256",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "pure",
-    "type": "function",
-    "signature": "0x79a8635b"
-  },
-  {
-    "constant": true,
     "inputs": [],
     "name": "userNormalPlanetPermanence",
     "outputs": [
@@ -222,7 +170,7 @@
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "payable": false,
