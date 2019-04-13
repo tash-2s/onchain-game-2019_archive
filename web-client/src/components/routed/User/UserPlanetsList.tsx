@@ -4,11 +4,18 @@ import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserN
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { Time } from "../../../models/time"
 
-export class UserPlanetsList extends OngoingGoldTimerComponent<{
+interface Props {
   user: ExtendedTargetUserState
   isMine: boolean
   rankup: (userPlanetId: number) => void
-}> {
+}
+
+export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
+  constructor(props: Props) {
+    super(props)
+    this.timerInterval = 10000 // 10 secs
+  }
+
   render = () => {
     return this.props.user.userNormalPlanets.map(up => (
       <UserPlanet

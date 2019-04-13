@@ -6,12 +6,18 @@ import { OngoingGoldCalculator } from "../../../models/OngoingGoldCalculator"
 export class OngoingGoldTimerComponent<
   P extends { user: ExtendedTargetUserState }
 > extends React.Component<P, { ongoingGold: number }> {
-  state = { ongoingGold: 0 }
-
   private timerId: NodeJS.Timeout | null = null
+  protected timerInterval = 1000 // 1 sec
+
+  constructor(props: P) {
+    super(props)
+    this.state = {
+      ongoingGold: OngoingGoldCalculator.calculate(props.user.gold, props.user.userNormalPlanets)
+    }
+  }
 
   componentDidMount = () => {
-    this.timerId = setInterval(() => this.updateOngoings(), 1000)
+    this.timerId = setInterval(() => this.updateOngoings(), this.timerInterval)
   }
 
   componentWillUnmount = () => {
