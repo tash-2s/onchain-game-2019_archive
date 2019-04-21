@@ -28,16 +28,15 @@ export class UserPlanetsMapUtil {
   static coordinatesKey = (q: number, r: number) => `${q}/${r}`
 
   static mapRadiusFromGold = (gold: number) => {
-    if (gold < 1) {
-      return 1
+    const data = [[1, 0], [2, 9000], [3, 270000], [4, 10800000], [5, 540000000]].reverse()
+
+    for (const d of data) {
+      if (d[1] <= gold) {
+        return d[0]
+      }
     }
-    let digit = 0
-    let g = gold
-    while (g !== 0) {
-      g = Math.floor(g / 10)
-      digit++
-    }
-    return Math.min(digit, 17)
+
+    throw new Error("'data' must be wrong")
   }
 
   static userPlanetsAndThierBiggestRadius = (userNormalPlanets: Array<UserNormalPlanet>) => {

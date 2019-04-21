@@ -85,7 +85,7 @@ const processUserNormalPlanets = (
   userPlanets.forEach(up => {
     const p = getNormalPlanet(up.normalPlanetId)
 
-    const rate = up.rank
+    const rate = Math.floor(13 ** up.rank / 10 ** up.rank)
     let param = 0
 
     switch (p.kind) {
