@@ -34,7 +34,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint200(SafeMath.sub(11, 10 ** planetRecord.priceGold)));
+      mintGold(msg.sender, 10 ** planetRecord.priceGold);
     } else {
       _confirm(msg.sender);
       unmintGold(msg.sender, 10 ** planetRecord.priceGold);
@@ -82,7 +82,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     for (uint i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = 10 ** userPlanet.originalParam * userPlanet.rank;
+      rated = (10 ** userPlanet.originalParam) * ((13 ** userPlanet.rank) / (10 ** userPlanet.rank));
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
