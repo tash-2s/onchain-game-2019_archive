@@ -44,11 +44,11 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   requiredSecForRankup = (): number => {
-    return 5 * 60 * this.rank * 30
+    return 300 * 2 ** (this.rank - 1)
   }
 
   requiredGoldForRankup = (): number => {
-    return 10 ** this.planetPriceGold() * this.rank
+    return 10 ** this.planetPriceGold() * this.rateMemo
   }
 
   planetKind = () => {
