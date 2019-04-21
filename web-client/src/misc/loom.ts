@@ -7,16 +7,26 @@ type TxSend<T> = import("web3x-es/contract").TxSend<T>
 export const callLoomContractMethod = async <T>(
   f: (cs: ReturnType<typeof getLoomContracts>) => TxCall<T>
 ) => {
+  console.time("call-loom")
+
   const r = await f(getLoomContracts()).call({ from: LoomWeb3.accountAddress })
+
+  console.timeEnd("call-loom")
   console.log(r)
+
   return r
 }
 
 export const sendLoomContractMethod = async <T>(
   f: (cs: ReturnType<typeof getLoomContracts>) => TxSend<T>
 ) => {
+  console.time("send-loom")
+
   const r = await f(getLoomContracts()).send({ from: LoomWeb3.accountAddress })
+
+  console.timeEnd("send-loom")
   console.log(r)
+
   return r
 }
 
