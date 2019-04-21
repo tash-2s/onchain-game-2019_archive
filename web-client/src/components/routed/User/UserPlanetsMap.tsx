@@ -4,20 +4,28 @@ import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { UserActions } from "../../../actions/routed/UserActions"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 
+import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { PlanetHex } from "./PlanetHex"
 
-export class UserPlanetsMap extends React.Component<{
+interface Props {
   user: ExtendedTargetUserState
   isMine: boolean
   userActions: UserActions
-}> {
+}
+
+export class UserPlanetsMap extends OngoingGoldTimerComponent<Props> {
+  constructor(props: Props) {
+    super(props)
+    this.timerInterval = 5000 // 5 secs
+  }
+
   render = () => {
     const {
       userPlanetsByCoordinates,
       userPlanetsBiggestRadius
     } = UserPlanetsMapUtil.userPlanetsAndThierBiggestRadius(this.props.user.userNormalPlanets)
 
-    const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(this.props.user.gold.confirmed)
+    const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(this.state.ongoingGold)
     const shownRadius = Math.max(userPlanetsBiggestRadius, usableRadius)
 
     const hexes = UserPlanetsMapUtil.hexesFromMapRadius(shownRadius).map(h => {
