@@ -5,6 +5,10 @@ export class OngoingGoldCalculator {
     gold: { confirmed: number; confirmedAt: number },
     userNormalPlanets: Array<UserNormalPlanet>
   ): number => {
+    if (gold.confirmedAt === 0) {
+      return 0
+    }
+
     const goldPerSec = (ups => {
       let totalResidenceParam = 0
       let totalGoldveinParam = 0
@@ -21,7 +25,11 @@ export class OngoingGoldCalculator {
       return totalResidenceParam * totalGoldveinParam
     })(userNormalPlanets)
 
-    const diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
+    let diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
+    if (diffSec < 0) {
+      // this can occur because of the time difference between web and loom
+      diffSec = 0
+    }
 
     return gold.confirmed + goldPerSec * diffSec
   }

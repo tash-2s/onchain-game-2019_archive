@@ -4,6 +4,13 @@ export class UserPlanetsMapUtil {
   static hexSize = 50
   static hexWidth = UserPlanetsMapUtil.hexSize * 2
   static hexHeight = Math.sqrt(3) * UserPlanetsMapUtil.hexSize
+  static mapRadiusAndRequiredGold = [
+    [1, 0],
+    [2, 9000],
+    [3, 270000],
+    [4, 10800000],
+    [5, 540000000]
+  ].reverse()
 
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
@@ -25,18 +32,28 @@ export class UserPlanetsMapUtil {
     return arr
   }
 
+  static hexesCountFromMapRadius = (radius: number) => {
+    return 1 + 3 * radius * (radius + 1)
+  }
+
   static coordinatesKey = (q: number, r: number) => `${q}/${r}`
 
   static mapRadiusFromGold = (gold: number) => {
-    const data = [[1, 0], [2, 9000], [3, 270000], [4, 10800000], [5, 540000000]].reverse()
-
-    for (const d of data) {
+    for (const d of UserPlanetsMapUtil.mapRadiusAndRequiredGold) {
       if (d[1] <= gold) {
         return d[0]
       }
     }
 
     throw new Error("'data' must be wrong")
+  }
+
+  static requiredGoldFromMapRadius = (radius: number) => {
+    const d = UserPlanetsMapUtil.mapRadiusAndRequiredGold.find(d => d[0] === radius)
+    if (d) {
+      return d[1]
+    }
+    return null
   }
 
   static userPlanetsAndThierBiggestRadius = (userNormalPlanets: Array<UserNormalPlanet>) => {
