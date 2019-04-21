@@ -15,7 +15,7 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
     return NormalPlanetsData.map(p => {
       const price = 10 ** p.priceGold
       let button
-      if (gold === 0 || gold >= price) {
+      if ((this.props.user.userNormalPlanets.length === 0 && gold === 0) || gold >= price) {
         button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>
       } else {
         button = <button disabled={true}>{buttonText}</button>
