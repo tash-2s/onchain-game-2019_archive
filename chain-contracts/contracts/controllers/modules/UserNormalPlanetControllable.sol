@@ -133,6 +133,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   // TODO: unmint
   // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
 
+  // this should require userPlanetRecord for performance reason
   function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
     UserNormalPlanetRecord memory record;
     uint16 index;
