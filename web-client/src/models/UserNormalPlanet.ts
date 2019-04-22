@@ -48,7 +48,9 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   requiredGoldForRankup = (): number => {
-    return 10 ** this.planetPriceGold() * this.rateMemo
+    return Math.floor(
+      (10 ** this.planetPriceGold() * 13 ** (this.rank - 1)) / 10 ** (this.rank - 1)
+    )
   }
 
   planetKind = () => {

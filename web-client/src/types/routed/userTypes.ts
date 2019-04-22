@@ -25,7 +25,6 @@ export class UserNormalPlanetType {
   rankupedAt!: number
   axialCoordinateQ!: number
   axialCoordinateR!: number
-  rateMemo!: number
   paramMemo!: number
 
   // this is not used when this behave as a type

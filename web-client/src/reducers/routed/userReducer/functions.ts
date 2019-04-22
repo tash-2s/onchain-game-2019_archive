@@ -84,28 +84,28 @@ const processUserNormalPlanets = (
 
   userPlanets.forEach(up => {
     const p = getNormalPlanet(up.normalPlanetId)
+    if (p.kind === "magic") {
+      throw new Error("magic planet is not supported yet")
+    }
 
-    const rate = Math.floor(13 ** up.rank / 10 ** up.rank)
-    let param = 0
+    const param = Math.floor((10 ** p.param * 13 ** (up.rank - 1)) / 10 ** (up.rank - 1))
 
     switch (p.kind) {
       case "residence":
-        param = 10 ** p.param * rate
         population += param
         break
       case "goldvein":
-        param = 10 ** p.param * rate
         goldPower += param
         break
       case "technology":
-        param = 10 ** p.param * rate
         techPower += param
         break
+      default:
+        throw new Error("undefined kind")
     }
 
     const newUp = {
       ...up,
-      rateMemo: rate,
       paramMemo: param
     }
 
