@@ -64,7 +64,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint rankupGold = (10 ** planetRecord.priceGold) * ((13 ** userPlanet.rank) / (10 ** userPlanet.rank));
+    uint rankupGold = (10 ** planetRecord.priceGold) * (13 ** (userPlanet.rank - 1)) / (10 ** (userPlanet.rank - 1));
     unmintGold(msg.sender, 10 ** rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
@@ -82,7 +82,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     for (uint i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = (10 ** userPlanet.originalParam) * ((13 ** userPlanet.rank) / (10 ** userPlanet.rank));
+      rated = (10 ** userPlanet.originalParam) * (13 ** (userPlanet.rank - 1)) / (10 ** (userPlanet.rank - 1));
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
