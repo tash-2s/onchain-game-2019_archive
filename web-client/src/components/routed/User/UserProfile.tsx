@@ -8,13 +8,13 @@ export function UserProfile(props: { user: ExtendedTargetUserState; isMine: bool
     <div>
       target user is {props.user.address} {props.isMine ? "[this is me]" : ""}
       <OngoingUserStatus user={props.user} />
-      population: {props.user.population}
+      population: {props.user.population.toLocaleString()}
       <br />
-      gold power: {props.user.goldPower}
+      gold power: {props.user.goldPower.toLocaleString()}
       <br />
-      tech power: {props.user.techPower}
+      tech power: {props.user.techPower.toLocaleString()}
       <br />
-      gold per sec: {props.user.goldPerSec}
+      gold per sec: {props.user.goldPerSec.toLocaleString()}
     </div>
   )
 }
