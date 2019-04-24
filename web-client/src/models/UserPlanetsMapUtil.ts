@@ -6,10 +6,13 @@ export class UserPlanetsMapUtil {
   static hexHeight = Math.sqrt(3) * UserPlanetsMapUtil.hexSize
   static mapRadiusAndRequiredGold = [
     [1, 0],
-    [2, 9000],
-    [3, 270000],
-    [4, 10800000],
-    [5, 540000000]
+    [2, 10000],
+    [3, 300000],
+    [4, 18000000],
+    [5, 1620000000],
+    [6, 194400000000],
+    [7, 29160000000000],
+    [8, 5248800000000000]
   ].reverse()
 
   static distanceFromCenter = (q: number, r: number) => {
