@@ -17,7 +17,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
   }
 
   render = () => {
-    return this.props.user.userNormalPlanets.map(up => (
+    return this.props.user.userNormalPlanets.map(up => up).sort((a, b) => a.createdAt - b.createdAt).map(up => (
       <UserPlanet
         key={up.id}
         userPlanet={up}
