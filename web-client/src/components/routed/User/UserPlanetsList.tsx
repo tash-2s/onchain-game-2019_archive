@@ -8,6 +8,7 @@ interface Props {
   user: ExtendedTargetUserState
   isMine: boolean
   rankup: (userPlanetId: number) => void
+  remove: (userPlanetId: number) => void
 }
 
 export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
@@ -25,6 +26,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
         techPower={this.props.user.techPower}
         ongoingGold={this.state.ongoingGold}
         rankup={this.props.rankup}
+        remove={this.props.remove}
       />
     ))
   }
@@ -36,6 +38,7 @@ class UserPlanet extends React.Component<{
   techPower: number
   ongoingGold: number
   rankup: (userPlanetId: number) => void
+  remove: (userPlanetId: number) => void
 }> {
   render = () => {
     const up = this.props.userPlanet
@@ -51,34 +54,41 @@ class UserPlanet extends React.Component<{
         created: {up.createdAtString()}
         <br />
         {up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankupedAtString()}</div>}
-        {this.props.isMine ? this.rankupButton() : <></>}
+        {this.props.isMine ? this.buttons() : <></>}
       </div>
     )
   }
 
-  rankupButton = () => {
+  buttons = () => {
     const up = this.props.userPlanet
     const now = Time.now()
     const techPower = this.props.techPower
     const isRankupable = up.isRankupable(this.props.ongoingGold, now, techPower)
+    let rankupButton
 
     if (isRankupable) {
-      return (
+      rankupButton =
         <button onClick={this.rankupButtonHandler}>
           rankup ({up.requiredGoldForRankup()} gold)
         </button>
-      )
     } else {
-      return (
+      rankupButton =
         <button disabled={true}>
           remaining sec for next rankup: {up.remainingSecForRankupWithoutTechPower(now)} -{" "}
           {techPower} = {up.remainingSecForRankup(now, techPower)}
         </button>
-      )
     }
+
+    const removeButton = <button onClick={this.removeButtonHandler}>remove</button>
+
+    return (<div>{rankupButton}{removeButton}</div>)
   }
 
   rankupButtonHandler = () => {
     this.props.rankup(this.props.userPlanet.id)
+  }
+
+  removeButtonHandler = () => {
+    this.props.remove(this.props.userPlanet.id)
   }
 }

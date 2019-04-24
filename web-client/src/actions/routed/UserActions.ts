@@ -78,4 +78,18 @@ export class UserActions extends AbstractActions {
       this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
     })
   }
+
+  static removeUserNormalPlanet = UserActions.creator<GetUser>("removeUserNormalPlanet")
+  removeUserNormalPlanet = (userPlanetId: number) => {
+    this.withLoading(async () => {
+      const address = LoomWeb3.accountAddress
+      await sendLoomContractMethod(cs =>
+        cs.NormalPlanetController.methods.removePlanet(userPlanetId)
+      )
+      const response = await callLoomContractMethod(cs =>
+        cs.UserController.methods.getUser(address)
+      )
+      this.dispatch(UserActions.removeUserNormalPlanet({ address, response }))
+    })
+  }
 }

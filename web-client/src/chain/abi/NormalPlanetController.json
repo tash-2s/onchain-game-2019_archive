@@ -258,5 +258,20 @@
     "stateMutability": "nonpayable",
     "type": "function",
     "signature": "0x7aacfc0e"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "userNormalPlanetId",
+        "type": "uint16"
+      }
+    ],
+    "name": "removePlanet",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x5f77b8e9"
   }
 ]

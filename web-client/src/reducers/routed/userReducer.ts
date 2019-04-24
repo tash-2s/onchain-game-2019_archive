@@ -68,4 +68,12 @@ export const createUserReducer = () =>
         currentTabFromState(state)
       )
     }))
+    .case(UserActions.removeUserNormalPlanet, (state, payload) => ({
+      ...state,
+      targetUser: buildTargetUser(
+        payload.address,
+        restructureUserFromResponse(payload.response),
+        currentTabFromState(state)
+      )
+    }))
     .build()
