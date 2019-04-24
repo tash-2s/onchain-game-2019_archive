@@ -51,11 +51,11 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
   }
 
   function rankupPlanet(uint16 userNormalPlanetId) external {
-    uint techPower = _confirm(msg.sender);
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
     );
+    uint techPower = _confirm(msg.sender);
 
     // ckeck time
     uint diffSec = uint32now() - userPlanet.rankupedAt;
