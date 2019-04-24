@@ -27,7 +27,8 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
 
       return (
         <div key={p.id}>
-          id: {p.id}, kind: {p.kind}, param: {(10 ** p.param).toLocaleString()}, price: {price.toLocaleString()} gold
+          id: {p.id}, kind: {p.kind}, param: {(10 ** p.param).toLocaleString()}, price:{" "}
+          {price.toLocaleString()} gold
           {button}
         </div>
       )

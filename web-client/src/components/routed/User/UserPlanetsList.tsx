@@ -18,17 +18,20 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
   }
 
   render = () => {
-    return this.props.user.userNormalPlanets.map(up => up).sort((a, b) => a.createdAt - b.createdAt).map(up => (
-      <UserPlanet
-        key={up.id}
-        userPlanet={up}
-        isMine={this.props.isMine}
-        techPower={this.props.user.techPower}
-        ongoingGold={this.state.ongoingGold}
-        rankup={this.props.rankup}
-        remove={this.props.remove}
-      />
-    ))
+    return this.props.user.userNormalPlanets
+      .map(up => up)
+      .sort((a, b) => a.createdAt - b.createdAt)
+      .map(up => (
+        <UserPlanet
+          key={up.id}
+          userPlanet={up}
+          isMine={this.props.isMine}
+          techPower={this.props.user.techPower}
+          ongoingGold={this.state.ongoingGold}
+          rankup={this.props.rankup}
+          remove={this.props.remove}
+        />
+      ))
   }
 }
 
@@ -67,21 +70,28 @@ class UserPlanet extends React.Component<{
     let rankupButton
 
     if (isRankupable) {
-      rankupButton =
+      rankupButton = (
         <button onClick={this.rankupButtonHandler}>
           rankup ({up.requiredGoldForRankup()} gold)
         </button>
+      )
     } else {
-      rankupButton =
+      rankupButton = (
         <button disabled={true}>
           remaining sec for next rankup: {up.remainingSecForRankupWithoutTechPower(now)} -{" "}
           {techPower} = {up.remainingSecForRankup(now, techPower)}
         </button>
+      )
     }
 
     const removeButton = <button onClick={this.removeButtonHandler}>remove</button>
 
-    return (<div>{rankupButton}{removeButton}</div>)
+    return (
+      <div>
+        {rankupButton}
+        {removeButton}
+      </div>
+    )
   }
 
   rankupButtonHandler = () => {
