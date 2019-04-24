@@ -85,7 +85,7 @@ const processUserNormalPlanets = (
   userPlanets.forEach(up => {
     const p = getNormalPlanet(up.normalPlanetId)
     if (p.kind === "magic") {
-      throw new Error("magic planet is not supported yet")
+      throw new Error("magic planets are not supported yet")
     }
 
     const param = Math.floor((10 ** p.param * 13 ** (up.rank - 1)) / 10 ** (up.rank - 1))

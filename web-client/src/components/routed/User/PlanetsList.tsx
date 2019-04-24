@@ -13,6 +13,10 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
     const buttonText = "get"
 
     return NormalPlanetsData.map(p => {
+      if (p.kind === "magic") {
+        throw new Error("magic planets are not supported yet")
+      }
+
       const price = 10 ** p.priceGold
       let button
       if ((this.props.user.userNormalPlanets.length === 0 && gold === 0) || gold >= price) {
@@ -20,9 +24,10 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
       } else {
         button = <button disabled={true}>{buttonText}</button>
       }
+
       return (
         <div key={p.id}>
-          id: {p.id}, kind: {p.kind}, price: {price} gold
+          id: {p.id}, kind: {p.kind}, param: {(10 ** p.param).toLocaleString()}, price: {price.toLocaleString()} gold
           {button}
         </div>
       )
