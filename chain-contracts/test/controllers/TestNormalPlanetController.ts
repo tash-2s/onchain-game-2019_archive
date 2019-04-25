@@ -70,4 +70,19 @@ contract("NormalPlanetController", async accounts => {
       })
     })
   })
+
+  describe("#removePlanet()", async () => {
+    context("valid id", async () => {
+      it("should remove the target", async () => {
+        const result1 = await (await UserController.deployed()).getUser(ownerAccount)
+        assert.deepEqual(result1[2].map(e => e.toNumber()), [0, 1, 1, 2])
+
+        await instance.removePlanet(0)
+        const result2 = await (await UserController.deployed()).getUser(ownerAccount)
+        assert.deepEqual(result2[2].map(e => e.toNumber()), [1, 2])
+
+        assert.notEqual(result1[1].toNumber(), result2[1].toNumber()) // confirmedAt
+      })
+    })
+  })
 })

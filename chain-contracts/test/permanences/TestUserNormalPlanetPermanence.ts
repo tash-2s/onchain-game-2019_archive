@@ -139,6 +139,54 @@ contract("UserNormalPlanetPermanence", async accounts => {
     })
   })
 
+  describe("#deleteElement()", async () => {
+    context("minter", async () => {
+      context("the target element exists", async () => {
+        it("should delete element", async () => {
+          await instance.pushElement(ownerAccount, 5)
+          await instance.pushElement(ownerAccount, 6)
+          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
+
+          await instance.deleteElement(ownerAccount, 1)
+          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5"])
+
+          await instance.deleteElement(ownerAccount, 0)
+          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), [])
+        })
+      })
+
+      context("the target element doesn't exist", async () => {
+        it("should fail", async () => {
+          let failed = false
+          try {
+            await instance.deleteElement(ownerAccount, 0)
+          } catch (_) {
+            failed = true
+          }
+          assert.equal(failed, true)
+        })
+      })
+    })
+
+    context("non-minter", async () => {
+      context("the target element exists", async () => {
+        it("should fail", async () => {
+          await instance.pushElement(ownerAccount, 5)
+          await instance.pushElement(ownerAccount, 6)
+          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
+
+          let failed = false
+          try {
+            await instance.deleteElement(ownerAccount, 1, { from: strangerAccount })
+          } catch (_) {
+            failed = true
+          }
+          assert.equal(failed, true)
+        })
+      })
+    })
+  })
+
   describe("#arrayLength()", async () => {
     it("should return the length of an array", async () => {
       assert.equal((await instance.arrayLength(strangerAccount)).toString(), "0")

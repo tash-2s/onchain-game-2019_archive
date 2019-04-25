@@ -130,9 +130,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  // TODO: unmint
-  // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
-
   // this should require userPlanetRecord for performance reason
   function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
     UserNormalPlanetRecord memory record;
@@ -158,6 +155,13 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         )
       )
     );
+  }
+
+  function unmintUserNormalPlanet(address account, uint16 userPlanetId) internal {
+    uint16 index;
+    (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
+
+    _userNormalPlanetPermanence.deleteElement(account, index);
   }
 
   function buildUserNormalPlanetRecordFromUint256(uint256 source)

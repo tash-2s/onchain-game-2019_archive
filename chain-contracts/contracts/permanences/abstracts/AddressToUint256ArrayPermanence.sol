@@ -27,7 +27,6 @@ contract AddressToUint256ArrayPermanence is MinterRole {
     _addressToUint256Array[addr][index] = ui256;
   }
 
-  // TODO: test
   // This function change the order of the array.
   function deleteElement(address addr, uint256 index) public onlyMinter {
     _addressToUint256Array[addr][index] = _addressToUint256Array[addr][_addressToUint256Array[addr].length - 1];

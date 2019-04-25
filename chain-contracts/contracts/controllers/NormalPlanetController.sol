@@ -70,6 +70,11 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
   }
 
+  function removePlanet(uint16 userNormalPlanetId) external {
+    _confirm(msg.sender);
+    unmintUserNormalPlanet(msg.sender, userNormalPlanetId);
+  }
+
   function _confirm(address account) private returns (uint) {
     uint population = 0;
     uint goldPower = 0;
