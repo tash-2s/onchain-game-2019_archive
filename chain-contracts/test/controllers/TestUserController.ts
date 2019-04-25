@@ -34,7 +34,7 @@ contract("UserController", async accounts => {
 
         const result = await instance.getUser(ownerAccount)
 
-        assert.equal(result[0].toString(), "5")
+        assert.equal(result[0].toString(), "1000")
         assert.isAbove(result[1].toNumber(), unixtimeNow - 10)
         assert.isBelow(result[1].toNumber(), unixtimeNow + 10)
         assert.deepEqual(result[2].map(e => e.toString()), ["0", "1"])

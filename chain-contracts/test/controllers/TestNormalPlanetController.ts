@@ -65,7 +65,7 @@ contract("NormalPlanetController", async accounts => {
         await instance.rankupPlanet(0, { from: strangerAccount })
 
         const result2 = await (await UserController.deployed()).getUser(strangerAccount)
-        assert.equal(result2[0].toNumber(), 9)
+        assert.equal(result2[0].toNumber(), 10)
         assert.equal(result2[3][0].toNumber(), 2)
       })
     })
@@ -80,8 +80,6 @@ contract("NormalPlanetController", async accounts => {
         await instance.removePlanet(0)
         const result2 = await (await UserController.deployed()).getUser(ownerAccount)
         assert.deepEqual(result2[2].map(e => e.toNumber()), [1, 2])
-
-        assert.notEqual(result1[1].toNumber(), result2[1].toNumber()) // confirmedAt
       })
     })
   })

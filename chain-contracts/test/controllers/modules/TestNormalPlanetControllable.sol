@@ -31,7 +31,7 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
   }
 
   function testNormalPlanetRecordOf() public {
-    _assertEqual(normalPlanetRecordOf(1), NormalPlanetRecord(1, 10, 5), "#normalPlanetRecordOf(1)");
+    _assertEqual(normalPlanetRecordOf(1), NormalPlanetRecord(1, 1, 3), "#normalPlanetRecordOf(1)");
   }
 
   function testBuildNormalPlanetRecordFromUint256() public {
