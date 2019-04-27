@@ -6,7 +6,9 @@ export const NormalPlanetsData: NormalPlanet[] = [
   { id: 3, kind: "residence", param: 2, priceGold: 6 },
   { id: 4, kind: "goldvein", param: 2, priceGold: 6 },
   { id: 5, kind: "residence", param: 3, priceGold: 9 },
-  { id: 6, kind: "goldvein", param: 3, priceGold: 9 }
+  { id: 6, kind: "goldvein", param: 3, priceGold: 9 },
+  { id: 101, kind: "technology", param: 2, priceGold: 8 },
+  { id: 102, kind: "technology", param: 3, priceGold: 11 },
 ]
 
 export const getNormalPlanet = (id: number) => {

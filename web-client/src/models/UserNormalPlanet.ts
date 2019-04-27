@@ -44,7 +44,17 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   requiredSecForRankup = (): number => {
-    return 300 * 2 ** (this.rank - 1)
+    return UserNormalPlanet.requiredSecForRankup(this.rank)
+  }
+
+  static requiredSecForRankup = (rank: number) => {
+    let i = 1
+    let memo = 300
+    while(i < rank) {
+      memo = Math.floor(memo * 14 / 10)
+      i++
+    }
+    return memo
   }
 
   requiredGoldForRankup = (): number => {
