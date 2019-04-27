@@ -59,7 +59,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // ckeck time
     uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = (300 * (2 ** (userPlanet.rank - 1))) - int(diffSec) - int(techPower); // TODO: type
+    int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(techPower); // TODO: type
     require(remainingSec <= 0, "need more time to rankup");
 
     // decrease required gold
@@ -68,6 +68,16 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     unmintGold(msg.sender, 10 ** rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
+  }
+
+  function _requiredSecForRankup(uint rank) private pure returns (uint) {
+    uint i = 1;
+    uint memo = 300;
+    while (i < rank) {
+      memo = memo * 14 / 10;
+      i++;
+    }
+    return memo;
   }
 
   function removePlanet(uint16 userNormalPlanetId) external {
