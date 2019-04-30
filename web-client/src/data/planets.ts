@@ -1,15 +1,20 @@
 import { NormalPlanet } from "../types/commonTypes"
 
-export const NormalPlanetsData: NormalPlanet[] = [
-  { id: 1, kind: "residence", param: 1, priceGold: 3 },
-  { id: 2, kind: "goldvein", param: 1, priceGold: 3 },
-  { id: 3, kind: "residence", param: 2, priceGold: 6 },
-  { id: 4, kind: "goldvein", param: 2, priceGold: 6 },
-  { id: 5, kind: "residence", param: 3, priceGold: 9 },
-  { id: 6, kind: "goldvein", param: 3, priceGold: 9 },
+let id = 1
+let param = 1
+const residenceAndGoldvein: NormalPlanet[] = []
+while (id <= 32) {
+  residenceAndGoldvein.push(
+    { id: id++, kind: "residence", param: param, priceGold: param * 3 },
+    { id: id++, kind: "goldvein", param: param, priceGold: param * 3 }
+  )
+  param++
+}
+
+export const NormalPlanetsData: NormalPlanet[] = residenceAndGoldvein.concat([
   { id: 101, kind: "technology", param: 2, priceGold: 8 },
-  { id: 102, kind: "technology", param: 3, priceGold: 11 },
-]
+  { id: 102, kind: "technology", param: 3, priceGold: 11 }
+])
 
 export const getNormalPlanet = (id: number) => {
   const p = NormalPlanetsData.find(p => p.id === id)
