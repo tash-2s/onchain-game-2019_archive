@@ -50,8 +50,8 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   static requiredSecForRankup = (rank: number) => {
     let i = 1
     let memo = 300
-    while(i < rank) {
-      memo = Math.floor(memo * 14 / 10)
+    while (i < rank) {
+      memo = Math.floor((memo * 14) / 10)
       i++
     }
     return memo

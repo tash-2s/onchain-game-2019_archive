@@ -78,6 +78,7 @@ class UserPlanet extends React.Component<{
     } else {
       rankupButton = (
         <button disabled={true}>
+          required gold: {up.requiredGoldForRankup()},
           remaining sec for next rankup: {up.remainingSecForRankupWithoutTechPower(now)} -{" "}
           {techPower} = {up.remainingSecForRankup(now, techPower)}
         </button>

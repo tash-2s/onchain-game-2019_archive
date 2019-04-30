@@ -27,7 +27,7 @@ export class OngoingGoldCalculator {
 
     let diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
     if (diffSec < 0) {
-      // this can occur because of the time difference between web and loom
+      // this can occur because of the time difference between browser and loom
       diffSec = 0
     }
 
