@@ -18,6 +18,9 @@ export class Template extends React.Component<{
     }
 
     if (this.props.isLoading) {
+      if (dialog.open) {
+        return
+      }
       dialog.showModal()
     } else {
       dialog.close()
