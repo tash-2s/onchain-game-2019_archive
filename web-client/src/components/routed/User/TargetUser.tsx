@@ -23,7 +23,12 @@ export class TargetUser extends React.Component<TargetUserProps> {
     switch (user.selectedUserPlanetsTab) {
       case "map":
         userPlanets = (
-          <UserPlanetsMap user={user} isMine={isMine} userActions={this.props.userActions} />
+          <UserPlanetsMap
+            user={user}
+            isMine={isMine}
+            userActions={this.props.userActions}
+            loomTimeDifference={this.props.common.loomTimeDifference}
+          />
         )
         break
       case "list":
@@ -33,17 +38,26 @@ export class TargetUser extends React.Component<TargetUserProps> {
             isMine={isMine}
             rankup={this.props.userActions.rankupUserNormalPlanet}
             remove={this.props.userActions.removeUserNormalPlanet}
+            loomTimeDifference={this.props.common.loomTimeDifference}
           />
         )
         break
     }
     const planetsList = (
-      <PlanetsList user={user} setPlanetToGet={this.props.userActions.setPlanetToGet} />
+      <PlanetsList
+        user={user}
+        setPlanetToGet={this.props.userActions.setPlanetToGet}
+        loomTimeDifference={this.props.common.loomTimeDifference}
+      />
     )
 
     return (
       <div>
-        <UserProfile user={user} isMine={isMine} />
+        <UserProfile
+          user={user}
+          isMine={isMine}
+          loomTimeDifference={this.props.common.loomTimeDifference}
+        />
         <button onClick={this.toggleTab}>toggle type of userPlanets</button>
         {userPlanets}
         {isMine ? planetsList : <></>}

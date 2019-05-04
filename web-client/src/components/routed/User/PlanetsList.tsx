@@ -6,6 +6,7 @@ import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
 export class PlanetsList extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
+  loomTimeDifference: number
   setPlanetToGet: (planetId: number) => void
 }> {
   render = () => {

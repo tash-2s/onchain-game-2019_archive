@@ -4,6 +4,7 @@ declare module "*/_loom.js" {
     static resetWithNewAccount: () => string
     static accountAddress: string
     static isGuest: boolean
+    static getLoomTime: () => number
   }
 
   export const getLoomContracts: () => {

@@ -70,9 +70,6 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   planetPriceGold = () => {
     return this.normalPlanet.priceGold
   }
-
-  createdAtString = () => Time.unixtimeToDateString(this.createdAt)
-  rankupedAtString = () => Time.unixtimeToDateString(this.rankupedAt)
 }
 
 export interface ExtendedUserState extends UserState {

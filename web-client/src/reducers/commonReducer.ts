@@ -19,7 +19,8 @@ const createInitialState: () => CommonState = () => ({
   route: getInitialRoute(),
   currentUser: getCurrentUser(),
   isLoading: false,
-  isError: false
+  isError: false,
+  loomTimeDifference: 0
 })
 
 export const createCommonReducer = () =>
@@ -40,4 +41,7 @@ export const createCommonReducer = () =>
       ...state,
       currentUser: { address: payload }
     }))
+    .case(CommonActions.updateLoomTimeDifference, (state, payload) => {
+      return { ...state, loomTimeDifference: payload }
+    })
     .build()

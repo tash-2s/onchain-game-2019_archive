@@ -6,6 +6,7 @@ import { Time } from "../../../models/time"
 
 interface Props {
   user: ExtendedTargetUserState
+  loomTimeDifference: number
   isMine: boolean
   rankup: (userPlanetId: number) => void
   remove: (userPlanetId: number) => void
@@ -24,6 +25,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
       .map(up => (
         <UserPlanet
           key={up.id}
+          loomTimeDifference={this.props.loomTimeDifference}
           userPlanet={up}
           isMine={this.props.isMine}
           techPower={this.props.user.techPower}
@@ -36,6 +38,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
 }
 
 class UserPlanet extends React.Component<{
+  loomTimeDifference: number
   userPlanet: UserNormalPlanet
   isMine: boolean
   techPower: number
@@ -45,7 +48,9 @@ class UserPlanet extends React.Component<{
 }> {
   render = () => {
     const up = this.props.userPlanet
-
+    const now = Time.nowFromDiff(this.props.loomTimeDifference)
+    const rankuped =
+      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {now - up.rankupedAt} sec ago</div>
     return (
       <div>
         {`${up.normalPlanetId} (kind: ${up.planetKind()})`}
@@ -54,9 +59,9 @@ class UserPlanet extends React.Component<{
         <br />
         param: {up.paramMemo}
         <br />
-        created: {up.createdAtString()}
+        created: {now - up.createdAt} sec ago
         <br />
-        {up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankupedAtString()}</div>}
+        {rankuped}
         {this.props.isMine ? this.buttons() : <></>}
       </div>
     )
@@ -64,7 +69,7 @@ class UserPlanet extends React.Component<{
 
   buttons = () => {
     const up = this.props.userPlanet
-    const now = Time.now()
+    const now = Time.nowFromDiff(this.props.loomTimeDifference)
     const techPower = this.props.techPower
     const isRankupable = up.isRankupable(this.props.ongoingGold, now, techPower)
     let rankupButton
@@ -78,9 +83,9 @@ class UserPlanet extends React.Component<{
     } else {
       rankupButton = (
         <button disabled={true}>
-          required gold: {up.requiredGoldForRankup()},
-          remaining sec for next rankup: {up.remainingSecForRankupWithoutTechPower(now)} -{" "}
-          {techPower} = {up.remainingSecForRankup(now, techPower)}
+          required gold: {up.requiredGoldForRankup()}, remaining sec for next rankup:{" "}
+          {up.remainingSecForRankupWithoutTechPower(now)} - {techPower} ={" "}
+          {up.remainingSecForRankup(now, techPower)}
         </button>
       )
     }

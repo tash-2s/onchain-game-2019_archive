@@ -35,4 +35,9 @@ export class CommonActions extends AbstractActions {
   stopLoading = () => {
     this.dispatch(CommonActions.stopLoading())
   }
+
+  static updateLoomTimeDifference = CommonActions.creator<number>("updateLoomTimeDifference")
+  updateLoomTimeDifference = (timeDiff: number) => {
+    this.dispatch(CommonActions.updateLoomTimeDifference(timeDiff))
+  }
 }

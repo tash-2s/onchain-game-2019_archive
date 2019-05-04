@@ -9,6 +9,7 @@ import { PlanetHex } from "./PlanetHex"
 
 interface Props {
   user: ExtendedTargetUserState
+  loomTimeDifference: number
   isMine: boolean
   userActions: UserActions
 }

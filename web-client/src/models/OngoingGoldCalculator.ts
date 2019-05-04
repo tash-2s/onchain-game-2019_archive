@@ -3,7 +3,8 @@ import { UserNormalPlanet } from "./UserNormalPlanet"
 export class OngoingGoldCalculator {
   static calculate = (
     gold: { confirmed: number; confirmedAt: number },
-    userNormalPlanets: Array<UserNormalPlanet>
+    userNormalPlanets: Array<UserNormalPlanet>,
+    now: number
   ): number => {
     if (gold.confirmedAt === 0) {
       return 0
@@ -25,7 +26,7 @@ export class OngoingGoldCalculator {
       return totalResidenceParam * totalGoldveinParam
     })(userNormalPlanets)
 
-    let diffSec = Math.floor(Date.now() / 1000) - gold.confirmedAt
+    let diffSec = now - gold.confirmedAt
     if (diffSec < 0) {
       // this can occur because of the time difference between browser and loom
       diffSec = 0

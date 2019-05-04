@@ -3,11 +3,15 @@ import * as React from "react"
 import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { OngoingUserStatus } from "./OngoingUserStatus"
 
-export function UserProfile(props: { user: ExtendedTargetUserState; isMine: boolean }) {
+export function UserProfile(props: {
+  user: ExtendedTargetUserState
+  isMine: boolean
+  loomTimeDifference: number
+}) {
   return (
     <div>
       target user is {props.user.address} {props.isMine ? "[this is me]" : ""}
-      <OngoingUserStatus user={props.user} />
+      <OngoingUserStatus user={props.user} loomTimeDifference={props.loomTimeDifference} />
       population: {props.user.population.toLocaleString()}
       <br />
       gold power: {props.user.goldPower.toLocaleString()}

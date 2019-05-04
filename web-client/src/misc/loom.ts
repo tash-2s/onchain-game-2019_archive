@@ -1,5 +1,8 @@
 import { LoomWeb3, getLoomContracts } from "./_loom.js"
 export * from "./_loom.js"
+import { Store } from "redux"
+import { Time } from "../models/time"
+import { CommonActions } from "../actions/CommonActions"
 
 type TxCall<T> = import("web3x-es/contract").TxCall<T>
 type TxSend<T> = import("web3x-es/contract").TxSend<T>
@@ -31,3 +34,14 @@ export const sendLoomContractMethod = async <T>(
 }
 
 export type TxCallGenericsType<T> = T extends TxCall<infer R> ? R : any
+
+const updateLoomTimeDifference = async (store: Store) => {
+  const loomTime = await LoomWeb3.getLoomTime()
+  const webTime = Time.now()
+  new CommonActions(store.dispatch).updateLoomTimeDifference(loomTime - webTime)
+}
+
+export const keepUpdatingLoomTime = (store: Store) => {
+  updateLoomTimeDifference(store)
+  setInterval(() => updateLoomTimeDifference(store), 15 * 1000)
+}

@@ -6,6 +6,7 @@ import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 
 export class OngoingUserStatus extends OngoingGoldTimerComponent<{
   user: ExtendedTargetUserState
+  loomTimeDifference: number
 }> {
   render = () => {
     const radius = UserPlanetsMapUtil.mapRadiusFromGold(this.state.ongoingGold)

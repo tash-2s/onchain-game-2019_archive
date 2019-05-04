@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 
 import { createReducer } from "./reducers/rootReducer"
 import { registerStore } from "./misc/route"
-import { LoomWeb3 } from "./misc/loom"
+import { LoomWeb3, keepUpdatingLoomTime } from "./misc/loom"
 import { AppContainer } from "./containers/AppContainer"
 import { TopLevelErrorBoundary } from "./components/TopLevelErrorBoundary"
 
@@ -23,3 +23,4 @@ ReactDOM.render(
   </TopLevelErrorBoundary>,
   document.getElementById("js-connector")
 )
+keepUpdatingLoomTime(store)

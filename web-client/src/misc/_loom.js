@@ -28,6 +28,11 @@ export class LoomWeb3 {
 
     return address
   }
+
+  static async getLoomTime() {
+    const o = await this.web3.eth.getBlock("latest")
+    return o.timestamp
+  }
 }
 
 export const getLoomContracts = () => ({
