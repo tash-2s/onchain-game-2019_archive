@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
-import { NormalPlanetsData } from "../../../data/planets"
+import { NormalPlanetsData, initialPlanetIds } from "../../../data/planets"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
 export class PlanetsList extends OngoingGoldTimerComponent<{
@@ -21,7 +21,9 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
       const price = 10 ** p.priceGold
       let button
       if (
-        (this.props.user.userNormalPlanets.length === 0 && gold === 0 && [1, 2].includes(p.id)) ||
+        (this.props.user.userNormalPlanets.length === 0 &&
+          gold === 0 &&
+          initialPlanetIds.includes(p.id)) ||
         gold >= price
       ) {
         button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>

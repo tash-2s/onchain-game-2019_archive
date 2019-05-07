@@ -16,6 +16,8 @@ export const NormalPlanetsData: NormalPlanet[] = residenceAndGoldvein.concat([
   { id: 102, kind: "technology", param: 3, priceGold: 12 }
 ])
 
+export const initialPlanetIds = [1, 2]
+
 export const getNormalPlanet = (id: number) => {
   const p = NormalPlanetsData.find(p => p.id === id)
 
