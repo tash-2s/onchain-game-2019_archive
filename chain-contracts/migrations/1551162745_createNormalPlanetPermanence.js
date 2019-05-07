@@ -9,17 +9,17 @@ module.exports = function(deployer, network) {
     let id = 1
     let param = 1
     const residenceAndGoldvein = []
-    while (id <= 32) {
+    while (id <= 16) {
       residenceAndGoldvein.push(
         { id: id++, kind: "residence", param: param, priceGold: param * 3 },
         { id: id++, kind: "goldvein", param: param, priceGold: param * 3 }
       )
-      param++
+      param += 2
     }
 
     const data = residenceAndGoldvein.concat([
       { id: 101, kind: "technology", param: 2, priceGold: 8 },
-      { id: 102, kind: "technology", param: 3, priceGold: 11 }
+      { id: 102, kind: "technology", param: 3, priceGold: 12 }
     ])
 
     for (i = 0; i < data.length; i++) {
