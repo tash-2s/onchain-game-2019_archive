@@ -7,7 +7,7 @@ import "../../permanences/UserNormalPlanetIdCounterPermanence.sol";
 
 contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   struct UserNormalPlanetRecord {
-    uint16 id;
+    uint64 id;
     uint16 normalPlanetId;
     uint8 kind;
     uint16 originalParam;
@@ -19,23 +19,23 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   }
 
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT = 1;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT = 5;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_NORMAL_PLANET_ID_START_DIGIT = 6;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_NORMAL_PLANET_ID_END_DIGIT = 10;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 11;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 13;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT = 14;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_END_DIGIT = 18;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_START_DIGIT = 19;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_END_DIGIT = 21;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_START_DIGIT = 22;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_END_DIGIT = 31;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_START_DIGIT = 32;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT = 41;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT = 42;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT = 46;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT = 47;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT = 51;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT = 20;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_NORMAL_PLANET_ID_START_DIGIT = 21;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_NORMAL_PLANET_ID_END_DIGIT = 25;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 26;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 28;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT = 29;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_END_DIGIT = 33;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_START_DIGIT = 34;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_END_DIGIT = 36;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_START_DIGIT = 37;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_END_DIGIT = 46;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_START_DIGIT = 47;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT = 56;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT = 57;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT = 61;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT = 62;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT = 66;
 
   uint256 constant USER_NORMAL_PLANET_PERMANENCE_ELEMENT_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000; // solium-disable-line max-len
 
@@ -81,7 +81,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return uint16(_userNormalPlanetPermanence.arrayLength(account));
   }
 
-  function userNormalPlanetRecordOf(address account, uint16 userPlanetId)
+  function userNormalPlanetRecordOf(address account, uint64 userPlanetId)
     internal
     view
     returns (UserNormalPlanetRecord)
@@ -110,13 +110,12 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       }
     }
 
-    uint16 counter = _userNormalPlanetIdCounterPermanence.read(account);
-    _userNormalPlanetIdCounterPermanence.update(account, counter + 1);
+    uint64 id = _userNormalPlanetIdCounterPermanence.generate(account);
     _userNormalPlanetPermanence.pushElement(
       account,
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(
-          counter,
+          id,
           normalPlanetId,
           kind,
           param,
@@ -131,7 +130,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   }
 
   // this should require userPlanetRecord for performance reason
-  function rankupUserNormalPlanet(address account, uint16 userPlanetId) internal {
+  function rankupUserNormalPlanet(address account, uint64 userPlanetId) internal {
     UserNormalPlanetRecord memory record;
     uint16 index;
     (record, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
@@ -157,7 +156,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  function unmintUserNormalPlanet(address account, uint16 userPlanetId) internal {
+  function unmintUserNormalPlanet(address account, uint64 userPlanetId) internal {
     uint16 index;
     (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
@@ -169,7 +168,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     pure
     returns (UserNormalPlanetRecord)
   {
-    uint16 id = uint16(
+    uint64 id = uint64(
       interpretPermanenceUint256(
         source,
         USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
@@ -311,7 +310,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  function _userNormalPlanetRecordWithIndexOf(address account, uint16 userPlanetId)
+  function _userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
     private
     view
     returns (UserNormalPlanetRecord, uint16)
@@ -321,7 +320,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint16 index;
 
     for (uint16 i = 0; i < us.length; i++) {
-      if (uint16(
+      if (uint64(
         interpretPermanenceUint256(
           us[i],
           USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,

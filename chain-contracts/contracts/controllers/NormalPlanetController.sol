@@ -50,7 +50,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     );
   }
 
-  function rankupPlanet(uint16 userNormalPlanetId) external {
+  function rankupPlanet(uint64 userNormalPlanetId) external {
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
@@ -80,7 +80,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     return memo;
   }
 
-  function removePlanet(uint16 userNormalPlanetId) external {
+  function removePlanet(uint64 userNormalPlanetId) external {
     _confirm(msg.sender);
     unmintUserNormalPlanet(msg.sender, userNormalPlanetId);
   }

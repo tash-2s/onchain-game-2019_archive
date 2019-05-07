@@ -34,7 +34,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   }
 
   function debugMintMaxUserNormalPlanets(address account) external {
-    uint16 counter = userNormalPlanetIdCounterPermanence().read(account);
+    uint64 counter = userNormalPlanetIdCounterPermanence().read(account);
     require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
 
     uint256[] memory arr = new uint256[](919);

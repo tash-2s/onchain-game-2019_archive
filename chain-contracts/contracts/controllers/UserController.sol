@@ -20,7 +20,7 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     returns (
     uint200 confirmedGold,
     uint32 goldConfirmedAt,
-    uint16[] unpIds, // [id, normalPlanetId, ...]
+    uint64[] unpIds, // [id, normalPlanetId, ...]
     uint8[] unpRanks,
     uint32[] unpTimes, // [rankupedAt, createdAt, ...]
     int16[] unpAxialCoordinates // [q, r, ...]
@@ -33,7 +33,7 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
     uint16 userPlanetsCount = uint16(userPlanetRecords.length);
 
-    unpIds = new uint16[](userPlanetsCount * 2);
+    unpIds = new uint64[](userPlanetsCount * 2);
     unpRanks = new uint8[](userPlanetsCount);
     unpTimes = new uint32[](userPlanetsCount * 2);
     unpAxialCoordinates = new int16[](userPlanetsCount * 2);
