@@ -34,10 +34,10 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, 10 ** planetRecord.priceGold);
+      mintGold(msg.sender, uint256(10) ** planetRecord.priceGold);
     } else {
       _confirm(msg.sender);
-      unmintGold(msg.sender, 10 ** planetRecord.priceGold);
+      unmintGold(msg.sender, uint256(10) ** planetRecord.priceGold);
     }
 
     mintUserNormalPlanet(
@@ -64,7 +64,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint rankupGold = (10 ** planetRecord.priceGold) * (13 ** (userPlanet.rank - 1)) / (10 ** (userPlanet.rank - 1));
+    uint rankupGold = (uint256(10) ** planetRecord.priceGold) * (uint256(13) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
     unmintGold(msg.sender, rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
@@ -97,7 +97,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     for (uint i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = (10 ** userPlanet.originalParam) * (13 ** (userPlanet.rank - 1)) / (10 ** (userPlanet.rank - 1));
+      rated = (uint256(10) ** userPlanet.originalParam) * (uint256(13) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
