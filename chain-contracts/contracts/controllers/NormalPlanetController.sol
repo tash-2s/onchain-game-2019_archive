@@ -34,10 +34,10 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint256(10) ** planetRecord.priceGold);
+      mintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
     } else {
       _confirm(msg.sender);
-      unmintGold(msg.sender, uint256(10) ** planetRecord.priceGold);
+      unmintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
     }
 
     mintUserNormalPlanet(
@@ -64,7 +64,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // decrease required gold
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint rankupGold = (uint256(10) ** planetRecord.priceGold) * (uint256(
+    uint rankupGold = (uint256(10) ** planetRecord.priceGoldCommonLogarithm) * (uint256(
       13
     ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
     unmintGold(msg.sender, rankupGold);

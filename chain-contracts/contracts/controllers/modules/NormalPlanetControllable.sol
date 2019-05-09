@@ -7,15 +7,15 @@ contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {
     uint8 kind;
     uint16 param;
-    uint8 priceGold;
+    uint8 priceGoldCommonLogarithm;
   }
 
   uint8 constant NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 1;
   uint8 constant NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 3;
   uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT = 4;
   uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT = 8;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_START_DIGIT = 9;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_END_DIGIT = 11;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT = 9;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT = 11;
 
   NormalPlanetPermanence private _normalPlanetPermanence;
 
@@ -50,18 +50,18 @@ contract NormalPlanetControllable is PermanenceInterpretable {
         NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT
       )
     );
-    uint8 priceGold = uint8(
+    uint8 priceGoldCommonLogarithm = uint8(
       interpretPermanenceUint256(
         source,
-        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_START_DIGIT,
-        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_END_DIGIT
+        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT,
+        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT
       )
     );
 
-    if (kind == 0 && param == 0 && priceGold == 0) {
+    if (kind == 0 && param == 0 && priceGoldCommonLogarithm == 0) {
       revert("faild to build a planet record, the source is wrong");
     }
 
-    return NormalPlanetRecord(kind, param, priceGold);
+    return NormalPlanetRecord(kind, param, priceGoldCommonLogarithm);
   }
 }
