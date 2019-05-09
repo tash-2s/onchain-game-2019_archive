@@ -54,18 +54,18 @@ contract("NormalPlanetController", async accounts => {
       it("should rankup a planet", async () => {
         await (await UserNormalPlanetPermanence.deployed()).pushElement(
           strangerAccount,
-          "15500000001000010010000100000"
+          "15500000001000010010000100000000000000000000"
         )
-        await (await UserGoldPermanence.deployed()).update(strangerAccount, 10)
+        await (await UserGoldPermanence.deployed()).update(strangerAccount, 1000)
 
         const result1 = await (await UserController.deployed()).getUser(strangerAccount)
-        assert.equal(result1[0].toNumber(), 10)
+        assert.equal(result1[0].toNumber(), 1000)
         assert.equal(result1[3][0].toNumber(), 1)
 
         await instance.rankupPlanet(0, { from: strangerAccount })
 
         const result2 = await (await UserController.deployed()).getUser(strangerAccount)
-        assert.equal(result2[0].toNumber(), 10)
+        assert.equal(result2[0].toNumber(), 0)
         assert.equal(result2[3][0].toNumber(), 2)
       })
     })

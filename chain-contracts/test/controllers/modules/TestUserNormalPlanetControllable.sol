@@ -39,8 +39,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     Assert.equal(userNormalPlanetRecordsOf(account).length, 0, "empty");
 
-    _permanence.pushElement(account, 10000100001);
-    _permanence.pushElement(account, 20000200002);
+    _permanence.pushElement(account, 10000100000000000000000001);
+    _permanence.pushElement(account, 20000200000000000000000002);
 
     Assert.equal(userNormalPlanetRecordsOf(account).length, 2, "added");
     _reporter.report(userNormalPlanetRecordsOf(account)[0].kind == 1, "valid");
@@ -50,9 +50,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     address account = address(2);
 
     Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(0), "initial");
-    _permanence.pushElement(account, 10000100001);
-    _permanence.pushElement(account, 20000200002);
-    _permanence.pushElement(account, 30000300003);
+    _permanence.pushElement(account, 10000100000000000000000001);
+    _permanence.pushElement(account, 20000200000000000000000002);
+    _permanence.pushElement(account, 30000300000000000000000003);
     Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(3), "added");
     uint256[] memory a = new uint256[](1);
     a[0] = 10000100001;
@@ -70,9 +70,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
     Assert.isFalse(isSuccessed, "no data");
 
-    _permanence.pushElement(account, 10000100001);
-    _permanence.pushElement(account, 20000200002);
-    _permanence.pushElement(account, 30000300003);
+    _permanence.pushElement(account, 10000100000000000000000001);
+    _permanence.pushElement(account, 20000200000000000000000002);
+    _permanence.pushElement(account, 30000300000000000000000003);
 
     Assert.equal(uint256(userNormalPlanetRecordOf(account, 2).id), uint256(2), "success");
 
@@ -114,8 +114,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
   function testRankupUserNormalPlanet() public {
     address account = address(5);
-    _permanence.pushElement(account, 1000010010000100000); // id: 0, rank: 1
-    _permanence.pushElement(account, 29000010010000100001); // id: 1, rank: 29
+    _permanence.pushElement(account, 1000010010000100000000000000000000); // id: 0, rank: 1
+    _permanence.pushElement(account, 29000010010000100000000000000000001); // id: 1, rank: 29
 
     rankupUserNormalPlanet(account, 0);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(2), "2");
@@ -149,14 +149,14 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     Assert.isFalse(isSuccessed, "0");
 
     _assertEqual(
-      buildUserNormalPlanetRecordFromUint256(10000000000),
+      buildUserNormalPlanetRecordFromUint256(10000000000000000000000000),
       UserNormalPlanetRecord(0, 0, 1, 0, 0, 0, 0, 0, 0),
       "kind: 1"
     );
 
     _assertEqual(
       buildUserNormalPlanetRecordFromUint256(
-        10000000000000000000000000000090000800000000070000000006005000040030000200001
+        10000000000000090000800000000070000000006005000040030000200000000000000000001
       ),
       UserNormalPlanetRecord(1, 2, 3, 4, 5, 6, 7, 8, 9),
       "1 to 9"
@@ -164,10 +164,10 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     _assertEqual(
       buildUserNormalPlanetRecordFromUint256(
-        10000000000000000000000000327673276742949672954294967295255655352556553565535
+        10000000000327673276742949672954294967295255655352556553518446744073709551615
       ),
       UserNormalPlanetRecord(
-        ~uint16(0),
+        ~uint64(0),
         ~uint16(0),
         ~uint8(0),
         ~uint16(0),
@@ -181,7 +181,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
 
     _assertEqual(
-      buildUserNormalPlanetRecordFromUint256(327686553500000000000000000000000000000010000000000),
+      buildUserNormalPlanetRecordFromUint256(
+        327686553500000000000000000000000000000010000000000000000000000000
+      ),
       UserNormalPlanetRecord(0, 0, 1, 0, 0, 0, 0, -1, INT16_MIN),
       "minus coordinates"
     );
@@ -196,14 +198,14 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     Assert.equal(
       buildUint256FromUserNormalPlanetRecord(UserNormalPlanetRecord(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-      10000000000000000000000000000090000800000000070000000006005000040030000200001,
+      10000000000000090000800000000070000000006005000040030000200000000000000000001,
       "1 to 9"
     );
 
     Assert.equal(
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(
-          ~uint16(0),
+          ~uint64(0),
           ~uint16(0),
           ~uint8(0),
           ~uint16(0),
@@ -214,7 +216,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
           INT16_MAX
         )
       ),
-      10000000000000000000000000327673276742949672954294967295255655352556553565535,
+      10000000000327673276742949672954294967295255655352556553518446744073709551615,
       "max"
     );
 
@@ -222,7 +224,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(0, 0, 1, 0, 0, 0, 0, -1, INT16_MIN)
       ),
-      10000000000000000000000000327686553500000000000000000000000000000010000000000,
+      10000000000327686553500000000000000000000000000000010000000000000000000000000,
       "minus coordinates"
     );
   }
@@ -280,7 +282,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     mintUserNormalPlanet(account, normalPlanetId, kind, param, axialCoordinateQ, axialCoordinateR);
   }
 
-  function wrappedRankupUserNormalPlanet(address account, uint16 userPlanetId) public {
+  function wrappedRankupUserNormalPlanet(address account, uint64 userPlanetId) public {
     rankupUserNormalPlanet(account, userPlanetId);
   }
 }
