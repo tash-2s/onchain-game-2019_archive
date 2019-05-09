@@ -7,7 +7,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {
     uint8 kind;
     uint16 param;
-    uint200 priceGold;
+    uint8 priceGold;
   }
 
   uint8 constant NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 1;
@@ -15,7 +15,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
   uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT = 4;
   uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT = 8;
   uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_START_DIGIT = 9;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_END_DIGIT = 69;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_END_DIGIT = 11;
 
   NormalPlanetPermanence private _normalPlanetPermanence;
 
@@ -50,7 +50,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
         NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT
       )
     );
-    uint200 priceGold = uint200(
+    uint8 priceGold = uint8(
       interpretPermanenceUint256(
         source,
         NORMAL_PLANET_PERMANENCE_PRICE_GOLD_START_DIGIT,
