@@ -44,9 +44,9 @@ module.exports = function(deployer, network) {
       }
       await planet.update(
         r.id,
-        `1${("0".repeat(67) + r.priceGoldCommonLogarithm).slice(-68)}${(
-          "0000" + r.paramCommonLogarithm
-        ).slice(-5)}00${kind}`
+        `1${("0".repeat(65) + r.priceGoldCommonLogarithm).slice(-66)}${(
+          "00" + r.paramCommonLogarithm
+        ).slice(-3)}00${kind}`
       )
     }
   })

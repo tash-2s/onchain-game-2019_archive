@@ -101,7 +101,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
 
     bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedMintUserNormalPlanet(address,uint16,uint8,uint16,int16,int16)")),
+      bytes4(keccak256("wrappedMintUserNormalPlanet(address,uint16,uint8,uint8,int16,int16)")),
       account,
       1,
       2,
@@ -114,8 +114,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
   function testRankupUserNormalPlanet() public {
     address account = address(5);
-    _permanence.pushElement(account, 1000010010000100000000000000000000); // id: 0, rank: 1
-    _permanence.pushElement(account, 29000010010000100000000000000000001); // id: 1, rank: 29
+    _permanence.pushElement(account, 10010010000100000000000000000000); // id: 0, rank: 1
+    _permanence.pushElement(account, 290010010000100000000000000000001); // id: 1, rank: 29
 
     rankupUserNormalPlanet(account, 0);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(2), "2");
@@ -156,7 +156,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     _assertEqual(
       buildUserNormalPlanetRecordFromUint256(
-        10000000000000090000800000000070000000006005000040030000200000000000000000001
+        10000000000000000900008000000000700000000060050040030000200000000000000000001
       ),
       UserNormalPlanetRecord(1, 2, 3, 4, 5, 6, 7, 8, 9),
       "1 to 9"
@@ -164,13 +164,13 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     _assertEqual(
       buildUserNormalPlanetRecordFromUint256(
-        10000000000327673276742949672954294967295255655352556553518446744073709551615
+        10000000000003276732767429496729542949672952552552556553518446744073709551615
       ),
       UserNormalPlanetRecord(
         ~uint64(0),
         ~uint16(0),
         ~uint8(0),
-        ~uint16(0),
+        ~uint8(0),
         ~uint8(0),
         ~uint32(0),
         ~uint32(0),
@@ -182,7 +182,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     _assertEqual(
       buildUserNormalPlanetRecordFromUint256(
-        327686553500000000000000000000000000000010000000000000000000000000
+        3276865535000000000000000000000000000010000000000000000000000000
       ),
       UserNormalPlanetRecord(0, 0, 1, 0, 0, 0, 0, -1, INT16_MIN),
       "minus coordinates"
@@ -198,7 +198,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     Assert.equal(
       buildUint256FromUserNormalPlanetRecord(UserNormalPlanetRecord(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-      10000000000000090000800000000070000000006005000040030000200000000000000000001,
+      10000000000000000900008000000000700000000060050040030000200000000000000000001,
       "1 to 9"
     );
 
@@ -208,7 +208,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
           ~uint64(0),
           ~uint16(0),
           ~uint8(0),
-          ~uint16(0),
+          ~uint8(0),
           ~uint8(0),
           ~uint32(0),
           ~uint32(0),
@@ -216,7 +216,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
           INT16_MAX
         )
       ),
-      10000000000327673276742949672954294967295255655352556553518446744073709551615,
+      10000000000003276732767429496729542949672952552552556553518446744073709551615,
       "max"
     );
 
@@ -224,7 +224,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(0, 0, 1, 0, 0, 0, 0, -1, INT16_MIN)
       ),
-      10000000000327686553500000000000000000000000000000010000000000000000000000000,
+      10000000000003276865535000000000000000000000000000010000000000000000000000000,
       "minus coordinates"
     );
   }
@@ -275,7 +275,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     address account,
     uint16 normalPlanetId,
     uint8 kind,
-    uint16 paramCommonLogarithm,
+    uint8 paramCommonLogarithm,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) public {

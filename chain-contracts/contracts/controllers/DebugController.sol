@@ -26,7 +26,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     address account,
     uint16 normalPlanetId,
     uint8 kind,
-    uint16 param,
+    uint8 param,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) external {
@@ -46,7 +46,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     uint i = 0;
     uint16 normalPlanetId;
     uint8 kind;
-    uint16 param;
+    uint8 param;
 
     for (q = -17; q <= 17; q++) {
       if (-17 < -q - 17) {

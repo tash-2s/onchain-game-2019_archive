@@ -54,7 +54,7 @@ contract("NormalPlanetController", async accounts => {
       it("should rankup a planet", async () => {
         await (await UserNormalPlanetPermanence.deployed()).pushElement(
           strangerAccount,
-          "15500000001000010010000100000000000000000000"
+          "155000000010010010000100000000000000000000"
         )
         await (await UserGoldPermanence.deployed()).update(strangerAccount, 1000)
 

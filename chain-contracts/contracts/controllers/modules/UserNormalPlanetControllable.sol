@@ -10,7 +10,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint64 id;
     uint16 normalPlanetId;
     uint8 kind;
-    uint16 originalParamCommonLogarithm;
+    uint8 originalParamCommonLogarithm;
     uint8 rank;
     uint32 rankupedAt;
     uint32 createdAt;
@@ -25,17 +25,17 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 26;
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 28;
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT = 29;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_END_DIGIT = 33;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_START_DIGIT = 34;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_END_DIGIT = 36;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_START_DIGIT = 37;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_END_DIGIT = 46;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_START_DIGIT = 47;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT = 56;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT = 57;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT = 61;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT = 62;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT = 66;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_END_DIGIT = 31;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_START_DIGIT = 32;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANK_END_DIGIT = 34;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_START_DIGIT = 35;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_END_DIGIT = 44;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_START_DIGIT = 45;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT = 54;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT = 55;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT = 59;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT = 60;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT = 64;
 
   uint256 constant USER_NORMAL_PLANET_PERMANENCE_ELEMENT_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000; // solium-disable-line max-len
 
@@ -96,7 +96,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     address account,
     uint16 normalPlanetId,
     uint8 kind,
-    uint16 paramCommonLogarithm,
+    uint8 paramCommonLogarithm,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) internal {
@@ -189,7 +189,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         USER_NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT
       )
     );
-    uint16 originalParamCommonLogarithm = uint16(
+    uint8 originalParamCommonLogarithm = uint8(
       interpretPermanenceUint256(
         source,
         USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT,

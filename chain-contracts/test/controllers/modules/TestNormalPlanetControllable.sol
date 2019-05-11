@@ -43,16 +43,16 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
 
     _assertEqual(
       buildNormalPlanetRecordFromUint256(
-        10000000000000000000000000000000000000000000000000000000000000000000500010003
+        10000000000000000000000000000000000000000000000000000000000000000000005010003
       ),
       NormalPlanetRecord(3, 10, 5),
       "dummy data"
     );
     _assertEqual(
       buildNormalPlanetRecordFromUint256(
-        10000000000000000000000000000000000000000000000000000000000000000025565535255
+        10000000000000000000000000000000000000000000000000000000000000000000255255255
       ),
-      NormalPlanetRecord(~uint8(0), ~uint16(0), ~uint8(0)),
+      NormalPlanetRecord(~uint8(0), ~uint8(0), ~uint8(0)),
       "maximum params data"
     );
   }

@@ -6,16 +6,16 @@ import "../../permanences/NormalPlanetPermanence.sol";
 contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {
     uint8 kind;
-    uint16 paramCommonLogarithm;
+    uint8 paramCommonLogarithm;
     uint8 priceGoldCommonLogarithm;
   }
 
   uint8 constant NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 1;
   uint8 constant NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 3;
   uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT = 4;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT = 8;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT = 9;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT = 11;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT = 6;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT = 7;
+  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT = 9;
 
   NormalPlanetPermanence private _normalPlanetPermanence;
 
@@ -43,7 +43,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
         NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT
       )
     );
-    uint16 paramCommonLogarithm = uint16(
+    uint8 paramCommonLogarithm = uint8(
       interpretPermanenceUint256(
         source,
         NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT,
