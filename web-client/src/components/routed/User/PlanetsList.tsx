@@ -19,7 +19,7 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
         throw new Error("magic planets are not supported yet")
       }
 
-      const price = new BN(10).pow(new BN(p.priceGold))
+      const price = new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
       let button
       if (
         (this.props.user.userNormalPlanets.length === 0 &&
@@ -34,7 +34,8 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
 
       return (
         <div key={p.id}>
-          id: {p.id}, kind: {p.kind}, param: {(10 ** p.param).toLocaleString()}, price:{" "}
+          id: {p.id}, kind: {p.kind}, param:{" "}
+          {new BN(10).pow(new BN(p.paramCommonLogarithm)).toLocaleString()}, price:{" "}
           {price.toLocaleString()} gold
           {button}
         </div>

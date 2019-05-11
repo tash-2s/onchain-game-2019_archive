@@ -75,7 +75,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 
   planetPriceGold = () => {
-    return this.normalPlanet.priceGold
+    return this.normalPlanet.priceGoldCommonLogarithm
   }
 }
 

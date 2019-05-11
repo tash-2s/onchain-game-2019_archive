@@ -13,12 +13,12 @@ export interface RouteState {
 
 interface NormalPlanetBase {
   id: number
-  priceGold: number
+  priceGoldCommonLogarithm: number
 }
 
 interface NormalNonMagicPlanet extends NormalPlanetBase {
   kind: "residence" | "goldvein" | "technology"
-  param: number
+  paramCommonLogarithm: number
 }
 
 interface NormalMagicPlanet extends NormalPlanetBase {

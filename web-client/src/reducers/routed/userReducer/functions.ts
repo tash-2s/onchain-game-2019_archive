@@ -91,7 +91,7 @@ const processUserNormalPlanets = (
 
     const previousRank = new BN(up.rank - 1)
     const param = new BN(10)
-      .pow(new BN(p.param))
+      .pow(new BN(p.paramCommonLogarithm))
       .mul(new BN(13).pow(previousRank))
       .div(new BN(10).pow(previousRank))
 
