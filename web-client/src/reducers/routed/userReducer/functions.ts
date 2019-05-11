@@ -68,7 +68,7 @@ export const buildTargetUser = (
     userNormalPlanets: userPlanets,
     population: population.toString(),
     goldPower: goldPower.toString(),
-    techPower: techPower.toString(),
+    techPower: techPower,
     goldPerSec: population.mul(goldPower).toString(),
     normalPlanetIdToGet: null,
     selectedUserPlanetsTab: tab
@@ -77,7 +77,7 @@ export const buildTargetUser = (
 
 const processUserNormalPlanets = (
   userPlanets: _User["userNormalPlanets"]
-): [TargetUserState["userNormalPlanets"], BN, BN, BN] => {
+): [TargetUserState["userNormalPlanets"], BN, BN, number] => {
   const newUserPlanets: TargetUserState["userNormalPlanets"] = []
   let population = new BN(0)
   let goldPower = new BN(0)
@@ -117,7 +117,7 @@ const processUserNormalPlanets = (
     newUserPlanets.push(newUp)
   })
 
-  return [newUserPlanets, population, goldPower, techPower]
+  return [newUserPlanets, population, goldPower, techPower.toNumber()]
 }
 
 export const currentTabFromState = (

@@ -29,7 +29,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
           loomTimeDifference={this.props.loomTimeDifference}
           userPlanet={up}
           isMine={this.props.isMine}
-          techPower={new BN(this.props.user.techPower)}
+          techPower={this.props.user.techPower}
           ongoingGold={this.state.ongoingGold}
           rankup={this.props.rankup}
           remove={this.props.remove}
@@ -42,7 +42,7 @@ class UserPlanet extends React.Component<{
   loomTimeDifference: number
   userPlanet: UserNormalPlanet
   isMine: boolean
-  techPower: BN
+  techPower: number
   ongoingGold: BN
   rankup: (userPlanetId: string) => void
   remove: (userPlanetId: string) => void

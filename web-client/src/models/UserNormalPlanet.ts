@@ -13,7 +13,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
   }
 
-  isRankupable = (gold: BN, time: number, techPower: BN): boolean => {
+  isRankupable = (gold: BN, time: number, techPower: number): boolean => {
     return (
       !this.isMaxRank() &&
       this.remainingSecForRankup(time, techPower) <= 0 &&
@@ -34,11 +34,8 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     return Time.unixtimeToDateString(unixtime)
   }
 
-  remainingSecForRankup = (time: number, techPower: BN) => {
-    return Math.max(
-      new BN(this.remainingSecForRankupWithoutTechPower(time)).sub(techPower).toNumber(),
-      0
-    )
+  remainingSecForRankup = (time: number, techPower: number) => {
+    return Math.max(this.remainingSecForRankupWithoutTechPower(time) - techPower, 0)
   }
 
   remainingSecForRankupWithoutTechPower = (time: number) => {
