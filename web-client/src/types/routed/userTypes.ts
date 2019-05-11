@@ -6,26 +6,26 @@ export interface UserState {
 
 export interface TargetUserState {
   address: string
-  gold: { confirmed: number; confirmedAt: number }
+  gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanetType>
-  population: number
-  goldPower: number
-  techPower: number
-  goldPerSec: number
+  population: string
+  goldPower: string
+  techPower: string
+  goldPerSec: string
   selectedUserPlanetsTab: "map" | "list"
   normalPlanetIdToGet: number | null
 }
 
 // This is used as object's type for store, and used as class for elsewhere
 export class UserNormalPlanetType {
-  id!: number
+  id!: string
   normalPlanetId!: number
   rank!: number
   createdAt!: number
   rankupedAt!: number
   axialCoordinateQ!: number
   axialCoordinateR!: number
-  paramMemo!: number
+  paramMemo!: string
 
   // this is not used when this behave as a type
   constructor(obj: UserNormalPlanetType) {

@@ -203,7 +203,7 @@
       },
       {
         "name": "unpIds",
-        "type": "uint16[]"
+        "type": "uint64[]"
       },
       {
         "name": "unpRanks",

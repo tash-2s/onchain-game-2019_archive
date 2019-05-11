@@ -1,13 +1,14 @@
 import { GetUserResponse } from "../../../actions/routed/UserActions"
 import { UserState, TargetUserState } from "../../../types/routed/userTypes"
 import { getNormalPlanet } from "../../../data/planets"
+import BN from "bn.js"
 
 const strToNum = (str: string): number => parseInt(str, 10)
 
 interface _User {
-  gold: { confirmed: number; confirmedAt: number }
+  gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<{
-    id: number
+    id: string
     normalPlanetId: number
     rank: number
     rankupedAt: number
@@ -31,7 +32,7 @@ export const restructureUserFromResponse = (response: GetUserResponse): _User =>
 
   while (i < unpRanks.length) {
     unps.push({
-      id: strToNum(unpIds[counter]),
+      id: unpIds[counter],
       normalPlanetId: strToNum(unpIds[counter + 1]),
       rank: strToNum(unpRanks[i]),
       rankupedAt: strToNum(unpTimes[counter]),
@@ -45,7 +46,7 @@ export const restructureUserFromResponse = (response: GetUserResponse): _User =>
   }
   return {
     gold: {
-      confirmed: strToNum(confirmedGold),
+      confirmed: confirmedGold,
       confirmedAt: strToNum(goldConfirmedAt)
     },
     userNormalPlanets: unps
@@ -65,10 +66,10 @@ export const buildTargetUser = (
     address: address,
     gold: user.gold,
     userNormalPlanets: userPlanets,
-    population: population,
-    goldPower: goldPower,
-    techPower: techPower,
-    goldPerSec: population * goldPower,
+    population: population.toString(),
+    goldPower: goldPower.toString(),
+    techPower: techPower.toString(),
+    goldPerSec: population.mul(goldPower).toString(),
     normalPlanetIdToGet: null,
     selectedUserPlanetsTab: tab
   }
@@ -76,11 +77,11 @@ export const buildTargetUser = (
 
 const processUserNormalPlanets = (
   userPlanets: _User["userNormalPlanets"]
-): [TargetUserState["userNormalPlanets"], number, number, number] => {
+): [TargetUserState["userNormalPlanets"], BN, BN, BN] => {
   const newUserPlanets: TargetUserState["userNormalPlanets"] = []
-  let population = 0
-  let goldPower = 0
-  let techPower = 0
+  let population = new BN(0)
+  let goldPower = new BN(0)
+  let techPower = new BN(0)
 
   userPlanets.forEach(up => {
     const p = getNormalPlanet(up.normalPlanetId)
@@ -88,17 +89,21 @@ const processUserNormalPlanets = (
       throw new Error("magic planets are not supported yet")
     }
 
-    const param = Math.floor((10 ** p.param * 13 ** (up.rank - 1)) / 10 ** (up.rank - 1))
+    const previousRank = new BN(up.rank - 1)
+    const param = new BN(10)
+      .pow(new BN(p.param))
+      .mul(new BN(13).pow(previousRank))
+      .div(new BN(10).pow(previousRank))
 
     switch (p.kind) {
       case "residence":
-        population += param
+        population = population.add(param)
         break
       case "goldvein":
-        goldPower += param
+        goldPower = goldPower.add(param)
         break
       case "technology":
-        techPower += param
+        techPower = techPower.add(param)
         break
       default:
         throw new Error("undefined kind")
@@ -106,7 +111,7 @@ const processUserNormalPlanets = (
 
     const newUp = {
       ...up,
-      paramMemo: param
+      paramMemo: param.toString()
     }
 
     newUserPlanets.push(newUp)

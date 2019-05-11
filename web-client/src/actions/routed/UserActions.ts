@@ -66,7 +66,7 @@ export class UserActions extends AbstractActions {
   }
 
   static rankupUserNormalPlanet = UserActions.creator<GetUser>("rankupUserNormalPlanet")
-  rankupUserNormalPlanet = (userPlanetId: number) => {
+  rankupUserNormalPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
       await sendLoomContractMethod(cs =>
@@ -80,7 +80,7 @@ export class UserActions extends AbstractActions {
   }
 
   static removeUserNormalPlanet = UserActions.creator<GetUser>("removeUserNormalPlanet")
-  removeUserNormalPlanet = (userPlanetId: number) => {
+  removeUserNormalPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
       await sendLoomContractMethod(cs =>

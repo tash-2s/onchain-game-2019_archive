@@ -1,4 +1,5 @@
 import * as React from "react"
+import BN from "bn.js"
 
 import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { NormalPlanetsData, initialPlanetIds } from "../../../data/planets"
@@ -18,13 +19,13 @@ export class PlanetsList extends OngoingGoldTimerComponent<{
         throw new Error("magic planets are not supported yet")
       }
 
-      const price = 10 ** p.priceGold
+      const price = new BN(10).pow(new BN(p.priceGold))
       let button
       if (
         (this.props.user.userNormalPlanets.length === 0 &&
-          gold === 0 &&
+          gold.eqn(0) &&
           initialPlanetIds.includes(p.id)) ||
-        gold >= price
+        gold.gte(price)
       ) {
         button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>
       } else {

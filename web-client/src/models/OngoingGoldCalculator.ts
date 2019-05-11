@@ -1,30 +1,15 @@
 import { UserNormalPlanet } from "./UserNormalPlanet"
+import BN from "bn.js"
 
 export class OngoingGoldCalculator {
   static calculate = (
-    gold: { confirmed: number; confirmedAt: number },
-    userNormalPlanets: Array<UserNormalPlanet>,
+    gold: { confirmed: string; confirmedAt: number },
+    goldPerSec: string,
     now: number
-  ): number => {
+  ): BN => {
     if (gold.confirmedAt === 0) {
-      return 0
+      return new BN(0)
     }
-
-    const goldPerSec = (ups => {
-      let totalResidenceParam = 0
-      let totalGoldveinParam = 0
-      ups.forEach(up => {
-        switch (up.planetKind()) {
-          case "residence":
-            totalResidenceParam += up.paramMemo
-            break
-          case "goldvein":
-            totalGoldveinParam += up.paramMemo
-            break
-        }
-      })
-      return totalResidenceParam * totalGoldveinParam
-    })(userNormalPlanets)
 
     let diffSec = now - gold.confirmedAt
     if (diffSec < 0) {
@@ -32,6 +17,6 @@ export class OngoingGoldCalculator {
       diffSec = 0
     }
 
-    return gold.confirmed + goldPerSec * diffSec
+    return new BN(gold.confirmed).add(new BN(goldPerSec).muln(diffSec))
   }
 }

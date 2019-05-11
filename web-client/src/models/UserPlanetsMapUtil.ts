@@ -1,3 +1,4 @@
+import BN from "bn.js"
 import { UserNormalPlanet } from "./UserNormalPlanet"
 
 export class UserPlanetsMapUtil {
@@ -5,24 +6,24 @@ export class UserPlanetsMapUtil {
   static hexWidth = UserPlanetsMapUtil.hexSize * 2
   static hexHeight = Math.sqrt(3) * UserPlanetsMapUtil.hexSize
   static mapRadiusAndRequiredGold = [
-    [1, 0],
-    [2, 10000],
-    [3, 400000],
-    [4, 25600000],
-    [5, 2611200000],
-    [6, 425625600000],
-    [7, 110662656000000],
-    [8, 46035664896000000],
-    [9, 30613717155840000000],
-    [10, 32572995053813760000000],
-    [11, 55439237581591019520000000],
-    [12, 150961043934672346152960000000],
-    [13, 657586307379432739842293760000000],
-    [14, 4582718976127266763960945213440000000],
-    [15, 51097316583819024418164539129856000000000],
-    [16, 911576127855331395620055378076631040000000000],
-    [17, 26020028993502579356578860711819356405760000000000]
-  ].reverse()
+    [1, new BN("0")],
+    [2, new BN("10000")],
+    [3, new BN("400000")],
+    [4, new BN("25600000")],
+    [5, new BN("2611200000")],
+    [6, new BN("425625600000")],
+    [7, new BN("110662656000000")],
+    [8, new BN("46035664896000000")],
+    [9, new BN("30613717155840000000")],
+    [10, new BN("32572995053813760000000")],
+    [11, new BN("55439237581591019520000000")],
+    [12, new BN("150961043934672346152960000000")],
+    [13, new BN("657586307379432739842293760000000")],
+    [14, new BN("4582718976127266763960945213440000000")],
+    [15, new BN("51097316583819024418164539129856000000000")],
+    [16, new BN("911576127855331395620055378076631040000000000")],
+    [17, new BN("26020028993502579356578860711819356405760000000000")]
+  ].reverse() as Array<[number, BN]>
 
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
@@ -50,9 +51,9 @@ export class UserPlanetsMapUtil {
 
   static coordinatesKey = (q: number, r: number) => `${q}/${r}`
 
-  static mapRadiusFromGold = (gold: number) => {
+  static mapRadiusFromGold = (gold: BN) => {
     for (const d of UserPlanetsMapUtil.mapRadiusAndRequiredGold) {
-      if (d[1] <= gold) {
+      if (d[1].lte(gold)) {
         return d[0]
       }
     }

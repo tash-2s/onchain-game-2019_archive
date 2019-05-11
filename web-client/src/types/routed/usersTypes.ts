@@ -1,3 +1,3 @@
 export interface UsersState {
-  users: Array<{ address: string; gold: number }>
+  users: Array<{ address: string; gold: string }>
 }

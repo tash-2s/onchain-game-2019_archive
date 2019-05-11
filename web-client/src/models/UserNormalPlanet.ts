@@ -1,3 +1,5 @@
+import BN from "bn.js"
+
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { NormalPlanet } from "../types/commonTypes"
 import { getNormalPlanet } from "../data/planets"
@@ -11,11 +13,11 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
   }
 
-  isRankupable = (gold: number, time: number, techPower: number): boolean => {
+  isRankupable = (gold: BN, time: number, techPower: BN): boolean => {
     return (
       !this.isMaxRank() &&
       this.remainingSecForRankup(time, techPower) <= 0 &&
-      this.requiredGoldForRankup() <= gold
+      this.requiredGoldForRankup().lte(gold)
     )
   }
 
@@ -32,8 +34,11 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     return Time.unixtimeToDateString(unixtime)
   }
 
-  remainingSecForRankup = (time: number, techPower: number) => {
-    return Math.max(this.remainingSecForRankupWithoutTechPower(time) - techPower, 0)
+  remainingSecForRankup = (time: number, techPower: BN) => {
+    return Math.max(
+      new BN(this.remainingSecForRankupWithoutTechPower(time)).sub(techPower).toNumber(),
+      0
+    )
   }
 
   remainingSecForRankupWithoutTechPower = (time: number) => {
@@ -57,10 +62,12 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     return memo
   }
 
-  requiredGoldForRankup = (): number => {
-    return Math.floor(
-      (10 ** this.planetPriceGold() * 13 ** (this.rank - 1)) / 10 ** (this.rank - 1)
-    )
+  requiredGoldForRankup = () => {
+    const previousRank = new BN(this.rank - 1)
+    return new BN(10)
+      .pow(new BN(this.planetPriceGold()))
+      .mul(new BN(13).pow(previousRank))
+      .div(new BN(10).pow(previousRank))
   }
 
   planetKind = () => {

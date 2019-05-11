@@ -249,7 +249,7 @@
     "inputs": [
       {
         "name": "userNormalPlanetId",
-        "type": "uint16"
+        "type": "uint64"
       }
     ],
     "name": "rankupPlanet",
@@ -257,14 +257,14 @@
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function",
-    "signature": "0x7aacfc0e"
+    "signature": "0x1a098653"
   },
   {
     "constant": false,
     "inputs": [
       {
         "name": "userNormalPlanetId",
-        "type": "uint16"
+        "type": "uint64"
       }
     ],
     "name": "removePlanet",
@@ -272,6 +272,6 @@
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function",
-    "signature": "0x5f77b8e9"
+    "signature": "0x10135315"
   }
 ]

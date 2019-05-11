@@ -1,4 +1,5 @@
 import * as React from "react"
+import BN from "bn.js"
 
 import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
@@ -8,8 +9,8 @@ interface Props {
   user: ExtendedTargetUserState
   loomTimeDifference: number
   isMine: boolean
-  rankup: (userPlanetId: number) => void
-  remove: (userPlanetId: number) => void
+  rankup: (userPlanetId: string) => void
+  remove: (userPlanetId: string) => void
 }
 
 export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
@@ -28,7 +29,7 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
           loomTimeDifference={this.props.loomTimeDifference}
           userPlanet={up}
           isMine={this.props.isMine}
-          techPower={this.props.user.techPower}
+          techPower={new BN(this.props.user.techPower)}
           ongoingGold={this.state.ongoingGold}
           rankup={this.props.rankup}
           remove={this.props.remove}
@@ -41,10 +42,10 @@ class UserPlanet extends React.Component<{
   loomTimeDifference: number
   userPlanet: UserNormalPlanet
   isMine: boolean
-  techPower: number
-  ongoingGold: number
-  rankup: (userPlanetId: number) => void
-  remove: (userPlanetId: number) => void
+  techPower: BN
+  ongoingGold: BN
+  rankup: (userPlanetId: string) => void
+  remove: (userPlanetId: string) => void
 }> {
   render = () => {
     const up = this.props.userPlanet
