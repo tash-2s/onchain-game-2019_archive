@@ -2,7 +2,7 @@ import { createBrowserHistory } from "history"
 import { Store } from "redux"
 import { _routeIds, RouteId, RouteState } from "../types/commonTypes"
 import { CommonActions } from "../actions/CommonActions"
-const pathToRegexp = require("path-to-regexp")
+import pathToRegexp from "path-to-regexp"
 
 class Route {
   constructor(public readonly routeId: RouteId, public readonly regExp: RegExp) {}
