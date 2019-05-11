@@ -59,7 +59,7 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
 
   function _assertEqual(NormalPlanetRecord r1, NormalPlanetRecord r2, string message) private {
     _reporter.report(
-      r1.kind == r2.kind && r1.param == r2.param && r1.priceGoldCommonLogarithm == r2.priceGoldCommonLogarithm,
+      r1.kind == r2.kind && r1.paramCommonLogarithm == r2.paramCommonLogarithm && r1.priceGoldCommonLogarithm == r2.priceGoldCommonLogarithm,
       message
     );
   }

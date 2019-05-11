@@ -238,7 +238,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
           r1.id,
           r1.normalPlanetId,
           r1.kind,
-          r1.originalParam,
+          r1.originalParamCommonLogarithm,
           r1.rank,
           r1.rankupedAt,
           r1.createdAt,
@@ -250,7 +250,7 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
           r2.id,
           r2.normalPlanetId,
           r2.kind,
-          r2.originalParam,
+          r2.originalParamCommonLogarithm,
           r2.rank,
           r2.rankupedAt,
           r2.createdAt,
@@ -275,11 +275,18 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     address account,
     uint16 normalPlanetId,
     uint8 kind,
-    uint16 param,
+    uint16 paramCommonLogarithm,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) public {
-    mintUserNormalPlanet(account, normalPlanetId, kind, param, axialCoordinateQ, axialCoordinateR);
+    mintUserNormalPlanet(
+      account,
+      normalPlanetId,
+      kind,
+      paramCommonLogarithm,
+      axialCoordinateQ,
+      axialCoordinateR
+    );
   }
 
   function wrappedRankupUserNormalPlanet(address account, uint64 userPlanetId) public {

@@ -11,15 +11,25 @@ module.exports = function(deployer, network) {
     const residenceAndGoldvein = []
     while (id <= 16) {
       residenceAndGoldvein.push(
-        { id: id++, kind: "residence", param: param, priceGoldCommonLogarithm: param * 3 },
-        { id: id++, kind: "goldvein", param: param, priceGoldCommonLogarithm: param * 3 }
+        {
+          id: id++,
+          kind: "residence",
+          paramCommonLogarithm: param,
+          priceGoldCommonLogarithm: param * 3
+        },
+        {
+          id: id++,
+          kind: "goldvein",
+          paramCommonLogarithm: param,
+          priceGoldCommonLogarithm: param * 3
+        }
       )
       param += 2
     }
 
     const data = residenceAndGoldvein.concat([
-      { id: 101, kind: "technology", param: 2, priceGoldCommonLogarithm: 8 },
-      { id: 102, kind: "technology", param: 3, priceGoldCommonLogarithm: 12 }
+      { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
+      { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
     ])
 
     for (i = 0; i < data.length; i++) {
@@ -34,9 +44,9 @@ module.exports = function(deployer, network) {
       }
       await planet.update(
         r.id,
-        `1${("0".repeat(67) + r.priceGoldCommonLogarithm).slice(-68)}${("0000" + r.param).slice(
-          -5
-        )}00${kind}`
+        `1${("0".repeat(67) + r.priceGoldCommonLogarithm).slice(-68)}${(
+          "0000" + r.paramCommonLogarithm
+        ).slice(-5)}00${kind}`
       )
     }
   })

@@ -6,7 +6,7 @@ import "../../permanences/NormalPlanetPermanence.sol";
 contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {
     uint8 kind;
-    uint16 param;
+    uint16 paramCommonLogarithm;
     uint8 priceGoldCommonLogarithm;
   }
 
@@ -43,7 +43,7 @@ contract NormalPlanetControllable is PermanenceInterpretable {
         NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT
       )
     );
-    uint16 param = uint16(
+    uint16 paramCommonLogarithm = uint16(
       interpretPermanenceUint256(
         source,
         NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT,
@@ -58,10 +58,10 @@ contract NormalPlanetControllable is PermanenceInterpretable {
       )
     );
 
-    if (kind == 0 && param == 0 && priceGoldCommonLogarithm == 0) {
+    if (kind == 0 && paramCommonLogarithm == 0 && priceGoldCommonLogarithm == 0) {
       revert("faild to build a planet record, the source is wrong");
     }
 
-    return NormalPlanetRecord(kind, param, priceGoldCommonLogarithm);
+    return NormalPlanetRecord(kind, paramCommonLogarithm, priceGoldCommonLogarithm);
   }
 }

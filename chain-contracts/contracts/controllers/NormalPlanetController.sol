@@ -44,7 +44,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       msg.sender,
       planetId,
       planetRecord.kind,
-      planetRecord.param,
+      planetRecord.paramCommonLogarithm,
       axialCoordinateQ,
       axialCoordinateR
     );
@@ -99,7 +99,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     for (uint i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = (uint256(10) ** userPlanet.originalParam) * (uint256(
+      rated = (uint256(10) ** userPlanet.originalParamCommonLogarithm) * (uint256(
         13
       ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
       if (userPlanet.kind == 1) {

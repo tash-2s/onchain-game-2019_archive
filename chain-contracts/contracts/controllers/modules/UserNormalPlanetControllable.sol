@@ -10,7 +10,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint64 id;
     uint16 normalPlanetId;
     uint8 kind;
-    uint16 originalParam;
+    uint16 originalParamCommonLogarithm;
     uint8 rank;
     uint32 rankupedAt;
     uint32 createdAt;
@@ -96,7 +96,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     address account,
     uint16 normalPlanetId,
     uint8 kind,
-    uint16 param,
+    uint16 paramCommonLogarithm,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) internal {
@@ -118,7 +118,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
           id,
           normalPlanetId,
           kind,
-          param,
+          paramCommonLogarithm,
           1,
           uint32now(),
           uint32now(),
@@ -145,7 +145,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
           record.id,
           record.normalPlanetId,
           record.kind,
-          record.originalParam,
+          record.originalParamCommonLogarithm,
           newRank,
           uint32now(),
           record.createdAt,
@@ -189,7 +189,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         USER_NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT
       )
     );
-    uint16 originalParam = uint16(
+    uint16 originalParamCommonLogarithm = uint16(
       interpretPermanenceUint256(
         source,
         USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT,
@@ -240,7 +240,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       id,
       normalPlanetId,
       kind,
-      originalParam,
+      originalParamCommonLogarithm,
       rank,
       rankupedAt,
       createdAt,
@@ -276,7 +276,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       n,
       USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_START_DIGIT,
       USER_NORMAL_PLANET_PERMANENCE_ORIGINAL_PARAM_END_DIGIT,
-      record.originalParam
+      record.originalParamCommonLogarithm
     );
     n = reinterpretPermanenceUint256(
       n,
