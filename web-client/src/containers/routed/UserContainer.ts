@@ -4,30 +4,16 @@ import { Dispatch, AnyAction } from "redux"
 import { RootState } from "../../types/rootTypes"
 import { CommonState } from "../../types/commonTypes"
 
+import { computeUserState } from "../../computers/userComputer"
 import { UserNormalPlanet, ExtendedUserState } from "../../models/UserNormalPlanet"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"
 
 const mapStateToProps = (state: RootState): { common: CommonState; user: ExtendedUserState } => {
-  if (!state.routed.user.targetUser) {
-    return {
-      common: state.common,
-      user: { ...state.routed.user, targetUser: null }
-    }
-  }
-
   return {
     common: state.common,
-    user: {
-      ...state.routed.user,
-      targetUser: {
-        ...state.routed.user.targetUser,
-        userNormalPlanets: state.routed.user.targetUser.userNormalPlanets.map(
-          up => new UserNormalPlanet(up)
-        )
-      }
-    }
+    user: computeUserState(state.routed.user)
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {

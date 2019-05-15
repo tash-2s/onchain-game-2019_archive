@@ -1,14 +1,18 @@
 import BN from "bn.js"
 
-import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
+import {
+  OldUserState,
+  OldTargetUserState,
+  OldUserNormalPlanetType
+} from "../types/routed/userTypes"
 import { NormalPlanet } from "../types/commonTypes"
 import { getNormalPlanet } from "../data/planets"
 import { Time } from "../models/time"
 
-export class UserNormalPlanet extends UserNormalPlanetType {
+export class UserNormalPlanet extends OldUserNormalPlanetType {
   normalPlanet: NormalPlanet
 
-  constructor(obj: UserNormalPlanetType) {
+  constructor(obj: OldUserNormalPlanetType) {
     super(obj)
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
   }
@@ -76,10 +80,10 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   }
 }
 
-export interface ExtendedUserState extends UserState {
+export interface ExtendedUserState extends OldUserState {
   targetUser: ExtendedTargetUserState | null
 }
 
-export interface ExtendedTargetUserState extends TargetUserState {
+export interface ExtendedTargetUserState extends OldTargetUserState {
   userNormalPlanets: Array<UserNormalPlanet>
 }
