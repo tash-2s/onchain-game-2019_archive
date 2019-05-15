@@ -16,7 +16,7 @@ export const createUsersReducer = () =>
 
       const users = golds
         .map((gold, i) => ({ address: addresses[i], gold: gold }))
-        .filter(o => o.gold.gt(new BN(0)))
+        .filter(o => o.gold.gtn(0))
         .filter(o => {
           if (addrs.includes(o.address)) {
             return false
