@@ -59,7 +59,7 @@ class UserPlanet extends React.Component<{
         <br />
         rank: {up.rank}/{up.maxRank()}
         <br />
-        param: up.paramMemo TODO
+        param: {up.paramMemo.toString()}
         <br />
         created: {now - up.createdAt} sec ago
         <br />

@@ -7,10 +7,12 @@ import { Time } from "../models/time"
 
 export class UserNormalPlanet extends UserNormalPlanetType {
   normalPlanet: NormalPlanet
+  paramMemo: BN
 
-  constructor(obj: UserNormalPlanetType) {
+  constructor(obj: UserNormalPlanetType & { paramMemo: BN }) {
     super(obj)
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
+    this.paramMemo = obj.paramMemo
   }
 
   isRankupable = (gold: BN, time: number, techPower: number): boolean => {

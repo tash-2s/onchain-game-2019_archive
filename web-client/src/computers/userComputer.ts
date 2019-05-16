@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserState, TargetUserState } from "../types/routed/userTypes"
+import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { UserNormalPlanet } from "../models/UserNormalPlanet"
 import { getNormalPlanet } from "../data/planets"
 
@@ -31,8 +31,8 @@ export const computeUserState = (state: UserState) => {
 
 const processUserNormalPlanets = (
   userPlanets: TargetUserState["userNormalPlanets"]
-): [TargetUserState["userNormalPlanets"], BN, BN, number] => {
-  const newUserPlanets: TargetUserState["userNormalPlanets"] = []
+): [Array<UserNormalPlanetType & { paramMemo: BN }>, BN, BN, number] => {
+  const newUserPlanets: Array<UserNormalPlanetType & { paramMemo: BN }> = []
   let population = new BN(0)
   let goldPower = new BN(0)
   let techPower = new BN(0)
@@ -65,7 +65,7 @@ const processUserNormalPlanets = (
 
     const newUp = {
       ...up,
-      paramMemo: param.toString() // TODO: remove
+      paramMemo: param
     }
 
     newUserPlanets.push(newUp)
