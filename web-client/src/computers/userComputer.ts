@@ -1,10 +1,13 @@
 import BN from "bn.js"
 
-import { UserState, TargetUserState, OldTargetUserState } from "../types/routed/userTypes"
-import { UserNormalPlanet, ExtendedUserState } from "../models/UserNormalPlanet"
+import { UserState, TargetUserState } from "../types/routed/userTypes"
+import { UserNormalPlanet } from "../models/UserNormalPlanet"
 import { getNormalPlanet } from "../data/planets"
 
-export const computeUserState = (state: UserState): ExtendedUserState => {
+type ComputedUserState = ReturnType<typeof computeUserState>
+export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
+
+export const computeUserState = (state: UserState) => {
   if (!state.targetUser) {
     return { ...state, targetUser: null }
   }
@@ -21,17 +24,15 @@ export const computeUserState = (state: UserState): ExtendedUserState => {
       population: population.toString(),
       goldPower: goldPower.toString(),
       techPower: techPower,
-      goldPerSec: population.mul(goldPower).toString(),
-      selectedUserPlanetsTab: "map", // TODO: remove
-      normalPlanetIdToGet: null // TODO: remove
+      goldPerSec: population.mul(goldPower).toString()
     }
   }
 }
 
 const processUserNormalPlanets = (
   userPlanets: TargetUserState["userNormalPlanets"]
-): [OldTargetUserState["userNormalPlanets"], BN, BN, number] => {
-  const newUserPlanets: OldTargetUserState["userNormalPlanets"] = []
+): [TargetUserState["userNormalPlanets"], BN, BN, number] => {
+  const newUserPlanets: TargetUserState["userNormalPlanets"] = []
   let population = new BN(0)
   let goldPower = new BN(0)
   let techPower = new BN(0)
@@ -64,7 +65,7 @@ const processUserNormalPlanets = (
 
     const newUp = {
       ...up,
-      paramMemo: param.toString()
+      paramMemo: param.toString() // TODO: remove
     }
 
     newUserPlanets.push(newUp)

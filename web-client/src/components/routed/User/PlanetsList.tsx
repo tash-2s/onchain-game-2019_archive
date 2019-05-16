@@ -1,12 +1,12 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { NormalPlanetsData, initialPlanetIds } from "../../../data/planets"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
 export class PlanetsList extends OngoingGoldTimerComponent<{
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
   loomTimeDifference: number
   setPlanetToGet: (planetId: number) => void
 }> {

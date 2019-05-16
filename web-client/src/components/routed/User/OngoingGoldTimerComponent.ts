@@ -1,12 +1,12 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { OngoingGoldCalculator } from "../../../models/OngoingGoldCalculator"
 import { Time } from "../../../models/time"
 
 export class OngoingGoldTimerComponent<
-  P extends { user: ExtendedTargetUserState; loomTimeDifference: number }
+  P extends { user: ComputedTargetUserState; loomTimeDifference: number }
 > extends React.Component<P, { ongoingGold: BN }> {
   private timerId: NodeJS.Timeout | null = null
   protected timerInterval = 1000 // 1 sec

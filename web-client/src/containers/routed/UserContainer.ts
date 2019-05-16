@@ -5,7 +5,6 @@ import { RootState } from "../../types/rootTypes"
 import { CommonState } from "../../types/commonTypes"
 
 import { computeUserState } from "../../computers/userComputer"
-import { UserNormalPlanet, ExtendedUserState } from "../../models/UserNormalPlanet"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"

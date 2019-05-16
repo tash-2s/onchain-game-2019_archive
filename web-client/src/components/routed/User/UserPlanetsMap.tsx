@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserActions } from "../../../actions/routed/UserActions"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 import { UiState } from "../../../types/uiTypes"
@@ -9,7 +9,7 @@ import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { PlanetHex } from "./PlanetHex"
 
 interface Props {
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
   userPageUi: UiState["userPage"]
   loomTimeDifference: number
   isMine: boolean

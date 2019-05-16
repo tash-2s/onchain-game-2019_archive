@@ -3,7 +3,7 @@ import * as React from "react"
 import { CommonState } from "../../../types/commonTypes"
 import { UiState } from "../../../types/uiTypes"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetsList } from "./UserPlanetsList"
@@ -13,7 +13,7 @@ import { PlanetsList } from "./PlanetsList"
 // targetUser is not null
 type TargetUserProps = {
   common: CommonState
-  user: { targetUser: ExtendedTargetUserState }
+  user: { targetUser: ComputedTargetUserState }
   userPageUi: UiState["userPage"]
 } & UserDispatchProps
 
