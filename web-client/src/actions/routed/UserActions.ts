@@ -13,7 +13,7 @@ export type GetUserResponse = TxCallGenericsType<
   >
 >
 
-interface GetUser {
+interface User {
   address: string
   response: GetUserResponse
 }
@@ -21,7 +21,7 @@ interface GetUser {
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static setTargetUser = UserActions.creator<GetUser>("setTargetUser")
+  static setTargetUser = UserActions.creator<User>("setTargetUser")
   setTargetUser = async (address: string) => {
     const response = await callLoomContractMethod(cs => cs.UserController.methods.getUser(address))
     this.dispatch(UserActions.setTargetUser({ address, response }))
@@ -32,19 +32,7 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  static changeSelectedUserPlanetsTab = UserActions.creator<
-    TargetUserState["selectedUserPlanetsTab"]
-  >("changeSelectedUserPlanetsTab")
-  changeSelectedUserPlanetsTab = (tab: TargetUserState["selectedUserPlanetsTab"]) => {
-    this.dispatch(UserActions.changeSelectedUserPlanetsTab(tab))
-  }
-
-  static setPlanetToGet = UserActions.creator<number>("setPlanetToGet")
-  setPlanetToGet = (planetId: number) => {
-    this.dispatch(UserActions.setPlanetToGet(planetId))
-  }
-
-  static getPlanet = UserActions.creator<GetUser>("getPlanet")
+  static getPlanet = UserActions.creator<User>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       await sendLoomContractMethod(cs =>
@@ -65,7 +53,7 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static rankupUserNormalPlanet = UserActions.creator<GetUser>("rankupUserNormalPlanet")
+  static rankupUserNormalPlanet = UserActions.creator<User>("rankupUserNormalPlanet")
   rankupUserNormalPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
@@ -79,7 +67,7 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static removeUserNormalPlanet = UserActions.creator<GetUser>("removeUserNormalPlanet")
+  static removeUserNormalPlanet = UserActions.creator<User>("removeUserNormalPlanet")
   removeUserNormalPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress

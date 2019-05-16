@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { OngoingUserStatus } from "./OngoingUserStatus"
 
 export function UserProfile(props: {
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
   isMine: boolean
   loomTimeDifference: number
 }) {

@@ -1,14 +1,16 @@
 import * as React from "react"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserActions } from "../../../actions/routed/UserActions"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
+import { UiState } from "../../../types/uiTypes"
 
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { PlanetHex } from "./PlanetHex"
 
 interface Props {
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
+  userPageUi: UiState["userPage"]
   loomTimeDifference: number
   isMine: boolean
   userActions: UserActions
@@ -37,7 +39,7 @@ export class UserPlanetsMap extends OngoingGoldTimerComponent<Props> {
       const settable =
         this.props.isMine &&
         !userPlanet &&
-        !!this.props.user.normalPlanetIdToGet &&
+        !!this.props.userPageUi.selectedNormalPlanetId &&
         UserPlanetsMapUtil.distanceFromCenter(q, r) <= usableRadius
 
       return (
@@ -59,10 +61,10 @@ export class UserPlanetsMap extends OngoingGoldTimerComponent<Props> {
 
   setPlanet = (q: number, r: number) => {
     return () => {
-      if (!this.props.user.normalPlanetIdToGet) {
+      if (!this.props.userPageUi.selectedNormalPlanetId) {
         throw new Error("this must be called with target")
       }
-      this.props.userActions.getPlanet(this.props.user.normalPlanetIdToGet, q, r)
+      this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
     }
   }
 }

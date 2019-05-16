@@ -1,11 +1,11 @@
 import * as React from "react"
 
-import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 
 export class OngoingUserStatus extends OngoingGoldTimerComponent<{
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
   loomTimeDifference: number
 }> {
   render = () => {

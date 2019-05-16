@@ -1,12 +1,13 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { UserNormalPlanet, ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
+import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { Time } from "../../../models/time"
 
 interface Props {
-  user: ExtendedTargetUserState
+  user: ComputedTargetUserState
   loomTimeDifference: number
   isMine: boolean
   rankup: (userPlanetId: string) => void
@@ -58,7 +59,7 @@ class UserPlanet extends React.Component<{
         <br />
         rank: {up.rank}/{up.maxRank()}
         <br />
-        param: {up.paramMemo}
+        param: {up.paramMemo.toString()}
         <br />
         created: {now - up.createdAt} sec ago
         <br />
@@ -78,13 +79,13 @@ class UserPlanet extends React.Component<{
     if (isRankupable) {
       rankupButton = (
         <button onClick={this.rankupButtonHandler}>
-          rankup ({up.requiredGoldForRankup()} gold)
+          rankup ({up.requiredGoldForRankup().toString()} gold)
         </button>
       )
     } else {
       rankupButton = (
         <button disabled={true}>
-          required gold: {up.requiredGoldForRankup()}, remaining sec for next rankup:{" "}
+          required gold: {up.requiredGoldForRankup().toString()}, remaining sec for next rankup:{" "}
           {up.remainingSecForRankupWithoutTechPower(now)} - {techPower} ={" "}
           {up.remainingSecForRankup(now, techPower)}
         </button>
