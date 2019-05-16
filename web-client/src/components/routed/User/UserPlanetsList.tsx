@@ -79,13 +79,13 @@ class UserPlanet extends React.Component<{
     if (isRankupable) {
       rankupButton = (
         <button onClick={this.rankupButtonHandler}>
-          rankup ({up.requiredGoldForRankup()} gold)
+          rankup ({up.requiredGoldForRankup().toString()} gold)
         </button>
       )
     } else {
       rankupButton = (
         <button disabled={true}>
-          required gold: {up.requiredGoldForRankup()}, remaining sec for next rankup:{" "}
+          required gold: {up.requiredGoldForRankup().toString()}, remaining sec for next rankup:{" "}
           {up.remainingSecForRankupWithoutTechPower(now)} - {techPower} ={" "}
           {up.remainingSecForRankup(now, techPower)}
         </button>
