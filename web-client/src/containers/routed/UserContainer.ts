@@ -9,16 +9,20 @@ import { UserNormalPlanet, ExtendedUserState } from "../../models/UserNormalPlan
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"
+import { UserPageUiActions } from "../../actions/UiActions"
 
-const mapStateToProps = (state: RootState): { common: CommonState; user: ExtendedUserState } => {
+const mapStateToProps = (state: RootState) => {
   return {
     common: state.common,
+    userPageUi: state.ui.userPage,
     user: computeUserState(state.routed.user)
   }
 }
+
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
     commonActions: new CommonActions(dispatch),
+    userPageUiActions: new UserPageUiActions(dispatch),
     userActions: new UserActions(dispatch)
   }
 }

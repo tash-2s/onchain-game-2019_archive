@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { CommonState } from "../../../types/commonTypes"
+import { UiState } from "../../../types/uiTypes"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ExtendedTargetUserState } from "../../../models/UserNormalPlanet"
 
@@ -13,6 +14,7 @@ import { PlanetsList } from "./PlanetsList"
 type TargetUserProps = {
   common: CommonState
   user: { targetUser: ExtendedTargetUserState }
+  userPageUi: UiState["userPage"]
 } & UserDispatchProps
 
 export class TargetUser extends React.Component<TargetUserProps> {
@@ -20,11 +22,12 @@ export class TargetUser extends React.Component<TargetUserProps> {
     const user = this.props.user.targetUser
     const isMine = this.isMine()
     let userPlanets
-    switch (user.selectedUserPlanetsTab) {
+    switch (this.props.userPageUi.selectedUserPlanetsTab) {
       case "map":
         userPlanets = (
           <UserPlanetsMap
             user={user}
+            userPageUi={this.props.userPageUi}
             isMine={isMine}
             userActions={this.props.userActions}
             loomTimeDifference={this.props.common.loomTimeDifference}
@@ -46,7 +49,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
     const planetsList = (
       <PlanetsList
         user={user}
-        setPlanetToGet={this.props.userActions.setPlanetToGet}
+        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
         loomTimeDifference={this.props.common.loomTimeDifference}
       />
     )
@@ -66,12 +69,12 @@ export class TargetUser extends React.Component<TargetUserProps> {
   }
 
   toggleTab = () => {
-    switch (this.props.user.targetUser.selectedUserPlanetsTab) {
+    switch (this.props.userPageUi.selectedUserPlanetsTab) {
       case "map":
-        this.props.userActions.changeSelectedUserPlanetsTab("list")
+        this.props.userPageUiActions.selectUserPlanetsTab("list")
         break
       case "list":
-        this.props.userActions.changeSelectedUserPlanetsTab("map")
+        this.props.userPageUiActions.selectUserPlanetsTab("map")
         break
     }
   }

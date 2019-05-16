@@ -32,14 +32,6 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  changeSelectedUserPlanetsTab = (tab: "map" | "list") => {
-    // TODO: remove
-  }
-
-  setPlanetToGet = (planetId: number) => {
-    // TODO: remove
-  }
-
   static getPlanet = UserActions.creator<User>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
