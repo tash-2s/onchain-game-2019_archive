@@ -1,5 +1,3 @@
-import { PlanetKind } from "../commonTypes"
-
 export interface UserState {
   targetUser: TargetUserState | null
 }

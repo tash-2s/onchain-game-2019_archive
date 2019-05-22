@@ -3,6 +3,7 @@ import { CommonActions } from "../actions/CommonActions"
 import { CommonState } from "../types/commonTypes"
 import { historyLib, convertHashToRouteIdWithParams } from "../misc/route"
 import { LoomWeb3 } from "../misc/loom"
+import { Time } from "../models/time"
 
 const getInitialRoute = (): CommonState["route"] => {
   return convertHashToRouteIdWithParams(historyLib.location.hash)
@@ -20,6 +21,7 @@ const createInitialState: () => CommonState = () => ({
   currentUser: getCurrentUser(),
   isLoading: false,
   isError: false,
+  webTime: Time.now(),
   loomTimeDifference: 0
 })
 
@@ -41,7 +43,14 @@ export const createCommonReducer = () =>
       ...state,
       currentUser: { address: payload }
     }))
-    .case(CommonActions.updateLoomTimeDifference, (state, payload) => {
-      return { ...state, loomTimeDifference: payload }
+    .case(CommonActions.updateTime, (state, payload) => {
+      return {
+        ...state,
+        webTime: payload.webTime,
+        loomTimeDifference: payload.loomTime - payload.webTime
+      }
+    })
+    .case(CommonActions.updateWebTime, (state, payload) => {
+      return { ...state, webTime: payload }
     })
     .build()

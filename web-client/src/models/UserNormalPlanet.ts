@@ -8,18 +8,22 @@ import { Time } from "../models/time"
 export class UserNormalPlanet extends UserNormalPlanetType {
   normalPlanet: NormalPlanet
   paramMemo: BN
+  now: number
+  gold: BN
 
-  constructor(obj: UserNormalPlanetType & { paramMemo: BN }) {
+  constructor(obj: UserNormalPlanetType & { paramMemo: BN }, now: number, gold: BN) {
     super(obj)
     this.normalPlanet = getNormalPlanet(this.normalPlanetId)
     this.paramMemo = obj.paramMemo
+    this.now = now
+    this.gold = gold
   }
 
-  isRankupable = (gold: BN, time: number, techPower: number): boolean => {
+  isRankupable = (techPower: number): boolean => {
     return (
       !this.isMaxRank() &&
-      this.remainingSecForRankup(time, techPower) <= 0 &&
-      this.requiredGoldForRankup().lte(gold)
+      this.remainingSecForRankup(techPower) <= 0 &&
+      this.requiredGoldForRankup().lte(this.gold)
     )
   }
 
@@ -36,12 +40,12 @@ export class UserNormalPlanet extends UserNormalPlanetType {
     return Time.unixtimeToDateString(unixtime)
   }
 
-  remainingSecForRankup = (time: number, techPower: number) => {
-    return Math.max(this.remainingSecForRankupWithoutTechPower(time) - techPower, 0)
+  remainingSecForRankup = (techPower: number) => {
+    return Math.max(this.remainingSecForRankupWithoutTechPower() - techPower, 0)
   }
 
-  remainingSecForRankupWithoutTechPower = (time: number) => {
-    const prevDiffSec = time - this.rankupedAt
+  remainingSecForRankupWithoutTechPower = () => {
+    const prevDiffSec = this.now - this.rankupedAt
     const remainingSec = this.requiredSecForRankup() - prevDiffSec
 
     return Math.max(remainingSec, 0)
@@ -76,4 +80,7 @@ export class UserNormalPlanet extends UserNormalPlanetType {
   planetPriceGold = () => {
     return this.normalPlanet.priceGoldCommonLogarithm
   }
+
+  rankuped = () => this.now - this.rankupedAt
+  created = () => this.now - this.createdAt
 }

@@ -3,23 +3,16 @@ import BN from "bn.js"
 
 import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 import { Time } from "../../../models/time"
 
 interface Props {
   user: ComputedTargetUserState
-  loomTimeDifference: number
   isMine: boolean
   rankup: (userPlanetId: string) => void
   remove: (userPlanetId: string) => void
 }
 
-export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
-  constructor(props: Props) {
-    super(props)
-    this.timerInterval = 10000 // 10 secs
-  }
-
+export class UserPlanetsList extends React.Component<Props> {
   render = () => {
     return this.props.user.userNormalPlanets
       .map(up => up)
@@ -27,11 +20,9 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
       .map(up => (
         <UserPlanet
           key={up.id}
-          loomTimeDifference={this.props.loomTimeDifference}
           userPlanet={up}
           isMine={this.props.isMine}
           techPower={this.props.user.techPower}
-          ongoingGold={this.state.ongoingGold}
           rankup={this.props.rankup}
           remove={this.props.remove}
         />
@@ -40,19 +31,16 @@ export class UserPlanetsList extends OngoingGoldTimerComponent<Props> {
 }
 
 class UserPlanet extends React.Component<{
-  loomTimeDifference: number
   userPlanet: UserNormalPlanet
   isMine: boolean
   techPower: number
-  ongoingGold: BN
   rankup: (userPlanetId: string) => void
   remove: (userPlanetId: string) => void
 }> {
   render = () => {
     const up = this.props.userPlanet
-    const now = Time.nowFromDiff(this.props.loomTimeDifference)
     const rankuped =
-      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {now - up.rankupedAt} sec ago</div>
+      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankuped()} sec ago</div>
     return (
       <div>
         {`${up.normalPlanetId} (kind: ${up.planetKind()})`}
@@ -61,7 +49,7 @@ class UserPlanet extends React.Component<{
         <br />
         param: {up.paramMemo.toString()}
         <br />
-        created: {now - up.createdAt} sec ago
+        created: {up.created()} sec ago
         <br />
         {rankuped}
         {this.props.isMine ? this.buttons() : <></>}
@@ -71,9 +59,8 @@ class UserPlanet extends React.Component<{
 
   buttons = () => {
     const up = this.props.userPlanet
-    const now = Time.nowFromDiff(this.props.loomTimeDifference)
     const techPower = this.props.techPower
-    const isRankupable = up.isRankupable(this.props.ongoingGold, now, techPower)
+    const isRankupable = up.isRankupable(techPower)
     let rankupButton
 
     if (isRankupable) {
@@ -86,8 +73,8 @@ class UserPlanet extends React.Component<{
       rankupButton = (
         <button disabled={true}>
           required gold: {up.requiredGoldForRankup().toString()}, remaining sec for next rankup:{" "}
-          {up.remainingSecForRankupWithoutTechPower(now)} - {techPower} ={" "}
-          {up.remainingSecForRankup(now, techPower)}
+          {up.remainingSecForRankupWithoutTechPower()} - {techPower} ={" "}
+          {up.remainingSecForRankup(techPower)}
         </button>
       )
     }

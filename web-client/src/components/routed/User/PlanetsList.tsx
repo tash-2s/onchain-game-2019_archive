@@ -3,15 +3,13 @@ import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { NormalPlanetsData, initialPlanetIds } from "../../../data/planets"
-import { OngoingGoldTimerComponent } from "./OngoingGoldTimerComponent"
 
-export class PlanetsList extends OngoingGoldTimerComponent<{
+export class PlanetsList extends React.Component<{
   user: ComputedTargetUserState
-  loomTimeDifference: number
   setPlanetToGet: (planetId: number) => void
 }> {
   render = () => {
-    const gold = this.state.ongoingGold
+    const gold = this.props.user.goldBN
     const buttonText = "get"
 
     return NormalPlanetsData.map(p => {

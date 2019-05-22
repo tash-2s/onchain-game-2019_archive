@@ -9,12 +9,15 @@ import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { CommonActions } from "../../actions/CommonActions"
 import { UserPageUiActions } from "../../actions/UiActions"
+import { Time } from "../../models/time"
 
 const mapStateToProps = (state: RootState) => {
+  const now = Time.build(state.common.webTime, state.common.loomTimeDifference)
+
   return {
     common: state.common,
     userPageUi: state.ui.userPage,
-    user: computeUserState(state.routed.user)
+    user: computeUserState(state.routed.user, now)
   }
 }
 

@@ -30,7 +30,6 @@ export class TargetUser extends React.Component<TargetUserProps> {
             userPageUi={this.props.userPageUi}
             isMine={isMine}
             userActions={this.props.userActions}
-            loomTimeDifference={this.props.common.loomTimeDifference}
           />
         )
         break
@@ -41,26 +40,17 @@ export class TargetUser extends React.Component<TargetUserProps> {
             isMine={isMine}
             rankup={this.props.userActions.rankupUserNormalPlanet}
             remove={this.props.userActions.removeUserNormalPlanet}
-            loomTimeDifference={this.props.common.loomTimeDifference}
           />
         )
         break
     }
     const planetsList = (
-      <PlanetsList
-        user={user}
-        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
-        loomTimeDifference={this.props.common.loomTimeDifference}
-      />
+      <PlanetsList user={user} setPlanetToGet={this.props.userPageUiActions.selectPlanet} />
     )
 
     return (
       <div>
-        <UserProfile
-          user={user}
-          isMine={isMine}
-          loomTimeDifference={this.props.common.loomTimeDifference}
-        />
+        <UserProfile user={user} isMine={isMine} />
         <button onClick={this.toggleTab}>toggle type of userPlanets</button>
         {userPlanets}
         {isMine ? planetsList : <></>}

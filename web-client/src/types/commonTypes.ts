@@ -3,6 +3,7 @@ export interface CommonState {
   currentUser: { address: string } | null
   isLoading: boolean
   isError: boolean
+  webTime: number
   loomTimeDifference: number
 }
 

@@ -3,11 +3,14 @@ import BN from "bn.js"
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { UserNormalPlanet } from "../models/UserNormalPlanet"
 import { getNormalPlanet } from "../data/planets"
+import { BNFormatter } from "../models/BNFormatter"
+import { OngoingGoldCalculator } from "../models/OngoingGoldCalculator"
+import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
 
 type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
 
-export const computeUserState = (state: UserState) => {
+export const computeUserState = (state: UserState, now: number) => {
   if (!state.targetUser) {
     return { ...state, targetUser: null }
   }
@@ -15,16 +18,26 @@ export const computeUserState = (state: UserState) => {
   const [userPlanets, population, goldPower, techPower] = processUserNormalPlanets(
     state.targetUser.userNormalPlanets
   )
+  const goldPerSec = population.mul(goldPower)
+
+  const ongoingGold = OngoingGoldCalculator.calculate(
+    new BN(state.targetUser.gold.confirmed),
+    state.targetUser.gold.confirmedAt,
+    goldPerSec,
+    now
+  )
 
   return {
-    ...state,
     targetUser: {
-      ...state.targetUser,
-      userNormalPlanets: userPlanets.map(up => new UserNormalPlanet(up)),
-      population: population.toString(),
-      goldPower: goldPower.toString(),
+      address: state.targetUser.address,
+      gold: BNFormatter.pretty(ongoingGold),
+      goldBN: ongoingGold, // TODO: remove
+      userNormalPlanets: userPlanets.map(up => new UserNormalPlanet(up, now, ongoingGold)), // TODO: they should be objs
+      population: BNFormatter.pretty(population),
+      goldPower: BNFormatter.pretty(goldPower),
       techPower: techPower,
-      goldPerSec: population.mul(goldPower).toString()
+      goldPerSec: BNFormatter.pretty(goldPerSec),
+      mapRadius: UserPlanetsMapUtil.mapRadiusFromGold(ongoingGold)
     }
   }
 }
