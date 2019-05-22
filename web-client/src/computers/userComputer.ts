@@ -3,7 +3,6 @@ import BN from "bn.js"
 import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
 import { UserNormalPlanet } from "../models/UserNormalPlanet"
 import { getNormalPlanet } from "../data/planets"
-import { BNFormatter } from "../models/BNFormatter"
 import { OngoingGoldCalculator } from "../models/OngoingGoldCalculator"
 import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
 
@@ -30,13 +29,12 @@ export const computeUserState = (state: UserState, now: number) => {
   return {
     targetUser: {
       address: state.targetUser.address,
-      gold: BNFormatter.pretty(ongoingGold),
-      goldBN: ongoingGold, // TODO: remove
+      gold: ongoingGold,
       userNormalPlanets: userPlanets.map(up => new UserNormalPlanet(up, now, ongoingGold)), // TODO: they should be objs
-      population: BNFormatter.pretty(population),
-      goldPower: BNFormatter.pretty(goldPower),
+      population: population,
+      goldPower: goldPower,
       techPower: techPower,
-      goldPerSec: BNFormatter.pretty(goldPerSec),
+      goldPerSec: goldPerSec,
       mapRadius: UserPlanetsMapUtil.mapRadiusFromGold(ongoingGold)
     }
   }

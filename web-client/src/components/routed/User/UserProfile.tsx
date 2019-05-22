@@ -2,19 +2,20 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { OngoingUserStatus } from "./OngoingUserStatus"
+import { PrettyBN } from "../../utils/PrettyBN"
 
 export function UserProfile(props: { user: ComputedTargetUserState; isMine: boolean }) {
   return (
     <div>
       target user is {props.user.address} {props.isMine ? "[this is me]" : ""}
       <OngoingUserStatus user={props.user} />
-      population: {props.user.population.toLocaleString()}
+      population: <PrettyBN bn={props.user.population} />
       <br />
-      gold power: {props.user.goldPower.toLocaleString()}
+      gold power: <PrettyBN bn={props.user.goldPower} />
       <br />
       tech power: {props.user.techPower.toLocaleString()}
       <br />
-      gold per sec: {props.user.goldPerSec.toLocaleString()}
+      gold per sec: <PrettyBN bn={props.user.goldPerSec} />
     </div>
   )
 }

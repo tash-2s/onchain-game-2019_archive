@@ -3,13 +3,14 @@ import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { NormalPlanetsData, initialPlanetIds } from "../../../data/planets"
+import { PrettyBN } from "../../utils/PrettyBN"
 
 export class PlanetsList extends React.Component<{
   user: ComputedTargetUserState
   setPlanetToGet: (planetId: number) => void
 }> {
   render = () => {
-    const gold = this.props.user.goldBN
+    const gold = this.props.user.gold
     const buttonText = "get"
 
     return NormalPlanetsData.map(p => {
@@ -33,8 +34,8 @@ export class PlanetsList extends React.Component<{
       return (
         <div key={p.id}>
           id: {p.id}, kind: {p.kind}, param:{" "}
-          {new BN(10).pow(new BN(p.paramCommonLogarithm)).toLocaleString()}, price:{" "}
-          {price.toLocaleString()} gold
+          <PrettyBN bn={new BN(10).pow(new BN(p.paramCommonLogarithm))} />, price:{" "}
+          <PrettyBN bn={price} /> gold
           {button}
         </div>
       )

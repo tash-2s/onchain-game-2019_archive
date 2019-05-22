@@ -4,6 +4,7 @@ import BN from "bn.js"
 import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { Time } from "../../../models/time"
+import { PrettyBN } from "../../utils/PrettyBN"
 
 interface Props {
   user: ComputedTargetUserState
@@ -47,7 +48,7 @@ class UserPlanet extends React.Component<{
         <br />
         rank: {up.rank}/{up.maxRank()}
         <br />
-        param: {up.paramMemo.toString()}
+        param: <PrettyBN bn={up.paramMemo} />
         <br />
         created: {up.created()} sec ago
         <br />
@@ -66,14 +67,14 @@ class UserPlanet extends React.Component<{
     if (isRankupable) {
       rankupButton = (
         <button onClick={this.rankupButtonHandler}>
-          rankup ({up.requiredGoldForRankup().toString()} gold)
+          rankup (<PrettyBN bn={up.requiredGoldForRankup()} /> gold)
         </button>
       )
     } else {
       rankupButton = (
         <button disabled={true}>
-          required gold: {up.requiredGoldForRankup().toString()}, remaining sec for next rankup:{" "}
-          {up.remainingSecForRankupWithoutTechPower()} - {techPower} ={" "}
+          required gold: <PrettyBN bn={up.requiredGoldForRankup()} />, remaining sec for next
+          rankup: {up.remainingSecForRankupWithoutTechPower()} - {techPower} ={" "}
           {up.remainingSecForRankup(techPower)}
         </button>
       )
