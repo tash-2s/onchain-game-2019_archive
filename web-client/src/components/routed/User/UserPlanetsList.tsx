@@ -1,7 +1,6 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { Time } from "../../../models/time"
 import { PrettyBN } from "../../utils/PrettyBN"
@@ -32,7 +31,7 @@ export class UserPlanetsList extends React.Component<Props> {
 }
 
 class UserPlanet extends React.Component<{
-  userPlanet: UserNormalPlanet
+  userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   isMine: boolean
   techPower: number
   rankup: (userPlanetId: string) => void
@@ -41,16 +40,23 @@ class UserPlanet extends React.Component<{
   render = () => {
     const up = this.props.userPlanet
     const rankuped =
-      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankuped()} sec ago</div>
+      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankupedSec} sec ago</div>
+    const param =
+      up.planetKind === "technology" ? (
+        up.param.toNumber().toLocaleString()
+      ) : (
+        <PrettyBN bn={up.param} />
+      )
+
     return (
       <div>
-        {`${up.normalPlanetId} (kind: ${up.planetKind()})`}
+        {`${up.normalPlanetId} (kind: ${up.planetKind})`}
         <br />
-        rank: {up.rank}/{up.maxRank()}
+        rank: {up.rank}/{up.maxRank}
         <br />
-        param: <PrettyBN bn={up.paramMemo} />
+        param: {param}
         <br />
-        created: {up.created()} sec ago
+        created: {up.createdSec} sec ago
         <br />
         {rankuped}
         {this.props.isMine ? this.buttons() : <></>}
@@ -61,21 +67,20 @@ class UserPlanet extends React.Component<{
   buttons = () => {
     const up = this.props.userPlanet
     const techPower = this.props.techPower
-    const isRankupable = up.isRankupable(techPower)
+    const isRankupable = up.isRankupable
     let rankupButton
 
     if (isRankupable) {
       rankupButton = (
         <button onClick={this.rankupButtonHandler}>
-          rankup (<PrettyBN bn={up.requiredGoldForRankup()} /> gold)
+          rankup (<PrettyBN bn={up.requiredGoldForRankup} /> gold)
         </button>
       )
     } else {
       rankupButton = (
         <button disabled={true}>
-          required gold: <PrettyBN bn={up.requiredGoldForRankup()} />, remaining sec for next
-          rankup: {up.remainingSecForRankupWithoutTechPower()} - {techPower} ={" "}
-          {up.remainingSecForRankup(techPower)}
+          required gold: <PrettyBN bn={up.requiredGoldForRankup} />, remaining sec for next rankup:{" "}
+          {up.remainingSecForRankupWithoutTechPower} - {techPower} = {up.remainingSecForRankup}
         </button>
       )
     }

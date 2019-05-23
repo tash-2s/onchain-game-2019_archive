@@ -1,13 +1,13 @@
 import * as React from "react"
 import styled from "styled-components"
 
-import { UserNormalPlanet } from "../../../models/UserNormalPlanet"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 
 export function PlanetHex(props: {
   q: number
   r: number
-  userPlanet: UserNormalPlanet | null
+  userPlanet: ComputedTargetUserState["userNormalPlanets"][number] | null
   shiftTop: number
   shiftLeft: number
   setPlanet: ((q: number, r: number) => (() => void)) | null

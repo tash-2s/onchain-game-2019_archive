@@ -1,5 +1,6 @@
 import BN from "bn.js"
-import { UserNormalPlanet } from "./UserNormalPlanet"
+
+import { ComputedTargetUserState } from "./../computers/userComputer"
 
 export class UserPlanetsMapUtil {
   static hexSize = 50
@@ -69,8 +70,12 @@ export class UserPlanetsMapUtil {
     return null
   }
 
-  static userPlanetsAndThierBiggestRadius = (userNormalPlanets: Array<UserNormalPlanet>) => {
-    const userPlanetsByCoordinates: { [key: string]: UserNormalPlanet | null } = {}
+  static userPlanetsAndThierBiggestRadius = (
+    userNormalPlanets: ComputedTargetUserState["userNormalPlanets"]
+  ) => {
+    const userPlanetsByCoordinates: {
+      [key: string]: ComputedTargetUserState["userNormalPlanets"][number] | null
+    } = {}
     let userPlanetsBiggestRadius = 0
 
     userNormalPlanets.forEach(up => {
