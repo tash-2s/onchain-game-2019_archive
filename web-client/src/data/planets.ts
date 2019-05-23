@@ -1,3 +1,4 @@
+import BN from "bn.js"
 import { NormalPlanet } from "../types/commonTypes"
 
 let id = 1
@@ -16,10 +17,22 @@ while (id <= 16) {
   param += 2
 }
 
-export const NormalPlanetsData: NormalPlanet[] = residenceAndGoldvein.concat([
+const _NormalPlanetsData: NormalPlanet[] = residenceAndGoldvein.concat([
   { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
   { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
 ])
+
+export const NormalPlanetsData = _NormalPlanetsData.map(p => {
+  if (p.kind === "magic") {
+    throw new Error("not supported")
+  }
+
+  return {
+    ...p,
+    param: new BN(10).pow(new BN(p.paramCommonLogarithm)),
+    priceGold: new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
+  }
+})
 
 export const initialPlanetIds = [1, 2]
 

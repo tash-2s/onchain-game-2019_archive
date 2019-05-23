@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserState, TargetUserState, UserNormalPlanetType } from "../types/routed/userTypes"
+import { UserState, TargetUserState } from "../types/routed/userTypes"
 import { getNormalPlanet } from "../data/planets"
 import { OngoingGoldCalculator } from "../models/OngoingGoldCalculator"
 import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
@@ -43,6 +43,46 @@ export const computeUserState = (state: UserState, now: number) => {
   }
 }
 
+const processUserNormalPlanets = (
+  rawUserPlanets: TargetUserState["userNormalPlanets"],
+  now: number
+) => {
+  let population = new BN(0)
+  let goldPower = new BN(0)
+  let techPower = new BN(0)
+
+  const userPlanets = rawUserPlanets.map(up => {
+    const p = getNormalPlanet(up.normalPlanetId)
+    const param = userPlanetParam(up.rank, p.param)
+
+    switch (p.kind) {
+      case "residence":
+        population = population.add(param)
+        break
+      case "goldvein":
+        goldPower = goldPower.add(param)
+        break
+      case "technology":
+        techPower = techPower.add(param)
+        break
+      default:
+        throw new Error("undefined kind")
+    }
+
+    return {
+      ...up,
+      param: param,
+      maxRank: 30,
+      requiredGoldForRankup: userPlanetRequiredGoldForRankup(up.rank, p.priceGold),
+      planetKind: p.kind,
+      rankupedSec: now - up.rankupedAt,
+      createdSec: now - up.createdAt
+    }
+  })
+
+  return { userPlanets, population, goldPower, techPower: techPower.toNumber() }
+}
+
 const processUserNormalPlanets2 = (
   userPlanets: ReturnType<typeof processUserNormalPlanets>["userPlanets"],
   gold: BN,
@@ -71,67 +111,14 @@ const processUserNormalPlanets2 = (
   })
 }
 
-const processUserNormalPlanets = (
-  rawUserPlanets: TargetUserState["userNormalPlanets"],
-  now: number
-) => {
-  let population = new BN(0)
-  let goldPower = new BN(0)
-  let techPower = new BN(0)
-
-  const userPlanets = rawUserPlanets.map(up => {
-    const p = getNormalPlanet(up.normalPlanetId)
-    if (p.kind === "magic") {
-      throw new Error("magic planets are not supported yet")
-    }
-
-    const param = userPlanetParam(up.rank, p.paramCommonLogarithm)
-
-    switch (p.kind) {
-      case "residence":
-        population = population.add(param)
-        break
-      case "goldvein":
-        goldPower = goldPower.add(param)
-        break
-      case "technology":
-        techPower = techPower.add(param)
-        break
-      default:
-        throw new Error("undefined kind")
-    }
-
-    return {
-      ...up,
-      param: param,
-      maxRank: 30,
-      requiredGoldForRankup: userPlanetRequiredGoldForRankup(up.rank, p.priceGoldCommonLogarithm),
-      planetKind: p.kind,
-      rankupedSec: now - up.rankupedAt,
-      createdSec: now - up.createdAt
-    }
-  })
-
-  return { userPlanets, population, goldPower, techPower: techPower.toNumber() }
+const userPlanetParam = (currentRank: number, planetParam: BN) => {
+  const previousRank = new BN(currentRank - 1)
+  return planetParam.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
-const userPlanetParam = (currentRank: number, planetParamCommonLogarithm: number) => {
+const userPlanetRequiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
   const previousRank = new BN(currentRank - 1)
-  return new BN(10)
-    .pow(new BN(planetParamCommonLogarithm))
-    .mul(new BN(13).pow(previousRank))
-    .div(new BN(10).pow(previousRank))
-}
-
-const userPlanetRequiredGoldForRankup = (
-  currentRank: number,
-  planetPriceGoldCommonLogarithm: number
-) => {
-  const previousRank = new BN(currentRank - 1)
-  return new BN(10)
-    .pow(new BN(planetPriceGoldCommonLogarithm))
-    .mul(new BN(13).pow(previousRank))
-    .div(new BN(10).pow(previousRank))
+  return planetPriceGold.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
 const userPlanetRemainingSecForRankup = (

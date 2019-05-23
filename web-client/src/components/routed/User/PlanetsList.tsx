@@ -14,17 +14,12 @@ export class PlanetsList extends React.Component<{
     const buttonText = "get"
 
     return NormalPlanetsData.map(p => {
-      if (p.kind === "magic") {
-        throw new Error("magic planets are not supported yet")
-      }
-
-      const price = new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
       let button
       if (
         (this.props.user.userNormalPlanets.length === 0 &&
           gold.eqn(0) &&
           initialPlanetIds.includes(p.id)) ||
-        gold.gte(price)
+        gold.gte(p.priceGold)
       ) {
         button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>
       } else {
@@ -33,9 +28,8 @@ export class PlanetsList extends React.Component<{
 
       return (
         <div key={p.id}>
-          id: {p.id}, kind: {p.kind}, param:{" "}
-          <PrettyBN bn={new BN(10).pow(new BN(p.paramCommonLogarithm))} />, price:{" "}
-          <PrettyBN bn={price} /> gold
+          id: {p.id}, kind: {p.kind}, param: <PrettyBN bn={p.param} />, price:{" "}
+          <PrettyBN bn={p.priceGold} /> gold
           {button}
         </div>
       )

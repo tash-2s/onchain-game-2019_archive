@@ -5,14 +5,14 @@ import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { Time } from "../../../models/time"
 import { PrettyBN } from "../../utils/PrettyBN"
 
-interface Props {
+interface UserPlanetsListProps {
   user: ComputedTargetUserState
   isMine: boolean
   rankup: (userPlanetId: string) => void
   remove: (userPlanetId: string) => void
 }
 
-export class UserPlanetsList extends React.Component<Props> {
+export class UserPlanetsList extends React.Component<UserPlanetsListProps> {
   render = () => {
     return this.props.user.userNormalPlanets
       .map(up => up)
@@ -30,13 +30,15 @@ export class UserPlanetsList extends React.Component<Props> {
   }
 }
 
-class UserPlanet extends React.Component<{
+interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   isMine: boolean
   techPower: number
   rankup: (userPlanetId: string) => void
   remove: (userPlanetId: string) => void
-}> {
+}
+
+class UserPlanet extends React.Component<UserPlanetProps> {
   render = () => {
     const up = this.props.userPlanet
     const rankuped =
@@ -59,12 +61,14 @@ class UserPlanet extends React.Component<{
         created: {up.createdSec} sec ago
         <br />
         {rankuped}
-        {this.props.isMine ? this.buttons() : <></>}
+        {this.props.isMine ? <UserPlanetButtons {...this.props} /> : <></>}
       </div>
     )
   }
+}
 
-  buttons = () => {
+class UserPlanetButtons extends React.Component<UserPlanetProps> {
+  render = () => {
     const up = this.props.userPlanet
     const techPower = this.props.techPower
     const isRankupable = up.isRankupable
