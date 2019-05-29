@@ -50,29 +50,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     );
   }
 
-  function rankupPlanet(uint64 userNormalPlanetId) external {
-    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
-      msg.sender,
-      userNormalPlanetId
-    );
-    uint techPower = _confirm(msg.sender);
-
-    // ckeck time
-    uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(techPower); // TODO: type
-    require(remainingSec <= 0, "need more time to rankup");
-
-    // decrease required gold
-    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint rankupGold = (uint256(10) ** planetRecord.priceGoldCommonLogarithm) * (uint256(
-      13
-    ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
-    unmintGold(msg.sender, rankupGold);
-
-    rankupUserNormalPlanet(msg.sender, userNormalPlanetId, userPlanet.rank + 1);
-  }
-
-  function bulkRankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
+  function rankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
@@ -84,8 +62,16 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     }
 
     // ckeck time
-    if (_requiredSecForRankup(targetRank - 1) < techPower) {
-      revert("more techPower is needed to bulk rankup");
+    if (targetRank == (userPlanet.rank + 1)) {
+      uint diffSec = uint32now() - userPlanet.rankupedAt;
+      int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(
+        techPower
+      ); // TODO: type
+      require(remainingSec <= 0, "need more time to rankup");
+    } else {
+      if (_requiredSecForRankup(targetRank - 1) < techPower) {
+        revert("more techPower is needed to bulk rankup");
+      }
     }
 
     // decrease required gold
