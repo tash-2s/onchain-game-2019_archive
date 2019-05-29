@@ -69,9 +69,10 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       ); // TODO: type
       require(remainingSec <= 0, "need more time to rankup");
     } else {
-      if (_requiredSecForRankup(targetRank - 1) < techPower) {
-        revert("more techPower is needed to bulk rankup");
-      }
+      require(
+        _requiredSecForRankup(targetRank - 1) <= techPower,
+        "more techPower is needed to bulk rankup"
+      );
     }
 
     // decrease required gold
