@@ -45,7 +45,10 @@ export class TargetUser extends React.Component<TargetUserProps> {
         break
     }
     const planetsList = (
-      <PlanetsList user={user} setPlanetToGet={this.props.userPageUiActions.selectPlanet} />
+      <PlanetsList
+        normalPlanets={user.normalPlanets}
+        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
+      />
     )
 
     return (
