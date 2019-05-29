@@ -1,7 +1,6 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { Time } from "../../../models/time"
 import { PrettyBN } from "../../utils/PrettyBN"
 
 interface UserPlanetsListProps {
