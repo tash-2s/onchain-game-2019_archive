@@ -1,5 +1,4 @@
 import * as React from "react"
-import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { Time } from "../../../models/time"
