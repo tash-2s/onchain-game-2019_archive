@@ -81,6 +81,8 @@ const processUserNormalPlanets = (
     }
   })
 
+  userPlanets.sort((a, b) => a.createdAt - b.createdAt)
+
   return { userPlanets, population, goldPower, techPower: techPower.toNumber() }
 }
 

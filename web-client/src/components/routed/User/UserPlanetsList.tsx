@@ -13,19 +13,16 @@ interface UserPlanetsListProps {
 
 export class UserPlanetsList extends React.Component<UserPlanetsListProps> {
   render = () => {
-    return this.props.user.userNormalPlanets
-      .map(up => up)
-      .sort((a, b) => a.createdAt - b.createdAt)
-      .map(up => (
-        <UserPlanet
-          key={up.id}
-          userPlanet={up}
-          isMine={this.props.isMine}
-          techPower={this.props.user.techPower}
-          rankup={this.props.rankup}
-          remove={this.props.remove}
-        />
-      ))
+    return this.props.user.userNormalPlanets.map(up => (
+      <UserPlanet
+        key={up.id}
+        userPlanet={up}
+        isMine={this.props.isMine}
+        techPower={this.props.user.techPower}
+        rankup={this.props.rankup}
+        remove={this.props.remove}
+      />
+    ))
   }
 }
 
