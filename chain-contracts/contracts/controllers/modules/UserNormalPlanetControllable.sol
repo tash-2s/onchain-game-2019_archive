@@ -39,6 +39,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
   uint256 constant USER_NORMAL_PLANET_PERMANENCE_ELEMENT_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000; // solium-disable-line max-len
 
+  uint8 constant MAX_USER_NORMAL_PLANET_RANK = 30;
+
   UserNormalPlanetPermanence private _userNormalPlanetPermanence;
   UserNormalPlanetIdCounterPermanence private _userNormalPlanetIdCounterPermanence;
 
@@ -130,13 +132,15 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   }
 
   // this should require userPlanetRecord for performance reason
-  function rankupUserNormalPlanet(address account, uint64 userPlanetId) internal {
+  function rankupUserNormalPlanet(address account, uint64 userPlanetId, uint8 targetRank) internal {
     UserNormalPlanetRecord memory record;
     uint16 index;
     (record, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
-    uint8 newRank = record.rank + 1;
-    require(newRank <= 30, "max rank");
+    require(
+      targetRank > record.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
+      "invalid rank for rankup"
+    );
     _userNormalPlanetPermanence.updateByIndex(
       account,
       index,
@@ -146,7 +150,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
           record.normalPlanetId,
           record.kind,
           record.originalParamCommonLogarithm,
-          newRank,
+          targetRank,
           uint32now(),
           record.createdAt,
           record.axialCoordinateQ,
