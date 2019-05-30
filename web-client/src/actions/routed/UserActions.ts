@@ -54,11 +54,11 @@ export class UserActions extends AbstractActions {
   }
 
   static rankupUserNormalPlanet = UserActions.creator<User>("rankupUserNormalPlanet")
-  rankupUserNormalPlanet = (userPlanetId: string) => {
+  rankupUserNormalPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
       await sendLoomContractMethod(cs =>
-        cs.NormalPlanetController.methods.rankupPlanet(userPlanetId)
+        cs.NormalPlanetController.methods.rankupPlanet(userPlanetId, targetRank)
       )
       const response = await callLoomContractMethod(cs =>
         cs.UserController.methods.getUser(address)

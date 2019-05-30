@@ -250,6 +250,10 @@
       {
         "name": "userNormalPlanetId",
         "type": "uint64"
+      },
+      {
+        "name": "targetRank",
+        "type": "uint8"
       }
     ],
     "name": "rankupPlanet",
@@ -257,7 +261,7 @@
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function",
-    "signature": "0x1a098653"
+    "signature": "0x2db45a59"
   },
   {
     "constant": false,

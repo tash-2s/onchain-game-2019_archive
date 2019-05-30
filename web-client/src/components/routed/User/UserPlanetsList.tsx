@@ -6,7 +6,7 @@ import { PrettyBN } from "../../utils/PrettyBN"
 interface UserPlanetsListProps {
   user: ComputedTargetUserState
   isMine: boolean
-  rankup: (userPlanetId: string) => void
+  rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
 }
 
@@ -29,7 +29,7 @@ interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   isMine: boolean
   techPower: number
-  rankup: (userPlanetId: string) => void
+  rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
 }
 
@@ -95,7 +95,7 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   }
 
   rankupButtonHandler = () => {
-    this.props.rankup(this.props.userPlanet.id)
+    this.props.rankup(this.props.userPlanet.id, this.props.userPlanet.rank + 1)
   }
 
   removeButtonHandler = () => {
