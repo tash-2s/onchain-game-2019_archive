@@ -117,26 +117,31 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     _permanence.pushElement(account, 10010010000100000000000000000000); // id: 0, rank: 1
     _permanence.pushElement(account, 290010010000100000000000000000001); // id: 1, rank: 29
 
-    rankupUserNormalPlanet(account, 0);
+    rankupUserNormalPlanet(account, 0, 2);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(2), "2");
 
-    rankupUserNormalPlanet(account, 0);
+    rankupUserNormalPlanet(account, 0, 3);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(3), "3");
 
-    rankupUserNormalPlanet(account, 1);
+    rankupUserNormalPlanet(account, 0, 5);
+    Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(5), "5");
+
+    rankupUserNormalPlanet(account, 1, 30);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 1).rank), uint(30), "30");
 
     bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint16)")),
+      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint64,uint8)")),
       account,
-      1
+      1,
+      31
     );
     Assert.isFalse(isSuccessed, "> 30");
 
     isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint16)")),
+      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint64,uint8)")),
       account,
-      2
+      2,
+      7
     );
     Assert.isFalse(isSuccessed, "no target user planet");
   }
@@ -289,7 +294,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
   }
 
-  function wrappedRankupUserNormalPlanet(address account, uint64 userPlanetId) public {
-    rankupUserNormalPlanet(account, userPlanetId);
+  function wrappedRankupUserNormalPlanet(address account, uint64 userPlanetId, uint8 targetRank)
+    public
+  {
+    rankupUserNormalPlanet(account, userPlanetId, targetRank);
   }
 }

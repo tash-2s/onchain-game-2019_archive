@@ -50,26 +50,57 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     );
   }
 
-  function rankupPlanet(uint64 userNormalPlanetId) external {
+  function rankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
     );
     uint techPower = _confirm(msg.sender);
 
+    if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
+      revert("invalid targetRank");
+    }
+
     // ckeck time
-    uint diffSec = uint32now() - userPlanet.rankupedAt;
-    int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(techPower); // TODO: type
-    require(remainingSec <= 0, "need more time to rankup");
+    if (targetRank == (userPlanet.rank + 1)) {
+      uint diffSec = uint32now() - userPlanet.rankupedAt;
+      int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(
+        techPower
+      ); // TODO: type
+      require(remainingSec <= 0, "need more time to rankup");
+    } else {
+      require(
+        _requiredSecForRankup(targetRank - 1) <= techPower,
+        "more techPower is needed to bulk rankup"
+      );
+    }
 
     // decrease required gold
-    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(userPlanet.normalPlanetId);
-    uint rankupGold = (uint256(10) ** planetRecord.priceGoldCommonLogarithm) * (uint256(
-      13
-    ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
+    uint planetPriceGold = uint256(10) ** normalPlanetRecordOf(
+      userPlanet.normalPlanetId
+    ).priceGoldCommonLogarithm;
+    uint rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
     unmintGold(msg.sender, rankupGold);
 
-    rankupUserNormalPlanet(msg.sender, userNormalPlanetId);
+    rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
+  }
+
+  function _requiredGoldForRankup(uint planetPriceGold, uint8 currentRank, uint8 targetRank)
+    private
+    pure
+    returns (uint)
+  {
+    uint requiredGold = 0;
+    uint8 tmpRank = currentRank;
+
+    while (tmpRank < targetRank) {
+      requiredGold += planetPriceGold * (uint256(13) ** (tmpRank - 1)) / (uint256(
+        10
+      ) ** (tmpRank - 1));
+      tmpRank++;
+    }
+
+    return requiredGold;
   }
 
   function _requiredSecForRankup(uint rank) private pure returns (uint) {

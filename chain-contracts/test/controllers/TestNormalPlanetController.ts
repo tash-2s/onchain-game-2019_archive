@@ -42,7 +42,7 @@ contract("NormalPlanetController", async accounts => {
       it("should fail", async () => {
         let failed = false
         try {
-          await instance.rankupPlanet(0)
+          await instance.rankupPlanet(0, 2)
         } catch (_) {
           failed = true
         }
@@ -62,11 +62,24 @@ contract("NormalPlanetController", async accounts => {
         assert.equal(result1[0].toNumber(), 1000)
         assert.equal(result1[3][0].toNumber(), 1)
 
-        await instance.rankupPlanet(0, { from: strangerAccount })
+        await instance.rankupPlanet(0, 2, { from: strangerAccount })
 
         const result2 = await (await UserController.deployed()).getUser(strangerAccount)
         assert.equal(result2[0].toNumber(), 0)
         assert.equal(result2[3][0].toNumber(), 2)
+      })
+
+      it("should bulk rankup a planet", async () => {
+        await (await UserNormalPlanetPermanence.deployed()).pushElement(
+          strangerAccount,
+          "155000000300030030010200000000000000000001" // tech planet to add tech power (planet id: 102, rank: 30)
+        )
+        await (await UserGoldPermanence.deployed()).update(strangerAccount, 5187)
+        await instance.rankupPlanet(0, 5, { from: strangerAccount })
+
+        const result = await (await UserController.deployed()).getUser(strangerAccount)
+        assert.equal(result[0].toNumber(), 0)
+        assert.equal(result[3][0].toNumber(), 5)
       })
     })
   })
