@@ -66,10 +66,10 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   render = () => {
     const up = this.props.userPlanet
     const techPower = this.props.techPower
-    const isRankupable = up.isRankupable
-    let rankupButton
+    let rankupButton: JSX.Element
+    let bulkRankupButton: JSX.Element
 
-    if (isRankupable) {
+    if (up.rankupableCount >= 1) {
       rankupButton = (
         <button onClick={this.rankupButtonHandler}>
           rankup (<PrettyBN bn={up.requiredGoldForRankup} /> gold)
@@ -84,11 +84,25 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
       )
     }
 
+    if (up.rankupableCount >= 2) {
+      bulkRankupButton = (
+        <button onClick={this.bulkRankupButtonHandler}>
+          bulk rankup to rank {up.rank + up.rankupableCount} (gold:{" "}
+          <PrettyBN bn={up.requiredGoldForBulkRankup} />)
+        </button>
+      )
+    } else {
+      bulkRankupButton = <button disabled={true}>bulk rankup</button>
+    }
+
     const removeButton = <button onClick={this.removeButtonHandler}>remove</button>
 
     return (
       <div>
         {rankupButton}
+        <br />
+        {bulkRankupButton}
+        <br />
         {removeButton}
       </div>
     )
@@ -96,6 +110,13 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
 
   rankupButtonHandler = () => {
     this.props.rankup(this.props.userPlanet.id, this.props.userPlanet.rank + 1)
+  }
+
+  bulkRankupButtonHandler = () => {
+    this.props.rankup(
+      this.props.userPlanet.id,
+      this.props.userPlanet.rank + this.props.userPlanet.rankupableCount
+    )
   }
 
   removeButtonHandler = () => {

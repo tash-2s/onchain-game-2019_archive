@@ -74,7 +74,6 @@ const processUserNormalPlanets = (
       ...up,
       param: param,
       maxRank: 30,
-      requiredGoldForRankup: userPlanetRequiredGoldForRankup(up.rank, p.priceGold),
       planetKind: p.kind,
       rankupedSec: now - up.rankupedAt,
       createdSec: now - up.createdAt
@@ -93,21 +92,26 @@ const processUserNormalPlanets2 = (
   now: number
 ) => {
   return userPlanets.map(up => {
-    const [remainingSec, remainingSecWithoutTechPower] = userPlanetRemainingSecForRankup(
+    const p = getNormalPlanet(up.normalPlanetId)
+    const [remainingSec, remainingSecWithoutTechPower] = remainingSecForRankup(
       up.rank,
       up.rankupedAt,
       techPower,
       now
     )
+    const [rankupableCount, requiredGoldForBulkRankup] = userPlanetRankupableCount(
+      up.rank,
+      up.rankupedAt,
+      gold,
+      techPower,
+      p.priceGold,
+      now
+    )
     return {
       ...up,
-      isRankupable: userPlanetIsRankupable(
-        up.rank,
-        up.maxRank,
-        remainingSec,
-        up.requiredGoldForRankup,
-        gold
-      ),
+      rankupableCount: rankupableCount,
+      requiredGoldForRankup: requiredGoldForRankup(up.rank, p.priceGold),
+      requiredGoldForBulkRankup: requiredGoldForBulkRankup,
       remainingSecForRankup: remainingSec,
       remainingSecForRankupWithoutTechPower: remainingSecWithoutTechPower
     }
@@ -119,41 +123,70 @@ const userPlanetParam = (currentRank: number, planetParam: BN) => {
   return planetParam.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
-const userPlanetRequiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
+const requiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
   const previousRank = new BN(currentRank - 1)
   return planetPriceGold.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
-const userPlanetRemainingSecForRankup = (
-  rank: number,
+const remainingSecForRankup = (
+  currentRank: number,
   rankupedAt: number,
   techPower: number,
   now: number
 ): [number, number] => {
   const prevDiffSec = now - rankupedAt
-  const remainingSec = requiredSecForRankup(rank) - prevDiffSec
+  const remainingSec = requiredSecForRankup(currentRank) - prevDiffSec
   const withoutTechPower = Math.max(remainingSec, 0)
   return [Math.max(withoutTechPower - techPower, 0), withoutTechPower]
 }
 
-const requiredSecForRankup = (rank: number) => {
+const requiredSecForRankup = (currentRank: number) => {
   let i = 1
   let memo = 300
-  while (i < rank) {
+  while (i < currentRank) {
     memo = Math.floor((memo * 14) / 10)
     i++
   }
   return memo
 }
 
-const userPlanetIsRankupable = (
-  rank: number,
-  maxRank: number,
-  remainingSec: number,
-  requiredGoldForRankup: BN,
-  gold: BN
-) => {
-  return rank < maxRank && remainingSec <= 0 && requiredGoldForRankup.lte(gold)
+const MAX_RANK = 30
+const userPlanetRankupableCount = (
+  userPlanetCurrentRank: number,
+  userPlanetRankupedAt: number,
+  gold: BN,
+  techPower: number,
+  planetOriginalPriceGold: BN,
+  now: number
+): [number, BN] => {
+  let rankupableCount = 0
+  let remainingGold = gold
+
+  while (true) {
+    const rank = userPlanetCurrentRank + rankupableCount
+    if (rank >= MAX_RANK) {
+      break
+    }
+
+    const requiredGold = requiredGoldForRankup(rank, planetOriginalPriceGold)
+    if (requiredGold.gt(remainingGold)) {
+      break
+    }
+
+    if (requiredSecForRankup(rank) > techPower) {
+      if (rankupableCount !== 0) {
+        break
+      }
+      if (remainingSecForRankup(rank, userPlanetRankupedAt, techPower, now)[0] > 0) {
+        break
+      }
+    }
+
+    remainingGold = remainingGold.sub(requiredGold)
+    rankupableCount++
+  }
+
+  return [rankupableCount, gold.sub(remainingGold)]
 }
 
 const processNormalPlanets = (gold: BN, userPlanetsCount: number) => {
