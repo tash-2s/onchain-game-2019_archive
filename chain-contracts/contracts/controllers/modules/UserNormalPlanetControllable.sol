@@ -132,6 +132,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   }
 
   // this should require userPlanetRecord for performance reason
+  //   => a record and its index are needed, so it's not simple than I think...
   function rankupUserNormalPlanet(address account, uint64 userPlanetId, uint8 targetRank) internal {
     UserNormalPlanetRecord memory record;
     uint16 index;
