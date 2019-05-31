@@ -100,16 +100,15 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
       "id: 1"
     );
 
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedMintUserNormalPlanet(address,uint16,uint8,uint8,int16,int16)")),
-      account,
-      1,
-      2,
-      3,
-      1,
-      -1
+    // overwrite
+    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(2), "2");
+    mintUserNormalPlanet(account, 7, 7, 7, 1, -1);
+    _assertEqual(
+      userNormalPlanetRecordOf(account, 2),
+      UserNormalPlanetRecord(2, 7, 7, 7, 1, uint32now(), uint32now(), 1, -1),
+      "overwritable"
     );
-    Assert.isFalse(isSuccessed, "same coordinates");
+    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(2), "still 2");
   }
 
   function testRankupUserNormalPlanet() public {

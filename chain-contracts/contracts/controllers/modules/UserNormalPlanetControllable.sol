@@ -104,11 +104,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   ) internal {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
 
-    // allow overwrite for performance?
     for (uint16 i = 0; i < records.length; i++) {
       // TODO: for big planets
       if ((records[i].axialCoordinateQ == axialCoordinateQ) && (records[i].axialCoordinateR == axialCoordinateR)) {
-        revert("duplicated coordinates");
+        _userNormalPlanetPermanence.deleteElement(account, i);
       }
     }
 
