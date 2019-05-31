@@ -4,50 +4,62 @@ import { UserState, TargetUserState } from "../types/routed/userTypes"
 import { NormalPlanetsData, initialPlanetIds, getNormalPlanet } from "../data/planets"
 import { OngoingGoldCalculator } from "../models/OngoingGoldCalculator"
 import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
-import { PlanetKind } from "../types/commonTypes"
 
 type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
 
 export const computeUserState = (state: UserState, now: number) => {
   if (!state.targetUser) {
-    return { ...state, targetUser: null }
+    return { targetUser: null }
   }
 
-  const { userPlanets, population, goldPower, techPower } = processUserNormalPlanets(
-    state.targetUser.userNormalPlanets,
-    now
-  )
-  const goldPerSec = population.mul(goldPower)
-
-  const ongoingGold = OngoingGoldCalculator.calculate(
-    new BN(state.targetUser.gold.confirmed),
-    state.targetUser.gold.confirmedAt,
-    goldPerSec,
-    now
+  const { userPlanets, population, goldPower, techPower } = computeUserPlanetParams(
+    state.targetUser.userNormalPlanets
   )
 
-  const userPlanets2 = processUserNormalPlanets2(userPlanets, ongoingGold, techPower, now)
+  const { goldPerSec, ongoingGold } = computeGold(population, goldPower, state.targetUser.gold, now)
+
+  const computedUserPlanets = computeUserPlanetRankStatuses(
+    userPlanets,
+    ongoingGold,
+    techPower,
+    now
+  )
 
   return {
     targetUser: {
       address: state.targetUser.address,
       gold: ongoingGold,
-      userNormalPlanets: userPlanets2,
+      userNormalPlanets: computedUserPlanets.sort((a, b) => a.createdAt - b.createdAt),
       population: population,
       goldPower: goldPower,
       techPower: techPower,
       goldPerSec: goldPerSec,
       mapRadius: UserPlanetsMapUtil.mapRadiusFromGold(ongoingGold),
-      normalPlanets: processNormalPlanets(ongoingGold, userPlanets2.length)
+      normalPlanets: processNormalPlanets(ongoingGold, computedUserPlanets.length)
     }
   }
 }
 
-const processUserNormalPlanets = (
-  rawUserPlanets: TargetUserState["userNormalPlanets"],
+const computeGold = (
+  population: BN,
+  goldPower: BN,
+  userGold: { confirmed: string; confirmedAt: number },
   now: number
 ) => {
+  const goldPerSec = population.mul(goldPower)
+
+  const ongoingGold = OngoingGoldCalculator.calculate(
+    new BN(userGold.confirmed),
+    userGold.confirmedAt,
+    goldPerSec,
+    now
+  )
+
+  return { goldPerSec, ongoingGold }
+}
+
+const computeUserPlanetParams = (rawUserPlanets: TargetUserState["userNormalPlanets"]) => {
   let population = new BN(0)
   let goldPower = new BN(0)
   let techPower = new BN(0)
@@ -73,26 +85,20 @@ const processUserNormalPlanets = (
     return {
       ...up,
       param: param,
-      maxRank: 30,
-      planetKind: p.kind,
-      rankupedSec: now - up.rankupedAt,
-      createdSec: now - up.createdAt
+      planet: p
     }
   })
-
-  userPlanets.sort((a, b) => a.createdAt - b.createdAt)
 
   return { userPlanets, population, goldPower, techPower: techPower.toNumber() }
 }
 
-const processUserNormalPlanets2 = (
-  userPlanets: ReturnType<typeof processUserNormalPlanets>["userPlanets"],
+const computeUserPlanetRankStatuses = (
+  userPlanets: ReturnType<typeof computeUserPlanetParams>["userPlanets"],
   gold: BN,
   techPower: number,
   now: number
 ) => {
   return userPlanets.map(up => {
-    const p = getNormalPlanet(up.normalPlanetId)
     const [remainingSec, remainingSecWithoutTechPower] = remainingSecForRankup(
       up.rank,
       up.rankupedAt,
@@ -104,13 +110,14 @@ const processUserNormalPlanets2 = (
       up.rankupedAt,
       gold,
       techPower,
-      p.priceGold,
+      up.planet.priceGold,
       now
     )
     return {
       ...up,
+      maxRank: MAX_RANK,
       rankupableCount: rankupableCount,
-      requiredGoldForRankup: requiredGoldForRankup(up.rank, p.priceGold),
+      requiredGoldForRankup: requiredGoldForRankup(up.rank, up.planet.priceGold),
       requiredGoldForBulkRankup: requiredGoldForBulkRankup,
       remainingSecForRankup: remainingSec,
       remainingSecForRankupWithoutTechPower: remainingSecWithoutTechPower

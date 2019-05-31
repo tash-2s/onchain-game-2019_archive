@@ -1,9 +1,9 @@
 import * as React from "react"
 
-import { CommonState } from "../../../types/commonTypes"
 import { UiState } from "../../../types/uiTypes"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { ComputedCommonState } from "../../../computers/commonComputer"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetsList } from "./UserPlanetsList"
@@ -12,7 +12,7 @@ import { PlanetsList } from "./PlanetsList"
 
 // targetUser is not null
 type TargetUserProps = {
-  common: CommonState
+  common: ComputedCommonState
   user: { targetUser: ComputedTargetUserState }
   userPageUi: UiState["userPage"]
 } & UserDispatchProps
@@ -37,6 +37,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
         userPlanets = (
           <UserPlanetsList
             user={user}
+            now={this.props.common.now}
             isMine={isMine}
             rankup={this.props.userActions.rankupUserNormalPlanet}
             remove={this.props.userActions.removeUserNormalPlanet}

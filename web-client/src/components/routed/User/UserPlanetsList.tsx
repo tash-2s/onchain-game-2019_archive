@@ -6,6 +6,7 @@ import { PrettyBN } from "../../utils/PrettyBN"
 interface UserPlanetsListProps {
   user: ComputedTargetUserState
   isMine: boolean
+  now: number
   rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
 }
@@ -18,6 +19,7 @@ export class UserPlanetsList extends React.Component<UserPlanetsListProps> {
         userPlanet={up}
         isMine={this.props.isMine}
         techPower={this.props.user.techPower}
+        now={this.props.now}
         rankup={this.props.rankup}
         remove={this.props.remove}
       />
@@ -29,6 +31,7 @@ interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   isMine: boolean
   techPower: number
+  now: number
   rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
 }
@@ -37,9 +40,13 @@ class UserPlanet extends React.Component<UserPlanetProps> {
   render = () => {
     const up = this.props.userPlanet
     const rankuped =
-      up.createdAt === up.rankupedAt ? <></> : <div>rankuped: {up.rankupedSec} sec ago</div>
+      up.createdAt === up.rankupedAt ? (
+        <></>
+      ) : (
+        <div>rankuped: {this.props.now - up.rankupedAt} sec ago</div>
+      )
     const param =
-      up.planetKind === "technology" ? (
+      up.planet.kind === "technology" ? (
         up.param.toNumber().toLocaleString()
       ) : (
         <PrettyBN bn={up.param} />
@@ -47,13 +54,13 @@ class UserPlanet extends React.Component<UserPlanetProps> {
 
     return (
       <div>
-        {`${up.normalPlanetId} (kind: ${up.planetKind})`}
+        {`${up.normalPlanetId} (kind: ${up.planet.kind})`}
         <br />
         rank: {up.rank}/{up.maxRank}
         <br />
         param: {param}
         <br />
-        created: {up.createdSec} sec ago
+        created: {this.props.now - up.createdAt} sec ago
         <br />
         {rankuped}
         {this.props.isMine ? <UserPlanetButtons {...this.props} /> : <></>}
