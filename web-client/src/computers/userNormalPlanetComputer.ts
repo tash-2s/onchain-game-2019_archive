@@ -12,7 +12,7 @@ export const computeUserNormalPlanetParams = (
 
   const userNormalPlanets = rawUserPlanets.map(up => {
     const p = getNormalPlanet(up.normalPlanetId)
-    const param = userPlanetParam(up.rank, p.param)
+    const param = paramBasedOnRank(p.param, up.rank)
 
     switch (p.kind) {
       case "residence":
@@ -45,33 +45,36 @@ export const computeUserNormalPlanetRankStatuses = (
   now: number
 ) => {
   return userPlanets.map(up => {
-    const [remainingSec, remainingSecWithoutTechPower] = remainingSecForRankup(
+    const { withTechPower, withoutTechPower } = remainingSecForRankup(
       up.rank,
       up.rankupedAt,
       techPower,
       now
     )
-    const [rankupableCount, requiredGoldForBulkRankup] = userPlanetRankupableCount(
+    const MAX_RANK = 30
+    const { count, requiredGold } = rankupableCount(
       up.rank,
       up.rankupedAt,
+      MAX_RANK,
+      up.planet.priceGold,
       gold,
       techPower,
-      up.planet.priceGold,
       now
     )
+
     return {
       ...up,
       maxRank: MAX_RANK,
-      rankupableCount: rankupableCount,
+      rankupableCount: count,
       requiredGoldForRankup: requiredGoldForRankup(up.rank, up.planet.priceGold),
-      requiredGoldForBulkRankup: requiredGoldForBulkRankup,
-      remainingSecForRankup: remainingSec,
-      remainingSecForRankupWithoutTechPower: remainingSecWithoutTechPower
+      requiredGoldForBulkRankup: requiredGold,
+      remainingSecForRankup: withTechPower,
+      remainingSecForRankupWithoutTechPower: withoutTechPower
     }
   })
 }
 
-const userPlanetParam = (currentRank: number, planetParam: BN) => {
+const paramBasedOnRank = (planetParam: BN, currentRank: number) => {
   const previousRank = new BN(currentRank - 1)
   return planetParam.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
@@ -86,11 +89,14 @@ const remainingSecForRankup = (
   rankupedAt: number,
   techPower: number,
   now: number
-): [number, number] => {
+) => {
   const prevDiffSec = now - rankupedAt
   const remainingSec = requiredSecForRankup(currentRank) - prevDiffSec
   const withoutTechPower = Math.max(remainingSec, 0)
-  return [Math.max(withoutTechPower - techPower, 0), withoutTechPower]
+  return {
+    withTechPower: Math.max(withoutTechPower - techPower, 0),
+    withoutTechPower: withoutTechPower
+  }
 }
 
 const requiredSecForRankup = (currentRank: number) => {
@@ -103,21 +109,21 @@ const requiredSecForRankup = (currentRank: number) => {
   return memo
 }
 
-const MAX_RANK = 30
-const userPlanetRankupableCount = (
+const rankupableCount = (
   userPlanetCurrentRank: number,
   userPlanetRankupedAt: number,
+  userPlanetMaxRank: number,
+  planetOriginalPriceGold: BN,
   gold: BN,
   techPower: number,
-  planetOriginalPriceGold: BN,
   now: number
-): [number, BN] => {
+) => {
   let rankupableCount = 0
   let remainingGold = gold
 
   while (true) {
     const rank = userPlanetCurrentRank + rankupableCount
-    if (rank >= MAX_RANK) {
+    if (rank >= userPlanetMaxRank) {
       break
     }
 
@@ -130,7 +136,7 @@ const userPlanetRankupableCount = (
       if (rankupableCount !== 0) {
         break
       }
-      if (remainingSecForRankup(rank, userPlanetRankupedAt, techPower, now)[0] > 0) {
+      if (remainingSecForRankup(rank, userPlanetRankupedAt, techPower, now).withTechPower > 0) {
         break
       }
     }
@@ -139,5 +145,5 @@ const userPlanetRankupableCount = (
     rankupableCount++
   }
 
-  return [rankupableCount, gold.sub(remainingGold)]
+  return { count: rankupableCount, requiredGold: gold.sub(remainingGold) }
 }

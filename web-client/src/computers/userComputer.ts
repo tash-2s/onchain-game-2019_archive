@@ -40,7 +40,7 @@ export const computeUserState = (state: UserState, now: number) => {
       techPower: techPower,
       goldPerSec: goldPerSec,
       mapRadius: UserPlanetsMapUtil.mapRadiusFromGold(ongoingGold),
-      normalPlanets: processNormalPlanets(ongoingGold, computedUserPlanets.length)
+      normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length)
     }
   }
 }
@@ -63,7 +63,7 @@ const computeGold = (
   return { goldPerSec, ongoingGold }
 }
 
-const processNormalPlanets = (gold: BN, userPlanetsCount: number) => {
+const computeNormalPlanets = (gold: BN, userPlanetsCount: number) => {
   if (initialPlanetIds.length !== 2) {
     throw new Error("you need to check this impl")
   }
