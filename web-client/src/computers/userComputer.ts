@@ -2,12 +2,12 @@ import BN from "bn.js"
 
 import { UserState } from "../types/routed/userTypes"
 import { NormalPlanetsData, initialPlanetIds, getNormalPlanet } from "../data/planets"
-import { OngoingGoldCalculator } from "../models/OngoingGoldCalculator"
 import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
 import {
   computeUserNormalPlanetParams,
   computeUserNormalPlanetRankStatuses
 } from "./userNormalPlanetComputer"
+import { computeGold } from "./goldComputer"
 
 type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
@@ -43,24 +43,6 @@ export const computeUserState = (state: UserState, now: number) => {
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length)
     }
   }
-}
-
-const computeGold = (
-  population: BN,
-  goldPower: BN,
-  userGold: { confirmed: string; confirmedAt: number },
-  now: number
-) => {
-  const goldPerSec = population.mul(goldPower)
-
-  const ongoingGold = OngoingGoldCalculator.calculate(
-    new BN(userGold.confirmed),
-    userGold.confirmedAt,
-    goldPerSec,
-    now
-  )
-
-  return { goldPerSec, ongoingGold }
 }
 
 const computeNormalPlanets = (gold: BN, userPlanetsCount: number) => {
