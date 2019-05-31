@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserActions } from "../../../actions/routed/UserActions"
+import { UserPageUiActions } from "../../../actions/UiActions"
 import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 import { UiState } from "../../../types/uiTypes"
 
@@ -12,6 +13,7 @@ interface Props {
   userPageUi: UiState["userPage"]
   isMine: boolean
   userActions: UserActions
+  uiActions: UserPageUiActions
 }
 
 export class UserPlanetsMap extends React.Component<Props> {
@@ -57,6 +59,7 @@ export class UserPlanetsMap extends React.Component<Props> {
         throw new Error("this must be called with target")
       }
       this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
+      this.props.uiActions.unselectPlanet()
     }
   }
 }

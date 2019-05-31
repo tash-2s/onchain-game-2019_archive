@@ -26,4 +26,11 @@ export const createUiReducer = () =>
         selectedNormalPlanetId: payload
       }
     }))
+    .case(UserPageUiActions.unselectPlanet, state => ({
+      ...state,
+      userPage: {
+        ...state.userPage,
+        selectedNormalPlanetId: null
+      }
+    }))
     .build()
