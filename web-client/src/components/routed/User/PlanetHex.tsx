@@ -16,7 +16,9 @@ export function PlanetHex(props: {
   const y = UserPlanetsMapUtil.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
 
   const buttonIfAvailable = !!props.setPlanet ? (
-    <button onClick={props.setPlanet(props.q, props.r)}>set</button>
+    <button onClick={props.setPlanet(props.q, props.r)}>
+      {props.userPlanet ? "replace" : "set"}
+    </button>
   ) : (
     <></>
   )

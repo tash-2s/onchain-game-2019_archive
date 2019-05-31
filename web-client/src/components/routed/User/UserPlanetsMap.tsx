@@ -31,7 +31,6 @@ export class UserPlanetsMap extends React.Component<Props> {
       const userPlanet = userPlanetsByCoordinates[key]
       const settable =
         this.props.isMine &&
-        !userPlanet &&
         !!this.props.userPageUi.selectedNormalPlanetId &&
         UserPlanetsMapUtil.distanceFromCenter(q, r) <= usableRadius
 
