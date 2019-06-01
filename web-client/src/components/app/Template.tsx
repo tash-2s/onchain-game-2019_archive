@@ -46,18 +46,31 @@ export class Template extends React.Component<{
   getNav = () => {
     // when an error occurs, this should be un-clickable, because the store will continue to have the error state
     return (
-      <div>
-        <ul>
-          <li>
-            <InternalLink to={"/"}>index</InternalLink>
-          </li>
-          <li>
-            <InternalLink to={"/users"}>/users</InternalLink>
-          </li>
-          {this.getAccountMenu()}
-        </ul>
-        <hr />
-      </div>
+      <nav className={"navbar is-light"}>
+        <div className={"container"}>
+          <div className={"navbar-brand"}>
+            <InternalLink className={"navbar-item"} to={"/"}>
+              k2
+            </InternalLink>
+
+            <a className={"navbar-burger"}>
+              <span />
+              <span />
+              <span />
+            </a>
+          </div>
+
+          <div className={"navbar-menu"}>
+            <div className={"navbar-start"}>
+              <InternalLink className={"navbar-item"} to={"/users"}>
+                /users
+              </InternalLink>
+            </div>
+
+            <div className={"navbar-end"}>{this.getAccountMenu()}</div>
+          </div>
+        </div>
+      </nav>
     )
   }
 
@@ -65,20 +78,29 @@ export class Template extends React.Component<{
     if (this.props.currentUser) {
       const user = this.props.currentUser
       return (
-        <div>
+        <InternalLink className={"navbar-item"} to={["/:address", { address: user.address }]}>
           My useraddress: {user.address}
-          <br />
-          <InternalLink to={["/:address", { address: user.address }]}>my planets</InternalLink>
-        </div>
+        </InternalLink>
       )
     } else {
       const signup = () => {
         this.props.signup()
       }
       return (
-        <div>
-          <button onClick={signup}>signup</button>
-          <button disabled={true}>login</button>
+        <div className={"navbar-item"}>
+          <div className={"field is-grouped"}>
+            <p className={"control"}>
+              <button className={"button"} onClick={signup}>
+                signup
+              </button>
+            </p>
+
+            <p className={"control"}>
+              <button className={"button"} disabled={true}>
+                login
+              </button>
+            </p>
+          </div>
         </div>
       )
     }
