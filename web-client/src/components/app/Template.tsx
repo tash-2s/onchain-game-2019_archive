@@ -1,6 +1,7 @@
 import * as React from "react"
-import { InternalLink } from "../utils/InternalLink"
+
 import { CommonState } from "../../types/commonTypes"
+import { Nav } from "./Nav"
 
 export class Template extends React.Component<{
   isLoading: boolean
@@ -37,73 +38,10 @@ export class Template extends React.Component<{
     return (
       <div>
         <dialog ref={this.dialogRef}>LOADING</dialog>
-        {this.getNav()}
+        <Nav currentUser={this.props.currentUser} signup={this.props.signup} />
         {this.getErrorOrChildren()}
       </div>
     )
-  }
-
-  getNav = () => {
-    // when an error occurs, this should be un-clickable, because the store will continue to have the error state
-    return (
-      <nav className={"navbar is-light"}>
-        <div className={"container"}>
-          <div className={"navbar-brand"}>
-            <InternalLink className={"navbar-item"} to={"/"}>
-              k2
-            </InternalLink>
-
-            <a className={"navbar-burger"}>
-              <span />
-              <span />
-              <span />
-            </a>
-          </div>
-
-          <div className={"navbar-menu"}>
-            <div className={"navbar-start"}>
-              <InternalLink className={"navbar-item"} to={"/users"}>
-                /users
-              </InternalLink>
-            </div>
-
-            <div className={"navbar-end"}>{this.getAccountMenu()}</div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-
-  getAccountMenu = () => {
-    if (this.props.currentUser) {
-      const user = this.props.currentUser
-      return (
-        <InternalLink className={"navbar-item"} to={["/:address", { address: user.address }]}>
-          My useraddress: {user.address}
-        </InternalLink>
-      )
-    } else {
-      const signup = () => {
-        this.props.signup()
-      }
-      return (
-        <div className={"navbar-item"}>
-          <div className={"field is-grouped"}>
-            <p className={"control"}>
-              <button className={"button"} onClick={signup}>
-                signup
-              </button>
-            </p>
-
-            <p className={"control"}>
-              <button className={"button"} disabled={true}>
-                login
-              </button>
-            </p>
-          </div>
-        </div>
-      )
-    }
   }
 
   getErrorOrChildren = () => {
