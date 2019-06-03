@@ -1,6 +1,8 @@
 import * as React from "react"
-import { InternalLink } from "../utils/InternalLink"
+
 import { CommonState } from "../../types/commonTypes"
+import { Nav } from "./Nav"
+import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
   isLoading: boolean
@@ -35,53 +37,15 @@ export class Template extends React.Component<{
 
   render = () => {
     return (
-      <div>
+      <>
         <dialog ref={this.dialogRef}>LOADING</dialog>
-        {this.getNav()}
-        {this.getErrorOrChildren()}
-      </div>
+        <Nav currentUser={this.props.currentUser} signup={this.props.signup} />
+        <section className={"section"}>
+          <div className={"container"}>{this.getErrorOrChildren()}</div>
+        </section>
+        <Footer />
+      </>
     )
-  }
-
-  getNav = () => {
-    // when an error occurs, this should be un-clickable, because the store will continue to have the error state
-    return (
-      <div>
-        <ul>
-          <li>
-            <InternalLink to={"/"}>index</InternalLink>
-          </li>
-          <li>
-            <InternalLink to={"/users"}>/users</InternalLink>
-          </li>
-          {this.getAccountMenu()}
-        </ul>
-        <hr />
-      </div>
-    )
-  }
-
-  getAccountMenu = () => {
-    if (this.props.currentUser) {
-      const user = this.props.currentUser
-      return (
-        <div>
-          My useraddress: {user.address}
-          <br />
-          <InternalLink to={["/:address", { address: user.address }]}>my planets</InternalLink>
-        </div>
-      )
-    } else {
-      const signup = () => {
-        this.props.signup()
-      }
-      return (
-        <div>
-          <button onClick={signup}>signup</button>
-          <button disabled={true}>login</button>
-        </div>
-      )
-    }
   }
 
   getErrorOrChildren = () => {

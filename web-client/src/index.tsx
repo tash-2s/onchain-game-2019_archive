@@ -22,6 +22,6 @@ ReactDOM.render(
       <AppContainer />
     </Provider>
   </TopLevelErrorBoundary>,
-  document.getElementById("js-connector")
+  document.getElementById("app-js-connector")
 )
 startClock(store)

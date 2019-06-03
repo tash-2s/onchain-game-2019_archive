@@ -6,8 +6,7 @@ import { PrettyBN } from "../../utils/PrettyBN"
 
 export function UserProfile(props: { user: ComputedTargetUserState; isMine: boolean }) {
   return (
-    <div>
-      target user is {props.user.address} {props.isMine ? "[this is me]" : ""}
+    <div className={"box"}>
       <OngoingUserStatus user={props.user} />
       population: <PrettyBN bn={props.user.population} />
       <br />
