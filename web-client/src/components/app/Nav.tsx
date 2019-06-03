@@ -14,7 +14,7 @@ export class Nav extends React.Component<{
         <div className={"container"}>
           <div className={"navbar-brand"}>
             <InternalLink className={"navbar-item"} to={"/"}>
-              k2
+              <strong>k2</strong>
             </InternalLink>
 
             <a className={"navbar-burger"}>
@@ -45,23 +45,29 @@ export class Nav extends React.Component<{
     if (this.props.currentUser) {
       const user = this.props.currentUser
       return (
-        <InternalLink className={"navbar-item"} to={["/:address", { address: user.address }]}>
-          My useraddress: {user.address}
-        </InternalLink>
+        <div className={"navbar-item has-dropdown is-hoverable"}>
+          <a className={"navbar-link"}>{user.address}</a>
+          <div className={"navbar-dropdown"}>
+            <InternalLink className={"navbar-item"} to={["/:address", { address: user.address }]}>
+              My Page
+            </InternalLink>
+            <a className={"navbar-item"}>Log out (TODO)</a>
+          </div>
+        </div>
       )
     } else {
       return (
         <div className={"navbar-item"}>
           <div className={"field is-grouped"}>
             <p className={"control"}>
-              <button className={"button"} onClick={this.props.signup}>
-                signup
+              <button className={"button is-primary"} onClick={this.props.signup}>
+                Sign up
               </button>
             </p>
 
             <p className={"control"}>
-              <button className={"button"} disabled={true}>
-                login
+              <button className={"button is-link"} disabled={true}>
+                Log in (TODO)
               </button>
             </p>
           </div>
