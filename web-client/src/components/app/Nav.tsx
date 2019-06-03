@@ -27,7 +27,10 @@ export class Nav extends React.Component<{
           <div className={"navbar-menu"}>
             <div className={"navbar-start"}>
               <InternalLink className={"navbar-item"} to={"/users"}>
-                /users
+                Remarkable Users
+              </InternalLink>
+              <InternalLink className={"navbar-item"} to={"/about"}>
+                About
               </InternalLink>
             </div>
 
