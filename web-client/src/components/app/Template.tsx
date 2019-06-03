@@ -39,7 +39,9 @@ export class Template extends React.Component<{
       <div>
         <dialog ref={this.dialogRef}>LOADING</dialog>
         <Nav currentUser={this.props.currentUser} signup={this.props.signup} />
-        {this.getErrorOrChildren()}
+        <section className={"section"}>
+          <div className={"container"}>{this.getErrorOrChildren()}</div>
+        </section>
       </div>
     )
   }

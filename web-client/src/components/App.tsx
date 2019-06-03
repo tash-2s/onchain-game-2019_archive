@@ -22,7 +22,7 @@ export class App extends React.Component<AppProps> {
   getRouted = () => {
     switch (this.props.common.route.id) {
       case "/":
-        return <p>top</p>
+        return <h1 className={"title"}>top</h1>
       case "/users":
         return <UsersContainer />
       case "/:address":
