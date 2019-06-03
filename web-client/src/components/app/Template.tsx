@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { CommonState } from "../../types/commonTypes"
 import { Nav } from "./Nav"
+import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
   isLoading: boolean
@@ -42,6 +43,7 @@ export class Template extends React.Component<{
         <section className={"section"}>
           <div className={"container"}>{this.getErrorOrChildren()}</div>
         </section>
+        <Footer />
       </>
     )
   }
