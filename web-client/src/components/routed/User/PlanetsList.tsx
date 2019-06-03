@@ -9,8 +9,7 @@ export class PlanetsList extends React.Component<{
 }> {
   render = () => {
     const buttonText = "get"
-
-    return this.props.normalPlanets.map(p => {
+    const planets = this.props.normalPlanets.map(p => {
       let button
       if (p.gettable) {
         button = <button onClick={this.setPlanetToGet(p.id)}>{buttonText}</button>
@@ -26,6 +25,8 @@ export class PlanetsList extends React.Component<{
         </div>
       )
     })
+
+    return <div className={"box"}>{planets}</div>
   }
 
   setPlanetToGet = (planetId: number) => {

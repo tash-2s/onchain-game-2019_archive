@@ -47,19 +47,35 @@ export class TargetUser extends React.Component<TargetUserProps> {
         break
     }
     const planetsList = (
-      <PlanetsList
-        normalPlanets={user.normalPlanets}
-        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
-      />
+      <div className={"column"}>
+        <PlanetsList
+          normalPlanets={user.normalPlanets}
+          setPlanetToGet={this.props.userPageUiActions.selectPlanet}
+        />
+      </div>
     )
 
+    const planetClass = isMine ? "is-half" : "is-three-quarters"
+
     return (
-      <div>
-        <UserProfile user={user} isMine={isMine} />
-        <button onClick={this.toggleTab}>toggle type of userPlanets</button>
-        {userPlanets}
-        {isMine ? planetsList : <></>}
-      </div>
+      <>
+        <h1 className={"title is-5"}>
+          target user is {user.address} {isMine ? "[this is me]" : ""}
+        </h1>
+
+        <div className={"columns"}>
+          <div className={"column"}>
+            <UserProfile user={user} isMine={isMine} />
+          </div>
+
+          <div className={`column ${planetClass}`}>
+            <button onClick={this.toggleTab}>toggle type of userPlanets</button>
+            {userPlanets}
+          </div>
+
+          {isMine ? planetsList : <></>}
+        </div>
+      </>
     )
   }
 
