@@ -36,13 +36,13 @@ export class Template extends React.Component<{
 
   render = () => {
     return (
-      <div>
+      <>
         <dialog ref={this.dialogRef}>LOADING</dialog>
         <Nav currentUser={this.props.currentUser} signup={this.props.signup} />
         <section className={"section"}>
           <div className={"container"}>{this.getErrorOrChildren()}</div>
         </section>
-      </div>
+      </>
     )
   }
 
