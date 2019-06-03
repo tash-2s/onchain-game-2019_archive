@@ -13,9 +13,11 @@ interface InternalLinkProps {
 }
 
 export class InternalLink extends React.Component<InternalLinkProps> {
+  aRef = React.createRef<HTMLAnchorElement>()
+
   render = () => {
     return (
-      <a href={this.getPath()} onClick={this.go} className={this.props.className}>
+      <a href={this.getPath()} onClick={this.go} className={this.props.className} ref={this.aRef}>
         {this.props.children}
       </a>
     )
@@ -42,5 +44,10 @@ export class InternalLink extends React.Component<InternalLinkProps> {
   go = (e: React.FormEvent) => {
     e.preventDefault()
     historyLib.push(this.getPath())
+
+    const a = this.aRef.current
+    if (a) {
+      a.blur()
+    }
   }
 }
