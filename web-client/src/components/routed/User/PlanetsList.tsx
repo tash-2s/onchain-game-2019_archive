@@ -48,7 +48,7 @@ export class PlanetsList extends React.Component<{
 
     return (
       <nav className={"panel"}>
-        <p className={"panel-heading"}>Planets</p>
+        <p className={"panel-heading"}>Planet List</p>
 
         <p className={"panel-tabs"}>
           <a className={"is-active"}>all</a>

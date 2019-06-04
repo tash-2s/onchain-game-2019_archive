@@ -11,6 +11,13 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.selectUserPlanetsTab(tab))
   }
 
+  static changePlanetListVisibility = UserPageUiActions.creator<boolean>(
+    "changePlanetListVisibility"
+  )
+  changePlanetListVisibility = (visibility: boolean) => {
+    this.dispatch(UserPageUiActions.changePlanetListVisibility(visibility))
+  }
+
   static selectPlanet = UserPageUiActions.creator<number>("selectPlanet")
   selectPlanet = (planetId: number) => {
     this.dispatch(UserPageUiActions.selectPlanet(planetId))

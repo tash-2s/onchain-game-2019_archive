@@ -56,7 +56,8 @@ export class TargetUser extends React.Component<TargetUserProps> {
       </div>
     )
 
-    const planetClass = isMine ? "is-half" : "is-three-quarters"
+    const planetClass =
+      isMine && this.props.userPageUi.planetListVisibility ? "is-half" : "is-three-quarters"
 
     return (
       <>
@@ -70,25 +71,18 @@ export class TargetUser extends React.Component<TargetUserProps> {
           </div>
 
           <div className={`column ${planetClass}`}>
-            <button onClick={this.toggleTab}>toggle type of userPlanets</button>
+            <Buttons
+              ui={this.props.userPageUi}
+              actions={this.props.userPageUiActions}
+              isMine={isMine}
+            />
             {userPlanets}
           </div>
 
-          {isMine ? planetsList : <></>}
+          {isMine && this.props.userPageUi.planetListVisibility ? planetsList : <></>}
         </div>
       </>
     )
-  }
-
-  toggleTab = () => {
-    switch (this.props.userPageUi.selectedUserPlanetsTab) {
-      case "map":
-        this.props.userPageUiActions.selectUserPlanetsTab("list")
-        break
-      case "list":
-        this.props.userPageUiActions.selectUserPlanetsTab("map")
-        break
-    }
   }
 
   isMine = (): boolean => {
@@ -97,5 +91,62 @@ export class TargetUser extends React.Component<TargetUserProps> {
     } else {
       return false
     }
+  }
+}
+
+class Buttons extends React.Component<{
+  ui: UiState["userPage"]
+  actions: UserDispatchProps["userPageUiActions"]
+  isMine: boolean
+}> {
+  render = () => {
+    let planetListButton = <></>
+    // TODO: This is not needed for mobile
+    if (this.props.isMine) {
+      if (this.props.ui.planetListVisibility) {
+        planetListButton = (
+          <button className={"button is-small"} onClick={this.togglePlanetList}>
+            Hide Planet List
+          </button>
+        )
+      } else {
+        planetListButton = (
+          <button className={"button is-small"} onClick={this.togglePlanetList}>
+            Show Planet List
+          </button>
+        )
+      }
+    }
+
+    return (
+      <nav className={"level"}>
+        <div className={"level-left"}>
+          <div className={"level-item"}>
+            <button className={"button is-small"} onClick={this.toggleUserPlanets}>
+              Toggle View
+            </button>
+          </div>
+        </div>
+
+        <div className={"level-right"}>
+          <div className={"level-item"}>{planetListButton}</div>
+        </div>
+      </nav>
+    )
+  }
+
+  toggleUserPlanets = () => {
+    switch (this.props.ui.selectedUserPlanetsTab) {
+      case "map":
+        this.props.actions.selectUserPlanetsTab("list")
+        break
+      case "list":
+        this.props.actions.selectUserPlanetsTab("map")
+        break
+    }
+  }
+
+  togglePlanetList = () => {
+    this.props.actions.changePlanetListVisibility(!this.props.ui.planetListVisibility)
   }
 }
