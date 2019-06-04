@@ -11,7 +11,7 @@ interface Props {
 export function Nav(props: Props) {
   // when an error occurs, this should be un-clickable, because the store will continue to have the error state
   return (
-    <nav className={"navbar is-light"}>
+    <nav className={"navbar has-shadow"}>
       <div className={"container"}>
         <div className={"navbar-brand"}>
           <InternalLink className={"navbar-item"} to={"/"}>
