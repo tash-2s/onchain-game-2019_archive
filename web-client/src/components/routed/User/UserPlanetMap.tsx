@@ -16,7 +16,7 @@ interface Props {
   uiActions: UserPageUiActions
 }
 
-export class UserPlanetsMap extends React.Component<Props> {
+export class UserPlanetMap extends React.Component<Props> {
   render = () => {
     const {
       userPlanetsByCoordinates,

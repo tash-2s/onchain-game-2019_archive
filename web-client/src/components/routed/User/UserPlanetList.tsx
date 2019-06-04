@@ -11,7 +11,7 @@ interface UserPlanetsListProps {
   remove: (userPlanetId: string) => void
 }
 
-export class UserPlanetsList extends React.Component<UserPlanetsListProps> {
+export class UserPlanetList extends React.Component<UserPlanetsListProps> {
   render = () => {
     return this.props.user.userNormalPlanets.map(up => (
       <UserPlanet

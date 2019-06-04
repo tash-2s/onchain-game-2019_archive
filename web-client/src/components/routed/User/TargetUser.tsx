@@ -6,9 +6,9 @@ import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { ComputedCommonState } from "../../../computers/commonComputer"
 
 import { UserProfile } from "./UserProfile"
-import { UserPlanetsList } from "./UserPlanetsList"
-import { UserPlanetsMap } from "./UserPlanetsMap"
-import { PlanetsList } from "./PlanetsList"
+import { UserPlanetList } from "./UserPlanetList"
+import { UserPlanetMap } from "./UserPlanetMap"
+import { PlanetList } from "./PlanetList"
 
 // targetUser is not null
 type TargetUserProps = {
@@ -25,7 +25,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
     switch (this.props.userPageUi.selectedUserPlanetsTab) {
       case "map":
         userPlanets = (
-          <UserPlanetsMap
+          <UserPlanetMap
             user={user}
             userPageUi={this.props.userPageUi}
             isMine={isMine}
@@ -36,7 +36,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
         break
       case "list":
         userPlanets = (
-          <UserPlanetsList
+          <UserPlanetList
             user={user}
             now={this.props.common.now}
             isMine={isMine}
@@ -46,9 +46,9 @@ export class TargetUser extends React.Component<TargetUserProps> {
         )
         break
     }
-    const planetsList = (
+    const planetList = (
       <div className={"column"}>
-        <PlanetsList
+        <PlanetList
           normalPlanets={user.normalPlanets}
           setPlanetToGet={this.props.userPageUiActions.selectPlanet}
           userPageUi={this.props.userPageUi}
@@ -79,7 +79,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
             {userPlanets}
           </div>
 
-          {isMine && this.props.userPageUi.planetListVisibility ? planetsList : <></>}
+          {isMine && this.props.userPageUi.planetListVisibility ? planetList : <></>}
         </div>
       </>
     )

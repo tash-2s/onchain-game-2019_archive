@@ -4,7 +4,7 @@ import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { PrettyBN } from "../../utils/PrettyBN"
 import { UiState } from "../../../types/uiTypes"
 
-export class PlanetsList extends React.Component<{
+export class PlanetList extends React.Component<{
   normalPlanets: ComputedTargetUserState["normalPlanets"]
   setPlanetToGet: (planetId: number) => void
   userPageUi: UiState["userPage"]
