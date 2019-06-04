@@ -13,7 +13,7 @@ interface UserPlanetsListProps {
 
 export class UserPlanetList extends React.Component<UserPlanetsListProps> {
   render = () => {
-    return this.props.user.userNormalPlanets.map(up => (
+    const userPlanets = this.props.user.userNormalPlanets.map(up => (
       <UserPlanet
         key={up.id}
         userPlanet={up}
@@ -24,6 +24,12 @@ export class UserPlanetList extends React.Component<UserPlanetsListProps> {
         remove={this.props.remove}
       />
     ))
+
+    return (
+      <table className={"table is-bordered is-fullwidth"}>
+        <tbody>{userPlanets}</tbody>
+      </table>
+    )
   }
 }
 
@@ -43,7 +49,7 @@ class UserPlanet extends React.Component<UserPlanetProps> {
       up.createdAt === up.rankupedAt ? (
         <></>
       ) : (
-        <div>rankuped: {this.props.now - up.rankupedAt} sec ago</div>
+        <div>Rankuped: {this.props.now - up.rankupedAt} sec ago</div>
       )
     const param =
       up.planet.kind === "technology" ? (
@@ -53,18 +59,22 @@ class UserPlanet extends React.Component<UserPlanetProps> {
       )
 
     return (
-      <div>
-        {`${up.normalPlanetId} (kind: ${up.planet.kind})`}
-        <br />
-        rank: {up.rank}/{up.maxRank}
-        <br />
-        param: {param}
-        <br />
-        created: {this.props.now - up.createdAt} sec ago
-        <br />
-        {rankuped}
-        {this.props.isMine ? <UserPlanetButtons {...this.props} /> : <></>}
-      </div>
+      <tr>
+        <td>
+          <div>
+            Kind: {up.planet.kind}
+            <br />
+            Rank: {up.rank}/{up.maxRank}
+            <br />
+            Param: {param}
+            <br />
+            Created: {this.props.now - up.createdAt} sec ago
+            <br />
+            {rankuped}
+          </div>
+          {this.props.isMine ? <UserPlanetButtons {...this.props} /> : <></>}
+        </td>
+      </tr>
     )
   }
 }
@@ -78,38 +88,44 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
 
     if (up.rankupableCount >= 1) {
       rankupButton = (
-        <button onClick={this.rankupButtonHandler}>
-          rankup (<PrettyBN bn={up.requiredGoldForRankup} /> gold)
+        <button className={"button is-primary"} onClick={this.rankupButtonHandler}>
+          Rankup (Gold: <PrettyBN bn={up.requiredGoldForRankup} />)
         </button>
       )
     } else {
       rankupButton = (
-        <button disabled={true}>
-          required gold: <PrettyBN bn={up.requiredGoldForRankup} />, remaining sec for next rankup:{" "}
-          {up.remainingSecForRankupWithoutTechPower} - {techPower} = {up.remainingSecForRankup}
+        <button className={"button is-primary"} disabled={true}>
+          Rankup (Gold: <PrettyBN bn={up.requiredGoldForRankup} />, Remaining Sec:{" "}
+          {up.remainingSecForRankup})
         </button>
       )
     }
 
     if (up.rankupableCount >= 2) {
       bulkRankupButton = (
-        <button onClick={this.bulkRankupButtonHandler}>
-          bulk rankup to rank {up.rank + up.rankupableCount} (gold:{" "}
+        <button className={"button is-link"} onClick={this.bulkRankupButtonHandler}>
+          Bulk Rankup to rank {up.rank + up.rankupableCount} (Gold:{" "}
           <PrettyBN bn={up.requiredGoldForBulkRankup} />)
         </button>
       )
     } else {
-      bulkRankupButton = <button disabled={true}>bulk rankup</button>
+      bulkRankupButton = (
+        <button className={"button is-link"} disabled={true}>
+          Bulk Rankup
+        </button>
+      )
     }
 
-    const removeButton = <button onClick={this.removeButtonHandler}>remove</button>
+    const removeButton = (
+      <button className={"button is-danger is-outlined"} onClick={this.removeButtonHandler}>
+        Remove
+      </button>
+    )
 
     return (
-      <div>
+      <div className={"buttons are-small"}>
         {rankupButton}
-        <br />
         {bulkRankupButton}
-        <br />
         {removeButton}
       </div>
     )
