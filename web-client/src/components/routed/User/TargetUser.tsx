@@ -47,17 +47,12 @@ export class TargetUser extends React.Component<TargetUserProps> {
         break
     }
     const planetList = (
-      <div className={"column"}>
-        <PlanetList
-          normalPlanets={user.normalPlanets}
-          setPlanetToGet={this.props.userPageUiActions.selectPlanet}
-          userPageUi={this.props.userPageUi}
-        />
-      </div>
+      <PlanetList
+        normalPlanets={user.normalPlanets}
+        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
+        userPageUi={this.props.userPageUi}
+      />
     )
-
-    const planetClass =
-      isMine && this.props.userPageUi.planetListVisibility ? "is-half" : "is-three-quarters"
 
     return (
       <>
@@ -65,12 +60,13 @@ export class TargetUser extends React.Component<TargetUserProps> {
           target user is {user.address} {isMine ? "[this is me]" : ""}
         </h1>
 
-        <div className={"columns"}>
+        <div className={"columns is-desktop"}>
           <div className={"column"}>
             <UserProfile user={user} isMine={isMine} />
+            {isMine ? planetList : <></>}
           </div>
 
-          <div className={`column ${planetClass}`}>
+          <div className={`column is-three-quarters`}>
             <Buttons
               ui={this.props.userPageUi}
               actions={this.props.userPageUiActions}
@@ -78,8 +74,6 @@ export class TargetUser extends React.Component<TargetUserProps> {
             />
             {userPlanets}
           </div>
-
-          {isMine && this.props.userPageUi.planetListVisibility ? planetList : <></>}
         </div>
       </>
     )
@@ -100,23 +94,23 @@ class Buttons extends React.Component<{
   isMine: boolean
 }> {
   render = () => {
-    let planetListButton = <></>
-    // TODO: This is not needed for mobile
-    if (this.props.isMine) {
-      if (this.props.ui.planetListVisibility) {
-        planetListButton = (
-          <button className={"button is-small"} onClick={this.togglePlanetList}>
-            Hide Planet List
-          </button>
-        )
-      } else {
-        planetListButton = (
-          <button className={"button is-small"} onClick={this.togglePlanetList}>
-            Show Planet List
-          </button>
-        )
-      }
-    }
+    const planetListButton = <></>
+    // TODO: for mobile
+    // if (this.props.isMine) {
+    //   if (this.props.ui.planetListVisibility) {
+    //     planetListButton = (
+    //       <button className={"button is-small"} onClick={this.togglePlanetList}>
+    //         Hide Planet List
+    //       </button>
+    //     )
+    //   } else {
+    //     planetListButton = (
+    //       <button className={"button is-small"} onClick={this.togglePlanetList}>
+    //         Show Planet List
+    //       </button>
+    //     )
+    //   }
+    // }
 
     return (
       <nav className={"level"}>
