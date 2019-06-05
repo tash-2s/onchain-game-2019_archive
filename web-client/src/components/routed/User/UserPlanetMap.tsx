@@ -15,10 +15,31 @@ interface Props {
   uiActions: UserPageUiActions
 }
 
-export class UserPlanetMap extends React.Component<Props> {
+interface State {
+  width: number | null
+}
+
+const placeholderId = "user-planet-map-placeholder"
+
+export class UserPlanetMap extends React.Component<Props, State> {
+  state: State = { width: null }
+
+  componentDidMount = () => {
+    if (!this.state.width) {
+      const e = document.getElementById(placeholderId)
+      if (e) {
+        this.setState({ width: e.clientWidth })
+      }
+    }
+  }
+
   render = () => {
+    if (!this.state.width) {
+      return <div id={placeholderId} />
+    }
+
     const shownRadius = this.props.user.map.shownRadius
-    const hexSize = 50
+    const hexSize = this.state.width / (3 * shownRadius + 2)
     const hexWidth = hexSize * 2
     const hexHeight = Math.sqrt(3) * hexSize
 
