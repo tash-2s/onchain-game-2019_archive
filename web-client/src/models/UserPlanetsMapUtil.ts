@@ -1,7 +1,5 @@
 import BN from "bn.js"
 
-import { ComputedTargetUserState } from "./../computers/userComputer"
-
 export class UserPlanetsMapUtil {
   static mapRadiusAndRequiredGold = [
     [1, new BN("0")],
