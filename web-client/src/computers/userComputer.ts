@@ -2,12 +2,12 @@ import BN from "bn.js"
 
 import { UserState } from "../types/routed/userTypes"
 import { NormalPlanetsData, initialPlanetIds, getNormalPlanet } from "../data/planets"
-import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
 import {
   computeUserNormalPlanetParams,
   computeUserNormalPlanetRankStatuses
 } from "./userNormalPlanetComputer"
 import { computeGold } from "./goldComputer"
+import { computeMap } from "./mapComputer"
 
 type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
@@ -39,7 +39,7 @@ export const computeUserState = (state: UserState, now: number) => {
       goldPower: goldPower,
       techPower: techPower,
       goldPerSec: goldPerSec,
-      mapRadius: UserPlanetsMapUtil.mapRadiusFromGold(ongoingGold),
+      map: computeMap(ongoingGold, computedUserPlanets),
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length)
     }
   }

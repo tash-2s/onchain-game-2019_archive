@@ -3,9 +3,6 @@ import BN from "bn.js"
 import { ComputedTargetUserState } from "./../computers/userComputer"
 
 export class UserPlanetsMapUtil {
-  static hexSize = 50
-  static hexWidth = UserPlanetsMapUtil.hexSize * 2
-  static hexHeight = Math.sqrt(3) * UserPlanetsMapUtil.hexSize
   static mapRadiusAndRequiredGold = [
     [1, new BN("0")],
     [2, new BN("10000")],
@@ -70,11 +67,13 @@ export class UserPlanetsMapUtil {
     return null
   }
 
-  static userPlanetsAndThierBiggestRadius = (
-    userNormalPlanets: ComputedTargetUserState["userNormalPlanets"]
+  static userPlanetsAndThierBiggestRadius = <
+    T extends { axialCoordinateQ: number; axialCoordinateR: number }
+  >(
+    userNormalPlanets: Array<T>
   ) => {
     const userPlanetsByCoordinates: {
-      [key: string]: ComputedTargetUserState["userNormalPlanets"][number] | null
+      [key: string]: T | null
     } = {}
     let userPlanetsBiggestRadius = 0
 

@@ -7,7 +7,7 @@ import { PrettyBN } from "../../utils/PrettyBN"
 import { initialPlanetIds, getNormalPlanet } from "../../../data/planets"
 
 export function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
-  const radius = props.user.mapRadius
+  const radius = props.user.map.usableRadius
   const requiredGold = UserPlanetsMapUtil.requiredGoldFromMapRadius(radius + 1)
   let requiredGoldText: JSX.Element
   if (requiredGold) {
