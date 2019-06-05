@@ -19,10 +19,12 @@ export const computeMap = <T extends { axialCoordinateQ: number; axialCoordinate
     const settable = UserPlanetsMapUtil.distanceFromCenter(q, r) <= usableRadius
     return { q, r, userPlanet, settable }
   })
+  const requiredGoldForNextRadius = UserPlanetsMapUtil.requiredGoldFromMapRadius(usableRadius + 1)
 
   return {
     usableRadius,
     shownRadius,
-    hexes
+    hexes,
+    requiredGoldForNextRadius
   }
 }

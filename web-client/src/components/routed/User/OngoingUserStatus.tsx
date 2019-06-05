@@ -2,16 +2,14 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { UserPlanetsMapUtil } from "../../../models/UserPlanetsMapUtil"
 import { PrettyBN } from "../../utils/PrettyBN"
 import { initialPlanetIds, getNormalPlanet } from "../../../data/planets"
 
 export function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
   const radius = props.user.map.usableRadius
-  const requiredGold = UserPlanetsMapUtil.requiredGoldFromMapRadius(radius + 1)
   let requiredGoldText: JSX.Element
-  if (requiredGold) {
-    requiredGoldText = <PrettyBN bn={requiredGold} />
+  if (props.user.map.requiredGoldForNextRadius) {
+    requiredGoldText = <PrettyBN bn={props.user.map.requiredGoldForNextRadius} />
   } else {
     requiredGoldText = <span>already maximum</span>
   }
