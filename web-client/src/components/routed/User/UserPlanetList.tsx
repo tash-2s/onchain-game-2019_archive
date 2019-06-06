@@ -11,27 +11,25 @@ interface UserPlanetListProps {
   remove: (userPlanetId: string) => void
 }
 
-export class UserPlanetList extends React.Component<UserPlanetListProps> {
-  render = () => {
-    const userPlanets = this.props.user.userNormalPlanets.map(up => (
-      <tr key={up.id}>
-        <td>
-          <UserPlanet
-            userPlanet={up}
-            isMine={this.props.isMine}
-            techPower={this.props.user.techPower}
-            now={this.props.now}
-            rankup={this.props.rankup}
-            remove={this.props.remove}
-          />
-        </td>
-      </tr>
-    ))
+export function UserPlanetList(props: UserPlanetListProps) {
+  const userPlanets = props.user.userNormalPlanets.map(up => (
+    <tr key={up.id}>
+      <td>
+        <UserPlanet
+          userPlanet={up}
+          isMine={props.isMine}
+          techPower={props.user.techPower}
+          now={props.now}
+          rankup={props.rankup}
+          remove={props.remove}
+        />
+      </td>
+    </tr>
+  ))
 
-    return (
-      <table className={"table is-bordered is-fullwidth"}>
-        <tbody>{userPlanets}</tbody>
-      </table>
-    )
-  }
+  return (
+    <table className={"table is-bordered is-fullwidth"}>
+      <tbody>{userPlanets}</tbody>
+    </table>
+  )
 }

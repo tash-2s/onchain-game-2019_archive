@@ -12,39 +12,37 @@ interface UserPlanetProps {
   remove: (userPlanetId: string) => void
 }
 
-export class UserPlanet extends React.Component<UserPlanetProps> {
-  render = () => {
-    const up = this.props.userPlanet
-    const rankuped =
-      up.createdAt === up.rankupedAt ? (
-        <></>
-      ) : (
-        <div>Rankuped: {this.props.now - up.rankupedAt} sec ago</div>
-      )
-    const param =
-      up.planet.kind === "technology" ? (
-        up.param.toNumber().toLocaleString()
-      ) : (
-        <PrettyBN bn={up.param} />
-      )
-
-    return (
-      <>
-        <div>
-          Kind: {up.planet.kind}
-          <br />
-          Rank: {up.rank}/{up.maxRank}
-          <br />
-          Param: {param}
-          <br />
-          Created: {this.props.now - up.createdAt} sec ago
-          <br />
-          {rankuped}
-        </div>
-        {this.props.isMine ? <UserPlanetButtons {...this.props} /> : <></>}
-      </>
+export function UserPlanet(props: UserPlanetProps) {
+  const up = props.userPlanet
+  const rankuped =
+    up.createdAt === up.rankupedAt ? (
+      <></>
+    ) : (
+      <div>Rankuped: {props.now - up.rankupedAt} sec ago</div>
     )
-  }
+  const param =
+    up.planet.kind === "technology" ? (
+      up.param.toNumber().toLocaleString()
+    ) : (
+      <PrettyBN bn={up.param} />
+    )
+
+  return (
+    <>
+      <div>
+        Kind: {up.planet.kind}
+        <br />
+        Rank: {up.rank}/{up.maxRank}
+        <br />
+        Param: {param}
+        <br />
+        Created: {props.now - up.createdAt} sec ago
+        <br />
+        {rankuped}
+      </div>
+      {props.isMine ? <UserPlanetButtons {...props} /> : <></>}
+    </>
+  )
 }
 
 class UserPlanetButtons extends React.Component<UserPlanetProps> {
