@@ -31,6 +31,7 @@ export function PlanetHex(props: {
     width: props.hexWidth,
     height: props.hexHeight,
     backgroundColor: props.userPlanet ? "cyan" : "red",
+    cursor: props.userPlanet ? "pointer" : "auto",
     clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
     display: "flex",
     justifyContent: "center",
