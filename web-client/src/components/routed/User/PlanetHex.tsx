@@ -12,6 +12,7 @@ export function PlanetHex(props: {
   hexWidth: number
   hexHeight: number
   setPlanet: ((q: number, r: number) => (() => void)) | null
+  select: () => void
 }) {
   const x = props.hexSize * ((3 / 2) * props.q)
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
@@ -38,7 +39,7 @@ export function PlanetHex(props: {
   }
 
   return (
-    <div style={css}>
+    <div style={css} onClick={props.select}>
       <div>
         q:{props.q}, r:{props.r}
         <br />

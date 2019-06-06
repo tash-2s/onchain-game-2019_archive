@@ -27,4 +27,14 @@ export class UserPageUiActions extends AbstractActions {
   unselectPlanet = () => {
     this.dispatch(UserPageUiActions.unselectPlanet())
   }
+
+  static selectUserPlanet = UserPageUiActions.creator<string>("selectUserPlanet")
+  selectUserPlanet = (userPlanetId: string) => {
+    this.dispatch(UserPageUiActions.selectUserPlanet(userPlanetId))
+  }
+
+  static unselectUserPlanet = UserPageUiActions.creator("unsselectUserPlanet")
+  unselectUserPlanet = () => {
+    this.dispatch(UserPageUiActions.unselectUserPlanet())
+  }
 }

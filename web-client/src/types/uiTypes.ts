@@ -3,5 +3,6 @@ export interface UiState {
     selectedUserPlanetsTab: "map" | "list"
     selectedNormalPlanetId: number | null
     planetListVisibility: boolean
+    selectedUserPlanetId: string | null
   }
 }

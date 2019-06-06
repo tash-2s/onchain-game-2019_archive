@@ -6,7 +6,8 @@ const initialState: UiState = {
   userPage: {
     selectedUserPlanetsTab: "map",
     selectedNormalPlanetId: null,
-    planetListVisibility: true
+    planetListVisibility: true,
+    selectedUserPlanetId: null
   }
 }
 
@@ -39,6 +40,20 @@ export const createUiReducer = () =>
       userPage: {
         ...state.userPage,
         selectedNormalPlanetId: null
+      }
+    }))
+    .case(UserPageUiActions.selectUserPlanet, (state, payload) => ({
+      ...state,
+      userPage: {
+        ...state.userPage,
+        selectedUserPlanetId: payload
+      }
+    }))
+    .case(UserPageUiActions.unselectUserPlanet, state => ({
+      ...state,
+      userPage: {
+        ...state.userPage,
+        selectedUserPlanetId: null
       }
     }))
     .build()

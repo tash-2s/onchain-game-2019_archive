@@ -6,6 +6,7 @@ import { UserPageUiActions } from "../../../actions/UiActions"
 import { UiState } from "../../../types/uiTypes"
 
 import { PlanetHex } from "./PlanetHex"
+import { Modal } from "../../utils/Modal"
 
 interface Props {
   user: ComputedTargetUserState
@@ -50,6 +51,9 @@ export class UserPlanetMap extends React.Component<Props, State> {
     const hexes = this.props.user.map.hexes.map(h => {
       const settable =
         this.props.isMine && !!this.props.userPageUi.selectedNormalPlanetId && h.settable
+      const selectFn = () => {
+        !h.userPlanet || this.props.uiActions.selectUserPlanet(h.userPlanet.id)
+      }
 
       return (
         <PlanetHex
@@ -63,12 +67,30 @@ export class UserPlanetMap extends React.Component<Props, State> {
           hexWidth={hexWidth}
           hexHeight={hexHeight}
           setPlanet={settable ? this.setPlanet : null}
+          select={selectFn}
         />
       )
     })
 
     const height = (shownRadius * 2 + 1) * hexHeight
-    return <div style={{ position: "relative", height: height }}>{hexes}</div>
+
+    let modal = <></>
+    if (this.props.userPageUi.selectedUserPlanetId) {
+      modal = (
+        <Modal close={this.props.uiActions.unselectUserPlanet}>
+          {this.props.userPageUi.selectedUserPlanetId}
+        </Modal>
+      )
+    }
+
+    return (
+      <>
+        {modal}
+        <div style={{ position: "relative", height: height }}>
+          {hexes}
+        </div>
+      </>
+    )
   }
 
   setPlanet = (q: number, r: number) => {
