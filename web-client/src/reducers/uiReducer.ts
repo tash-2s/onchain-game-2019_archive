@@ -2,7 +2,7 @@ import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { UserPageUiActions } from "../actions/UiActions"
 import { UiState } from "../types/uiTypes"
 
-const initialState: UiState = {
+export const initialUiState: UiState = {
   userPage: {
     selectedUserPlanetsTab: "map",
     selectedNormalPlanetId: null,
@@ -12,7 +12,7 @@ const initialState: UiState = {
 }
 
 export const createUiReducer = () =>
-  reducerWithInitialState(initialState)
+  reducerWithInitialState(initialUiState)
     .case(UserPageUiActions.selectUserPlanetsTab, (state, payload) => ({
       ...state,
       userPage: {
@@ -55,5 +55,9 @@ export const createUiReducer = () =>
         ...state.userPage,
         selectedUserPlanetId: null
       }
+    }))
+    .case(UserPageUiActions.clear, state => ({
+      ...state,
+      userPage: { ...initialUiState.userPage }
     }))
     .build()
