@@ -7,6 +7,7 @@ import { UiState } from "../../../types/uiTypes"
 
 import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../../utils/Modal"
+import { UserPlanet } from "./UserPlanet"
 
 interface Props {
   user: ComputedTargetUserState
@@ -14,6 +15,7 @@ interface Props {
   isMine: boolean
   userActions: UserActions
   uiActions: UserPageUiActions
+  now: number
 }
 
 interface State {
@@ -76,19 +78,30 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
     let modal = <></>
     if (this.props.userPageUi.selectedUserPlanetId) {
-      modal = (
-        <Modal close={this.props.uiActions.unselectUserPlanet}>
-          {this.props.userPageUi.selectedUserPlanetId}
-        </Modal>
+      const up = this.props.user.userNormalPlanets.find(
+        up => up.id === this.props.userPageUi.selectedUserPlanetId
       )
+      // this must be always true
+      if (up) {
+        modal = (
+          <Modal close={this.props.uiActions.unselectUserPlanet}>
+            <UserPlanet
+              userPlanet={up}
+              isMine={this.props.isMine}
+              techPower={this.props.user.techPower}
+              now={this.props.now}
+              rankup={this.props.userActions.rankupUserNormalPlanet}
+              remove={this.props.userActions.removeUserNormalPlanet}
+            />
+          </Modal>
+        )
+      }
     }
 
     return (
       <>
         {modal}
-        <div style={{ position: "relative", height: height }}>
-          {hexes}
-        </div>
+        <div style={{ position: "relative", height: height }}>{hexes}</div>
       </>
     )
   }

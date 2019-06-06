@@ -31,6 +31,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
             isMine={isMine}
             userActions={this.props.userActions}
             uiActions={this.props.userPageUiActions}
+            now={this.props.common.now}
           />
         )
         break
