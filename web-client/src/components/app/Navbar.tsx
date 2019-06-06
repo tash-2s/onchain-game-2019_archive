@@ -8,7 +8,7 @@ interface Props {
   signup: () => void
 }
 
-export function Nav(props: Props) {
+export function Navbar(props: Props) {
   // when an error occurs, this should be un-clickable, because the store will continue to have the error state
   return (
     <nav className={"navbar has-shadow"}>

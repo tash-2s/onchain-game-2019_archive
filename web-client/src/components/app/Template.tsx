@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { CommonState } from "../../types/commonTypes"
-import { Nav } from "./Nav"
+import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
@@ -39,7 +39,7 @@ export class Template extends React.Component<{
     return (
       <>
         <dialog ref={this.dialogRef}>LOADING</dialog>
-        <Nav currentUser={this.props.currentUser} signup={this.props.signup} />
+        <Navbar currentUser={this.props.currentUser} signup={this.props.signup} />
         <section className={"section"}>
           <div className={"container"}>{this.getErrorOrChildren()}</div>
         </section>
