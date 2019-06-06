@@ -39,6 +39,10 @@ export class UserPlanetMap extends React.Component<Props, State> {
     }
 
     const shownRadius = this.props.user.map.shownRadius
+    // Show biggest map for this area
+    // Calc hex sizes to fit mapWidth
+    // mapWidth (= state.width) = (1.5 * hexSize) * (mapRadius * 2 + 1) + (0.5 * hexSize)
+    // Transform this equation for hexSize...
     const hexSize = this.state.width / (3 * shownRadius + 2)
     const hexWidth = hexSize * 2
     const hexHeight = Math.sqrt(3) * hexSize
