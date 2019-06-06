@@ -1,5 +1,4 @@
 import * as React from "react"
-import styled from "styled-components"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 
@@ -25,30 +24,27 @@ export function PlanetHex(props: {
     <></>
   )
 
-  const css = {
+  const css: React.CSSProperties = {
     left: x + props.shiftLeft,
     top: y + props.shiftTop,
     width: props.hexWidth,
     height: props.hexHeight,
-    backgroundColor: props.userPlanet ? "cyan" : "red"
+    backgroundColor: props.userPlanet ? "cyan" : "red",
+    clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute"
   }
 
   return (
-    <Styled style={css}>
+    <div style={css}>
       <div>
         q:{props.q}, r:{props.r}
         <br />
         {props.userPlanet ? props.userPlanet.id : ""}
       </div>
       {buttonIfAvailable}
-    </Styled>
+    </div>
   )
 }
-
-const Styled = styled.div`
-  clip-path: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-`
