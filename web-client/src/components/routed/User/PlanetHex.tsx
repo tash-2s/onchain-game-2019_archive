@@ -18,7 +18,7 @@ export function PlanetHex(props: {
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
 
   const buttonIfAvailable = !!props.setPlanet ? (
-    <button onClick={props.setPlanet(props.q, props.r)}>
+    <button className={"button is-small"} onClick={props.setPlanet(props.q, props.r)}>
       {props.userPlanet ? "replace" : "set"}
     </button>
   ) : (
@@ -41,11 +41,6 @@ export function PlanetHex(props: {
 
   return (
     <div style={css} onClick={props.select}>
-      <div>
-        q:{props.q}, r:{props.r}
-        <br />
-        {props.userPlanet ? props.userPlanet.id : ""}
-      </div>
       {buttonIfAvailable}
     </div>
   )
