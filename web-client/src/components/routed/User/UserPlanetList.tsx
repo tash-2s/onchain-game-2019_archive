@@ -28,8 +28,54 @@ export function UserPlanetList(props: UserPlanetListProps) {
   ))
 
   return (
-    <table className={"table is-bordered is-fullwidth"}>
-      <tbody>{userPlanets}</tbody>
-    </table>
+    <>
+      <Controller />
+      <table className={"table is-bordered is-fullwidth"}>
+        <tbody>{userPlanets}</tbody>
+      </table>
+    </>
+  )
+}
+
+function Controller() {
+  return (
+    <nav className={"level"}>
+      <div className={"level-left"}>
+        <div className={"level-item"}>
+          <div className={"tabs is-toggle"}>
+            <ul>
+              <li className={"is-active"}>
+                <a>All</a>
+              </li>
+              <li>
+                <a>Residence</a>
+              </li>
+              <li>
+                <a>Goldvein</a>
+              </li>
+              <li>
+                <a>Technology</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className={"level-right"}>
+        <div className={"level-item"}>
+          <div className={"dropdown is-hoverable"}>
+            <div className={"dropdown-trigger"}>
+              <button className={"button"}>ABC ⇅</button>
+            </div>
+            <div className={"dropdown-menu"}>
+              <div className={"dropdown-content"}>
+                <a className={"dropdown-item"}>DEF</a>
+                <a className={"dropdown-item"}>GHI</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
   )
 }
