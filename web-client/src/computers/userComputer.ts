@@ -45,16 +45,16 @@ export const computeUserState = (state: UserState, now: number) => {
   }
 }
 
-const computeNormalPlanets = (gold: BN, userPlanetsCount: number) => {
+const computeNormalPlanets = (gold: BN, userPlanetCount: number) => {
   if (initialPlanetIds.length !== 2) {
     throw new Error("you need to check this impl")
   }
 
   let onlyAvailableId: null | number = null
-  if (gold.eqn(0) && userPlanetsCount === 0) {
+  if (gold.eqn(0) && userPlanetCount === 0) {
     onlyAvailableId = initialPlanetIds[0]
   }
-  if (gold.eq(getNormalPlanet(initialPlanetIds[1]).priceGold) && userPlanetsCount === 1) {
+  if (gold.eq(getNormalPlanet(initialPlanetIds[1]).priceGold) && userPlanetCount === 1) {
     onlyAvailableId = initialPlanetIds[1]
   }
 

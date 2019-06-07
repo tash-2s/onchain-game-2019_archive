@@ -4,11 +4,11 @@ import { UiState } from "../types/uiTypes"
 export class UserPageUiActions extends AbstractActions {
   private static creator = UserPageUiActions.getActionCreator()
 
-  static selectUserPlanetsTab = UserPageUiActions.creator<
-    UiState["userPage"]["selectedUserPlanetsTab"]
-  >("selectUserPlanetsTab")
-  selectUserPlanetsTab = (tab: UiState["userPage"]["selectedUserPlanetsTab"]) => {
-    this.dispatch(UserPageUiActions.selectUserPlanetsTab(tab))
+  static selectUserPlanetViewType = UserPageUiActions.creator<
+    UiState["userPage"]["selectedUserPlanetViewType"]
+  >("selectUserPlanetViewType")
+  selectUserPlanetViewType = (type: UiState["userPage"]["selectedUserPlanetViewType"]) => {
+    this.dispatch(UserPageUiActions.selectUserPlanetViewType(type))
   }
 
   static changePlanetListVisibility = UserPageUiActions.creator<boolean>(

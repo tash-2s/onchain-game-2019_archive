@@ -1,6 +1,6 @@
 export interface UiState {
   userPage: {
-    selectedUserPlanetsTab: "map" | "list"
+    selectedUserPlanetViewType: "map" | "list"
     selectedNormalPlanetId: number | null
     planetListVisibility: boolean
     selectedUserPlanetId: string | null

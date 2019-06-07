@@ -22,7 +22,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
     const user = this.props.user.targetUser
     const isMine = this.isMine()
     let userPlanets
-    switch (this.props.userPageUi.selectedUserPlanetsTab) {
+    switch (this.props.userPageUi.selectedUserPlanetViewType) {
       case "map":
         userPlanets = (
           <UserPlanetMap
@@ -131,12 +131,12 @@ class Buttons extends React.Component<{
   }
 
   toggleUserPlanets = () => {
-    switch (this.props.ui.selectedUserPlanetsTab) {
+    switch (this.props.ui.selectedUserPlanetViewType) {
       case "map":
-        this.props.actions.selectUserPlanetsTab("list")
+        this.props.actions.selectUserPlanetViewType("list")
         break
       case "list":
-        this.props.actions.selectUserPlanetsTab("map")
+        this.props.actions.selectUserPlanetViewType("map")
         break
     }
   }

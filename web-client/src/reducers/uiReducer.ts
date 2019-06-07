@@ -4,7 +4,7 @@ import { UiState } from "../types/uiTypes"
 
 export const initialUiState: UiState = {
   userPage: {
-    selectedUserPlanetsTab: "map",
+    selectedUserPlanetViewType: "map",
     selectedNormalPlanetId: null,
     planetListVisibility: true,
     selectedUserPlanetId: null
@@ -13,11 +13,11 @@ export const initialUiState: UiState = {
 
 export const createUiReducer = () =>
   reducerWithInitialState(initialUiState)
-    .case(UserPageUiActions.selectUserPlanetsTab, (state, payload) => ({
+    .case(UserPageUiActions.selectUserPlanetViewType, (state, payload) => ({
       ...state,
       userPage: {
         ...state.userPage,
-        selectedUserPlanetsTab: payload
+        selectedUserPlanetViewType: payload
       }
     }))
     .case(UserPageUiActions.changePlanetListVisibility, (state, payload) => ({
@@ -31,7 +31,7 @@ export const createUiReducer = () =>
       ...state,
       userPage: {
         ...state.userPage,
-        selectedUserPlanetsTab: "map",
+        selectedUserPlanetViewType: "map",
         selectedNormalPlanetId: payload
       }
     }))
