@@ -38,6 +38,24 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.unselectUserPlanet())
   }
 
+  static selectUserPlanetKindForUserPlanetList = UserPageUiActions.creator<
+    UiState["userPage"]["selectedUserPlanetKindForUserPlanetList"]
+  >("selectUserPlanetKindForUserPlanetList")
+  selectUserPlanetKindForUserPlanetList = (
+    kind: UiState["userPage"]["selectedUserPlanetKindForUserPlanetList"]
+  ) => {
+    this.dispatch(UserPageUiActions.selectUserPlanetKindForUserPlanetList(kind))
+  }
+
+  static selectSortKindForUserPlanetList = UserPageUiActions.creator<
+    UiState["userPage"]["selectedSortKindForUserPlanetList"]
+  >("selectSortKindForUserPlanetList")
+  selectSortKindForUserPlanetList = (
+    kind: UiState["userPage"]["selectedSortKindForUserPlanetList"]
+  ) => {
+    this.dispatch(UserPageUiActions.selectSortKindForUserPlanetList(kind))
+  }
+
   static clear = UserPageUiActions.creator("clear")
   clear = () => {
     this.dispatch(UserPageUiActions.clear())

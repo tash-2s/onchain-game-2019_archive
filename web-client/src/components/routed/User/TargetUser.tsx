@@ -43,6 +43,8 @@ export class TargetUser extends React.Component<TargetUserProps> {
             isMine={isMine}
             rankup={this.props.userActions.rankupUserNormalPlanet}
             remove={this.props.userActions.removeUserNormalPlanet}
+            ui={this.props.userPageUi}
+            uiActions={this.props.userPageUiActions}
           />
         )
         break

@@ -7,7 +7,9 @@ export const initialUiState: UiState = {
     selectedUserPlanetViewType: "map",
     selectedNormalPlanetId: null,
     planetListVisibility: true,
-    selectedUserPlanetId: null
+    selectedUserPlanetId: null,
+    selectedUserPlanetKindForUserPlanetList: "all",
+    selectedSortKindForUserPlanetList: "Newest"
   }
 }
 
@@ -54,6 +56,20 @@ export const createUiReducer = () =>
       userPage: {
         ...state.userPage,
         selectedUserPlanetId: null
+      }
+    }))
+    .case(UserPageUiActions.selectUserPlanetKindForUserPlanetList, (state, payload) => ({
+      ...state,
+      userPage: {
+        ...state.userPage,
+        selectedUserPlanetKindForUserPlanetList: payload
+      }
+    }))
+    .case(UserPageUiActions.selectSortKindForUserPlanetList, (state, payload) => ({
+      ...state,
+      userPage: {
+        ...state.userPage,
+        selectedSortKindForUserPlanetList: payload
       }
     }))
     .case(UserPageUiActions.clear, state => ({
