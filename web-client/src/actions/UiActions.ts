@@ -11,13 +11,6 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.selectUserPlanetViewType(type))
   }
 
-  static changePlanetListVisibility = UserPageUiActions.creator<boolean>(
-    "changePlanetListVisibility"
-  )
-  changePlanetListVisibility = (visibility: boolean) => {
-    this.dispatch(UserPageUiActions.changePlanetListVisibility(visibility))
-  }
-
   static selectPlanet = UserPageUiActions.creator<number>("selectPlanet")
   selectPlanet = (planetId: number) => {
     this.dispatch(UserPageUiActions.selectPlanet(planetId))
@@ -54,6 +47,11 @@ export class UserPageUiActions extends AbstractActions {
     kind: UiState["userPage"]["selectedSortKindForUserPlanetList"]
   ) => {
     this.dispatch(UserPageUiActions.selectSortKindForUserPlanetList(kind))
+  }
+
+  static togglePlanetListVisibility = UserPageUiActions.creator("togglePlanetListVisibility")
+  togglePlanetListVisibility = () => {
+    this.dispatch(UserPageUiActions.togglePlanetListVisibility())
   }
 
   static clear = UserPageUiActions.creator("clear")

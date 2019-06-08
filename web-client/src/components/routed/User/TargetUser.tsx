@@ -50,11 +50,29 @@ export class TargetUser extends React.Component<TargetUserProps> {
         break
     }
     const planetList = (
-      <PlanetList
-        normalPlanets={user.normalPlanets}
-        setPlanetToGet={this.props.userPageUiActions.selectPlanet}
-        userPageUi={this.props.userPageUi}
-      />
+      <>
+        <div
+          className={"is-hidden-desktop box is-shadowless is-marginless"}
+          style={{ textAlign: "center" }}
+        >
+          <button
+            className={"button is-small is-primary"}
+            onClick={this.props.userPageUiActions.togglePlanetListVisibility}
+          >
+            {this.props.userPageUi.planetListVisibilityOnMobile ? "Hide" : "Show"} Planet List
+          </button>
+        </div>
+
+        <div
+          className={this.props.userPageUi.planetListVisibilityOnMobile ? "" : "is-hidden-touch"}
+        >
+          <PlanetList
+            normalPlanets={user.normalPlanets}
+            setPlanetToGet={this.props.userPageUiActions.selectPlanet}
+            userPageUi={this.props.userPageUi}
+          />
+        </div>
+      </>
     )
 
     return (
@@ -97,24 +115,6 @@ class Buttons extends React.Component<{
   isMine: boolean
 }> {
   render = () => {
-    const planetListButton = <></>
-    // TODO: for mobile
-    // if (this.props.isMine) {
-    //   if (this.props.ui.planetListVisibility) {
-    //     planetListButton = (
-    //       <button className={"button is-small"} onClick={this.togglePlanetList}>
-    //         Hide Planet List
-    //       </button>
-    //     )
-    //   } else {
-    //     planetListButton = (
-    //       <button className={"button is-small"} onClick={this.togglePlanetList}>
-    //         Show Planet List
-    //       </button>
-    //     )
-    //   }
-    // }
-
     return (
       <nav className={"level"}>
         <div className={"level-left"}>
@@ -126,7 +126,7 @@ class Buttons extends React.Component<{
         </div>
 
         <div className={"level-right"}>
-          <div className={"level-item"}>{planetListButton}</div>
+          <div className={"level-item"} />
         </div>
       </nav>
     )
@@ -141,9 +141,5 @@ class Buttons extends React.Component<{
         this.props.actions.selectUserPlanetViewType("map")
         break
     }
-  }
-
-  togglePlanetList = () => {
-    this.props.actions.changePlanetListVisibility(!this.props.ui.planetListVisibility)
   }
 }

@@ -8,7 +8,7 @@ export interface UiState {
   userPage: {
     selectedUserPlanetViewType: "map" | "list"
     selectedNormalPlanetId: number | null
-    planetListVisibility: boolean
+    planetListVisibilityOnMobile: boolean
     selectedUserPlanetId: string | null
     selectedUserPlanetKindForUserPlanetList: "all" | PlanetKind
     selectedSortKindForUserPlanetList: SortKind
