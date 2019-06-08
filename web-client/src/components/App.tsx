@@ -10,11 +10,10 @@ export class App extends React.Component<AppProps> {
   render = () => {
     return (
       <Template
-        isLoading={this.props.common.isLoading}
-        isError={this.props.common.isError}
-        throwError={this.props.commonActions.throwError}
-        currentUser={this.props.common.currentUser}
-        signup={this.props.commonActions.signup}
+        common={this.props.common}
+        commonUi={this.props.commonUi}
+        commonActions={this.props.commonActions}
+        commonUiActions={this.props.commonUiActions}
       >
         {this.getRouted()}
       </Template>

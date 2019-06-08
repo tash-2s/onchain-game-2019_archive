@@ -5,13 +5,15 @@ import { RootState } from "../types/rootTypes"
 import { App } from "../components/App"
 import { AppActions } from "../actions/AppActions"
 import { CommonActions } from "../actions/CommonActions"
+import { CommonUiActions } from "../actions/UiActions"
 
 const mapStateToProps = (state: RootState) => {
-  return { common: state.common, app: state.app }
+  return { common: state.common, commonUi: state.ui.common, app: state.app }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
     commonActions: new CommonActions(dispatch),
+    commonUiActions: new CommonUiActions(dispatch),
     appActions: new AppActions(dispatch)
   }
 }

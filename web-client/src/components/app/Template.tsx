@@ -1,15 +1,19 @@
 import * as React from "react"
 
 import { CommonState } from "../../types/commonTypes"
+import { UiState } from "../../types/uiTypes"
+
+import { CommonActions } from "../../actions/CommonActions"
+import { CommonUiActions } from "../../actions/UiActions"
+
 import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
-  isLoading: boolean
-  isError: boolean
-  throwError: (e: Error, b: boolean, info?: any) => void
-  currentUser: CommonState["currentUser"]
-  signup: () => void
+  common: CommonState
+  commonUi: UiState["common"]
+  commonActions: CommonActions
+  commonUiActions: CommonUiActions
 }> {
   dialogRef = React.createRef<HTMLDialogElement>()
 
@@ -19,7 +23,7 @@ export class Template extends React.Component<{
       return
     }
 
-    if (this.props.isLoading) {
+    if (this.props.common.isLoading) {
       if (dialog.open) {
         return
       }
@@ -30,8 +34,8 @@ export class Template extends React.Component<{
   }
 
   componentDidCatch(error: Error, info: any) {
-    if (!this.props.isError) {
-      this.props.throwError(error, false, info)
+    if (!this.props.common.isError) {
+      this.props.commonActions.throwError(error, false, info)
     }
   }
 
@@ -39,7 +43,12 @@ export class Template extends React.Component<{
     return (
       <>
         <dialog ref={this.dialogRef}>LOADING</dialog>
-        <Navbar currentUser={this.props.currentUser} signup={this.props.signup} />
+        <Navbar
+          currentUser={this.props.common.currentUser}
+          activatedNavbarMenuOnMobile={this.props.commonUi.activatedNavbarMenuOnMobile}
+          signup={this.props.commonActions.signup}
+          toggleNavbarMenuOnMobile={this.props.commonUiActions.toggleNavbarMenuOnMobile}
+        />
         <section className={"section"}>
           <div className={"container"}>{this.getErrorOrChildren()}</div>
         </section>
@@ -49,7 +58,7 @@ export class Template extends React.Component<{
   }
 
   getErrorOrChildren = () => {
-    if (this.props.isError) {
+    if (this.props.common.isError) {
       const clickHandle = () => location.replace(location.pathname)
       return (
         <div>

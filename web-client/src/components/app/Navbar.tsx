@@ -5,11 +5,15 @@ import { InternalLink } from "../utils/InternalLink"
 
 interface Props {
   currentUser: CommonState["currentUser"]
+  activatedNavbarMenuOnMobile: boolean
   signup: () => void
+  toggleNavbarMenuOnMobile: () => void
 }
 
 export function Navbar(props: Props) {
   // when an error occurs, this should be un-clickable, because the store will continue to have the error state
+  const mobileClass = props.activatedNavbarMenuOnMobile ? "is-active" : ""
+
   return (
     <nav className={"navbar has-shadow"}>
       <div className={"container"}>
@@ -18,14 +22,14 @@ export function Navbar(props: Props) {
             <strong>k2</strong>
           </InternalLink>
 
-          <a className={"navbar-burger"}>
+          <a onClick={props.toggleNavbarMenuOnMobile} className={`navbar-burger ${mobileClass}`}>
             <span />
             <span />
             <span />
           </a>
         </div>
 
-        <div className={"navbar-menu"}>
+        <div className={`navbar-menu ${mobileClass}`}>
           <div className={"navbar-start"}>
             <InternalLink className={"navbar-item"} to={"/users"}>
               Remarkable Users

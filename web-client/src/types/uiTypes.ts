@@ -13,4 +13,7 @@ export interface UiState {
     selectedUserPlanetKindForUserPlanetList: "all" | PlanetKind
     selectedSortKindForUserPlanetList: SortKind
   }
+  common: {
+    activatedNavbarMenuOnMobile: boolean
+  }
 }

@@ -61,3 +61,12 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.clear())
   }
 }
+
+export class CommonUiActions extends AbstractActions {
+  private static creator = CommonUiActions.getActionCreator()
+
+  static toggleNavbarMenuOnMobile = CommonUiActions.creator("toggleNavbarMenuOnMobile")
+  toggleNavbarMenuOnMobile = () => {
+    this.dispatch(CommonUiActions.toggleNavbarMenuOnMobile())
+  }
+}

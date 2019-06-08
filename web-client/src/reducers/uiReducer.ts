@@ -1,5 +1,5 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
-import { UserPageUiActions } from "../actions/UiActions"
+import { UserPageUiActions, CommonUiActions } from "../actions/UiActions"
 import { UiState } from "../types/uiTypes"
 
 export const initialUiState: UiState = {
@@ -10,6 +10,9 @@ export const initialUiState: UiState = {
     selectedUserPlanetId: null,
     selectedUserPlanetKindForUserPlanetList: "all",
     selectedSortKindForUserPlanetList: "Newest"
+  },
+  common: {
+    activatedNavbarMenuOnMobile: false
   }
 }
 
@@ -75,5 +78,9 @@ export const createUiReducer = () =>
     .case(UserPageUiActions.clear, state => ({
       ...state,
       userPage: { ...initialUiState.userPage }
+    }))
+    .case(CommonUiActions.toggleNavbarMenuOnMobile, state => ({
+      ...state,
+      common: { activatedNavbarMenuOnMobile: !state.common.activatedNavbarMenuOnMobile }
     }))
     .build()
