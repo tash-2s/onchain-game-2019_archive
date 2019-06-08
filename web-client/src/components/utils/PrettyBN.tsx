@@ -1,5 +1,6 @@
 import * as React from "react"
 import BN from "bn.js"
+
 import { BNFormatter } from "../../models/BNFormatter"
 
 export function PrettyBN(props: { bn: BN }) {
