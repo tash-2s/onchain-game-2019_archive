@@ -12,7 +12,12 @@ export interface RouteState {
   params: Array<string>
 }
 
-export type PlanetKind = "residence" | "goldmine" | "technology"
+// ref. https://stackoverflow.com/questions/44480644/typescript-string-union-to-string-array
+type Lit = string | number | boolean | undefined | null | void | {}
+const tuple = <T extends Lit[]>(...args: T) => args
+
+export const planetKinds = tuple("residence", "goldmine", "technology")
+export type PlanetKind = (typeof planetKinds)[number]
 
 export interface NormalPlanet {
   id: number
@@ -21,10 +26,6 @@ export interface NormalPlanet {
   priceGoldCommonLogarithm: number
 }
 
-// ref. https://stackoverflow.com/questions/44480644/typescript-string-union-to-string-array
-type Lit = string | number | boolean | undefined | null | void | {}
-const tuple = <T extends Lit[]>(...args: T) => args
-// this is a type file, so this is added `_` to name
-export const _routeIds = tuple("/", "/users", "/:address", "/about", "/not_found")
-type RouteTuple = typeof _routeIds
+export const routeIds = tuple("/", "/users", "/:address", "/about", "/not_found")
+type RouteTuple = typeof routeIds
 export type RouteId = RouteTuple[number]

@@ -1,6 +1,6 @@
 import { createBrowserHistory } from "history"
 import { Store } from "redux"
-import { _routeIds, RouteId, RouteState } from "../types/commonTypes"
+import { routeIds, RouteId, RouteState } from "../types/commonTypes"
 import { CommonActions } from "../actions/CommonActions"
 import pathToRegexp from "path-to-regexp"
 
@@ -9,7 +9,7 @@ class Route {
 }
 const routes = ((): Array<Route> => {
   const rs: Array<Route> = []
-  _routeIds.forEach(routeId => {
+  routeIds.forEach(routeId => {
     rs.push(new Route(routeId, pathToRegexp(routeId)))
   })
   return rs

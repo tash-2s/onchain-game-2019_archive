@@ -4,6 +4,7 @@ import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserPlanet } from "./UserPlanet"
 import { UiState, sortKinds } from "../../../types/uiTypes"
 import { UserPageUiActions } from "../../../actions/UiActions"
+import { planetKinds } from "../../../types/commonTypes"
 
 interface UserPlanetListProps {
   user: ComputedTargetUserState
@@ -81,6 +82,14 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
     )
   })
 
+  const kinds = planetKinds.map(k => {
+    return (
+      <li key={k} className={planetKind === k ? "is-active" : ""}>
+        <a onClick={selectKind(k)}>{k.slice(0, 1).toUpperCase() + k.slice(1)}</a>
+      </li>
+    )
+  })
+
   return (
     <nav className={"level"}>
       <div className={"level-left"}>
@@ -90,15 +99,7 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
               <li className={planetKind === "all" ? "is-active" : ""}>
                 <a onClick={selectKind("all")}>All</a>
               </li>
-              <li className={planetKind === "residence" ? "is-active" : ""}>
-                <a onClick={selectKind("residence")}>Residence</a>
-              </li>
-              <li className={planetKind === "goldmine" ? "is-active" : ""}>
-                <a onClick={selectKind("goldmine")}>Goldmine</a>
-              </li>
-              <li className={planetKind === "technology" ? "is-active" : ""}>
-                <a onClick={selectKind("technology")}>Technology</a>
-              </li>
+              {kinds}
             </ul>
           </div>
         </div>
