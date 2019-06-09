@@ -10,13 +10,6 @@ const tuple = <T extends Lit[]>(...args: T) => args
 export const planetKinds = tuple("residence", "goldmine", "technology")
 export type PlanetKind = (typeof planetKinds)[number]
 
-export interface NormalPlanet {
-  id: number
-  kind: PlanetKind
-  paramCommonLogarithm: number
-  priceGoldCommonLogarithm: number
-}
-
 export const routeIds = tuple("/", "/users", "/:address", "/about", "/not_found")
 type RouteTuple = typeof routeIds
 export type RouteId = RouteTuple[number]

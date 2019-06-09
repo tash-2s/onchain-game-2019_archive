@@ -1,5 +1,13 @@
 import BN from "bn.js"
-import { NormalPlanet } from "../types/commonTypes"
+
+import { PlanetKind } from "../types/commonTypes"
+
+interface NormalPlanet {
+  id: number
+  kind: PlanetKind
+  paramCommonLogarithm: number
+  priceGoldCommonLogarithm: number
+}
 
 let id = 1
 let param = 1
