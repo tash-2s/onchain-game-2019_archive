@@ -55,7 +55,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       msg.sender,
       userNormalPlanetId
     );
-    uint techPower = _confirm(msg.sender);
+    uint knowledge = _confirm(msg.sender);
 
     if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
       revert("invalid targetRank");
@@ -65,13 +65,13 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     if (targetRank == (userPlanet.rank + 1)) {
       uint diffSec = uint32now() - userPlanet.rankupedAt;
       int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(
-        techPower
+        knowledge
       ); // TODO: type
       require(remainingSec <= 0, "need more time to rankup");
     } else {
       require(
-        _requiredSecForRankup(targetRank - 1) <= techPower,
-        "more techPower is needed to bulk rankup"
+        _requiredSecForRankup(targetRank - 1) <= knowledge,
+        "more knowledge is needed to bulk rankup"
       );
     }
 
@@ -120,8 +120,8 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
   function _confirm(address account) private returns (uint) {
     uint population = 0;
-    uint goldPower = 0;
-    uint techPower = 0;
+    uint productivity = 0;
+    uint knowledge = 0;
 
     UserNormalPlanetRecord[] memory userPlanets = userNormalPlanetRecordsOf(account);
     UserNormalPlanetRecord memory userPlanet;
@@ -136,16 +136,16 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
-        goldPower += rated;
+        productivity += rated;
       } else if (userPlanet.kind == 3) {
-        techPower += rated;
+        knowledge += rated;
       } else {
         revert("undefined kind");
       }
     }
 
     // TODO: type
-    uint goldPerSec = population * goldPower;
+    uint goldPerSec = population * productivity;
     uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
     uint diffGold = goldPerSec * diffSec;
 
@@ -154,6 +154,6 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       _remarkableUserController.tackle(account);
     }
 
-    return techPower;
+    return knowledge;
   }
 }
