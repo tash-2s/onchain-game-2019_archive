@@ -12,24 +12,14 @@ export interface RouteState {
   params: Array<string>
 }
 
-interface NormalPlanetBase {
+export type PlanetKind = "residence" | "goldmine" | "technology"
+
+export interface NormalPlanet {
   id: number
+  kind: PlanetKind
+  paramCommonLogarithm: number
   priceGoldCommonLogarithm: number
 }
-
-interface NormalNonMagicPlanet extends NormalPlanetBase {
-  kind: "residence" | "goldmine" | "technology"
-  paramCommonLogarithm: number
-}
-
-interface NormalMagicPlanet extends NormalPlanetBase {
-  kind: "magic"
-  hogeParam: "todo"
-}
-
-export type NormalPlanet = NormalNonMagicPlanet | NormalMagicPlanet
-
-export type PlanetKind = NormalNonMagicPlanet["kind"] | NormalMagicPlanet["kind"]
 
 // ref. https://stackoverflow.com/questions/44480644/typescript-string-union-to-string-array
 type Lit = string | number | boolean | undefined | null | void | {}

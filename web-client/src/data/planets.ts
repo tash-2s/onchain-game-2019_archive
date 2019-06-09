@@ -23,10 +23,6 @@ const _NormalPlanetsData: NormalPlanet[] = residenceAndGoldmine.concat([
 ])
 
 export const NormalPlanetsData = _NormalPlanetsData.map(p => {
-  if (p.kind === "magic") {
-    throw new Error("not supported")
-  }
-
   return {
     ...p,
     param: new BN(10).pow(new BN(p.paramCommonLogarithm)),
