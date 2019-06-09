@@ -8,9 +8,9 @@ module.exports = function(deployer, network) {
 
     let id = 1
     let param = 1
-    const residenceAndGoldvein = []
+    const residenceAndGoldmine = []
     while (id <= 16) {
-      residenceAndGoldvein.push(
+      residenceAndGoldmine.push(
         {
           id: id++,
           kind: "residence",
@@ -19,7 +19,7 @@ module.exports = function(deployer, network) {
         },
         {
           id: id++,
-          kind: "goldvein",
+          kind: "goldmine",
           paramCommonLogarithm: param,
           priceGoldCommonLogarithm: param * 3
         }
@@ -27,7 +27,7 @@ module.exports = function(deployer, network) {
       param += 2
     }
 
-    const data = residenceAndGoldvein.concat([
+    const data = residenceAndGoldmine.concat([
       { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
       { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
     ])
@@ -37,7 +37,7 @@ module.exports = function(deployer, network) {
       let kind
       if (r.kind == "residence") {
         kind = 1
-      } else if (r.kind == "goldvein") {
+      } else if (r.kind == "goldmine") {
         kind = 2
       } else if (r.kind == "technology") {
         kind = 3
