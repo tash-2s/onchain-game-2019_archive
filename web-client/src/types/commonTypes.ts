@@ -18,7 +18,7 @@ interface NormalPlanetBase {
 }
 
 interface NormalNonMagicPlanet extends NormalPlanetBase {
-  kind: "residence" | "goldvein" | "technology"
+  kind: "residence" | "goldmine" | "technology"
   paramCommonLogarithm: number
 }
 

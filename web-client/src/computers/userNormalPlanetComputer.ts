@@ -18,7 +18,7 @@ export const computeUserNormalPlanetParams = (
       case "residence":
         population = population.add(param)
         break
-      case "goldvein":
+      case "goldmine":
         productivity = productivity.add(param)
         break
       case "technology":

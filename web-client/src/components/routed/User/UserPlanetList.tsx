@@ -93,8 +93,8 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
               <li className={planetKind === "residence" ? "is-active" : ""}>
                 <a onClick={selectKind("residence")}>Residence</a>
               </li>
-              <li className={planetKind === "goldvein" ? "is-active" : ""}>
-                <a onClick={selectKind("goldvein")}>Goldvein</a>
+              <li className={planetKind === "goldmine" ? "is-active" : ""}>
+                <a onClick={selectKind("goldmine")}>Goldmine</a>
               </li>
               <li className={planetKind === "technology" ? "is-active" : ""}>
                 <a onClick={selectKind("technology")}>Technology</a>
