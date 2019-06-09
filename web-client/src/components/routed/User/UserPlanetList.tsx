@@ -2,7 +2,8 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserPlanet } from "./UserPlanet"
-import { UiState, sortKinds } from "../../../types/uiTypes"
+import { UiState } from "../../../reducers/uiReducer"
+import { sortKinds } from "../../../types/uiTypes"
 import { UserPageUiActions } from "../../../actions/UiActions"
 import { planetKinds } from "../../../types/commonTypes"
 

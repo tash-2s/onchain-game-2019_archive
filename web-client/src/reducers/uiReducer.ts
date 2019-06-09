@@ -1,20 +1,23 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { UserPageUiActions, CommonUiActions } from "../actions/UiActions"
-import { UiState } from "../types/uiTypes"
+import { PlanetKind } from "../types/commonTypes"
+import { SortKind } from "../types/uiTypes"
 
-export const initialUiState: UiState = {
+export const initialUiState = {
   userPage: {
-    selectedUserPlanetViewType: "map",
-    selectedNormalPlanetId: null,
+    selectedUserPlanetViewType: "map" as "map" | "list",
+    selectedNormalPlanetId: null as number | null,
     planetListVisibilityOnMobile: false,
-    selectedUserPlanetId: null,
-    selectedUserPlanetKindForUserPlanetList: "all",
-    selectedSortKindForUserPlanetList: "Newest"
+    selectedUserPlanetId: null as string | null,
+    selectedUserPlanetKindForUserPlanetList: "all" as "all" | PlanetKind,
+    selectedSortKindForUserPlanetList: "Newest" as SortKind
   },
   common: {
     activatedNavbarMenuOnMobile: false
   }
 }
+
+export type UiState = typeof initialUiState
 
 export const createUiReducer = () =>
   reducerWithInitialState(initialUiState)

@@ -3,7 +3,7 @@ import * as React from "react"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserActions } from "../../../actions/routed/UserActions"
 import { UserPageUiActions } from "../../../actions/UiActions"
-import { UiState } from "../../../types/uiTypes"
+import { UiState } from "../../../reducers/uiReducer"
 
 import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../../utils/Modal"

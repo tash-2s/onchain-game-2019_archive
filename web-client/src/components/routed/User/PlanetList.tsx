@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { PrettyBN } from "../../utils/PrettyBN"
-import { UiState } from "../../../types/uiTypes"
+import { UiState } from "../../../reducers/uiReducer"
 
 export class PlanetList extends React.Component<{
   normalPlanets: ComputedTargetUserState["normalPlanets"]

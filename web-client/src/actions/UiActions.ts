@@ -1,5 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
-import { UiState } from "../types/uiTypes"
+import { UiState } from "../reducers/uiReducer"
 
 export class UserPageUiActions extends AbstractActions {
   private static creator = UserPageUiActions.getActionCreator()

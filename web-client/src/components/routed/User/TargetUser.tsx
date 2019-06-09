@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { UiState } from "../../../types/uiTypes"
+import { UiState } from "../../../reducers/uiReducer"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { ComputedCommonState } from "../../../computers/commonComputer"

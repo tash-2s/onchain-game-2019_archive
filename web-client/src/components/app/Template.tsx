@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { ComputedCommonState } from "../../computers/commonComputer"
-import { UiState } from "../../types/uiTypes"
+import { UiState } from "../../reducers/uiReducer"
 
 import { CommonActions } from "../../actions/CommonActions"
 import { CommonUiActions } from "../../actions/UiActions"
