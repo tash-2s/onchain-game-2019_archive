@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { CommonState } from "../../types/commonTypes"
+import { ComputedCommonState } from "../../computers/commonComputer"
 import { UiState } from "../../types/uiTypes"
 
 import { CommonActions } from "../../actions/CommonActions"
@@ -10,7 +10,7 @@ import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
-  common: CommonState
+  common: ComputedCommonState
   commonUi: UiState["common"]
   commonActions: CommonActions
   commonUiActions: CommonUiActions

@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { RootState } from "../../types/rootTypes"
+import { RootState } from "../../reducers/rootReducer"
 import { computeUserState } from "../../computers/userComputer"
 import { computeCommonState } from "../../computers/commonComputer"
 import { User } from "../../components/routed/User"

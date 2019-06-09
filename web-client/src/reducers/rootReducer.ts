@@ -16,3 +16,6 @@ export const createReducer = () =>
       users: createUsersReducer()
     })
   })
+
+type FirstNonUndef<T extends [any, any]> = T extends [infer P | undefined, any] ? P : never
+export type RootState = FirstNonUndef<Parameters<ReturnType<typeof createReducer>>>

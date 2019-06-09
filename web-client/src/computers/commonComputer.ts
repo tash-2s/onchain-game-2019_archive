@@ -1,4 +1,4 @@
-import { CommonState } from "../types/commonTypes"
+import { CommonState } from "../reducers/commonReducer"
 import { Time } from "../models/time"
 
 export type ComputedCommonState = ReturnType<typeof computeCommonState>

@@ -1,12 +1,3 @@
-export interface CommonState {
-  route: RouteState
-  currentUser: { address: string } | null
-  isLoading: boolean
-  isError: boolean
-  webTime: number
-  loomTimeDifference: number
-}
-
 export interface RouteState {
   id: RouteId
   params: Array<string>

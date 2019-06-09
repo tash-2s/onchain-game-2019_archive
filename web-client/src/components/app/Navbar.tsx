@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { CommonState } from "../../types/commonTypes"
 import { InternalLink } from "../utils/InternalLink"
+import { ComputedCommonState } from "../../computers/commonComputer"
 
 interface Props {
-  currentUser: CommonState["currentUser"]
+  currentUser: ComputedCommonState["currentUser"]
   activatedNavbarMenuOnMobile: boolean
   signup: () => void
   toggleNavbarMenuOnMobile: () => void
