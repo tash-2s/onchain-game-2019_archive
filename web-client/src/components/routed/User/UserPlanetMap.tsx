@@ -88,7 +88,7 @@ export class UserPlanetMap extends React.Component<Props, State> {
             <UserPlanet
               userPlanet={up}
               isMine={this.props.isMine}
-              techPower={this.props.user.techPower}
+              knowledge={this.props.user.knowledge}
               now={this.props.now}
               rankup={this.props.userActions.rankupUserNormalPlanet}
               remove={this.props.userActions.removeUserNormalPlanet}

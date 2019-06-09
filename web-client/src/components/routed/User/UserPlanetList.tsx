@@ -40,7 +40,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
           <UserPlanet
             userPlanet={up}
             isMine={props.isMine}
-            techPower={props.user.techPower}
+            knowledge={props.user.knowledge}
             now={props.now}
             rankup={props.rankup}
             remove={props.remove}

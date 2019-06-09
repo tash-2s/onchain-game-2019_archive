@@ -7,8 +7,8 @@ export const computeUserNormalPlanetParams = (
   rawUserPlanets: TargetUserState["userNormalPlanets"]
 ) => {
   let population = new BN(0)
-  let goldPower = new BN(0)
-  let techPower = new BN(0)
+  let productivity = new BN(0)
+  let knowledge = new BN(0)
 
   const userNormalPlanets = rawUserPlanets.map(up => {
     const p = getNormalPlanet(up.normalPlanetId)
@@ -19,10 +19,10 @@ export const computeUserNormalPlanetParams = (
         population = population.add(param)
         break
       case "goldvein":
-        goldPower = goldPower.add(param)
+        productivity = productivity.add(param)
         break
       case "technology":
-        techPower = techPower.add(param)
+        knowledge = knowledge.add(param)
         break
       default:
         throw new Error("undefined kind")
@@ -35,20 +35,20 @@ export const computeUserNormalPlanetParams = (
     }
   })
 
-  return { userNormalPlanets, population, goldPower, techPower: techPower.toNumber() }
+  return { userNormalPlanets, population, productivity, knowledge: knowledge.toNumber() }
 }
 
 export const computeUserNormalPlanetRankStatuses = (
   userPlanets: ReturnType<typeof computeUserNormalPlanetParams>["userNormalPlanets"],
   gold: BN,
-  techPower: number,
+  knowledge: number,
   now: number
 ) => {
   return userPlanets.map(up => {
-    const { withTechPower, withoutTechPower } = remainingSecForRankup(
+    const { withKnowledge, withoutKnowledge } = remainingSecForRankup(
       up.rank,
       up.rankupedAt,
-      techPower,
+      knowledge,
       now
     )
     const MAX_RANK = 30
@@ -58,7 +58,7 @@ export const computeUserNormalPlanetRankStatuses = (
       MAX_RANK,
       up.planet.priceGold,
       gold,
-      techPower,
+      knowledge,
       now
     )
 
@@ -68,8 +68,8 @@ export const computeUserNormalPlanetRankStatuses = (
       rankupableCount: count,
       requiredGoldForRankup: requiredGoldForRankup(up.rank, up.planet.priceGold),
       requiredGoldForBulkRankup: requiredGold,
-      remainingSecForRankup: withTechPower,
-      remainingSecForRankupWithoutTechPower: withoutTechPower
+      remainingSecForRankup: withKnowledge,
+      remainingSecForRankupWithoutKnowledge: withoutKnowledge
     }
   })
 }
@@ -87,15 +87,15 @@ const requiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
 const remainingSecForRankup = (
   currentRank: number,
   rankupedAt: number,
-  techPower: number,
+  knowledge: number,
   now: number
 ) => {
   const prevDiffSec = now - rankupedAt
   const remainingSec = requiredSecForRankup(currentRank) - prevDiffSec
-  const withoutTechPower = Math.max(remainingSec, 0)
+  const withoutKnowledge = Math.max(remainingSec, 0)
   return {
-    withTechPower: Math.max(withoutTechPower - techPower, 0),
-    withoutTechPower: withoutTechPower
+    withKnowledge: Math.max(withoutKnowledge - knowledge, 0),
+    withoutKnowledge: withoutKnowledge
   }
 }
 
@@ -115,7 +115,7 @@ const rankupableCount = (
   userPlanetMaxRank: number,
   planetOriginalPriceGold: BN,
   gold: BN,
-  techPower: number,
+  knowledge: number,
   now: number
 ) => {
   let rankupableCount = 0
@@ -132,11 +132,11 @@ const rankupableCount = (
       break
     }
 
-    if (requiredSecForRankup(rank) > techPower) {
+    if (requiredSecForRankup(rank) > knowledge) {
       if (rankupableCount !== 0) {
         break
       }
-      if (remainingSecForRankup(rank, userPlanetRankupedAt, techPower, now).withTechPower > 0) {
+      if (remainingSecForRankup(rank, userPlanetRankupedAt, knowledge, now).withKnowledge > 0) {
         break
       }
     }

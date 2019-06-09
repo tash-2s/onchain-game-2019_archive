@@ -2,11 +2,11 @@ import BN from "bn.js"
 
 export const computeGold = (
   population: BN,
-  goldPower: BN,
+  productivity: BN,
   userGold: { confirmed: string; confirmedAt: number },
   now: number
 ) => {
-  const goldPerSec = population.mul(goldPower)
+  const goldPerSec = population.mul(productivity)
 
   const ongoingGold = calculateOngoing(
     new BN(userGold.confirmed),

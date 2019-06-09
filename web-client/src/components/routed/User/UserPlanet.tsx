@@ -6,7 +6,7 @@ import { ComputedTargetUserState } from "../../../computers/userComputer"
 interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   isMine: boolean
-  techPower: number
+  knowledge: number
   now: number
   rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
@@ -48,7 +48,7 @@ export function UserPlanet(props: UserPlanetProps) {
 class UserPlanetButtons extends React.Component<UserPlanetProps> {
   render = () => {
     const up = this.props.userPlanet
-    const techPower = this.props.techPower
+    const knowledge = this.props.knowledge
     let rankupButton: JSX.Element
     let bulkRankupButton: JSX.Element
 

@@ -17,16 +17,21 @@ export const computeUserState = (state: UserState, now: number) => {
     return { targetUser: null }
   }
 
-  const { userNormalPlanets, population, goldPower, techPower } = computeUserNormalPlanetParams(
+  const { userNormalPlanets, population, productivity, knowledge } = computeUserNormalPlanetParams(
     state.targetUser.userNormalPlanets
   )
 
-  const { goldPerSec, ongoingGold } = computeGold(population, goldPower, state.targetUser.gold, now)
+  const { goldPerSec, ongoingGold } = computeGold(
+    population,
+    productivity,
+    state.targetUser.gold,
+    now
+  )
 
   const computedUserPlanets = computeUserNormalPlanetRankStatuses(
     userNormalPlanets,
     ongoingGold,
-    techPower,
+    knowledge,
     now
   )
 
@@ -36,8 +41,8 @@ export const computeUserState = (state: UserState, now: number) => {
       gold: ongoingGold,
       userNormalPlanets: computedUserPlanets.sort((a, b) => a.createdAt - b.createdAt),
       population: population,
-      goldPower: goldPower,
-      techPower: techPower,
+      productivity: productivity,
+      knowledge: knowledge,
       goldPerSec: goldPerSec,
       map: computeMap(ongoingGold, computedUserPlanets),
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length)
