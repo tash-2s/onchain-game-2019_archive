@@ -1,11 +1,9 @@
 import BN from "bn.js"
 
-import { TargetUserState } from "../types/routed/userTypes"
+import { UserNormalPlanet } from "../reducers/routed/userReducer"
 import { getNormalPlanet } from "../data/planets"
 
-export const computeUserNormalPlanetParams = (
-  rawUserPlanets: TargetUserState["userNormalPlanets"]
-) => {
+export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPlanet>) => {
   let population = new BN(0)
   let productivity = new BN(0)
   let knowledge = new BN(0)

@@ -1,7 +1,26 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { UserActions, GetUserResponse } from "../../actions/routed/UserActions"
-import { UserState, TargetUserState } from "../../types/routed/userTypes"
+
+export interface UserState {
+  targetUser: TargetUserState | null
+}
+
+interface TargetUserState {
+  address: string
+  gold: { confirmed: string; confirmedAt: number }
+  userNormalPlanets: Array<UserNormalPlanet>
+}
+
+export interface UserNormalPlanet {
+  id: string
+  normalPlanetId: number
+  rank: number
+  createdAt: number
+  rankupedAt: number
+  axialCoordinateQ: number
+  axialCoordinateR: number
+}
 
 const initialState: UserState = {
   targetUser: null
@@ -56,7 +75,7 @@ const restructureUserFromResponse = (
   const unpTimes = response[4]
   const unpAxialCoordinates = response[5]
 
-  const unps: TargetUserState["userNormalPlanets"] = []
+  const unps: Array<UserNormalPlanet> = []
   let i = 0
   let counter = 0
 

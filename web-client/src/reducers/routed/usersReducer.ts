@@ -1,9 +1,9 @@
-import { reducerWithInitialState } from "typescript-fsa-reducers"
-import { UsersActions } from "../../actions/routed/UsersActions"
-import { UsersState } from "../../types/routed/usersTypes"
 import BN from "bn.js"
+import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-const initialState: UsersState = {
+import { UsersActions } from "../../actions/routed/UsersActions"
+
+const initialState: { users: Array<{ address: string; gold: string }> } = {
   users: []
 }
 

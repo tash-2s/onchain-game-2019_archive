@@ -5,7 +5,6 @@ import {
   TxCallGenericsType,
   LoomWeb3
 } from "../../misc/loom"
-import { TargetUserState } from "../../types/routed/userTypes"
 
 export type GetUserResponse = TxCallGenericsType<
   ReturnType<
