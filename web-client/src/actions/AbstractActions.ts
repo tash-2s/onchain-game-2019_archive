@@ -1,5 +1,5 @@
 import { actionCreatorFactory } from "typescript-fsa"
-import { CommonActions } from "./CommonActions"
+import { AppActions } from "./AppActions"
 
 export class AbstractActions {
   protected static getActionCreator() {
@@ -12,12 +12,12 @@ export class AbstractActions {
   }
 
   protected handleError = (error: Error) => {
-    new CommonActions(this.dispatch).throwError(error)
+    new AppActions(this.dispatch).throwError(error)
   }
 
   protected withLoading = async (fn: () => void) => {
-    new CommonActions(this.dispatch).startLoading()
+    new AppActions(this.dispatch).startLoading()
     await fn()
-    new CommonActions(this.dispatch).stopLoading()
+    new AppActions(this.dispatch).stopLoading()
   }
 }

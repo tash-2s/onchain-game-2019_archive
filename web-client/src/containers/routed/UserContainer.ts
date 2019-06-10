@@ -12,7 +12,7 @@ const mapStateToProps = (state: RootState) => {
   const time = computeTimeState(state.time)
 
   return {
-    common: state.common,
+    route: state.app.route,
     currentUser: state.currentUser,
     time: time,
     userPageUi: state.ui.userPage,

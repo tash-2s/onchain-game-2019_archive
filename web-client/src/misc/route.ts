@@ -2,7 +2,7 @@ import { createBrowserHistory } from "history"
 import { Store } from "redux"
 
 import { routeIds, RouteId, RouteState } from "../constants"
-import { CommonActions } from "../actions/CommonActions"
+import { AppActions } from "../actions/AppActions"
 import pathToRegexp from "path-to-regexp"
 
 class Route {
@@ -21,7 +21,7 @@ export const historyLib = createBrowserHistory()
 export const registerStore = (store: Store) => {
   historyLib.listen((location, _action) => {
     const rwp = convertHashToRouteIdWithParams(location.hash)
-    new CommonActions(store.dispatch).changeRoute(rwp)
+    new AppActions(store.dispatch).changeRoute(rwp)
   })
 }
 

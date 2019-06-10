@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
 
-import { createCommonReducer } from "./commonReducer"
+import { createAppReducer } from "./appReducer"
 import { createCurrentUserReducer } from "./currentUserReducer"
 import { createTimeReducer } from "./timeReducer"
 import { createUiReducer } from "./uiReducer"
@@ -9,7 +9,7 @@ import { createUsersReducer } from "./routed/usersReducer"
 
 export const createReducer = () =>
   combineReducers({
-    common: createCommonReducer(),
+    app: createAppReducer(),
     currentUser: createCurrentUserReducer(),
     time: createTimeReducer(),
     ui: createUiReducer(),

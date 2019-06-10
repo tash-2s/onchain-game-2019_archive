@@ -3,7 +3,6 @@ import * as React from "react"
 import { UiState } from "../../../reducers/uiReducer"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { CommonState } from "../../../reducers/commonReducer"
 import { CurrentUserState } from "../../../reducers/currentUserReducer"
 import { ComputedTimeState } from "../../../computers/timeComputer"
 
@@ -14,7 +13,6 @@ import { PlanetList } from "./PlanetList"
 
 // targetUser is not null
 type TargetUserProps = {
-  common: CommonState
   currentUser: CurrentUserState
   time: ComputedTimeState
   user: { targetUser: ComputedTargetUserState }

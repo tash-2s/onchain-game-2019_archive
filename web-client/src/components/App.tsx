@@ -10,9 +10,9 @@ export class App extends React.Component<AppProps> {
   render = () => {
     return (
       <Template
-        common={this.props.common}
+        app={this.props.app}
         commonUi={this.props.commonUi}
-        commonActions={this.props.commonActions}
+        appActions={this.props.appActions}
         commonUiActions={this.props.commonUiActions}
         currentUser={this.props.currentUser}
         currentUserActions={this.props.currentUserActions}
@@ -23,7 +23,7 @@ export class App extends React.Component<AppProps> {
   }
 
   getRouted = () => {
-    switch (this.props.common.route.id) {
+    switch (this.props.app.route.id) {
       case "/":
         return <h1 className={"title"}>top</h1>
       case "/users":

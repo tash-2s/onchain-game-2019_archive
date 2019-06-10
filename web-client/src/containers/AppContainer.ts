@@ -4,20 +4,20 @@ import { Dispatch, AnyAction } from "redux"
 import { RootState } from "../reducers/rootReducer"
 import { App } from "../components/App"
 
-import { CommonActions } from "../actions/CommonActions"
+import { AppActions } from "../actions/AppActions"
 import { CurrentUserActions } from "../actions/CurrentUserActions"
 import { CommonUiActions } from "../actions/UiActions"
 
 const mapStateToProps = (state: RootState) => {
   return {
-    common: state.common,
+    app: state.app,
     currentUser: state.currentUser,
     commonUi: state.ui.common
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    commonActions: new CommonActions(dispatch),
+    appActions: new AppActions(dispatch),
     currentUserActions: new CurrentUserActions(dispatch),
     commonUiActions: new CommonUiActions(dispatch)
   }

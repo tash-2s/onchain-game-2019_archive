@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { CommonState } from "../../reducers/commonReducer"
+import { AppState } from "../../reducers/appReducer"
 import { UiState } from "../../reducers/uiReducer"
 import { CurrentUserState } from "../../reducers/currentUserReducer"
 
-import { CommonActions } from "../../actions/CommonActions"
+import { AppActions } from "../../actions/AppActions"
 import { CommonUiActions } from "../../actions/UiActions"
 import { CurrentUserActions } from "../../actions/CurrentUserActions"
 
@@ -12,9 +12,9 @@ import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
-  common: CommonState
+  app: AppState
   commonUi: UiState["common"]
-  commonActions: CommonActions
+  appActions: AppActions
   commonUiActions: CommonUiActions
   currentUser: CurrentUserState
   currentUserActions: CurrentUserActions
@@ -27,7 +27,7 @@ export class Template extends React.Component<{
       return
     }
 
-    if (this.props.common.isLoading) {
+    if (this.props.app.isLoading) {
       if (dialog.open) {
         return
       }
@@ -38,8 +38,8 @@ export class Template extends React.Component<{
   }
 
   componentDidCatch(error: Error, info: any) {
-    if (!this.props.common.isError) {
-      this.props.commonActions.throwError(error, false, info)
+    if (!this.props.app.isError) {
+      this.props.appActions.throwError(error, false, info)
     }
   }
 
@@ -62,7 +62,7 @@ export class Template extends React.Component<{
   }
 
   getErrorOrChildren = () => {
-    if (this.props.common.isError) {
+    if (this.props.app.isError) {
       const clickHandle = () => location.replace(location.pathname)
       return (
         <div>
