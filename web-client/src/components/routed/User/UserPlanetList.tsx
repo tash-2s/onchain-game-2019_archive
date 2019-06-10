@@ -3,9 +3,8 @@ import * as React from "react"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserPlanet } from "./UserPlanet"
 import { UiState } from "../../../reducers/uiReducer"
-import { sortKinds } from "../../../types/uiTypes"
+import { userPlanetSortKinds, planetKinds } from "../../../constants"
 import { UserPageUiActions } from "../../../actions/UiActions"
-import { planetKinds } from "../../../types/commonTypes"
 
 interface UserPlanetListProps {
   user: ComputedTargetUserState
@@ -67,7 +66,7 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
   const selectKind = (_kind: typeof planetKind) => () =>
     props.actions.selectUserPlanetKindForUserPlanetList(_kind)
 
-  const sortItems = sortKinds.map(k => {
+  const sortItems = userPlanetSortKinds.map(k => {
     const cls = k === sortKind ? "is-active" : ""
     const fn =
       k === sortKind

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { RouteId } from "../../types/commonTypes"
+import { RouteId } from "../../constants"
 import { historyLib, combineRouteIdAndParams } from "../../misc/route"
 
 type RouteIdWithParamsObj = [RouteId, { address: string }]

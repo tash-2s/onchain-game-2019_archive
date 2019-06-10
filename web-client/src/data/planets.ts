@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { PlanetKind } from "../types/commonTypes"
+import { PlanetKind } from "../constants"
 
 interface NormalPlanet {
   id: number

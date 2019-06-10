@@ -1,7 +1,7 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
+
 import { UserPageUiActions, CommonUiActions } from "../actions/UiActions"
-import { PlanetKind } from "../types/commonTypes"
-import { SortKind } from "../types/uiTypes"
+import { PlanetKind, UserPlanetSortKind } from "../constants"
 
 export const initialUiState = {
   userPage: {
@@ -10,7 +10,7 @@ export const initialUiState = {
     planetListVisibilityOnMobile: false,
     selectedUserPlanetId: null as string | null,
     selectedUserPlanetKindForUserPlanetList: "all" as "all" | PlanetKind,
-    selectedSortKindForUserPlanetList: "Newest" as SortKind
+    selectedSortKindForUserPlanetList: "Newest" as UserPlanetSortKind
   },
   common: {
     activatedNavbarMenuOnMobile: false

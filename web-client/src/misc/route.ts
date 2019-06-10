@@ -1,6 +1,7 @@
 import { createBrowserHistory } from "history"
 import { Store } from "redux"
-import { routeIds, RouteId, RouteState } from "../types/commonTypes"
+
+import { routeIds, RouteId, RouteState } from "../constants"
 import { CommonActions } from "../actions/CommonActions"
 import pathToRegexp from "path-to-regexp"
 

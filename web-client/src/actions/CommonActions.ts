@@ -1,5 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
-import { RouteState } from "../types/commonTypes"
+import { RouteState } from "../constants"
 import { LoomWeb3 } from "../misc/loom"
 
 export class CommonActions extends AbstractActions {
