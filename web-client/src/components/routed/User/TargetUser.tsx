@@ -4,6 +4,7 @@ import { UiState } from "../../../reducers/uiReducer"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { ComputedCommonState } from "../../../computers/commonComputer"
+import { CurrentUserState } from "../../../reducers/currentUserReducer"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
@@ -13,6 +14,7 @@ import { PlanetList } from "./PlanetList"
 // targetUser is not null
 type TargetUserProps = {
   common: ComputedCommonState
+  currentUser: CurrentUserState
   user: { targetUser: ComputedTargetUserState }
   userPageUi: UiState["userPage"]
 } & UserDispatchProps
@@ -101,8 +103,9 @@ export class TargetUser extends React.Component<TargetUserProps> {
   }
 
   isMine = (): boolean => {
-    if (this.props.common.currentUser) {
-      return this.props.common.currentUser.address === this.props.user.targetUser.address
+    const address = this.props.currentUser.address
+    if (address) {
+      return address === this.props.user.targetUser.address
     } else {
       return false
     }

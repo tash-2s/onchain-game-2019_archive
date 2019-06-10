@@ -14,6 +14,8 @@ export class App extends React.Component<AppProps> {
         commonUi={this.props.commonUi}
         commonActions={this.props.commonActions}
         commonUiActions={this.props.commonUiActions}
+        currentUser={this.props.currentUser}
+        currentUserActions={this.props.currentUserActions}
       >
         {this.getRouted()}
       </Template>

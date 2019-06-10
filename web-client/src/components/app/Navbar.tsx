@@ -2,9 +2,10 @@ import * as React from "react"
 
 import { InternalLink } from "../utils/InternalLink"
 import { ComputedCommonState } from "../../computers/commonComputer"
+import { CurrentUserState } from "../../reducers/currentUserReducer"
 
 interface Props {
-  currentUser: ComputedCommonState["currentUser"]
+  currentUser: CurrentUserState
   activatedNavbarMenuOnMobile: boolean
   signup: () => void
   toggleNavbarMenuOnMobile: () => void
@@ -50,13 +51,13 @@ export function Navbar(props: Props) {
 }
 
 function NavEndContent(props: Props) {
-  if (props.currentUser) {
-    const user = props.currentUser
+  const address = props.currentUser.address
+  if (address) {
     return (
       <div className={"navbar-item has-dropdown is-hoverable"}>
-        <a className={"navbar-link"}>{user.address}</a>
+        <a className={"navbar-link"}>{address}</a>
         <div className={"navbar-dropdown"}>
-          <InternalLink className={"navbar-item"} to={["/:address", { address: user.address }]}>
+          <InternalLink className={"navbar-item"} to={["/:address", { address: address }]}>
             My Page
           </InternalLink>
           <a className={"navbar-item"}>Log out (TODO)</a>

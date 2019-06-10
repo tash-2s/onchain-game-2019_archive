@@ -2,23 +2,10 @@ import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { CommonActions } from "../actions/CommonActions"
 import { historyLib, convertHashToRouteIdWithParams } from "../misc/route"
-import { LoomWeb3 } from "../misc/loom"
 import { Time } from "../models/time"
 
-const getInitialRoute = () => {
-  return convertHashToRouteIdWithParams(historyLib.location.hash)
-}
-
-const getCurrentUser = () => {
-  if (LoomWeb3.isGuest) {
-    return null
-  }
-  return { address: LoomWeb3.accountAddress }
-}
-
 const createInitialState = () => ({
-  route: getInitialRoute(),
-  currentUser: getCurrentUser(),
+  route: convertHashToRouteIdWithParams(historyLib.location.hash),
   isLoading: false,
   isError: false,
   webTime: Time.now(),
@@ -41,10 +28,6 @@ export const createCommonReducer = () =>
     .case(CommonActions.stopLoading, state => {
       return { ...state, isLoading: false }
     })
-    .case(CommonActions.signup, (state, payload) => ({
-      ...state,
-      currentUser: { address: payload }
-    }))
     .case(CommonActions.updateTime, (state, payload) => {
       return {
         ...state,

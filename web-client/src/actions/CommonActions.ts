@@ -1,6 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
 import { RouteState } from "../constants"
-import { LoomWeb3 } from "../misc/loom"
 
 export class CommonActions extends AbstractActions {
   private static creator = CommonActions.getActionCreator()
@@ -18,12 +17,6 @@ export class CommonActions extends AbstractActions {
       console.error(error, info)
     }
     this.dispatch(CommonActions.throwError(error))
-  }
-
-  static signup = CommonActions.creator<string>("signup")
-  signup = () => {
-    const address = LoomWeb3.resetWithNewAccount()
-    this.dispatch(CommonActions.signup(address))
   }
 
   static startLoading = CommonActions.creator("startLoading")

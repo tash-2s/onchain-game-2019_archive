@@ -2,9 +2,11 @@ import * as React from "react"
 
 import { ComputedCommonState } from "../../computers/commonComputer"
 import { UiState } from "../../reducers/uiReducer"
+import { CurrentUserState } from "../../reducers/currentUserReducer"
 
 import { CommonActions } from "../../actions/CommonActions"
 import { CommonUiActions } from "../../actions/UiActions"
+import { CurrentUserActions } from "../../actions/CurrentUserActions"
 
 import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
@@ -14,6 +16,8 @@ export class Template extends React.Component<{
   commonUi: UiState["common"]
   commonActions: CommonActions
   commonUiActions: CommonUiActions
+  currentUser: CurrentUserState
+  currentUserActions: CurrentUserActions
 }> {
   dialogRef = React.createRef<HTMLDialogElement>()
 
@@ -44,9 +48,9 @@ export class Template extends React.Component<{
       <>
         <dialog ref={this.dialogRef}>LOADING</dialog>
         <Navbar
-          currentUser={this.props.common.currentUser}
+          currentUser={this.props.currentUser}
           activatedNavbarMenuOnMobile={this.props.commonUi.activatedNavbarMenuOnMobile}
-          signup={this.props.commonActions.signup}
+          signup={this.props.currentUserActions.signup}
           toggleNavbarMenuOnMobile={this.props.commonUiActions.toggleNavbarMenuOnMobile}
         />
         <section className={"section"}>

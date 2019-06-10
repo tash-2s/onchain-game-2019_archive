@@ -14,6 +14,7 @@ const mapStateToProps = (state: RootState) => {
 
   return {
     common: common,
+    currentUser: state.currentUser,
     userPageUi: state.ui.userPage,
     user: computeUserState(state.routed.user, common.now)
   }
