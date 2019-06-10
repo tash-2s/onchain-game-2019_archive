@@ -63,7 +63,6 @@ export const createUserReducer = () =>
     .build()
 
 const strToNum = (str: string): number => parseInt(str, 10)
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 const restructureUserFromResponse = (
   response: GetUserResponse

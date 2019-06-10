@@ -1,3 +1,2 @@
-const tuple = <T extends Array<string>>(...args: T) => args
-export const sortKinds = tuple("Newest", "Oldest")
+export const sortKinds = ["Newest", "Oldest"] as const
 export type SortKind = (typeof sortKinds)[number]
