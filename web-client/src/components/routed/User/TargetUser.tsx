@@ -3,8 +3,9 @@ import * as React from "react"
 import { UiState } from "../../../reducers/uiReducer"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { ComputedCommonState } from "../../../computers/commonComputer"
+import { CommonState } from "../../../reducers/commonReducer"
 import { CurrentUserState } from "../../../reducers/currentUserReducer"
+import { ComputedTimeState } from "../../../computers/timeComputer"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
@@ -13,8 +14,9 @@ import { PlanetList } from "./PlanetList"
 
 // targetUser is not null
 type TargetUserProps = {
-  common: ComputedCommonState
+  common: CommonState
   currentUser: CurrentUserState
+  time: ComputedTimeState
   user: { targetUser: ComputedTargetUserState }
   userPageUi: UiState["userPage"]
 } & UserDispatchProps
@@ -33,7 +35,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
             isMine={isMine}
             userActions={this.props.userActions}
             uiActions={this.props.userPageUiActions}
-            now={this.props.common.now}
+            now={this.props.time.now}
           />
         )
         break
@@ -41,7 +43,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
         userPlanets = (
           <UserPlanetList
             user={user}
-            now={this.props.common.now}
+            now={this.props.time.now}
             isMine={isMine}
             rankup={this.props.userActions.rankupUserNormalPlanet}
             remove={this.props.userActions.removeUserNormalPlanet}

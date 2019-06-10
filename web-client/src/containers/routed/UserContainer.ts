@@ -3,19 +3,20 @@ import { Dispatch, AnyAction } from "redux"
 
 import { RootState } from "../../reducers/rootReducer"
 import { computeUserState } from "../../computers/userComputer"
-import { computeCommonState } from "../../computers/commonComputer"
+import { computeTimeState } from "../../computers/timeComputer"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
 import { UserPageUiActions } from "../../actions/UiActions"
 
 const mapStateToProps = (state: RootState) => {
-  const common = computeCommonState(state.common)
+  const time = computeTimeState(state.time)
 
   return {
-    common: common,
+    common: state.common,
     currentUser: state.currentUser,
+    time: time,
     userPageUi: state.ui.userPage,
-    user: computeUserState(state.routed.user, common.now)
+    user: computeUserState(state.routed.user, time.now)
   }
 }
 

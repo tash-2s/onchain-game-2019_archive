@@ -28,14 +28,4 @@ export class CommonActions extends AbstractActions {
   stopLoading = () => {
     this.dispatch(CommonActions.stopLoading())
   }
-
-  static updateTime = CommonActions.creator<{ webTime: number; loomTime: number }>("updateTime")
-  updateTime = (webTime: number, loomTime: number) => {
-    this.dispatch(CommonActions.updateTime({ webTime, loomTime }))
-  }
-
-  static updateWebTime = CommonActions.creator<number>("updateWebTime")
-  updateWebTime = (webTime: number) => {
-    this.dispatch(CommonActions.updateWebTime(webTime))
-  }
 }

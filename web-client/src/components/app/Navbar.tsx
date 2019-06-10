@@ -1,7 +1,6 @@
 import * as React from "react"
 
 import { InternalLink } from "../utils/InternalLink"
-import { ComputedCommonState } from "../../computers/commonComputer"
 import { CurrentUserState } from "../../reducers/currentUserReducer"
 
 interface Props {

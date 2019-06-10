@@ -2,7 +2,6 @@ import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
 import { RootState } from "../reducers/rootReducer"
-import { computeCommonState } from "../computers/commonComputer"
 import { App } from "../components/App"
 
 import { CommonActions } from "../actions/CommonActions"
@@ -11,7 +10,7 @@ import { CommonUiActions } from "../actions/UiActions"
 
 const mapStateToProps = (state: RootState) => {
   return {
-    common: computeCommonState(state.common),
+    common: state.common,
     currentUser: state.currentUser,
     commonUi: state.ui.common
   }
