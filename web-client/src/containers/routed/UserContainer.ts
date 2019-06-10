@@ -6,7 +6,6 @@ import { computeUserState } from "../../computers/userComputer"
 import { computeCommonState } from "../../computers/commonComputer"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
-import { CommonActions } from "../../actions/CommonActions"
 import { UserPageUiActions } from "../../actions/UiActions"
 
 const mapStateToProps = (state: RootState) => {
@@ -22,7 +21,6 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    commonActions: new CommonActions(dispatch),
     userPageUiActions: new UserPageUiActions(dispatch),
     userActions: new UserActions(dispatch)
   }
