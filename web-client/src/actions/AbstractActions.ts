@@ -16,6 +16,7 @@ export class AbstractActions {
   }
 
   protected withLoading = async (fn: () => void) => {
+    // TODO: this is weird
     new AppActions(this.dispatch).startLoading()
     await fn()
     new AppActions(this.dispatch).stopLoading()
