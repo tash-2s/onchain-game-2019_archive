@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { ComputedTargetUserState } from "../../computers/userComputer"
 
 export function PlanetHex(props: {
   q: number

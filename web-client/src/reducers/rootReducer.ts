@@ -5,8 +5,8 @@ import { createCurrentUserReducer } from "./currentUserReducer"
 import { createTimeReducer } from "./timeReducer"
 import { createTemplateUiReducer } from "./templateUiReducer"
 import { createUserPageUiReducer } from "./userPageUiReducer"
-import { createUserReducer } from "./routed/userReducer"
-import { createUsersReducer } from "./routed/usersReducer"
+import { createUserReducer } from "./userReducer"
+import { createUsersReducer } from "./usersReducer"
 
 export const createReducer = () =>
   combineReducers({
@@ -15,10 +15,8 @@ export const createReducer = () =>
     time: createTimeReducer(),
     templateUi: createTemplateUiReducer(),
     userPageUi: createUserPageUiReducer(),
-    routed: combineReducers({
-      user: createUserReducer(),
-      users: createUsersReducer()
-    })
+    user: createUserReducer(),
+    users: createUsersReducer()
   })
 
 type FirstNonUndef<T extends [any, any]> = T extends [infer P | undefined, any] ? P : never

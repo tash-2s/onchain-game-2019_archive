@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { PrettyBN } from "../../utils/PrettyBN"
-import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { PrettyBN } from "../utils/PrettyBN"
+import { ComputedTargetUserState } from "../../computers/userComputer"
 
 interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]

@@ -1,9 +1,9 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { PrettyBN } from "../../utils/PrettyBN"
-import { initialPlanetIds, getNormalPlanet } from "../../../data/planets"
+import { ComputedTargetUserState } from "../../computers/userComputer"
+import { PrettyBN } from "../utils/PrettyBN"
+import { initialPlanetIds, getNormalPlanet } from "../../data/planets"
 
 export function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
   const radius = props.user.map.usableRadius

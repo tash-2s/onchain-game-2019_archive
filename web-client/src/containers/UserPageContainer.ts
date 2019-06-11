@@ -1,12 +1,12 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { RootState } from "../../reducers/rootReducer"
-import { computeUserState } from "../../computers/userComputer"
-import { computeTimeState } from "../../computers/timeComputer"
-import { User } from "../../components/routed/User"
-import { UserActions } from "../../actions/routed/UserActions"
-import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { RootState } from "../reducers/rootReducer"
+import { computeUserState } from "../computers/userComputer"
+import { computeTimeState } from "../computers/timeComputer"
+import { UserPage } from "../components/UserPage"
+import { UserActions } from "../actions/UserActions"
+import { UserPageUiActions } from "../actions/UserPageUiActions"
 
 const mapStateToProps = (state: RootState) => {
   const time = computeTimeState(state.time)
@@ -16,7 +16,7 @@ const mapStateToProps = (state: RootState) => {
     currentUser: state.currentUser,
     time: time,
     userPageUi: state.userPageUi,
-    user: computeUserState(state.routed.user, time.now)
+    user: computeUserState(state.user, time.now)
   }
 }
 
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
 export type UserDispatchProps = ReturnType<typeof mapDispatchToProps>
 export type UserProps = ReturnType<typeof mapStateToProps> & UserDispatchProps
 
-export const UserContainer = connect(
+export const UserPageContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(User)
+)(UserPage)

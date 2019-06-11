@@ -1,12 +1,12 @@
 import * as React from "react"
 
-import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { UserActions } from "../../../actions/routed/UserActions"
-import { UserPageUiActions } from "../../../actions/UserPageUiActions"
-import { UserPageUiState } from "../../../reducers/userPageUiReducer"
+import { ComputedTargetUserState } from "../../computers/userComputer"
+import { UserActions } from "../../actions/UserActions"
+import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { UserPageUiState } from "../../reducers/userPageUiReducer"
 
 import { PlanetHex } from "./PlanetHex"
-import { Modal } from "../../utils/Modal"
+import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
 
 interface Props {

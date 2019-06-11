@@ -1,7 +1,7 @@
 import BN from "bn.js"
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UsersActions } from "../../actions/routed/UsersActions"
+import { UsersActions } from "../actions/UsersActions"
 
 const initialState: { users: Array<{ address: string; gold: string }> } = {
   users: []

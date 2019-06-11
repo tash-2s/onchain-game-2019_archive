@@ -1,8 +1,8 @@
 import * as React from "react"
 
-import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { ComputedTargetUserState } from "../../computers/userComputer"
 import { OngoingUserStatus } from "./OngoingUserStatus"
-import { PrettyBN } from "../../utils/PrettyBN"
+import { PrettyBN } from "../utils/PrettyBN"
 
 export function UserProfile(props: { user: ComputedTargetUserState; isMine: boolean }) {
   return (

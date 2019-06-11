@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserActions, GetUserResponse } from "../../actions/routed/UserActions"
+import { UserActions, GetUserResponse } from "../actions/UserActions"
 
 export interface UserState {
   targetUser: TargetUserState | null

@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { UserProps } from "../../containers/routed/UserContainer"
-import { TargetUser } from "./User/TargetUser"
-import { initialUserPageUiState } from "../../reducers/userPageUiReducer"
+import { UserProps } from "../containers/UserPageContainer"
+import { TargetUser } from "./UserPage/TargetUser"
+import { initialUserPageUiState } from "../reducers/userPageUiReducer"
 
-export class User extends React.Component<UserProps> {
+export class UserPage extends React.Component<UserProps> {
   render = () => {
     if (
       this.props.user.targetUser &&

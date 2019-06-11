@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserState } from "../reducers/routed/userReducer"
+import { UserState } from "../reducers/userReducer"
 import { NormalPlanetsData, initialPlanetIds, getNormalPlanet } from "../data/planets"
 import {
   computeUserNormalPlanetParams,

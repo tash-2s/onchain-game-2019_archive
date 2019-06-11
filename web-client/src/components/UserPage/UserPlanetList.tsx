@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { ComputedTargetUserState } from "../../computers/userComputer"
 import { UserPlanet } from "./UserPlanet"
-import { UserPageUiState } from "../../../reducers/userPageUiReducer"
-import { userPlanetSortKinds, planetKindsWithAll } from "../../../constants"
-import { UserPageUiActions } from "../../../actions/UserPageUiActions"
+import { UserPageUiState } from "../../reducers/userPageUiReducer"
+import { userPlanetSortKinds, planetKindsWithAll } from "../../constants"
+import { UserPageUiActions } from "../../actions/UserPageUiActions"
 
 interface UserPlanetListProps {
   user: ComputedTargetUserState

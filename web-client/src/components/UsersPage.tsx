@@ -1,11 +1,11 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { PrettyBN } from "../utils/PrettyBN"
-import { UsersProps } from "../../containers/routed/UsersContainer"
-import { InternalLink } from "../utils/InternalLink"
+import { PrettyBN } from "./utils/PrettyBN"
+import { UsersProps } from "../containers/UsersPageContainer"
+import { InternalLink } from "./utils/InternalLink"
 
-export class Users extends React.Component<UsersProps> {
+export class UsersPage extends React.Component<UsersProps> {
   render = () => {
     const users = this.props.users.users.map(user => {
       return (

@@ -1,5 +1,5 @@
-import { AbstractActions } from "../AbstractActions"
-import { callLoomContractMethod, LoomWeb3 } from "../../misc/loom"
+import { AbstractActions } from "./AbstractActions"
+import { callLoomContractMethod, LoomWeb3 } from "../misc/loom"
 
 export class UsersActions extends AbstractActions {
   private static creator = UsersActions.getActionCreator()

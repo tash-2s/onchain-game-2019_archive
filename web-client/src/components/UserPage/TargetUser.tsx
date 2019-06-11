@@ -1,11 +1,11 @@
 import * as React from "react"
 
-import { CurrentUserState } from "../../../reducers/currentUserReducer"
-import { ComputedTimeState } from "../../../computers/timeComputer"
-import { UserPageUiState } from "../../../reducers/userPageUiReducer"
-import { ComputedTargetUserState } from "../../../computers/userComputer"
-import { UserPageUiActions } from "../../../actions/UserPageUiActions"
-import { UserActions } from "../../../actions/routed/UserActions"
+import { CurrentUserState } from "../../reducers/currentUserReducer"
+import { ComputedTimeState } from "../../computers/timeComputer"
+import { UserPageUiState } from "../../reducers/userPageUiReducer"
+import { ComputedTargetUserState } from "../../computers/userComputer"
+import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { UserActions } from "../../actions/UserActions"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"

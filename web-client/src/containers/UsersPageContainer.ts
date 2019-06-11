@@ -1,12 +1,12 @@
 import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
-import { RootState } from "../../reducers/rootReducer"
-import { Users } from "../../components/routed/Users"
-import { UsersActions } from "../../actions/routed/UsersActions"
+import { RootState } from "../reducers/rootReducer"
+import { UsersPage } from "../components/UsersPage"
+import { UsersActions } from "../actions/UsersActions"
 
 const mapStateToProps = (state: RootState) => {
-  return { users: state.routed.users }
+  return { users: state.users }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
 
 export type UsersProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-export const UsersContainer = connect(
+export const UsersPageContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Users)
+)(UsersPage)

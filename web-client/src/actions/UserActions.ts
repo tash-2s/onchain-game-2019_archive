@@ -1,15 +1,13 @@
-import { AbstractActions } from "../AbstractActions"
+import { AbstractActions } from "./AbstractActions"
 import {
   callLoomContractMethod,
   sendLoomContractMethod,
   TxCallGenericsType,
   LoomWeb3
-} from "../../misc/loom"
+} from "../misc/loom"
 
 export type GetUserResponse = TxCallGenericsType<
-  ReturnType<
-    import("../../chain/types/UserController").UserControllerDefinition["methods"]["getUser"]
-  >
+  ReturnType<import("../chain/types/UserController").UserControllerDefinition["methods"]["getUser"]>
 >
 
 interface User {

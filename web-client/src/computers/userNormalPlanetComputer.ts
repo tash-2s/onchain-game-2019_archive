@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserNormalPlanet } from "../reducers/routed/userReducer"
+import { UserNormalPlanet } from "../reducers/userReducer"
 import { getNormalPlanet } from "../data/planets"
 
 export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPlanet>) => {
