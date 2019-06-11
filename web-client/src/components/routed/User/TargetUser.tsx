@@ -1,27 +1,29 @@
 import * as React from "react"
 
-import { UserPageUiState } from "../../../reducers/userPageUiReducer"
-import { UserDispatchProps } from "../../../containers/routed/UserContainer"
-import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { CurrentUserState } from "../../../reducers/currentUserReducer"
 import { ComputedTimeState } from "../../../computers/timeComputer"
+import { UserPageUiState } from "../../../reducers/userPageUiReducer"
+import { ComputedTargetUserState } from "../../../computers/userComputer"
+import { UserPageUiActions } from "../../../actions/UserPageUiActions"
+import { UserActions } from "../../../actions/routed/UserActions"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
 import { UserPlanetMap } from "./UserPlanetMap"
 import { PlanetList } from "./PlanetList"
 
-// targetUser is not null
-type TargetUserProps = {
+interface TargetUserProps {
   currentUser: CurrentUserState
   time: ComputedTimeState
-  user: { targetUser: ComputedTargetUserState }
   userPageUi: UserPageUiState
-} & UserDispatchProps
+  targetUser: ComputedTargetUserState
+  userPageUiActions: UserPageUiActions
+  userActions: UserActions
+}
 
 export class TargetUser extends React.Component<TargetUserProps> {
   render = () => {
-    const user = this.props.user.targetUser
+    const user = this.props.targetUser
     const isMine = this.isMine()
     let userPlanets
     switch (this.props.userPageUi.selectedUserPlanetViewKind) {
@@ -101,7 +103,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
   isMine = (): boolean => {
     const address = this.props.currentUser.address
     if (address) {
-      return address === this.props.user.targetUser.address
+      return address === this.props.targetUser.address
     } else {
       return false
     }
@@ -109,7 +111,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
 }
 
 class Buttons extends React.Component<{
-  actions: UserDispatchProps["userPageUiActions"]
+  actions: UserPageUiActions
 }> {
   render = () => {
     return (

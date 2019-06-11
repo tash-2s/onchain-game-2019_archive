@@ -15,7 +15,16 @@ export class User extends React.Component<UserProps> {
         ...this.props,
         user: { ...this.props.user, targetUser: this.props.user.targetUser }
       }
-      return <TargetUser {...props} />
+      return (
+        <TargetUser
+          currentUser={this.props.currentUser}
+          time={this.props.time}
+          userPageUi={this.props.userPageUi}
+          targetUser={this.props.user.targetUser}
+          userPageUiActions={this.props.userPageUiActions}
+          userActions={this.props.userActions}
+        />
+      )
     } else {
       return <div>loading...</div>
     }
