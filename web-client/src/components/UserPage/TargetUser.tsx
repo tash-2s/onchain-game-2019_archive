@@ -48,7 +48,7 @@ export function TargetUser(props: {
 
         <div className={`column is-three-quarters`}>
           <Buttons actions={props.userPageUiActions} />
-          <UserPlanets
+          <ViewKindRouter
             targetUser={props.targetUser}
             userActions={props.userActions}
             userPageUi={props.userPageUi}
@@ -97,7 +97,7 @@ function WrappedPlanetList(props: {
   )
 }
 
-function UserPlanets(props: {
+function ViewKindRouter(props: {
   targetUser: ComputedTargetUserState
   userActions: UserActions
   userPageUi: UserPageUiState
