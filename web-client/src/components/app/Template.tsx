@@ -1,11 +1,11 @@
 import * as React from "react"
 
 import { AppState } from "../../reducers/appReducer"
-import { UiState } from "../../reducers/uiReducer"
+import { TemplateUiState } from "../../reducers/templateUiReducer"
 import { CurrentUserState } from "../../reducers/currentUserReducer"
 
 import { AppActions } from "../../actions/AppActions"
-import { CommonUiActions } from "../../actions/UiActions"
+import { TemplateUiActions } from "../../actions/TemplateUiActions"
 import { CurrentUserActions } from "../../actions/CurrentUserActions"
 
 import { Navbar } from "./Navbar"
@@ -13,11 +13,11 @@ import { Footer } from "./Footer"
 
 export class Template extends React.Component<{
   app: AppState
-  commonUi: UiState["common"]
   appActions: AppActions
-  commonUiActions: CommonUiActions
   currentUser: CurrentUserState
   currentUserActions: CurrentUserActions
+  templateUi: TemplateUiState
+  templateUiActions: TemplateUiActions
 }> {
   dialogRef = React.createRef<HTMLDialogElement>()
 
@@ -49,9 +49,9 @@ export class Template extends React.Component<{
         <dialog ref={this.dialogRef}>LOADING</dialog>
         <Navbar
           currentUser={this.props.currentUser}
-          activatedNavbarMenuOnMobile={this.props.commonUi.activatedNavbarMenuOnMobile}
+          activatedNavbarMenuForMobile={this.props.templateUi.activatedNavbarMenuForMobile}
           signup={this.props.currentUserActions.signup}
-          toggleNavbarMenuOnMobile={this.props.commonUiActions.toggleNavbarMenuOnMobile}
+          toggleNavbarMenuForMobile={this.props.templateUiActions.toggleNavbarMenuForMobile}
         />
         <section className={"section"}>
           <div className={"container"}>{this.getErrorOrChildren()}</div>

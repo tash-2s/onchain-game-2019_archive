@@ -2,9 +2,9 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserPlanet } from "./UserPlanet"
-import { UiState } from "../../../reducers/uiReducer"
-import { userPlanetSortKinds, planetKinds } from "../../../constants"
-import { UserPageUiActions } from "../../../actions/UiActions"
+import { UserPageUiState } from "../../../reducers/userPageUiReducer"
+import { userPlanetSortKinds, planetKindsWithAll } from "../../../constants"
+import { UserPageUiActions } from "../../../actions/UserPageUiActions"
 
 interface UserPlanetListProps {
   user: ComputedTargetUserState
@@ -12,7 +12,7 @@ interface UserPlanetListProps {
   now: number
   rankup: (userPlanetId: string, targetRank: number) => void
   remove: (userPlanetId: string) => void
-  ui: UiState["userPage"]
+  ui: UserPageUiState
   uiActions: UserPageUiActions
 }
 
@@ -60,7 +60,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
   )
 }
 
-function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActions }) {
+function Controller(props: { state: UserPageUiState; actions: UserPageUiActions }) {
   const planetKind = props.state.selectedUserPlanetKindForUserPlanetList
   const sortKind = props.state.selectedSortKindForUserPlanetList
   const selectKind = (_kind: typeof planetKind) => () =>
@@ -82,7 +82,7 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
     )
   })
 
-  const kinds = planetKinds.map(k => {
+  const kinds = planetKindsWithAll.map(k => {
     return (
       <li key={k} className={planetKind === k ? "is-active" : ""}>
         <a onClick={selectKind(k)}>{k.slice(0, 1).toUpperCase() + k.slice(1)}</a>
@@ -95,12 +95,7 @@ function Controller(props: { state: UiState["userPage"]; actions: UserPageUiActi
       <div className={"level-left"}>
         <div className={"level-item"}>
           <div className={"tabs is-toggle"}>
-            <ul>
-              <li className={planetKind === "all" ? "is-active" : ""}>
-                <a onClick={selectKind("all")}>All</a>
-              </li>
-              {kinds}
-            </ul>
+            <ul>{kinds}</ul>
           </div>
         </div>
       </div>

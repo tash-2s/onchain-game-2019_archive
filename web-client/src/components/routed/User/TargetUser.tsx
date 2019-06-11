@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { UiState } from "../../../reducers/uiReducer"
+import { UserPageUiState } from "../../../reducers/userPageUiReducer"
 import { UserDispatchProps } from "../../../containers/routed/UserContainer"
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { CurrentUserState } from "../../../reducers/currentUserReducer"
@@ -16,7 +16,7 @@ type TargetUserProps = {
   currentUser: CurrentUserState
   time: ComputedTimeState
   user: { targetUser: ComputedTargetUserState }
-  userPageUi: UiState["userPage"]
+  userPageUi: UserPageUiState
 } & UserDispatchProps
 
 export class TargetUser extends React.Component<TargetUserProps> {
@@ -24,7 +24,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
     const user = this.props.user.targetUser
     const isMine = this.isMine()
     let userPlanets
-    switch (this.props.userPageUi.selectedUserPlanetViewType) {
+    switch (this.props.userPageUi.selectedUserPlanetViewKind) {
       case "map":
         userPlanets = (
           <UserPlanetMap
@@ -59,14 +59,14 @@ export class TargetUser extends React.Component<TargetUserProps> {
         >
           <button
             className={"button is-small is-primary"}
-            onClick={this.props.userPageUiActions.togglePlanetListVisibility}
+            onClick={this.props.userPageUiActions.togglePlanetListVisibilityForMobile}
           >
-            {this.props.userPageUi.planetListVisibilityOnMobile ? "Hide" : "Show"} Planet List
+            {this.props.userPageUi.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
           </button>
         </div>
 
         <div
-          className={this.props.userPageUi.planetListVisibilityOnMobile ? "" : "is-hidden-touch"}
+          className={this.props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}
         >
           <PlanetList
             normalPlanets={user.normalPlanets}
@@ -90,11 +90,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
           </div>
 
           <div className={`column is-three-quarters`}>
-            <Buttons
-              ui={this.props.userPageUi}
-              actions={this.props.userPageUiActions}
-              isMine={isMine}
-            />
+            <Buttons actions={this.props.userPageUiActions} />
             {userPlanets}
           </div>
         </div>
@@ -113,16 +109,17 @@ export class TargetUser extends React.Component<TargetUserProps> {
 }
 
 class Buttons extends React.Component<{
-  ui: UiState["userPage"]
   actions: UserDispatchProps["userPageUiActions"]
-  isMine: boolean
 }> {
   render = () => {
     return (
       <nav className={"level"}>
         <div className={"level-left"}>
           <div className={"level-item"}>
-            <button className={"button is-small"} onClick={this.toggleUserPlanets}>
+            <button
+              className={"button is-small"}
+              onClick={this.props.actions.toggleUserPlanetViewKind}
+            >
               Toggle View
             </button>
           </div>
@@ -133,16 +130,5 @@ class Buttons extends React.Component<{
         </div>
       </nav>
     )
-  }
-
-  toggleUserPlanets = () => {
-    switch (this.props.ui.selectedUserPlanetViewType) {
-      case "map":
-        this.props.actions.selectUserPlanetViewType("list")
-        break
-      case "list":
-        this.props.actions.selectUserPlanetViewType("map")
-        break
-    }
   }
 }

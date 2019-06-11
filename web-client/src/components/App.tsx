@@ -9,11 +9,11 @@ export function App(props: AppProps) {
   return (
     <Template
       app={props.app}
-      commonUi={props.commonUi}
       appActions={props.appActions}
-      commonUiActions={props.commonUiActions}
       currentUser={props.currentUser}
       currentUserActions={props.currentUserActions}
+      templateUi={props.templateUi}
+      templateUiActions={props.templateUiActions}
     >
       <Router route={props.app.route} />
     </Template>

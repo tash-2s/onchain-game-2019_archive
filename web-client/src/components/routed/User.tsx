@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { UserProps } from "../../containers/routed/UserContainer"
 import { TargetUser } from "./User/TargetUser"
-import { initialUiState } from "../../reducers/uiReducer"
+import { initialUserPageUiState } from "../../reducers/userPageUiReducer"
 
 export class User extends React.Component<UserProps> {
   render = () => {
@@ -30,7 +30,7 @@ export class User extends React.Component<UserProps> {
       this.props.user.targetUser &&
       this.props.user.targetUser.address !== this.props.route.params[0]
     ) {
-      if (stringify(this.props.userPageUi) !== stringify(initialUiState.userPage)) {
+      if (stringify(this.props.userPageUi) !== stringify(initialUserPageUiState)) {
         this.props.userPageUiActions.clear()
         return
       }

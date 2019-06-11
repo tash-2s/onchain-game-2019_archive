@@ -2,12 +2,12 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { PrettyBN } from "../../utils/PrettyBN"
-import { UiState } from "../../../reducers/uiReducer"
+import { UserPageUiState } from "../../../reducers/userPageUiReducer"
 
 export class PlanetList extends React.Component<{
   normalPlanets: ComputedTargetUserState["normalPlanets"]
   setPlanetToGet: (planetId: number) => void
-  userPageUi: UiState["userPage"]
+  userPageUi: UserPageUiState
 }> {
   render = () => {
     const buttonText = "Get"

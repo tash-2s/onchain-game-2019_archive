@@ -6,7 +6,7 @@ import { computeUserState } from "../../computers/userComputer"
 import { computeTimeState } from "../../computers/timeComputer"
 import { User } from "../../components/routed/User"
 import { UserActions } from "../../actions/routed/UserActions"
-import { UserPageUiActions } from "../../actions/UiActions"
+import { UserPageUiActions } from "../../actions/UserPageUiActions"
 
 const mapStateToProps = (state: RootState) => {
   const time = computeTimeState(state.time)
@@ -15,7 +15,7 @@ const mapStateToProps = (state: RootState) => {
     route: state.app.route,
     currentUser: state.currentUser,
     time: time,
-    userPageUi: state.ui.userPage,
+    userPageUi: state.userPageUi,
     user: computeUserState(state.routed.user, time.now)
   }
 }

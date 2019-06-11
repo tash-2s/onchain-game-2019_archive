@@ -5,14 +5,14 @@ import { CurrentUserState } from "../../reducers/currentUserReducer"
 
 interface Props {
   currentUser: CurrentUserState
-  activatedNavbarMenuOnMobile: boolean
+  activatedNavbarMenuForMobile: boolean
   signup: () => void
-  toggleNavbarMenuOnMobile: () => void
+  toggleNavbarMenuForMobile: () => void
 }
 
 export function Navbar(props: Props) {
   // when an error occurs, this should be un-clickable, because the store will continue to have the error state
-  const mobileClass = props.activatedNavbarMenuOnMobile ? "is-active" : ""
+  const mobileClass = props.activatedNavbarMenuForMobile ? "is-active" : ""
 
   return (
     <nav className={"navbar has-shadow"}>
@@ -22,7 +22,7 @@ export function Navbar(props: Props) {
             <strong>k2</strong>
           </InternalLink>
 
-          <a onClick={props.toggleNavbarMenuOnMobile} className={`navbar-burger ${mobileClass}`}>
+          <a onClick={props.toggleNavbarMenuForMobile} className={`navbar-burger ${mobileClass}`}>
             <span />
             <span />
             <span />

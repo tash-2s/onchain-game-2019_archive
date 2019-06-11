@@ -2,8 +2,8 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../../computers/userComputer"
 import { UserActions } from "../../../actions/routed/UserActions"
-import { UserPageUiActions } from "../../../actions/UiActions"
-import { UiState } from "../../../reducers/uiReducer"
+import { UserPageUiActions } from "../../../actions/UserPageUiActions"
+import { UserPageUiState } from "../../../reducers/userPageUiReducer"
 
 import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../../utils/Modal"
@@ -11,7 +11,7 @@ import { UserPlanet } from "./UserPlanet"
 
 interface Props {
   user: ComputedTargetUserState
-  userPageUi: UiState["userPage"]
+  userPageUi: UserPageUiState
   isMine: boolean
   userActions: UserActions
   uiActions: UserPageUiActions
