@@ -1,4 +1,5 @@
 import * as React from "react"
+
 import { RouteId } from "../../constants"
 import { historyLib, combineRouteIdAndParams } from "../../misc/route"
 
@@ -7,12 +8,10 @@ const isRouteIdWithParamsObj = (arg: any): arg is RouteIdWithParamsObj => {
   return "object" === typeof arg && "object" === typeof arg[1]
 }
 
-interface InternalLinkProps {
+export class InternalLink extends React.Component<{
   to: RouteId | RouteIdWithParamsObj
   className?: string
-}
-
-export class InternalLink extends React.Component<InternalLinkProps> {
+}> {
   aRef = React.createRef<HTMLAnchorElement>()
 
   render = () => {

@@ -15,15 +15,15 @@ const mapStateToProps = (state: RootState) => {
     route: state.app.route,
     currentUser: state.currentUser,
     time: time,
-    userPageUi: state.userPageUi,
-    user: computeUserState(state.user, time.now)
+    user: computeUserState(state.user, time.now),
+    userPageUi: state.userPageUi
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    userPageUiActions: new UserPageUiActions(dispatch),
-    userActions: new UserActions(dispatch)
+    userActions: new UserActions(dispatch),
+    userPageUiActions: new UserPageUiActions(dispatch)
   }
 }
 

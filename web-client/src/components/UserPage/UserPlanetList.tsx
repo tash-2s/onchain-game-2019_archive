@@ -5,19 +5,17 @@ import { UserPlanet } from "./UserPlanet"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { userPlanetSortKinds, planetKindsWithAll } from "../../constants"
 import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { UserActions } from "../../actions/UserActions"
 
-interface UserPlanetListProps {
+export function UserPlanetList(props: {
   user: ComputedTargetUserState
-  isMine: boolean
+  userActions: UserActions
+  userPageUi: UserPageUiState
+  userPageUiActions: UserPageUiActions
   now: number
-  rankup: (userPlanetId: string, targetRank: number) => void
-  remove: (userPlanetId: string) => void
-  ui: UserPageUiState
-  uiActions: UserPageUiActions
-}
-
-export function UserPlanetList(props: UserPlanetListProps) {
-  const selectedKind = props.ui.selectedPlanetKind
+  isMine: boolean
+}) {
+  const selectedKind = props.userPageUi.selectedPlanetKind
   const userPlanets = props.user.userNormalPlanets
     .filter(up => {
       if (selectedKind === "all") {
@@ -26,7 +24,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
       return up.planet.kind === selectedKind
     })
     .sort((a, b) => {
-      switch (props.ui.selectedUserPlanetSortKind) {
+      switch (props.userPageUi.selectedUserPlanetSortKind) {
         case "Newest":
           return b.createdAt - a.createdAt
         case "Oldest":
@@ -43,8 +41,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
             isMine={props.isMine}
             knowledge={props.user.knowledge}
             now={props.now}
-            rankup={props.rankup}
-            remove={props.remove}
+            userActions={props.userActions}
           />
         </td>
       </tr>
@@ -52,7 +49,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
 
   return (
     <>
-      <Controller state={props.ui} actions={props.uiActions} />
+      <Controller state={props.userPageUi} actions={props.userPageUiActions} />
       <table className={"table is-bordered is-fullwidth"}>
         <tbody>{userPlanets}</tbody>
       </table>

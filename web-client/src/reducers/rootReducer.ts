@@ -13,10 +13,10 @@ export const createReducer = () =>
     app: createAppReducer(),
     currentUser: createCurrentUserReducer(),
     time: createTimeReducer(),
-    templateUi: createTemplateUiReducer(),
-    userPageUi: createUserPageUiReducer(),
     user: createUserReducer(),
-    users: createUsersReducer()
+    users: createUsersReducer(),
+    templateUi: createTemplateUiReducer(),
+    userPageUi: createUserPageUiReducer()
   })
 
 type FirstNonUndef<T extends [any, any]> = T extends [infer P | undefined, any] ? P : never

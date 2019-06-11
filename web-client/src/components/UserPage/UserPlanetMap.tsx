@@ -11,11 +11,11 @@ import { UserPlanet } from "./UserPlanet"
 
 interface Props {
   user: ComputedTargetUserState
-  userPageUi: UserPageUiState
-  isMine: boolean
   userActions: UserActions
-  uiActions: UserPageUiActions
+  userPageUi: UserPageUiState
+  userPageUiActions: UserPageUiActions
   now: number
+  isMine: boolean
 }
 
 interface State {
@@ -54,7 +54,7 @@ export class UserPlanetMap extends React.Component<Props, State> {
       const settable =
         this.props.isMine && !!this.props.userPageUi.selectedNormalPlanetId && h.settable
       const selectFn = () => {
-        !h.userPlanet || this.props.uiActions.selectUserPlanet(h.userPlanet.id)
+        !h.userPlanet || this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
       }
 
       return (
@@ -76,31 +76,9 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
     const height = (shownRadius * 2 + 1) * hexHeight
 
-    let modal = <></>
-    if (this.props.userPageUi.selectedUserPlanetId) {
-      const up = this.props.user.userNormalPlanets.find(
-        up => up.id === this.props.userPageUi.selectedUserPlanetId
-      )
-      // this must be always true
-      if (up) {
-        modal = (
-          <Modal close={this.props.uiActions.unselectUserPlanet}>
-            <UserPlanet
-              userPlanet={up}
-              isMine={this.props.isMine}
-              knowledge={this.props.user.knowledge}
-              now={this.props.now}
-              rankup={this.props.userActions.rankupUserPlanet}
-              remove={this.props.userActions.removeUserPlanet}
-            />
-          </Modal>
-        )
-      }
-    }
-
     return (
       <>
-        {modal}
+        <WrappedModal {...this.props} />
         <div style={{ position: "relative", height: height }}>{hexes}</div>
       </>
     )
@@ -112,7 +90,30 @@ export class UserPlanetMap extends React.Component<Props, State> {
         throw new Error("this must be called with target")
       }
       this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
-      this.props.uiActions.unselectPlanet()
+      this.props.userPageUiActions.unselectPlanet()
     }
   }
+}
+
+function WrappedModal(props: Props) {
+  if (props.userPageUi.selectedUserPlanetId) {
+    const up = props.user.userNormalPlanets.find(
+      up => up.id === props.userPageUi.selectedUserPlanetId
+    )
+    // this must be always true
+    if (up) {
+      return (
+        <Modal close={props.userPageUiActions.unselectUserPlanet}>
+          <UserPlanet
+            userPlanet={up}
+            isMine={props.isMine}
+            knowledge={props.user.knowledge}
+            now={props.now}
+            userActions={props.userActions}
+          />
+        </Modal>
+      )
+    }
+  }
+  return <></>
 }

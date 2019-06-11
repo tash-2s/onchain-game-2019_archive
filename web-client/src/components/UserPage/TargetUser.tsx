@@ -12,125 +12,139 @@ import { UserPlanetList } from "./UserPlanetList"
 import { UserPlanetMap } from "./UserPlanetMap"
 import { PlanetList } from "./PlanetList"
 
-interface TargetUserProps {
+export function TargetUser(props: {
   currentUser: CurrentUserState
   time: ComputedTimeState
-  userPageUi: UserPageUiState
   targetUser: ComputedTargetUserState
-  userPageUiActions: UserPageUiActions
   userActions: UserActions
-}
-
-export class TargetUser extends React.Component<TargetUserProps> {
-  render = () => {
-    const user = this.props.targetUser
-    const isMine = this.isMine()
-    let userPlanets
-    switch (this.props.userPageUi.selectedUserPlanetViewKind) {
-      case "map":
-        userPlanets = (
-          <UserPlanetMap
-            user={user}
-            userPageUi={this.props.userPageUi}
-            isMine={isMine}
-            userActions={this.props.userActions}
-            uiActions={this.props.userPageUiActions}
-            now={this.props.time.now}
-          />
-        )
-        break
-      case "list":
-        userPlanets = (
-          <UserPlanetList
-            user={user}
-            now={this.props.time.now}
-            isMine={isMine}
-            rankup={this.props.userActions.rankupUserPlanet}
-            remove={this.props.userActions.removeUserPlanet}
-            ui={this.props.userPageUi}
-            uiActions={this.props.userPageUiActions}
-          />
-        )
-        break
-    }
-    const planetList = (
-      <>
-        <div
-          className={"is-hidden-desktop box is-shadowless is-marginless"}
-          style={{ textAlign: "center" }}
-        >
-          <button
-            className={"button is-small is-primary"}
-            onClick={this.props.userPageUiActions.togglePlanetListVisibilityForMobile}
-          >
-            {this.props.userPageUi.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
-          </button>
-        </div>
-
-        <div
-          className={this.props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}
-        >
-          <PlanetList
-            planets={user.normalPlanets}
-            setPlanetToGet={this.props.userPageUiActions.selectPlanet}
-            userPageUi={this.props.userPageUi}
-          />
-        </div>
-      </>
-    )
-
-    return (
-      <>
-        <h1 className={"title is-5"}>
-          target user is {user.address} {isMine ? "[this is me]" : ""}
-        </h1>
-
-        <div className={"columns is-desktop"}>
-          <div className={"column"}>
-            <UserProfile user={user} isMine={isMine} />
-            {isMine ? planetList : <></>}
-          </div>
-
-          <div className={`column is-three-quarters`}>
-            <Buttons actions={this.props.userPageUiActions} />
-            {userPlanets}
-          </div>
-        </div>
-      </>
-    )
-  }
-
-  isMine = (): boolean => {
-    const address = this.props.currentUser.address
+  userPageUi: UserPageUiState
+  userPageUiActions: UserPageUiActions
+}) {
+  const isMine = (() => {
+    const address = props.currentUser.address
     if (address) {
-      return address === this.props.targetUser.address
+      return address === props.targetUser.address
     } else {
       return false
     }
+  })()
+
+  return (
+    <>
+      <h1 className={"title is-5"}>
+        target user is {props.targetUser.address} {isMine ? "[this is me]" : ""}
+      </h1>
+
+      <div className={"columns is-desktop"}>
+        <div className={"column"}>
+          <UserProfile user={props.targetUser} isMine={isMine} />
+          <WrappedPlanetList
+            targetUser={props.targetUser}
+            userPageUi={props.userPageUi}
+            userPageUiActions={props.userPageUiActions}
+            isMine={isMine}
+          />
+        </div>
+
+        <div className={`column is-three-quarters`}>
+          <Buttons actions={props.userPageUiActions} />
+          <UserPlanets
+            targetUser={props.targetUser}
+            userActions={props.userActions}
+            userPageUi={props.userPageUi}
+            userPageUiActions={props.userPageUiActions}
+            now={props.time.now}
+            isMine={isMine}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
+function WrappedPlanetList(props: {
+  targetUser: ComputedTargetUserState
+  userPageUi: UserPageUiState
+  userPageUiActions: UserPageUiActions
+  isMine: boolean
+}) {
+  if (props.isMine) {
+    return <></>
+  }
+
+  return (
+    <>
+      <div
+        className={"is-hidden-desktop box is-shadowless is-marginless"}
+        style={{ textAlign: "center" }}
+      >
+        <button
+          className={"button is-small is-primary"}
+          onClick={props.userPageUiActions.togglePlanetListVisibilityForMobile}
+        >
+          {props.userPageUi.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
+        </button>
+      </div>
+
+      <div className={props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}>
+        <PlanetList
+          planets={props.targetUser.normalPlanets}
+          setPlanetToGet={props.userPageUiActions.selectPlanet}
+          userPageUi={props.userPageUi}
+        />
+      </div>
+    </>
+  )
+}
+
+function UserPlanets(props: {
+  targetUser: ComputedTargetUserState
+  userActions: UserActions
+  userPageUi: UserPageUiState
+  userPageUiActions: UserPageUiActions
+  now: number
+  isMine: boolean
+}) {
+  switch (props.userPageUi.selectedUserPlanetViewKind) {
+    case "map":
+      return (
+        <UserPlanetMap
+          user={props.targetUser}
+          userActions={props.userActions}
+          userPageUi={props.userPageUi}
+          userPageUiActions={props.userPageUiActions}
+          now={props.now}
+          isMine={props.isMine}
+        />
+      )
+    case "list":
+      return (
+        <UserPlanetList
+          user={props.targetUser}
+          userActions={props.userActions}
+          userPageUi={props.userPageUi}
+          userPageUiActions={props.userPageUiActions}
+          now={props.now}
+          isMine={props.isMine}
+        />
+      )
   }
 }
 
-class Buttons extends React.Component<{
-  actions: UserPageUiActions
-}> {
-  render = () => {
-    return (
-      <nav className={"level"}>
-        <div className={"level-left"}>
-          <div className={"level-item"}>
-            <button
-              className={"button is-small"}
-              onClick={this.props.actions.toggleUserPlanetViewKind}
-            >
-              Toggle View
-            </button>
-          </div>
+function Buttons(props: { actions: UserPageUiActions }) {
+  return (
+    <nav className={"level"}>
+      <div className={"level-left"}>
+        <div className={"level-item"}>
+          <button className={"button is-small"} onClick={props.actions.toggleUserPlanetViewKind}>
+            Toggle View
+          </button>
         </div>
+      </div>
 
-        <div className={"level-right"}>
-          <div className={"level-item"} />
-        </div>
-      </nav>
-    )
-  }
+      <div className={"level-right"}>
+        <div className={"level-item"} />
+      </div>
+    </nav>
+  )
 }
