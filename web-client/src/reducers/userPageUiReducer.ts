@@ -6,10 +6,10 @@ import { UserPlanetViewKind, PlanetKindWithAll, UserPlanetSortKind } from "../co
 export const initialUserPageUiState = {
   selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
   selectedNormalPlanetId: null as number | null,
-  planetListVisibilityForMobile: false,
   selectedUserPlanetId: null as string | null,
-  selectedUserPlanetKindForUserPlanetList: "all" as PlanetKindWithAll,
-  selectedSortKindForUserPlanetList: "Newest" as UserPlanetSortKind
+  selectedPlanetKind: "all" as PlanetKindWithAll,
+  selectedUserPlanetSortKind: "Newest" as UserPlanetSortKind,
+  planetListVisibilityForMobile: false
 }
 
 export type UserPageUiState = typeof initialUserPageUiState
@@ -37,13 +37,13 @@ export const createUserPageUiReducer = () =>
       ...state,
       selectedUserPlanetId: null
     }))
-    .case(UserPageUiActions.selectUserPlanetKindForUserPlanetList, (state, payload) => ({
+    .case(UserPageUiActions.selectPlanetKind, (state, payload) => ({
       ...state,
-      selectedUserPlanetKindForUserPlanetList: payload
+      selectedPlanetKind: payload
     }))
-    .case(UserPageUiActions.selectSortKindForUserPlanetList, (state, payload) => ({
+    .case(UserPageUiActions.selectUserPlanetSortKind, (state, payload) => ({
       ...state,
-      selectedSortKindForUserPlanetList: payload
+      selectedUserPlanetSortKind: payload
     }))
     .case(UserPageUiActions.togglePlanetListVisibilityForMobile, state => ({
       ...state,

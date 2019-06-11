@@ -50,8 +50,8 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static rankupUserNormalPlanet = UserActions.creator<User>("rankupUserNormalPlanet")
-  rankupUserNormalPlanet = (userPlanetId: string, targetRank: number) => {
+  static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
+  rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
       await sendLoomContractMethod(cs =>
@@ -60,12 +60,12 @@ export class UserActions extends AbstractActions {
       const response = await callLoomContractMethod(cs =>
         cs.UserController.methods.getUser(address)
       )
-      this.dispatch(UserActions.rankupUserNormalPlanet({ address, response }))
+      this.dispatch(UserActions.rankupUserPlanet({ address, response }))
     })
   }
 
-  static removeUserNormalPlanet = UserActions.creator<User>("removeUserNormalPlanet")
-  removeUserNormalPlanet = (userPlanetId: string) => {
+  static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
+  removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = LoomWeb3.accountAddress
       await sendLoomContractMethod(cs =>
@@ -74,7 +74,7 @@ export class UserActions extends AbstractActions {
       const response = await callLoomContractMethod(cs =>
         cs.UserController.methods.getUser(address)
       )
-      this.dispatch(UserActions.removeUserNormalPlanet({ address, response }))
+      this.dispatch(UserActions.removeUserPlanet({ address, response }))
     })
   }
 }

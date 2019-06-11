@@ -90,8 +90,8 @@ export class UserPlanetMap extends React.Component<Props, State> {
               isMine={this.props.isMine}
               knowledge={this.props.user.knowledge}
               now={this.props.now}
-              rankup={this.props.userActions.rankupUserNormalPlanet}
-              remove={this.props.userActions.removeUserNormalPlanet}
+              rankup={this.props.userActions.rankupUserPlanet}
+              remove={this.props.userActions.removeUserPlanet}
             />
           </Modal>
         )

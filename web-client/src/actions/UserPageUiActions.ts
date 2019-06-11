@@ -29,18 +29,16 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.unselectUserPlanet())
   }
 
-  static selectUserPlanetKindForUserPlanetList = UserPageUiActions.creator<PlanetKindWithAll>(
-    "selectUserPlanetKindForUserPlanetList"
-  )
-  selectUserPlanetKindForUserPlanetList = (kind: PlanetKindWithAll) => {
-    this.dispatch(UserPageUiActions.selectUserPlanetKindForUserPlanetList(kind))
+  static selectPlanetKind = UserPageUiActions.creator<PlanetKindWithAll>("selectPlanetKind")
+  selectPlanetKind = (kind: PlanetKindWithAll) => {
+    this.dispatch(UserPageUiActions.selectPlanetKind(kind))
   }
 
-  static selectSortKindForUserPlanetList = UserPageUiActions.creator<UserPlanetSortKind>(
-    "selectSortKindForUserPlanetList"
+  static selectUserPlanetSortKind = UserPageUiActions.creator<UserPlanetSortKind>(
+    "selectUserPlanetSortKind"
   )
-  selectSortKindForUserPlanetList = (kind: UserPlanetSortKind) => {
-    this.dispatch(UserPageUiActions.selectSortKindForUserPlanetList(kind))
+  selectUserPlanetSortKind = (kind: UserPlanetSortKind) => {
+    this.dispatch(UserPageUiActions.selectUserPlanetSortKind(kind))
   }
 
   static togglePlanetListVisibilityForMobile = UserPageUiActions.creator(

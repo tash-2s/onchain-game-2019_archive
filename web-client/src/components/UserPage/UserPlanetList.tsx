@@ -17,7 +17,7 @@ interface UserPlanetListProps {
 }
 
 export function UserPlanetList(props: UserPlanetListProps) {
-  const selectedKind = props.ui.selectedUserPlanetKindForUserPlanetList
+  const selectedKind = props.ui.selectedPlanetKind
   const userPlanets = props.user.userNormalPlanets
     .filter(up => {
       if (selectedKind === "all") {
@@ -26,7 +26,7 @@ export function UserPlanetList(props: UserPlanetListProps) {
       return up.planet.kind === selectedKind
     })
     .sort((a, b) => {
-      switch (props.ui.selectedSortKindForUserPlanetList) {
+      switch (props.ui.selectedUserPlanetSortKind) {
         case "Newest":
           return b.createdAt - a.createdAt
         case "Oldest":
@@ -61,10 +61,9 @@ export function UserPlanetList(props: UserPlanetListProps) {
 }
 
 function Controller(props: { state: UserPageUiState; actions: UserPageUiActions }) {
-  const planetKind = props.state.selectedUserPlanetKindForUserPlanetList
-  const sortKind = props.state.selectedSortKindForUserPlanetList
-  const selectKind = (_kind: typeof planetKind) => () =>
-    props.actions.selectUserPlanetKindForUserPlanetList(_kind)
+  const planetKind = props.state.selectedPlanetKind
+  const sortKind = props.state.selectedUserPlanetSortKind
+  const selectKind = (_kind: typeof planetKind) => () => props.actions.selectPlanetKind(_kind)
 
   const sortItems = userPlanetSortKinds.map(k => {
     const cls = k === sortKind ? "is-active" : ""
@@ -73,7 +72,7 @@ function Controller(props: { state: UserPageUiState; actions: UserPageUiActions 
         ? () => {
             /* nop */
           }
-        : () => props.actions.selectSortKindForUserPlanetList(k)
+        : () => props.actions.selectUserPlanetSortKind(k)
 
     return (
       <a key={k} onClick={fn} className={`dropdown-item ${cls}`}>

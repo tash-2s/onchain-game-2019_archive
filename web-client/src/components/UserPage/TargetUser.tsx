@@ -45,8 +45,8 @@ export class TargetUser extends React.Component<TargetUserProps> {
             user={user}
             now={this.props.time.now}
             isMine={isMine}
-            rankup={this.props.userActions.rankupUserNormalPlanet}
-            remove={this.props.userActions.removeUserNormalPlanet}
+            rankup={this.props.userActions.rankupUserPlanet}
+            remove={this.props.userActions.removeUserPlanet}
             ui={this.props.userPageUi}
             uiActions={this.props.userPageUiActions}
           />
@@ -71,7 +71,7 @@ export class TargetUser extends React.Component<TargetUserProps> {
           className={this.props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}
         >
           <PlanetList
-            normalPlanets={user.normalPlanets}
+            planets={user.normalPlanets}
             setPlanetToGet={this.props.userPageUiActions.selectPlanet}
             userPageUi={this.props.userPageUi}
           />

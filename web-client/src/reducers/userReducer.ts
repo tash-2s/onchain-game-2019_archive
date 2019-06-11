@@ -46,14 +46,14 @@ export const createUserReducer = () =>
         address: payload.address
       }
     }))
-    .case(UserActions.rankupUserNormalPlanet, (state, payload) => ({
+    .case(UserActions.rankupUserPlanet, (state, payload) => ({
       ...state,
       targetUser: {
         ...restructureUserFromResponse(payload.response),
         address: payload.address
       }
     }))
-    .case(UserActions.removeUserNormalPlanet, (state, payload) => ({
+    .case(UserActions.removeUserPlanet, (state, payload) => ({
       ...state,
       targetUser: {
         ...restructureUserFromResponse(payload.response),

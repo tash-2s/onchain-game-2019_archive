@@ -5,13 +5,13 @@ import { PrettyBN } from "../utils/PrettyBN"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
 
 export class PlanetList extends React.Component<{
-  normalPlanets: ComputedTargetUserState["normalPlanets"]
+  planets: ComputedTargetUserState["normalPlanets"]
   setPlanetToGet: (planetId: number) => void
   userPageUi: UserPageUiState
 }> {
   render = () => {
     const buttonText = "Get"
-    const planets = this.props.normalPlanets.map(p => {
+    const planets = this.props.planets.map(p => {
       let button
       if (p.gettable) {
         button = (
