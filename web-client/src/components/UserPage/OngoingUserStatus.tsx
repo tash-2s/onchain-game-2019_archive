@@ -3,7 +3,7 @@ import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { PrettyBN } from "../utils/PrettyBN"
-import { initialPlanetIds, getNormalPlanet } from "../../data/planets"
+import { initialNormalPlanetIds, getNormalPlanet } from "../../data/NormalPlanets"
 
 export function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
   const radius = props.user.map.usableRadius
@@ -16,8 +16,8 @@ export function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
 
   let gold: BN
   if (props.user.gold.eqn(0) && props.user.userNormalPlanets.length === 0) {
-    gold = getNormalPlanet(initialPlanetIds[0]).priceGold.add(
-      getNormalPlanet(initialPlanetIds[1]).priceGold
+    gold = getNormalPlanet(initialNormalPlanetIds[0]).priceGold.add(
+      getNormalPlanet(initialNormalPlanetIds[1]).priceGold
     )
   } else {
     gold = props.user.gold

@@ -1,7 +1,7 @@
 import BN from "bn.js"
 
 import { UserState } from "../reducers/userReducer"
-import { NormalPlanetsData, initialPlanetIds, getNormalPlanet } from "../data/planets"
+import { NormalPlanets, initialNormalPlanetIds, getNormalPlanet } from "../data/NormalPlanets"
 import {
   computeUserNormalPlanetParams,
   computeUserNormalPlanetRankStatuses
@@ -51,19 +51,19 @@ export const computeUserState = (state: UserState, now: number) => {
 }
 
 const computeNormalPlanets = (gold: BN, userPlanetCount: number) => {
-  if (initialPlanetIds.length !== 2) {
+  if (initialNormalPlanetIds.length !== 2) {
     throw new Error("you need to check this impl")
   }
 
   let onlyAvailableId: null | number = null
   if (gold.eqn(0) && userPlanetCount === 0) {
-    onlyAvailableId = initialPlanetIds[0]
+    onlyAvailableId = initialNormalPlanetIds[0]
   }
-  if (gold.eq(getNormalPlanet(initialPlanetIds[1]).priceGold) && userPlanetCount === 1) {
-    onlyAvailableId = initialPlanetIds[1]
+  if (gold.eq(getNormalPlanet(initialNormalPlanetIds[1]).priceGold) && userPlanetCount === 1) {
+    onlyAvailableId = initialNormalPlanetIds[1]
   }
 
-  return NormalPlanetsData.map(p => {
+  return NormalPlanets.map(p => {
     let gettable = false
     if (onlyAvailableId) {
       if (onlyAvailableId === p.id) {

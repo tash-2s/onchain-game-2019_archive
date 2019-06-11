@@ -11,9 +11,9 @@ interface NormalPlanet {
 
 let id = 1
 let param = 1
-const residenceAndGoldmine: NormalPlanet[] = []
+let planets: NormalPlanet[] = []
 while (id <= 16) {
-  residenceAndGoldmine.push(
+  planets.push(
     {
       id: id++,
       kind: "residence",
@@ -25,23 +25,21 @@ while (id <= 16) {
   param += 2
 }
 
-const _NormalPlanetsData: NormalPlanet[] = residenceAndGoldmine.concat([
+planets = planets.concat([
   { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
   { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
 ])
 
-export const NormalPlanetsData = _NormalPlanetsData.map(p => {
-  return {
-    ...p,
-    param: new BN(10).pow(new BN(p.paramCommonLogarithm)),
-    priceGold: new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
-  }
-})
+export const NormalPlanets = planets.map(p => ({
+  ...p,
+  param: new BN(10).pow(new BN(p.paramCommonLogarithm)),
+  priceGold: new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
+}))
 
-export const initialPlanetIds = [1, 2]
+export const initialNormalPlanetIds = [1, 2]
 
 export const getNormalPlanet = (id: number) => {
-  const p = NormalPlanetsData.find(p => p.id === id)
+  const p = NormalPlanets.find(p => p.id === id)
 
   if (!p) {
     throw new Error("unknown planet: " + id)

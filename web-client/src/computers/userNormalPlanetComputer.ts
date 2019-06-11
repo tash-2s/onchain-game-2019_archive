@@ -1,7 +1,7 @@
 import BN from "bn.js"
 
 import { UserNormalPlanet } from "../reducers/userReducer"
-import { getNormalPlanet } from "../data/planets"
+import { getNormalPlanet } from "../data/NormalPlanets"
 
 export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPlanet>) => {
   let population = new BN(0)
