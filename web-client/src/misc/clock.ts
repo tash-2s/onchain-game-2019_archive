@@ -1,7 +1,7 @@
 import { Store } from "redux"
 
 import { LoomWeb3 } from "./loom"
-import { Time } from "./../models/time"
+import { Time } from "./../models/Time"
 import { TimeActions } from "./../actions/TimeActions"
 
 export const startClock = (store: Store) => {

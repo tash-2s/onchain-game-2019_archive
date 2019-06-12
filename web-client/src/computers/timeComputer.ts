@@ -1,5 +1,5 @@
 import { TimeState } from "../reducers/timeReducer"
-import { Time } from "../models/time"
+import { Time } from "../models/Time"
 
 export type ComputedTimeState = ReturnType<typeof computeTimeState>
 

@@ -1,7 +1,7 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { TimeActions } from "../actions/TimeActions"
-import { Time } from "../models/time"
+import { Time } from "../models/Time"
 
 const initialState = {
   webTime: Time.now(),

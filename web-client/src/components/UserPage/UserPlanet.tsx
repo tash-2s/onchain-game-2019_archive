@@ -48,7 +48,6 @@ export function UserPlanet(props: UserPlanetProps) {
 class UserPlanetButtons extends React.Component<UserPlanetProps> {
   render = () => {
     const up = this.props.userPlanet
-    const knowledge = this.props.knowledge
     let rankupButton: JSX.Element
     let bulkRankupButton: JSX.Element
 
