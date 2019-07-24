@@ -7,6 +7,7 @@ interface NormalPlanet {
   kind: PlanetKind
   paramCommonLogarithm: number
   priceGoldCommonLogarithm: number
+  artSeedStr: string
 }
 
 let id = 1
@@ -18,22 +19,42 @@ while (id <= 16) {
       id: id++,
       kind: "residence",
       paramCommonLogarithm: param,
-      priceGoldCommonLogarithm: param * 3
+      priceGoldCommonLogarithm: param * 3,
+      artSeedStr: `${id - 1}`
     },
-    { id: id++, kind: "goldmine", paramCommonLogarithm: param, priceGoldCommonLogarithm: param * 3 }
+    {
+      id: id++,
+      kind: "goldmine",
+      paramCommonLogarithm: param,
+      priceGoldCommonLogarithm: param * 3,
+      artSeedStr: `${id - 1}`
+    }
   )
   param += 2
 }
 
 planets = planets.concat([
-  { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
-  { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
+  {
+    id: 101,
+    kind: "technology",
+    paramCommonLogarithm: 2,
+    priceGoldCommonLogarithm: 8,
+    artSeedStr: "101"
+  },
+  {
+    id: 102,
+    kind: "technology",
+    paramCommonLogarithm: 3,
+    priceGoldCommonLogarithm: 12,
+    artSeedStr: "102"
+  }
 ])
 
 export const NormalPlanets = planets.map(p => ({
   ...p,
   param: new BN(10).pow(new BN(p.paramCommonLogarithm)),
-  priceGold: new BN(10).pow(new BN(p.priceGoldCommonLogarithm))
+  priceGold: new BN(10).pow(new BN(p.priceGoldCommonLogarithm)),
+  artSeed: new BN(p.artSeedStr, 10)
 }))
 
 export const initialNormalPlanetIds = [1, 2]
