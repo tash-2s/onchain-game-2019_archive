@@ -68,7 +68,7 @@ function WrappedPlanetList(props: {
   userPageUiActions: UserPageUiActions
   isMine: boolean
 }) {
-  if (props.isMine) {
+  if (!props.isMine) {
     return <></>
   }
 
