@@ -17,6 +17,7 @@ export function PlanetHex(props: {
 }) {
   const x = props.hexSize * ((3 / 2) * props.q)
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
+  const up = props.userPlanet
 
   const coverStyle: React.CSSProperties = {
     width: "100%",
@@ -30,7 +31,7 @@ export function PlanetHex(props: {
 
   const cover = !!props.setPlanet ? (
     <div style={coverStyle} onClick={props.setPlanet(props.q, props.r)}>
-      {props.userPlanet ? "replace" : "set"}
+      {up ? "replace" : "set"}
     </div>
   ) : (
     <></>
@@ -42,7 +43,7 @@ export function PlanetHex(props: {
     width: props.hexWidth,
     height: props.hexHeight,
     backgroundColor: "#000000",
-    cursor: props.userPlanet ? "pointer" : "auto",
+    cursor: up ? "pointer" : "auto",
     clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
     display: "flex",
     justifyContent: "center",
@@ -51,14 +52,14 @@ export function PlanetHex(props: {
   }
 
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
+  const deps = up ? [up.planet.kind, 0, 0, up.planet.artSeedStr] : ["", 0, 0, ""]
   React.useEffect(() => {
     const canvas = canvasRef.current
-    const up = props.userPlanet
     if (canvas && !!up) {
       const p = up.planet
       draw(canvas, Math.min(props.hexWidth, props.hexHeight), p.kind, 0, 0, p.artSeed)
     }
-  }, []) // TODO: inaccurate condition
+  }, deps)
 
   return (
     <div style={hexStyle} onClick={props.select}>
