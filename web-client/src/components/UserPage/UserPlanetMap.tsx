@@ -8,6 +8,7 @@ import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
+import { PlanetArt } from "../utils/PlanetArt"
 
 interface Props {
   user: ComputedTargetUserState
@@ -104,6 +105,7 @@ function WrappedModal(props: Props) {
     if (up) {
       return (
         <Modal close={props.userPageUiActions.unselectUserPlanet}>
+          <PlanetArt userPlanet={up} size={300} />
           <UserPlanet
             userPlanet={up}
             isMine={props.isMine}

@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { draw } from "../../misc/planetArt"
+import { PlanetArt } from "../utils/PlanetArt"
 
 export function PlanetHex(props: {
   q: number
@@ -29,20 +29,7 @@ export function PlanetHex(props: {
     alignItems: "center",
     cursor: "pointer"
   }
-
   const cover = !!props.setPlanet ? <div style={coverStyle}>{up ? "replace" : "set"}</div> : <></>
-
-  const canvasRef = React.useRef<HTMLCanvasElement>(null)
-  React.useEffect(
-    () => {
-      const canvas = canvasRef.current
-      if (canvas && !!up) {
-        const p = up.planet
-        draw(canvas, Math.min(props.hexWidth, props.hexHeight), p.kind, 0, 0, p.artSeed)
-      }
-    },
-    up ? [up.planet.kind, 0, 0, up.planet.artSeedStr] : ["", 0, 0, ""]
-  )
 
   const hexStyle: React.CSSProperties = {
     left: x + props.shiftLeft,
@@ -57,11 +44,12 @@ export function PlanetHex(props: {
     alignItems: "center",
     position: "absolute"
   }
-
   const onClick = props.setPlanet ? props.setPlanet(props.q, props.r) : props.select
+  const size = Math.min(props.hexWidth, props.hexHeight)
+
   return (
     <div style={hexStyle} onClick={onClick}>
-      {up ? <canvas ref={canvasRef} /> : <></>}
+      {up ? <PlanetArt userPlanet={up} size={size} /> : <></>}
       {cover}
     </div>
   )
