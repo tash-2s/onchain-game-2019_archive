@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
+import { draw } from "../../misc/planetArt"
 
 export function PlanetHex(props: {
   q: number
@@ -53,16 +54,11 @@ export function PlanetHex(props: {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
   React.useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas || !props.userPlanet) {
-      return
+    const up = props.userPlanet
+    if (canvas && !!up) {
+      const p = up.planet
+      draw(canvas, p.kind, 0, 0, p.artSeed)
     }
-    const ctx = canvas.getContext("2d")
-    if (!ctx) {
-      throw new Error("couldn't get a context from the canvas")
-    }
-
-    ctx.fillStyle = "#000000"
-    ctx.fillRect(0, 0, 100, 100)
   })
 
   return (
