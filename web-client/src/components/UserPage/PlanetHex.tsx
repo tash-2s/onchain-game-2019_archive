@@ -26,15 +26,22 @@ export function PlanetHex(props: {
     backgroundColor: "hsla(180deg, 100%, 50%, 50%)",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    cursor: "pointer"
   }
 
-  const cover = !!props.setPlanet ? (
-    <div style={coverStyle} onClick={props.setPlanet(props.q, props.r)}>
-      {up ? "replace" : "set"}
-    </div>
-  ) : (
-    <></>
+  const cover = !!props.setPlanet ? <div style={coverStyle}>{up ? "replace" : "set"}</div> : <></>
+
+  const canvasRef = React.useRef<HTMLCanvasElement>(null)
+  React.useEffect(
+    () => {
+      const canvas = canvasRef.current
+      if (canvas && !!up) {
+        const p = up.planet
+        draw(canvas, Math.min(props.hexWidth, props.hexHeight), p.kind, 0, 0, p.artSeed)
+      }
+    },
+    up ? [up.planet.kind, 0, 0, up.planet.artSeedStr] : ["", 0, 0, ""]
   )
 
   const hexStyle: React.CSSProperties = {
@@ -51,19 +58,10 @@ export function PlanetHex(props: {
     position: "absolute"
   }
 
-  const canvasRef = React.useRef<HTMLCanvasElement>(null)
-  const deps = up ? [up.planet.kind, 0, 0, up.planet.artSeedStr] : ["", 0, 0, ""]
-  React.useEffect(() => {
-    const canvas = canvasRef.current
-    if (canvas && !!up) {
-      const p = up.planet
-      draw(canvas, Math.min(props.hexWidth, props.hexHeight), p.kind, 0, 0, p.artSeed)
-    }
-  }, deps)
-
+  const onClick = props.setPlanet ? props.setPlanet(props.q, props.r) : props.select
   return (
-    <div style={hexStyle} onClick={props.select}>
-      {props.userPlanet ? <canvas ref={canvasRef} /> : ""}
+    <div style={hexStyle} onClick={onClick}>
+      {up ? <canvas ref={canvasRef} /> : <></>}
       {cover}
     </div>
   )
