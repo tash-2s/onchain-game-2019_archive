@@ -4,6 +4,7 @@ import { PlanetKind } from "../constants"
 
 export const draw = (
   canvas: HTMLCanvasElement,
+  sideLength: number,
   planetKind: PlanetKind,
   artVersion: number,
   artRarity: number,
@@ -12,6 +13,7 @@ export const draw = (
   if (artVersion === 0) {
     drawV0(
       canvas,
+      sideLength,
       planetKind,
       artRarity,
       new SeededRandomish(artSeed)
@@ -24,6 +26,7 @@ export const draw = (
 
 const drawV0 = (
   canvas: HTMLCanvasElement,
+  sideLength: number,
   kind: PlanetKind,
   rarity: number,
   r: SeededRandomish,
@@ -34,7 +37,7 @@ const drawV0 = (
     throw new Error("couldn't get a context from the canvas")
   }
 
-  setCanvasSize(canvas)
+  setCanvasSize(canvas, sideLength)
 
   const { hue, saturation, lightness, opacity } = getColorAttributes(r)
   const { hueTheory, hueTheoryBase } = getHueTheory(hue, r)
@@ -112,8 +115,7 @@ const ONE_THIRD = 1 / 3
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180
 
-const canvasSideViewportLength = 500,
-  canvasSideLength = canvasSideViewportLength * 2
+const canvasSideLength = 1000
 const centerX = canvasSideLength / 2,
   centerY = canvasSideLength / 2
 
@@ -248,11 +250,11 @@ const drawCircle = (
   c.arc(centerX, centerY, radius, startRad, endRad)
 }
 
-const setCanvasSize = (canvas: HTMLCanvasElement) => {
+const setCanvasSize = (canvas: HTMLCanvasElement, sideLength: number) => {
   canvas.width = canvasSideLength
   canvas.height = canvasSideLength
-  canvas.style.width = `${canvasSideViewportLength}px`
-  canvas.style.height = `${canvasSideViewportLength}px`
+  canvas.style.width = `${sideLength}px`
+  canvas.style.height = `${sideLength}px`
 }
 
 const getColorAttributes = (r: SeededRandomish) => {

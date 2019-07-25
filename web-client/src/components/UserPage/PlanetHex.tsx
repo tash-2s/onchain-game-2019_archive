@@ -18,31 +18,30 @@ export function PlanetHex(props: {
   const x = props.hexSize * ((3 / 2) * props.q)
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
 
+  const coverStyle: React.CSSProperties = {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+    backgroundColor: "hsla(180deg, 100%, 50%, 50%)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+
   const cover = !!props.setPlanet ? (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        backgroundColor: "hsla(180deg, 100%, 50%, 50%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      }}
-      onClick={props.setPlanet(props.q, props.r)}
-    >
+    <div style={coverStyle} onClick={props.setPlanet(props.q, props.r)}>
       {props.userPlanet ? "replace" : "set"}
     </div>
   ) : (
     <></>
   )
 
-  const css: React.CSSProperties = {
+  const hexStyle: React.CSSProperties = {
     left: x + props.shiftLeft,
     top: y + props.shiftTop,
     width: props.hexWidth,
     height: props.hexHeight,
-    backgroundColor: "grey",
+    backgroundColor: "#000000",
     cursor: props.userPlanet ? "pointer" : "auto",
     clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
     display: "flex",
@@ -57,12 +56,12 @@ export function PlanetHex(props: {
     const up = props.userPlanet
     if (canvas && !!up) {
       const p = up.planet
-      draw(canvas, p.kind, 0, 0, p.artSeed)
+      draw(canvas, Math.min(props.hexWidth, props.hexHeight), p.kind, 0, 0, p.artSeed)
     }
-  })
+  }, []) // TODO: inaccurate condition
 
   return (
-    <div style={css} onClick={props.select}>
+    <div style={hexStyle} onClick={props.select}>
       {props.userPlanet ? <canvas ref={canvasRef} /> : ""}
       {cover}
     </div>
