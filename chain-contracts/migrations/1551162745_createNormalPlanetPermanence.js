@@ -16,7 +16,10 @@ module.exports = function(deployer, network) {
           kind: "residence",
           paramCommonLogarithm: param,
           priceGoldCommonLogarithm: param * 3
-        },
+        }
+      )
+      param += 1
+      residenceAndGoldmine.push(
         {
           id: id++,
           kind: "goldmine",
@@ -24,7 +27,7 @@ module.exports = function(deployer, network) {
           priceGoldCommonLogarithm: param * 3
         }
       )
-      param += 2
+      param += 1
     }
 
     const data = residenceAndGoldmine.concat([

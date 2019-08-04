@@ -34,7 +34,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
+      mintGold(msg.sender, uint256(10) ** 6);
     } else {
       _confirm(msg.sender);
       unmintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
