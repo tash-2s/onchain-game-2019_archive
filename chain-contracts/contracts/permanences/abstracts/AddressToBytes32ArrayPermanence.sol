@@ -13,17 +13,15 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
     _addressToBytes32Array[addr] = b32Array;
   }
 
-  function pushElement(address addr, bytes32 b32) public onlyMinter {
+  function addElement(address addr, bytes32 b32) public onlyMinter {
     _addressToBytes32Array[addr].push(b32);
   }
 
-  // TODO: rename
-  function readByIndex(address addr, uint256 index) public view returns (bytes32) {
+  function readElement(address addr, uint256 index) public view returns (bytes32) {
     return _addressToBytes32Array[addr][index];
   }
 
-  // TODO: rename
-  function updateByIndex(address addr, uint256 index, bytes32 b32) public onlyMinter {
+  function updateElement(address addr, uint256 index, bytes32 b32) public onlyMinter {
     _addressToBytes32Array[addr][index] = b32;
   }
 
@@ -34,11 +32,11 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
   }
 
   // TODO: test
-  function deleteAll(address addr) public onlyMinter {
+  function delete(address addr) public onlyMinter {
     _addressToBytes32Array[addr].length = 0;
   }
 
-  function arrayLength(address addr) public view returns (uint256) {
+  function count(address addr) public view returns (uint256) {
     return _addressToBytes32Array[addr].length;
   }
 }

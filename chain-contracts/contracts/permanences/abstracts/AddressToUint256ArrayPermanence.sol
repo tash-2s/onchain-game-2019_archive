@@ -13,17 +13,15 @@ contract AddressToUint256ArrayPermanence is MinterRole {
     _addressToUint256Array[addr] = ui256Array;
   }
 
-  function pushElement(address addr, uint256 ui256) public onlyMinter {
+  function addElement(address addr, uint256 ui256) public onlyMinter {
     _addressToUint256Array[addr].push(ui256);
   }
 
-  // TODO: rename
-  function readByIndex(address addr, uint256 index) public view returns (uint256) {
+  function readElement(address addr, uint256 index) public view returns (uint256) {
     return _addressToUint256Array[addr][index];
   }
 
-  // TODO: rename
-  function updateByIndex(address addr, uint256 index, uint256 ui256) public onlyMinter {
+  function updateElement(address addr, uint256 index, uint256 ui256) public onlyMinter {
     _addressToUint256Array[addr][index] = ui256;
   }
 
@@ -34,11 +32,11 @@ contract AddressToUint256ArrayPermanence is MinterRole {
   }
 
   // TODO: test
-  function deleteAll(address addr) public onlyMinter {
+  function delete(address addr) public onlyMinter {
     _addressToUint256Array[addr].length = 0;
   }
 
-  function arrayLength(address addr) public view returns (uint256) {
+  function count(address addr) public view returns (uint256) {
     return _addressToUint256Array[addr].length;
   }
 }

@@ -80,7 +80,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function userNormalPlanetRecordsCountOf(address account) public view returns (uint16) {
-    return uint16(_userNormalPlanetPermanence.arrayLength(account));
+    return uint16(_userNormalPlanetPermanence.count(account));
   }
 
   function userNormalPlanetRecordOf(address account, uint64 userPlanetId)
@@ -112,7 +112,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     }
 
     uint64 id = _userNormalPlanetIdCounterPermanence.generate(account);
-    _userNormalPlanetPermanence.pushElement(
+    _userNormalPlanetPermanence.addElement(
       account,
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(
@@ -141,7 +141,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       targetRank > record.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
       "invalid rank for rankup"
     );
-    _userNormalPlanetPermanence.updateByIndex(
+    _userNormalPlanetPermanence.updateElement(
       account,
       index,
       buildUint256FromUserNormalPlanetRecord(
