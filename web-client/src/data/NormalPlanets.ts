@@ -21,7 +21,10 @@ while (id <= 16) {
       paramCommonLogarithm: param,
       priceGoldCommonLogarithm: param * 3,
       artSeedStr: `${id - 1}`
-    },
+    }
+  )
+  param += 1
+  planets.push(
     {
       id: id++,
       kind: "goldmine",
@@ -30,7 +33,7 @@ while (id <= 16) {
       artSeedStr: `${id - 1}`
     }
   )
-  param += 2
+  param += 1
 }
 
 planets = planets.concat([
