@@ -18,7 +18,7 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
   }
 
   // TODO: test
-  function delete(address addr) public onlyMinter {
+  function deleteAll(address addr) public onlyMinter {
     _addressToBytes32Array[addr].length = 0;
   }
 

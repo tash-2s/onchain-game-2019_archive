@@ -18,7 +18,7 @@ contract AddressToUint256ArrayPermanence is MinterRole {
   }
 
   // TODO: test
-  function delete(address addr) public onlyMinter {
+  function deleteAll(address addr) public onlyMinter {
     _addressToUint256Array[addr].length = 0;
   }
 
