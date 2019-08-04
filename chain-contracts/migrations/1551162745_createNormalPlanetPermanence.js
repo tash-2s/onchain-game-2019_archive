@@ -10,23 +10,19 @@ module.exports = function(deployer, network) {
     let param = 1
     const residenceAndGoldmine = []
     while (id <= 16) {
-      residenceAndGoldmine.push(
-        {
-          id: id++,
-          kind: "residence",
-          paramCommonLogarithm: param,
-          priceGoldCommonLogarithm: param * 3
-        }
-      )
+      residenceAndGoldmine.push({
+        id: id++,
+        kind: "residence",
+        paramCommonLogarithm: param,
+        priceGoldCommonLogarithm: param * 3
+      })
       param += 1
-      residenceAndGoldmine.push(
-        {
-          id: id++,
-          kind: "goldmine",
-          paramCommonLogarithm: param,
-          priceGoldCommonLogarithm: param * 3
-        }
-      )
+      residenceAndGoldmine.push({
+        id: id++,
+        kind: "goldmine",
+        paramCommonLogarithm: param,
+        priceGoldCommonLogarithm: param * 3
+      })
       param += 1
     }
 
