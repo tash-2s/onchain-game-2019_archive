@@ -9,12 +9,17 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
     return _addressToBytes32Array[addr];
   }
 
+  function count(address addr) public view returns (uint256) {
+    return _addressToBytes32Array[addr].length;
+  }
+
   function update(address addr, bytes32[] b32Array) public onlyMinter {
     _addressToBytes32Array[addr] = b32Array;
   }
 
-  function addElement(address addr, bytes32 b32) public onlyMinter {
-    _addressToBytes32Array[addr].push(b32);
+  // TODO: test
+  function delete(address addr) public onlyMinter {
+    _addressToBytes32Array[addr].length = 0;
   }
 
   function readElement(address addr, uint256 index) public view returns (bytes32) {
@@ -25,18 +30,13 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
     _addressToBytes32Array[addr][index] = b32;
   }
 
+  function addElement(address addr, bytes32 b32) public onlyMinter {
+    _addressToBytes32Array[addr].push(b32);
+  }
+
   // This function change the order of the array.
   function deleteElement(address addr, uint256 index) public onlyMinter {
     _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][_addressToBytes32Array[addr].length - 1];
     _addressToBytes32Array[addr].length--;
-  }
-
-  // TODO: test
-  function delete(address addr) public onlyMinter {
-    _addressToBytes32Array[addr].length = 0;
-  }
-
-  function count(address addr) public view returns (uint256) {
-    return _addressToBytes32Array[addr].length;
   }
 }
