@@ -39,8 +39,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     Assert.equal(userNormalPlanetRecordsOf(account).length, 0, "empty");
 
-    _permanence.addElement(account, 10000100000000000000000001);
-    _permanence.addElement(account, 20000200000000000000000002);
+    _permanence.createElement(account, 10000100000000000000000001);
+    _permanence.createElement(account, 20000200000000000000000002);
 
     Assert.equal(userNormalPlanetRecordsOf(account).length, 2, "added");
     _reporter.report(userNormalPlanetRecordsOf(account)[0].kind == 1, "valid");
@@ -50,9 +50,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     address account = address(2);
 
     Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(0), "initial");
-    _permanence.addElement(account, 10000100000000000000000001);
-    _permanence.addElement(account, 20000200000000000000000002);
-    _permanence.addElement(account, 30000300000000000000000003);
+    _permanence.createElement(account, 10000100000000000000000001);
+    _permanence.createElement(account, 20000200000000000000000002);
+    _permanence.createElement(account, 30000300000000000000000003);
     Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(3), "added");
     uint256[] memory a = new uint256[](1);
     a[0] = 10000100001;
@@ -70,9 +70,9 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
     Assert.isFalse(isSuccessed, "no data");
 
-    _permanence.addElement(account, 10000100000000000000000001);
-    _permanence.addElement(account, 20000200000000000000000002);
-    _permanence.addElement(account, 30000300000000000000000003);
+    _permanence.createElement(account, 10000100000000000000000001);
+    _permanence.createElement(account, 20000200000000000000000002);
+    _permanence.createElement(account, 30000300000000000000000003);
 
     Assert.equal(uint256(userNormalPlanetRecordOf(account, 2).id), uint256(2), "success");
 
@@ -113,8 +113,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
   function testRankupUserNormalPlanet() public {
     address account = address(5);
-    _permanence.addElement(account, 10010010000100000000000000000000); // id: 0, rank: 1
-    _permanence.addElement(account, 290010010000100000000000000000001); // id: 1, rank: 29
+    _permanence.createElement(account, 10010010000100000000000000000000); // id: 0, rank: 1
+    _permanence.createElement(account, 290010010000100000000000000000001); // id: 1, rank: 29
 
     rankupUserNormalPlanet(account, 0, 2);
     Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(2), "2");

@@ -34,7 +34,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
 
     context("when the data is not empty", async () => {
       it("should return a not empty array", async () => {
-        await instance.addElement(ownerAccount, "123")
+        await instance.createElement(ownerAccount, "123")
         const result = await instance.read(ownerAccount)
         assert.deepEqual(result.map(e => e.toString()), ["123"])
       })
@@ -75,11 +75,11 @@ contract("UserNormalPlanetPermanence", async accounts => {
     })
   })
 
-  describe("#addElement()", async () => {
+  describe("#createElement()", async () => {
     it("should not allow strangers to push an element", async () => {
       let failed = false
       try {
-        await instance.addElement(strangerAccount, "123", { from: strangerAccount })
+        await instance.createElement(strangerAccount, "123", { from: strangerAccount })
       } catch (_) {
         failed = true
       }
@@ -87,20 +87,20 @@ contract("UserNormalPlanetPermanence", async accounts => {
     })
 
     it("should push an element", async () => {
-      await instance.addElement(strangerAccount, "123")
+      await instance.createElement(strangerAccount, "123")
       assert.deepEqual((await instance.read(strangerAccount)).map(e => e.toString()), ["123"])
     })
 
     it("should handle big int", async () => {
-      await instance.addElement(
+      await instance.createElement(
         strangerAccount,
         "115792089237316195423570985008687907853269984665640564039457584007913129639935"
       ) // max
-      await instance.addElement(
+      await instance.createElement(
         strangerAccount,
         "115792089237316195423570985008687907853269984665640564039457584007913129639936"
       ) // max + 1
-      await instance.addElement(strangerAccount, "-1")
+      await instance.createElement(strangerAccount, "-1")
 
       assert.deepEqual((await instance.read(strangerAccount)).map(e => e.toString()), [
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
@@ -143,8 +143,8 @@ contract("UserNormalPlanetPermanence", async accounts => {
     context("minter", async () => {
       context("the target element exists", async () => {
         it("should delete element", async () => {
-          await instance.addElement(ownerAccount, 5)
-          await instance.addElement(ownerAccount, 6)
+          await instance.createElement(ownerAccount, 5)
+          await instance.createElement(ownerAccount, 6)
           assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
 
           await instance.deleteElement(ownerAccount, 1)
@@ -171,8 +171,8 @@ contract("UserNormalPlanetPermanence", async accounts => {
     context("non-minter", async () => {
       context("the target element exists", async () => {
         it("should fail", async () => {
-          await instance.addElement(ownerAccount, 5)
-          await instance.addElement(ownerAccount, 6)
+          await instance.createElement(ownerAccount, 5)
+          await instance.createElement(ownerAccount, 6)
           assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
 
           let failed = false

@@ -30,7 +30,7 @@ contract AddressToBytes32ArrayPermanence is MinterRole {
     _addressToBytes32Array[addr][index] = b32;
   }
 
-  function addElement(address addr, bytes32 b32) public onlyMinter {
+  function createElement(address addr, bytes32 b32) public onlyMinter {
     _addressToBytes32Array[addr].push(b32);
   }
 

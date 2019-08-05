@@ -112,7 +112,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     }
 
     uint64 id = _userNormalPlanetIdCounterPermanence.generate(account);
-    _userNormalPlanetPermanence.addElement(
+    _userNormalPlanetPermanence.createElement(
       account,
       buildUint256FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(

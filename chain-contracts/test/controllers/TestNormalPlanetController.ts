@@ -52,7 +52,7 @@ contract("NormalPlanetController", async accounts => {
 
     context("time is ok", async () => {
       it("should rankup a planet", async () => {
-        await (await UserNormalPlanetPermanence.deployed()).addElement(
+        await (await UserNormalPlanetPermanence.deployed()).createElement(
           strangerAccount,
           "155000000010010010000100000000000000000000"
         )
@@ -70,7 +70,7 @@ contract("NormalPlanetController", async accounts => {
       })
 
       it("should bulk rankup a planet", async () => {
-        await (await UserNormalPlanetPermanence.deployed()).addElement(
+        await (await UserNormalPlanetPermanence.deployed()).createElement(
           strangerAccount,
           "155000000300030030010200000000000000000001" // tech planet to add tech power (planet id: 102, rank: 30)
         )
