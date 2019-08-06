@@ -26,6 +26,7 @@ contract AddressToUint256ArrayPermanence is MinterRole {
     return _addressToUint256Array[addr][index];
   }
 
+  // TODO: I should add an index check as same as AddressArrayPermanence
   function updateElement(address addr, uint256 index, uint256 ui256) public onlyMinter {
     _addressToUint256Array[addr][index] = ui256;
   }
