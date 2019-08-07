@@ -144,9 +144,9 @@ contract UserSpecialPlanetControllable is TimeGettable {
     ) << USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT) | (bytes32(
       r.createdAt
     ) << USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT) | (bytes32(
-      r.axialCoordinateQ
+      uint16(r.axialCoordinateQ)
     ) << USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT) | (bytes32(
-      r.axialCoordinateR
+      uint16(r.axialCoordinateR)
     ) << USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT);
   }
 
