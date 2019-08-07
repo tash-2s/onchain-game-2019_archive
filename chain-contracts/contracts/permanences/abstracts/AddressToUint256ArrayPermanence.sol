@@ -31,8 +31,8 @@ contract AddressToUint256ArrayPermanence is MinterRole {
     _addressToUint256Array[addr][index] = ui256;
   }
 
-  function createElement(address addr, uint256 ui256) public onlyMinter {
-    _addressToUint256Array[addr].push(ui256);
+  function createElement(address addr, uint256 ui256) public onlyMinter returns (uint256) {
+    return _addressToUint256Array[addr].push(ui256);
   }
 
   // This function change the order of the array.

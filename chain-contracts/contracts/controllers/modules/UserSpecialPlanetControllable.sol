@@ -92,8 +92,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
   }
 
   function mintUserSpecialPlanet(address account, uint8 kind, uint8 paramCommonLogarithm) internal {
-    uint24 id = uint24(_userSpecialPlanetIdToOwnerPermanence.count());
-    _userSpecialPlanetIdToOwnerPermanence.createElement(account); // index = id
+    uint24 id = uint24(_userSpecialPlanetIdToOwnerPermanence.createElement(account) - 1);
 
     _userSpecialPlanetPermanence.createElement(
       account,

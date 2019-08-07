@@ -34,8 +34,8 @@ contract AddressArrayPermanence is MinterRole {
     return _addressArray[index];
   }
 
-  function createElement(address addr) public onlyMinter {
-    _addressArray.push(addr);
+  function createElement(address addr) public onlyMinter returns (uint256) {
+    return _addressArray.push(addr);
   }
 
   function updateElement(uint256 index, address addr) public onlyMinter {
