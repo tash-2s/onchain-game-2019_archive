@@ -2,30 +2,26 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./modules/UserGoldControllable.sol";
 import "./modules/NormalPlanetControllable.sol";
-import "./modules/UserNormalPlanetControllable.sol";
-import "./RemarkableUserController.sol";
+import "./modules/UserPlanetControllable.sol";
 
-contract NormalPlanetController is UserGoldControllable, NormalPlanetControllable, UserNormalPlanetControllable {
-  RemarkableUserController private _remarkableUserController;
-
+contract NormalPlanetController is NormalPlanetControllable, UserPlanetControllable {
   constructor(
-    address userGoldPermanenceAddress,
-    address normalPlanetPermanenceAddress,
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
-    address remarkableUsersContractAddress
+    address userSpecialPlanetPermanenceAddress,
+    address userSpecialPlanetIdToOwnerPermanenceAddress,
+    address userGoldPermanenceAddress,
+    address normalPlanetPermanenceAddress
   ) public {
-    setUserGoldPermanence(userGoldPermanenceAddress);
+    setupUserPlanetControllable(
+      userNormalPlanetPermanenceAddress,
+      userNormalPlanetIdCounterPermanenceAddress,
+      userSpecialPlanetPermanenceAddress,
+      userSpecialPlanetIdToOwnerPermanenceAddress,
+      userGoldPermanenceAddress
+    );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
-    setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
-    _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
-  }
-
-  function remarkableUserController() external view returns (RemarkableUserController) {
-    return _remarkableUserController;
   }
 
   function setPlanet(uint16 planetId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
@@ -36,7 +32,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
       mintGold(msg.sender, uint256(10) ** 6);
     } else {
-      _confirm(msg.sender);
+      confirm(msg.sender);
       unmintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
     }
 
@@ -55,7 +51,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
       msg.sender,
       userNormalPlanetId
     );
-    uint knowledge = _confirm(msg.sender);
+    uint knowledge = confirm(msg.sender);
 
     if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
       revert("invalid targetRank");
@@ -114,46 +110,7 @@ contract NormalPlanetController is UserGoldControllable, NormalPlanetControllabl
   }
 
   function removePlanet(uint64 userNormalPlanetId) external {
-    _confirm(msg.sender);
+    confirm(msg.sender);
     unmintUserNormalPlanet(msg.sender, userNormalPlanetId);
-  }
-
-  function _confirm(address account) private returns (uint) {
-    uint population = 0;
-    uint productivity = 0;
-    uint knowledge = 0;
-
-    UserNormalPlanetRecord[] memory userPlanets = userNormalPlanetRecordsOf(account);
-    UserNormalPlanetRecord memory userPlanet;
-    uint rated;
-
-    for (uint i = 0; i < userPlanets.length; i++) {
-      userPlanet = userPlanets[i];
-
-      rated = (uint256(10) ** userPlanet.originalParamCommonLogarithm) * (uint256(
-        13
-      ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
-      if (userPlanet.kind == 1) {
-        population += rated;
-      } else if (userPlanet.kind == 2) {
-        productivity += rated;
-      } else if (userPlanet.kind == 3) {
-        knowledge += rated;
-      } else {
-        revert("undefined kind");
-      }
-    }
-
-    // TODO: type
-    uint goldPerSec = population * productivity;
-    uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
-    uint diffGold = goldPerSec * diffSec;
-
-    if (diffGold > 0) {
-      mintGold(account, uint200(diffGold));
-      _remarkableUserController.tackle(account);
-    }
-
-    return knowledge;
   }
 }

@@ -111,6 +111,35 @@ contract UserSpecialPlanetControllable is TimeGettable {
     );
   }
 
+  // TODO: I should check the coordinates
+  function updateUserSpecialPlanetAxialCoordinates(
+    address account,
+    uint24 userPlanetId,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal {
+    UserSpecialPlanetRecord memory record;
+    uint16 index;
+    (record, index) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
+
+    _userSpecialPlanetPermanence.updateElement(
+      account,
+      index,
+      buildBytes32FromUserSpecialPlanetRecord(
+        UserSpecialPlanetRecord(
+          record.id,
+          record.kind,
+          record.originalParamCommonLogarithm,
+          record.rank,
+          uint32now(),
+          record.createdAt,
+          axialCoordinateQ,
+          axialCoordinateR
+        )
+      )
+    );
+  }
+
   function buildUserSpecialPlanetRecordFromBytes32(bytes32 b)
     internal
     pure
