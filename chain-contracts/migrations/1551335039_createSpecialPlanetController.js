@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const NormalPlanetController = artifacts.require("./controllers/NormalPlanetController") // TODO: fix
+const SpecialPlanetController = artifacts.require("./controllers/SpecialPlanetController") // TODO: fix
 
 const minterAdditionAbi = [
   {
@@ -25,10 +25,6 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "UserGoldPermanence"
     )
-    const normalPlanetPermanenceAddress = await helper.getRegistryContractAddress(
-      deployer.network_id,
-      "NormalPlanetPermanence"
-    )
     const userNormalPlanetPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
       "UserNormalPlanetPermanence"
@@ -46,13 +42,18 @@ module.exports = function(deployer, network, accounts) {
       "UserSpecialPlanetIdToOwnerPermanence"
     )
 
-    const controller = await helper.deployAndRegister(deployer, network, NormalPlanetController, [
+    const remarkableUsersAddress = await helper.getRegistryContractAddress(
+      deployer.network_id,
+      "RemarkableUserController"
+    )
+
+    const controller = await helper.deployAndRegister(deployer, network, SpecialPlanetController, [
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdCounterPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       userSpecialPlanetIdToOwnerPermanenceAddress,
       userGoldPermanenceAddress,
-      normalPlanetPermanenceAddress
+      remarkableUsersAddress
     ])
 
     const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
