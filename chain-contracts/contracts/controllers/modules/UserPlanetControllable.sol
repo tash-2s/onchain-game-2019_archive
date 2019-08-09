@@ -20,6 +20,34 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
   }
 
   function confirm(address account) internal returns (uint) {
+    (uint normalPopulation, uint normalProductivity, uint normalKnowledge) = _calculateUserNormalPlanetParams(
+      account
+    );
+    (uint specialPopulation, uint specialProductivity, uint specialKnowledge) = _calculateUserSpecialPlanetParams(
+      account
+    );
+
+    uint population = normalPopulation + specialPopulation;
+    uint productivity = normalProductivity + specialProductivity;
+    uint knowledge = normalKnowledge + specialKnowledge;
+
+    // TODO: type
+    uint goldPerSec = population * productivity;
+    uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
+    uint diffGold = goldPerSec * diffSec;
+
+    if (diffGold > 0) {
+      mintGold(account, uint200(diffGold));
+    }
+
+    return knowledge;
+  }
+
+  function _calculateUserNormalPlanetParams(address account)
+    private
+    view
+    returns (uint, uint, uint)
+  {
     uint population = 0;
     uint productivity = 0;
     uint knowledge = 0;
@@ -28,7 +56,7 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
     UserNormalPlanetRecord memory userPlanet;
     uint rated;
 
-    for (uint i = 0; i < userPlanets.length; i++) {
+    for (uint16 i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
       rated = (uint256(10) ** userPlanet.originalParamCommonLogarithm) * (uint256(
@@ -41,19 +69,41 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
       } else if (userPlanet.kind == 3) {
         knowledge += rated;
       } else {
-        revert("undefined kind");
+        revert("undefined normal planet kind");
       }
     }
 
-    // TODO: type
-    uint goldPerSec = population * productivity;
-    uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
-    uint diffGold = goldPerSec * diffSec;
+    return (population, productivity, knowledge);
+  }
 
-    if (diffGold > 0) {
-      mintGold(account, uint200(diffGold));
+  function _calculateUserSpecialPlanetParams(address account)
+    private
+    view
+    returns (uint, uint, uint)
+  {
+    uint population = 0;
+    uint productivity = 0;
+    uint knowledge = 0;
+
+    UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
+    UserSpecialPlanetRecord memory userPlanet;
+    uint param;
+
+    for (uint16 i = 0; i < userPlanets.length; i++) {
+      userPlanet = userPlanets[i];
+
+      param = uint256(10) ** userPlanet.originalParamCommonLogarithm;
+      if (userPlanet.kind == 1) {
+        population += param;
+      } else if (userPlanet.kind == 2) {
+        productivity += param;
+      } else if (userPlanet.kind == 3) {
+        knowledge += param;
+      } else {
+        revert("undefined special planet kind");
+      }
     }
 
-    return knowledge;
+    return (population, productivity, knowledge);
   }
 }
