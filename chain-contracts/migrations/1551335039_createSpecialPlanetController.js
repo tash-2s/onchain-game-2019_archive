@@ -56,19 +56,17 @@ module.exports = function(deployer, network, accounts) {
       remarkableUsersAddress
     ])
 
-    const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
-    await UserGoldPermanence.methods.addMinter(controller.address).send({ from: accounts[0] }) // TODO: 0 is right?
+    await new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress).methods
+      .addMinter(controller.address)
+      .send({ from: accounts[0] }) // TODO: 0 is right?
 
-    const UserNormalPlanet = new web3.eth.Contract(
-      minterAdditionAbi,
-      userNormalPlanetPermanenceAddress
-    )
-    await UserNormalPlanet.methods.addMinter(controller.address).send({ from: accounts[0] })
-    const UserNormalPlanetIdCounter = new web3.eth.Contract(
+    await new web3.eth.Contract(minterAdditionAbi, userNormalPlanetPermanenceAddress).methods
+      .addMinter(controller.address)
+      .send({ from: accounts[0] })
+    await new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetIdCounterPermanenceAddress
-    )
-    await UserNormalPlanetIdCounter.methods
+    ).methods
       .addMinter(controller.address)
       .send({ from: accounts[0] })
 
