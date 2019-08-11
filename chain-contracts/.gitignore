@@ -1,6 +1,8 @@
 node_modules
 app.db
 chaindata
+evm.db
+receipts_db
 genesis.json
 loom
 private_key
