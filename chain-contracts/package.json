@@ -11,7 +11,7 @@
   "devDependencies": {
     "ethlint": "^1.2.2",
     "loom-truffle-provider": "0.12.0",
-    "openzeppelin-solidity": "2.0",
+    "openzeppelin-solidity": "2.0.1",
     "prettier": "^1.16.4",
     "prettier-plugin-solidity": "^1.0.0-alpha.18",
     "truffle": "^5.0.10",
