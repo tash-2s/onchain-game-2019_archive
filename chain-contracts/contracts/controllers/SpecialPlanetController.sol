@@ -3,9 +3,11 @@ pragma solidity 0.4.24;
 import "./modules/UserPlanetControllable.sol";
 
 import "./RemarkableUserController.sol";
+import "../tokens/Erc721SpecialPlanet.sol";
 
 contract SpecialPlanetController is UserPlanetControllable {
   RemarkableUserController private _remarkableUserController;
+  Erc721SpecialPlanet private _erc721SpecialPlanet;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
@@ -13,7 +15,8 @@ contract SpecialPlanetController is UserPlanetControllable {
     address userSpecialPlanetPermanenceAddress,
     address userSpecialPlanetIdToOwnerPermanenceAddress,
     address userGoldPermanenceAddress,
-    address remarkableUsersContractAddress
+    address remarkableUsersContractAddress,
+    address erc721SpecialPlanetAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
@@ -23,10 +26,15 @@ contract SpecialPlanetController is UserPlanetControllable {
       userGoldPermanenceAddress
     );
     _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
+    _erc721SpecialPlanet = Erc721SpecialPlanet(erc721SpecialPlanetAddress);
   }
 
   function remarkableUserController() external view returns (RemarkableUserController) {
     return _remarkableUserController;
+  }
+
+  function erc721SpecialPlanet() external view returns (Erc721SpecialPlanet) {
+    return _erc721SpecialPlanet;
   }
 
   function planets(address account)
@@ -71,7 +79,8 @@ contract SpecialPlanetController is UserPlanetControllable {
     uint8 kind = 1; // TODO
     uint8 paramCommonLogarithm = 40; // TODO
 
-    mintUserSpecialPlanet(msg.sender, kind, paramCommonLogarithm);
+    uint24 id = mintUserSpecialPlanet(msg.sender, kind, paramCommonLogarithm);
+    _erc721SpecialPlanet.mintWithTokenURI(msg.sender, id, "");
   }
 
   function setPlanet(uint24 userPlanetId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
