@@ -85,5 +85,9 @@ module.exports = function(deployer, network, accounts) {
     ).methods
       .addMinter(controller.address)
       .send({ from: accounts[0] })
+
+    await new web3.eth.Contract(minterAdditionAbi, erc721SpecialPlanetAddress).methods
+      .addMinter(controller.address)
+      .send({ from: accounts[0] })
   })
 }
