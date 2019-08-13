@@ -87,12 +87,15 @@ contract UserSpecialPlanetControllable is TimeGettable {
     view
     returns (UserSpecialPlanetRecord)
   {
-    address account = _userSpecialPlanetIdToOwnerPermanence.readElement(userPlanetId);
+    address account = _userSpecialPlanetIdToOwnerPermanence.readElement(userPlanetId - 1);
     return userSpecialPlanetRecordOf(account, userPlanetId);
   }
 
-  function mintUserSpecialPlanet(address account, uint8 kind, uint8 paramCommonLogarithm) internal {
-    uint24 id = uint24(_userSpecialPlanetIdToOwnerPermanence.createElement(account) - 1);
+  function mintUserSpecialPlanet(address account, uint8 kind, uint8 paramCommonLogarithm)
+    internal
+    returns (uint24)
+  {
+    uint24 id = uint24(_userSpecialPlanetIdToOwnerPermanence.createElement(account));
 
     _userSpecialPlanetPermanence.createElement(
       account,
@@ -109,6 +112,8 @@ contract UserSpecialPlanetControllable is TimeGettable {
         )
       )
     );
+
+    return id;
   }
 
   // TODO: I should check the coordinates
