@@ -1,6 +1,8 @@
 {
   "private": true,
   "license": "UNLICENSED",
+  "name": "loomchain",
+  "version": "0.0.0",
   "scripts": {
     "truffle": "truffle",
     "loom": "./loom",
