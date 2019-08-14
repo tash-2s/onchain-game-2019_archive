@@ -4,7 +4,6 @@
   "name": "loomchain",
   "version": "0.0.0",
   "scripts": {
-    "truffle": "truffle",
     "loom": "./loom",
     "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --no-semi --print-width 100 --write && solium -d contracts/ --fix",
     "generate-ts-types": "truffle compile && typechain --target truffle './build/**/*.json'",
