@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "license": "UNLICENSED",
+  "name": "ethereum",
+  "version": "0.0.0",
+  "scripts": {
+  },
+  "devDependencies": {
+    "openzeppelin-solidity": "2.0.1",
+    "truffle": "^5.0.10"
+  }
+}

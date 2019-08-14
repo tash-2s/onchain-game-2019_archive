@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "license": "UNLICENSED",
+  "name": "loomchain",
+  "version": "0.0.0",
+  "scripts": {
+    "loom": "./loom",
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --no-semi --print-width 100 --write && solium -d contracts/ --fix",
+    "generate-ts-types": "truffle compile && typechain --target truffle './build/**/*.json'",
+    "test": "yarn generate-ts-types && tsc --noEmit && TS_NODE_FILES=true truffle test"
+  },
+  "devDependencies": {
+    "ethlint": "^1.2.2",
+    "loom-truffle-provider": "0.12.0",
+    "openzeppelin-solidity": "2.0.1",
+    "prettier": "^1.16.4",
+    "prettier-plugin-solidity": "^1.0.0-alpha.18",
+    "truffle": "^5.0.10",
+    "truffle-contract": "^4.0.6",
+    "truffle-deploy-registry": "^0.5.1",
+    "truffle-typings": "^1.0.6",
+    "ts-node": "^8.0.3",
+    "typechain": "^0.3.14",
+    "typescript": "^3.3.4000"
+  }
+}
