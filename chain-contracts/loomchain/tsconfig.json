@@ -3,7 +3,6 @@
     "target": "ES2017",
     "module": "commonjs",
     "strict": true,
-    "strictNullChecks": true,
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types", "./types"],
     "types": ["node", "truffle-contracts", "my-types"]
