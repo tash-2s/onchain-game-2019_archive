@@ -6,6 +6,12 @@ const registerInstance = (network, instance) => {
   }
 }
 
+const sleep = (time) => {
+ return new Promise(resolve => {
+   setTimeout(resolve, time)
+ })
+}
+
 module.exports = {
   buildContract: (artifacts, name, scheme) => {
     const tc = require("truffle-contract")
@@ -21,11 +27,13 @@ module.exports = {
   deployAndRegister: async (deployer, network, contract, args = []) => {
     const instance = await deployer.deploy(contract, ...args)
     registerInstance(network, instance)
+    await sleep(500) // to prevent timeout error...
     return instance
   },
   getRegistryContractAddress: async (networkId, name) => {
     const tdr = require("truffle-deploy-registry")
     const entry = await tdr.findLastByContractName(networkId, name)
     return entry.address
-  }
+  },
+  sleep: sleep
 }
