@@ -4,12 +4,16 @@
   "name": "ethereum",
   "version": "0.0.0",
   "scripts": {
-    "lint": "prettier '{*.js,migrations/**/*,contracts/**/*,test/**/*}' --write"
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write"
   },
   "devDependencies": {
     "openzeppelin-solidity": "2.0.1",
     "prettier": "^1.16.4",
     "prettier-plugin-solidity": "^1.0.0-alpha.18",
     "truffle": "^5.0.10"
+  },
+  "devDependencies": {
+    "bip39": "^3.0.2",
+    "truffle-hdwallet-provider": "^1.0.16"
   }
 }

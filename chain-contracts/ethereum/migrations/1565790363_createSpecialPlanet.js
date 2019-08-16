@@ -10,7 +10,7 @@ module.exports = function(deployer, network) {
   })
 }
 
-const getGatewayAddress = (network) => {
+const getGatewayAddress = network => {
   // https://loomx.io/developers/en/testnet-plasma.html
   switch (network) {
     case "rinkeby":

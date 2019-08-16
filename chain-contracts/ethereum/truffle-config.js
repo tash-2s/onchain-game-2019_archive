@@ -18,6 +18,10 @@
  *
  */
 
+const path = require("path")
+const fs = require("fs")
+const HDWalletProvider = require("truffle-hdwallet-provider")
+
 // const HDWalletProvider = require('truffle-hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
@@ -75,6 +79,28 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    rinkeby: {
+      provider: function() {
+        if (!process.env.INFURA_API_KEY) {
+          throw new Error("INFURA_API_KEY env var not set")
+        }
+        const mnemonicPath = path.join(__dirname, "rinkeby_mnemonic")
+        if (!fs.existsSync(mnemonicPath)) {
+          throw new Error("mnemonic not found")
+        }
+
+        const mnemonic = fs.readFileSync(mnemonicPath, "utf-8")
+        return new HDWalletProvider(
+          mnemonic,
+          `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+          0,
+          10
+        )
+      },
+      network_id: 4,
+      gasPrice: 15000000001,
+      skipDryRun: true
+    }
   },
 
   // Set default mocha options here, use special reporters etc.
