@@ -33,7 +33,7 @@ module.exports = {
       },
       network_id: "*"
     },
-    loom_extdev_plasma_us1: {
+    extdev: {
       provider: function() {
         const privateKey = readFileSync(path.join(__dirname, "extdev_private_key"), "utf-8")
         const chainId = "extdev-plasma-us1"

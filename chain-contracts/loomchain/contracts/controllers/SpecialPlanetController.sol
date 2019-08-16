@@ -80,7 +80,8 @@ contract SpecialPlanetController is UserPlanetControllable {
     uint8 paramCommonLogarithm = 40; // TODO
 
     uint24 id = mintUserSpecialPlanet(msg.sender, kind, paramCommonLogarithm);
-    _erc721SpecialPlanet.mintWithTokenURI(msg.sender, id, "");
+    // TODO
+    // _erc721SpecialPlanet.mintWithTokenURI(msg.sender, id, "");
   }
 
   function setPlanet(uint24 userPlanetId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
