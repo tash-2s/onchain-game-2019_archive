@@ -8,12 +8,12 @@ yarn loom genkey -a public_key -k private_key
 # Run
 ```
 yarn loom run
-yarn truffle migrate --network loom_local
+yarn truffle migrate --network local
 ```
 
 # Test
 ```
 yarn test # for truffle develop (fast)
 # or
-yarn test --network loom_local # for loom
+yarn test --network local # for loom
 ```

@@ -18,7 +18,7 @@ module.exports = {
     }
   },
   networks: {
-    loom_local: {
+    local: {
       provider: function() {
         const privateKey = readFileSync(path.join(__dirname, "private_key"), "utf-8")
         const chainId = "default"

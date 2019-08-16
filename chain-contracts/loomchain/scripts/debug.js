@@ -1,7 +1,7 @@
 // Execute DebugController's functions
 //
 // usage: yarn truffle exec scripts/debug.js --network [networkName] [functionName] [args...]
-// example: yarn truffle exec scripts/debug.js --network loom_local debugMintGold "0xbF11e74f927A1897a265a0bdB204b61570D18c20" 123
+// example: yarn truffle exec scripts/debug.js --network local debugMintGold "0xbF11e74f927A1897a265a0bdB204b61570D18c20" 123
 
 const DebugController = artifacts.require("./controllers/DebugController")
 
