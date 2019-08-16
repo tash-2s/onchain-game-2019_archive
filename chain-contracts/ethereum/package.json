@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "openzeppelin-solidity": "2.0.1",
+    "prettier": "^1.16.4",
     "truffle": "^5.0.10"
   }
 }
