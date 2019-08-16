@@ -47,7 +47,9 @@ module.exports = function(deployer, network) {
           "00" + r.paramCommonLogarithm
         ).slice(-3)}00${kind}`
       )
-      await helper.sleep(300) // to prevent timeout error...
+      if (!helper.isDevNetwork(network)) {
+        await helper.sleep(300) // to prevent timeout error...
+      }
     }
   })
 }

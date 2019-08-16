@@ -6,10 +6,15 @@ const registerInstance = (network, instance) => {
   }
 }
 
+// It seems like loom blocks transactions when I send many transactions in a short term.
 const sleep = (time) => {
  return new Promise(resolve => {
    setTimeout(resolve, time)
  })
+}
+
+const isDevNetwork = (network) => {
+  return network === "development" || network === "develop" || network === "local"
 }
 
 module.exports = {
@@ -27,7 +32,9 @@ module.exports = {
   deployAndRegister: async (deployer, network, contract, args = []) => {
     const instance = await deployer.deploy(contract, ...args)
     registerInstance(network, instance)
-    await sleep(500) // to prevent timeout error...
+    if (!isDevNetwork(network)) {
+      await sleep(500) // to prevent timeout error...
+    }
     return instance
   },
   getRegistryContractAddress: async (networkId, name) => {
@@ -35,5 +42,6 @@ module.exports = {
     const entry = await tdr.findLastByContractName(networkId, name)
     return entry.address
   },
-  sleep: sleep
+  sleep: sleep,
+  isDevNetwork: isDevNetwork
 }

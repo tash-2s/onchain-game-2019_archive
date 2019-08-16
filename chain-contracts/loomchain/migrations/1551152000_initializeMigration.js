@@ -76,7 +76,7 @@ const Migrations = artifacts.require("./Migrations") // TODO: fix
 // })
 
 module.exports = function(deployer, network) {
-  deployer.deploy(Migrations).then(migrations => {
-    return helper.registerInstance(network, migrations)
+  deployer.then(async function() {
+    await helper.deployAndRegister(deployer, network, Migrations)
   })
 }
