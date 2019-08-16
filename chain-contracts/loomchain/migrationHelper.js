@@ -7,13 +7,13 @@ const registerInstance = (network, instance) => {
 }
 
 // It seems like loom blocks transactions when I send many transactions in a short term.
-const sleep = (time) => {
- return new Promise(resolve => {
-   setTimeout(resolve, time)
- })
+const sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
 }
 
-const isDevNetwork = (network) => {
+const isDevNetwork = network => {
   return network === "development" || network === "develop" || network === "local"
 }
 

@@ -1,5 +1,5 @@
-const SpecialPlanet = artifacts.require("SpecialPlanet");
-const SpecialPlanetShop = artifacts.require("SpecialPlanetShop");
+const SpecialPlanet = artifacts.require("SpecialPlanet")
+const SpecialPlanetShop = artifacts.require("SpecialPlanetShop")
 
 module.exports = function(deployer) {
   deployer.then(async function() {
@@ -8,4 +8,4 @@ module.exports = function(deployer) {
 
     await (await SpecialPlanet.deployed()).addMinter(SpecialPlanetShop.address)
   })
-};
+}
