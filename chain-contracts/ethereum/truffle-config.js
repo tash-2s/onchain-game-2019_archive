@@ -81,18 +81,21 @@ module.exports = {
     // }
     rinkeby: {
       provider: function() {
-        if (!process.env.INFURA_API_KEY) {
-          throw new Error("INFURA_API_KEY env var not set")
+        const infuraKeyPath = path.join(__dirname, "infura_api_key")
+        if (!fs.existsSync(infuraKeyPath)) {
+          throw new Error("infura api key not found")
         }
+
         const mnemonicPath = path.join(__dirname, "rinkeby_mnemonic")
         if (!fs.existsSync(mnemonicPath)) {
           throw new Error("mnemonic not found")
         }
 
         const mnemonic = fs.readFileSync(mnemonicPath, "utf-8")
+        const infuraKey = fs.readFileSync(infuraKeyPath, "utf-8")
         return new HDWalletProvider(
           mnemonic,
-          `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+          `https://rinkeby.infura.io/v3/${infuraKey}`,
           0,
           10
         )
