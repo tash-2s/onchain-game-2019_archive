@@ -20,7 +20,7 @@ module.exports = {
   networks: {
     local: {
       provider: function() {
-        const privateKey = readFileSync(path.join(__dirname, "private_key"), "utf-8")
+        const privateKey = readFileSync(path.join(__dirname, "local_private_key"), "utf-8")
         const chainId = "default"
         const writeUrl = "http://127.0.0.1:46658/rpc"
         const readUrl = "http://127.0.0.1:46658/query"
