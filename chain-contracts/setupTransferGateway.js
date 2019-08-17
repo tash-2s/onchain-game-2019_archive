@@ -7,12 +7,15 @@ const {
   Contracts, Web3Signer, soliditySha3
 } = require('loom-js')
 const { OfflineWeb3Signer } = require('loom-js/dist/solidity-helpers') // TODO
+const BN = require('bn.js')
 
 const MnemonicUtil = require("./ethereum/MnemonicUtil.js")
 const InfuraUtil = require("./ethereum/InfuraUtil.js")
 
 const EthereumTokenJSON = require('./ethereum/build/contracts/SpecialPlanet.json')
 const LoomchainTokenJSON = require('./loomchain/build/contracts/Erc721SpecialPlanet.json')
+
+const RinkebyGatewayJSON = require('./Gateway.json')
 
 function loadRinkebyAccount() {
   const { privateKey } = new MnemonicUtil("rinkeby").getAddressAndPrivateKey()
@@ -130,7 +133,134 @@ const mapAccounts = async () => {
   }
 }
 
+const withdrawToken = async (tokenId) => {
+  const options = {}
+  let client
+  try {
+    const extdev = loadExtdevAccount()
+    const rinkeby = loadRinkebyAccount()
+    client = extdev.client
+
+    const rinkebyNetworkId = await rinkeby.web3js.eth.net.getId()
+    const extdevNetworkId = await extdev.web3js.eth.net.getId()
+
+    let signature
+    if (true) {
+      signature = await depositTokenToExtdevGateway({
+        client: extdev.client,
+        web3js: extdev.web3js,
+        tokenId: tokenId,
+        ownerExtdevAddress: extdev.account,
+        ownerRinkebyAddress: rinkeby.account.address,
+        tokenExtdevAddress: LoomchainTokenJSON.networks[extdevNetworkId].address,
+        tokenRinkebyAddress: EthereumTokenJSON.networks[rinkebyNetworkId].address,
+        timeout: options.timeout ? (options.timeout * 1000) : 120000
+      })
+      console.log(`Token ${tokenId} deposited to DAppChain Gateway...`)
+    } else {
+      const ownerAddr = Address.fromString(`${extdev.client.chainId}:${extdev.account}`)
+      const gatewayContract = await Contracts.TransferGateway.createAsync(extdev.client, ownerAddr)
+      const receipt = await gatewayContract.withdrawalReceiptAsync(ownerAddr)
+      signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+      console.log("resumed")
+    }
+
+    const tx = await withdrawTokenFromRinkebyGateway({
+      web3js: rinkeby.web3js,
+      tokenId: tokenId,
+      accountAddress: rinkeby.account.address,
+      signature,
+      gas: options.gas || 350000
+    })
+    console.log(`Token ${tokenId} withdrawn from Ethereum Gateway.`)
+    console.log(`Rinkeby tx hash: ${tx.transactionHash}`)
+  } catch (err) {
+    console.error(err)
+  } finally {
+    if (client) {
+      client.disconnect()
+    }
+  }
+}
+
+// Returns a promise that will be resolved with a hex string containing the signature that must
+// be submitted to the Ethereum Gateway to withdraw a token.
+async function depositTokenToExtdevGateway({
+  client, web3js, tokenId,
+  ownerExtdevAddress, ownerRinkebyAddress,
+  tokenExtdevAddress, tokenRinkebyAddress, timeout
+}) {
+  const ownerExtdevAddr = Address.fromString(`${client.chainId}:${ownerExtdevAddress}`)
+  const gatewayContract = await Contracts.TransferGateway.createAsync(client, ownerExtdevAddr)
+
+  const tokenContract = await getExtdevTokenContract(web3js)
+  const extdevGatewayAddress = (await client.getContractAddressAsync("gateway")).local.toString()
+  await tokenContract.methods
+    .approve(extdevGatewayAddress, tokenId)
+    .send({ from: ownerExtdevAddress })
+
+  const ownerRinkebyAddr = Address.fromString(`eth:${ownerRinkebyAddress}`)
+  const receiveSignedWithdrawalEvent = new Promise((resolve, reject) => {
+    let timer = setTimeout(
+      () => reject(new Error('Timeout while waiting for withdrawal to be signed')),
+      timeout
+    )
+    const listener = event => {
+      const tokenEthAddr = Address.fromString(`eth:${tokenRinkebyAddress}`)
+      if (
+        event.tokenContract.toString() === tokenEthAddr.toString() &&
+        event.tokenOwner.toString() === ownerRinkebyAddr.toString()
+      ) {
+        clearTimeout(timer)
+        timer = null
+        gatewayContract.removeAllListeners(Contracts.TransferGateway.EVENT_TOKEN_WITHDRAWAL)
+        resolve(event)
+      }
+    }
+    gatewayContract.on(Contracts.TransferGateway.EVENT_TOKEN_WITHDRAWAL, listener)
+  })
+
+  const tokenExtdevAddr = Address.fromString(`${client.chainId}:${tokenExtdevAddress}`)
+  await gatewayContract.withdrawERC721Async(new BN(tokenId), tokenExtdevAddr, ownerRinkebyAddr)
+
+  const event = await receiveSignedWithdrawalEvent
+  return CryptoUtils.bytesToHexAddr(event.sig)
+}
+
+async function getExtdevTokenContract(web3js) {
+  const networkId = await web3js.eth.net.getId()
+  return new web3js.eth.Contract(
+    LoomchainTokenJSON.abi,
+    LoomchainTokenJSON.networks[networkId].address,
+  )
+}
+
+async function withdrawTokenFromRinkebyGateway({ web3js, tokenId, accountAddress, signature, gas }) {
+  const gatewayContract = await getRinkebyGatewayContract(web3js)
+  const networkId = await web3js.eth.net.getId()
+
+  const gasEstimate = await gatewayContract.methods
+    .withdrawERC721(tokenId, signature, EthereumTokenJSON.networks[networkId].address)
+    .estimateGas({ from: accountAddress, gas })
+
+  if (gasEstimate == gas) {
+    throw new Error('Not enough enough gas, send more.')
+  }
+
+  return gatewayContract.methods
+    .withdrawERC721(tokenId, signature, EthereumTokenJSON.networks[networkId].address)
+    .send({ from: accountAddress, gas: gasEstimate })
+}
+
+async function getRinkebyGatewayContract(web3js) {
+  const networkId = await web3js.eth.net.getId()
+  return new web3js.eth.Contract(
+    RinkebyGatewayJSON.abi,
+    RinkebyGatewayJSON.networks[networkId].address
+  )
+}
+
 (async () => {
-  // await mapContracts()
+  // await withdrawToken(1)
   console.log("finished!")
 })()
