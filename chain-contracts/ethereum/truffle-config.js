@@ -21,6 +21,7 @@
 const path = require("path")
 const fs = require("fs")
 const HDWalletProvider = require("truffle-hdwallet-provider")
+const MnemonicUtil = require("./MnemonicUtil.js")
 
 // const HDWalletProvider = require('truffle-hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
@@ -85,20 +86,11 @@ module.exports = {
         if (!fs.existsSync(infuraKeyPath)) {
           throw new Error("infura api key not found")
         }
-
-        const mnemonicPath = path.join(__dirname, "rinkeby_mnemonic")
-        if (!fs.existsSync(mnemonicPath)) {
-          throw new Error("mnemonic not found")
-        }
-
-        const mnemonic = fs.readFileSync(mnemonicPath, "utf-8")
         const infuraKey = fs.readFileSync(infuraKeyPath, "utf-8")
-        return new HDWalletProvider(
-          mnemonic,
-          `https://rinkeby.infura.io/v3/${infuraKey}`,
-          0,
-          10
-        )
+
+        const mnemonic = new MnemonicUtil("rinkeby").getMnemonic()
+
+        return new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`, 0, 10)
       },
       network_id: 4,
       gasPrice: 15000000001,
