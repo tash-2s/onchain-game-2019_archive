@@ -95,7 +95,42 @@ const mapContracts = async () => {
   }
 }
 
+// this will be implemented in web-client
+const mapAccounts = async () => {
+  let client
+  try {
+    const rinkeby = loadRinkebyAccount()
+    const extdev = loadExtdevAccount()
+    client = extdev.client
+
+    const ownerRinkebyAddr = Address.fromString(`eth:${rinkeby.account.address}`)
+    const ownerExtdevAddr = Address.fromString(`${client.chainId}:${extdev.account}`)
+    const mapperContract = await Contracts.AddressMapper.createAsync(client, ownerExtdevAddr)
+
+    try {
+      const mapping = await mapperContract.getMappingAsync(ownerExtdevAddr)
+      console.log(`${mapping.from.toString()} is already mapped to ${mapping.to.toString()}`)
+      return
+    } catch (err) {
+      // assume this means there is no mapping yet, need to fix loom-js not to throw in this case
+    }
+
+    console.log(`mapping ${ownerRinkebyAddr.toString()} to ${ownerExtdevAddr.toString()}`)
+
+    const signer = new OfflineWeb3Signer(rinkeby.web3js, rinkeby.account)
+    await mapperContract.addIdentityMappingAsync(ownerExtdevAddr, ownerRinkebyAddr, signer)
+
+    console.log(`Mapped ${ownerExtdevAddr} to ${ownerRinkebyAddr}`)
+  } catch (err) {
+    console.error(err)
+  } finally {
+    if (client) {
+      client.disconnect()
+    }
+  }
+}
+
 (async () => {
-  await mapContracts()
+  // await mapContracts()
   console.log("finished!")
 })()
