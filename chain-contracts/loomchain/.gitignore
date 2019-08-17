@@ -5,9 +5,7 @@ receipts_db
 genesis.json
 loom
 private_key
-public_key
 extdev_private_key
-extdev_public_key
 networks/13654820909954.json
 networks/4447.json
 types/truffle-contracts
