@@ -1,5 +1,14 @@
 {
   "private": true,
   "license": "UNLICENSED",
-  "workspaces": ["loomchain", "ethereum"]
+  "workspaces": [
+    "loomchain",
+    "ethereum"
+  ],
+  "scripts": {
+    "lint": "prettier '*.js' --write"
+  },
+  "devDependencies": {
+    "prettier": "^1.16.4"
+  }
 }
