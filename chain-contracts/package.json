@@ -9,6 +9,6 @@
     "lint": "prettier '*.js' --write"
   },
   "devDependencies": {
-    "prettier": "^1.16.4"
+    "prettier": "*"
   }
 }
