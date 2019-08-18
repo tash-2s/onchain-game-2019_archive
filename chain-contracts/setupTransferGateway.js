@@ -14,10 +14,9 @@ const {
   CryptoUtils,
   LoomProvider,
   Contracts,
-  Web3Signer,
-  soliditySha3
+  soliditySha3,
+  OfflineWeb3Signer
 } = require("loom-js")
-const { OfflineWeb3Signer } = require("loom-js/dist/solidity-helpers") // TODO
 const BN = require("bn.js")
 
 const MnemonicUtil = require("./ethereum/MnemonicUtil.js")
