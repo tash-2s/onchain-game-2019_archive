@@ -197,7 +197,7 @@ async function depositTokenToExtdevGateway({
   const gatewayContract = await Contracts.TransferGateway.createAsync(client, ownerExtdevAddr)
 
   const tokenContract = await getExtdevTokenContract(web3js)
-  const extdevGatewayAddress = (await client.getContractAddressAsync("gateway")).local.toString()
+  const extdevGatewayAddress = (await tokenContract.methods.gateway().call({ from: ownerExtdevAddress })).toLowerCase()
   await tokenContract.methods
     .approve(extdevGatewayAddress, tokenId)
     .send({ from: ownerExtdevAddress })
