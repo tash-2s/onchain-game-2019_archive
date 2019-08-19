@@ -3,7 +3,7 @@ contract("TimeGettable", async accounts => {
   let instance: PromiseGenericsType<ReturnType<typeof TimeGettable.deployed>>
 
   before(async () => {
-    instance = await TimeGettable.new({ from: accounts[0] })
+    instance = await TimeGettable.new({from: accounts[0]})
   })
 
   describe("#uint32now()", async () => {

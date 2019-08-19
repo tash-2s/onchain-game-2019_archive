@@ -3,9 +3,9 @@ pragma solidity 0.4.24;
 import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 
 contract Migrations is MinterRole {
-  uint public last_completed_migration;
+  uint256 public last_completed_migration;
 
-  function setCompleted(uint completed) public onlyMinter {
+  function setCompleted(uint256 completed) public onlyMinter {
     last_completed_migration = completed;
   }
 

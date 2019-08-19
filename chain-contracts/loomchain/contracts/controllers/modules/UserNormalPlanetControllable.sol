@@ -106,7 +106,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
     for (uint16 i = 0; i < records.length; i++) {
       // TODO: for big planets
-      if ((records[i].axialCoordinateQ == axialCoordinateQ) && (records[i].axialCoordinateR == axialCoordinateR)) {
+      if (
+        (records[i].axialCoordinateQ == axialCoordinateQ) &&
+        (records[i].axialCoordinateR == axialCoordinateR)
+      ) {
         _userNormalPlanetPermanence.deleteElement(account, i);
       }
     }
@@ -240,17 +243,18 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       revert("faild to build user normal planet, it's not created");
     }
 
-    return UserNormalPlanetRecord(
-      id,
-      normalPlanetId,
-      kind,
-      originalParamCommonLogarithm,
-      rank,
-      rankupedAt,
-      createdAt,
-      axialCoordinateQ,
-      axialCoordinateR
-    );
+    return
+      UserNormalPlanetRecord(
+        id,
+        normalPlanetId,
+        kind,
+        originalParamCommonLogarithm,
+        rank,
+        rankupedAt,
+        createdAt,
+        axialCoordinateQ,
+        axialCoordinateR
+      );
   }
 
   function buildUint256FromUserNormalPlanetRecord(UserNormalPlanetRecord record)
@@ -306,12 +310,13 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT,
       uint16(record.axialCoordinateQ)
     );
-    return reinterpretPermanenceUint256(
-      n,
-      USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT,
-      USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT,
-      uint16(record.axialCoordinateR)
-    );
+    return
+      reinterpretPermanenceUint256(
+        n,
+        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT,
+        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT,
+        uint16(record.axialCoordinateR)
+      );
   }
 
   function _userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
@@ -324,13 +329,16 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint16 index;
 
     for (uint16 i = 0; i < us.length; i++) {
-      if (uint64(
-        interpretPermanenceUint256(
-          us[i],
-          USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
-          USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT
-        )
-      ) == userPlanetId) {
+      if (
+        uint64(
+          interpretPermanenceUint256(
+            us[i],
+            USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT,
+            USER_NORMAL_PLANET_PERMANENCE_ID_END_DIGIT
+          )
+        ) ==
+        userPlanetId
+      ) {
         target = us[i];
         index = i;
         break;

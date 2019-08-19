@@ -5,7 +5,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
   const strangerAccount = accounts[1]
 
   beforeEach(async () => {
-    instance = await UserNormalPlanetPermanence.new({ from: ownerAccount })
+    instance = await UserNormalPlanetPermanence.new({from: ownerAccount})
   })
 
   describe("#isMinter()", async () => {
@@ -59,7 +59,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
     it("should not allow strangers to update data", async () => {
       let failed1 = false
       try {
-        await instance.update(ownerAccount, ["123"], { from: strangerAccount })
+        await instance.update(ownerAccount, ["123"], {from: strangerAccount})
       } catch (_) {
         failed1 = true
       }
@@ -67,7 +67,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
 
       let failed2 = false
       try {
-        await instance.update(strangerAccount, ["123"], { from: strangerAccount })
+        await instance.update(strangerAccount, ["123"], {from: strangerAccount})
       } catch (_) {
         failed2 = true
       }
@@ -79,7 +79,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
     it("should not allow strangers to push an element", async () => {
       let failed = false
       try {
-        await instance.createElement(strangerAccount, "123", { from: strangerAccount })
+        await instance.createElement(strangerAccount, "123", {from: strangerAccount})
       } catch (_) {
         failed = true
       }
@@ -126,7 +126,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
     it("should not allow strangers to update an element", async () => {
       let failed = false
       try {
-        await instance.updateElement(ownerAccount, 0, "9", { from: strangerAccount })
+        await instance.updateElement(ownerAccount, 0, "9", {from: strangerAccount})
       } catch (_) {
         failed = true
       }
@@ -177,7 +177,7 @@ contract("UserNormalPlanetPermanence", async accounts => {
 
           let failed = false
           try {
-            await instance.deleteElement(ownerAccount, 1, { from: strangerAccount })
+            await instance.deleteElement(ownerAccount, 1, {from: strangerAccount})
           } catch (_) {
             failed = true
           }

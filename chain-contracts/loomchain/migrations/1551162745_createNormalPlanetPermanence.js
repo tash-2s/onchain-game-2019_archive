@@ -27,8 +27,8 @@ module.exports = function(deployer, network) {
     }
 
     const data = residenceAndGoldmine.concat([
-      { id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8 },
-      { id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12 }
+      {id: 101, kind: "technology", paramCommonLogarithm: 2, priceGoldCommonLogarithm: 8},
+      {id: 102, kind: "technology", paramCommonLogarithm: 3, priceGoldCommonLogarithm: 12}
     ])
 
     for (i = 0; i < data.length; i++) {

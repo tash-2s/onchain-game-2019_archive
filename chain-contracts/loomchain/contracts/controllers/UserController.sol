@@ -18,13 +18,13 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     external
     view
     returns (
-    uint200 confirmedGold,
-    uint32 goldConfirmedAt,
-    uint64[] unpIds, // [id, normalPlanetId, ...]
-    uint8[] unpRanks,
-    uint32[] unpTimes, // [rankupedAt, createdAt, ...]
-    int16[] unpAxialCoordinates // [q, r, ...]
-  )
+      uint200 confirmedGold,
+      uint32 goldConfirmedAt,
+      uint64[] unpIds, // [id, normalPlanetId, ...]
+      uint8[] unpRanks,
+      uint32[] unpTimes, // [rankupedAt, createdAt, ...]
+      int16[] unpAxialCoordinates // [q, r, ...]
+    )
   {
     UserGoldRecord memory goldRecord = userGoldRecordOf(account);
     confirmedGold = goldRecord.balance;

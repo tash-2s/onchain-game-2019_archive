@@ -35,7 +35,7 @@ contract("NormalPlanetPermanence", async accounts => {
     let failed = false
 
     try {
-      await instance.update("123", "456", { from: strangerAccount })
+      await instance.update("123", "456", {from: strangerAccount})
     } catch (_) {
       failed = true
     }
@@ -52,7 +52,7 @@ contract("NormalPlanetPermanence", async accounts => {
     const result1 = await instance.read("123")
     assert.equal(result1.toString(), "456")
 
-    const result2 = await instance.read("123", { from: strangerAccount })
+    const result2 = await instance.read("123", {from: strangerAccount})
     assert.equal(result2.toString(), "456")
   })
 

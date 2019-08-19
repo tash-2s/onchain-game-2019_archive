@@ -3,7 +3,7 @@ contract("PermanenceInterpretable", async accounts => {
   let instance: PromiseGenericsType<ReturnType<typeof PermanenceInterpretable.deployed>>
 
   before(async () => {
-    instance = await PermanenceInterpretable.new({ from: accounts[0] })
+    instance = await PermanenceInterpretable.new({from: accounts[0]})
   })
 
   describe("#interpretPermanenceUint256()", async () => {

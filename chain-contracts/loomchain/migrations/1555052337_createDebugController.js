@@ -48,20 +48,18 @@ module.exports = function(deployer, network, accounts) {
     )
 
     const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
-    await UserGoldPermanence.methods.addMinter(controller.address).send({ from: accounts[0] })
+    await UserGoldPermanence.methods.addMinter(controller.address).send({from: accounts[0]})
 
     const UserNormalPlanet = new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetPermanenceAddress
     )
-    await UserNormalPlanet.methods.addMinter(controller.address).send({ from: accounts[0] })
+    await UserNormalPlanet.methods.addMinter(controller.address).send({from: accounts[0]})
 
     const UserNormalPlanetIdCounter = new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetIdCounterPermanenceAddress
     )
-    await UserNormalPlanetIdCounter.methods
-      .addMinter(controller.address)
-      .send({ from: accounts[0] })
+    await UserNormalPlanetIdCounter.methods.addMinter(controller.address).send({from: accounts[0]})
   })
 }

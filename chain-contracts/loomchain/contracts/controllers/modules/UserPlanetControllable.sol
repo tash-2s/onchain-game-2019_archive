@@ -4,7 +4,11 @@ import "./UserNormalPlanetControllable.sol";
 import "./UserSpecialPlanetControllable.sol";
 import "./UserGoldControllable.sol";
 
-contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlanetControllable, UserGoldControllable {
+contract UserPlanetControllable is
+  UserNormalPlanetControllable,
+  UserSpecialPlanetControllable,
+  UserGoldControllable
+{
   function setupUserPlanetControllable(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
@@ -19,22 +23,22 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
     setUserGoldPermanence(userGoldPermanenceAddress);
   }
 
-  function confirm(address account) internal returns (uint) {
-    (uint normalPopulation, uint normalProductivity, uint normalKnowledge) = _calculateUserNormalPlanetParams(
+  function confirm(address account) internal returns (uint256) {
+    (uint256 normalPopulation, uint256 normalProductivity, uint256 normalKnowledge) = _calculateUserNormalPlanetParams(
       account
     );
-    (uint specialPopulation, uint specialProductivity, uint specialKnowledge) = _calculateUserSpecialPlanetParams(
+    (uint256 specialPopulation, uint256 specialProductivity, uint256 specialKnowledge) = _calculateUserSpecialPlanetParams(
       account
     );
 
-    uint population = normalPopulation + specialPopulation;
-    uint productivity = normalProductivity + specialProductivity;
-    uint knowledge = normalKnowledge + specialKnowledge;
+    uint256 population = normalPopulation + specialPopulation;
+    uint256 productivity = normalProductivity + specialProductivity;
+    uint256 knowledge = normalKnowledge + specialKnowledge;
 
     // TODO: type
-    uint goldPerSec = population * productivity;
+    uint256 goldPerSec = population * productivity;
     uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
-    uint diffGold = goldPerSec * diffSec;
+    uint256 diffGold = goldPerSec * diffSec;
 
     if (diffGold > 0) {
       mintGold(account, uint200(diffGold));
@@ -46,22 +50,23 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
   function _calculateUserNormalPlanetParams(address account)
     private
     view
-    returns (uint, uint, uint)
+    returns (uint256, uint256, uint256)
   {
-    uint population = 0;
-    uint productivity = 0;
-    uint knowledge = 0;
+    uint256 population = 0;
+    uint256 productivity = 0;
+    uint256 knowledge = 0;
 
     UserNormalPlanetRecord[] memory userPlanets = userNormalPlanetRecordsOf(account);
     UserNormalPlanetRecord memory userPlanet;
-    uint rated;
+    uint256 rated;
 
     for (uint16 i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      rated = (uint256(10) ** userPlanet.originalParamCommonLogarithm) * (uint256(
-        13
-      ) ** (userPlanet.rank - 1)) / (uint256(10) ** (userPlanet.rank - 1));
+      rated =
+        ((uint256(10)**userPlanet.originalParamCommonLogarithm) *
+          (uint256(13)**(userPlanet.rank - 1))) /
+        (uint256(10)**(userPlanet.rank - 1));
       if (userPlanet.kind == 1) {
         population += rated;
       } else if (userPlanet.kind == 2) {
@@ -79,20 +84,20 @@ contract UserPlanetControllable is UserNormalPlanetControllable, UserSpecialPlan
   function _calculateUserSpecialPlanetParams(address account)
     private
     view
-    returns (uint, uint, uint)
+    returns (uint256, uint256, uint256)
   {
-    uint population = 0;
-    uint productivity = 0;
-    uint knowledge = 0;
+    uint256 population = 0;
+    uint256 productivity = 0;
+    uint256 knowledge = 0;
 
     UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
     UserSpecialPlanetRecord memory userPlanet;
-    uint param;
+    uint256 param;
 
     for (uint16 i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      param = uint256(10) ** userPlanet.originalParamCommonLogarithm;
+      param = uint256(10)**userPlanet.originalParamCommonLogarithm;
       if (userPlanet.kind == 1) {
         population += param;
       } else if (userPlanet.kind == 2) {

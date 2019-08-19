@@ -3,7 +3,7 @@
 const fs = require("fs")
 const path = require("path")
 
-const { LocalAddress, CryptoUtils } = require("loom-js")
+const {LocalAddress, CryptoUtils} = require("loom-js")
 
 const prefix = process.argv[2]
 if (!prefix) {

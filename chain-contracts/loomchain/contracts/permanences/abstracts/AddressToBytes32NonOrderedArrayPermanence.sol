@@ -36,7 +36,9 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
 
   // This function change the order of the array.
   function deleteElement(address addr, uint256 index) public onlyMinter {
-    _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][_addressToBytes32Array[addr].length - 1];
+    _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][_addressToBytes32Array[addr]
+        .length -
+      1];
     _addressToBytes32Array[addr].length--;
   }
 }

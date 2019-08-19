@@ -1,8 +1,8 @@
 require("ts-node/register")
 
-const { readFileSync } = require("fs")
+const {readFileSync} = require("fs")
 const path = require("path")
-const { join } = require("path")
+const {join} = require("path")
 const LoomTruffleProvider = require("loom-truffle-provider")
 
 module.exports = {

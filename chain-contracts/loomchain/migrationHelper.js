@@ -20,7 +20,7 @@ const isDevNetwork = network => {
 module.exports = {
   buildContract: (artifacts, name, scheme) => {
     const tc = require("truffle-contract")
-    const contract = tc({ contractName: name, ...scheme })
+    const contract = tc({contractName: name, ...scheme})
 
     const _Migrations = artifacts.require("Migrations")
     contract.setProvider(_Migrations.currentProvider)

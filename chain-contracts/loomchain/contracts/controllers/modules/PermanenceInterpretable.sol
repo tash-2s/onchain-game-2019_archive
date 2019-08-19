@@ -9,7 +9,7 @@ contract PermanenceInterpretable {
   {
     assertInterpretableDigits(startDigit, endDigit);
 
-    return target % (10 ** endDigit) / (10 ** (startDigit - 1));
+    return (target % (10**endDigit)) / (10**(startDigit - 1));
   }
 
   // ex) (123456789, 4, 6, 999) => 123999789
@@ -21,8 +21,9 @@ contract PermanenceInterpretable {
   ) public pure returns (uint256) {
     assertInterpretableDigits(startDigit, endDigit);
 
-    uint256 zeroFilledTarget = (target / (10 ** endDigit) * (10 ** endDigit)) + (target % (10 ** (startDigit - 1)));
-    uint256 uppedUpdate = update * (10 ** (startDigit - 1));
+    uint256 zeroFilledTarget = ((target / (10**endDigit)) * (10**endDigit)) +
+      (target % (10**(startDigit - 1)));
+    uint256 uppedUpdate = update * (10**(startDigit - 1));
 
     return zeroFilledTarget + uppedUpdate;
   }

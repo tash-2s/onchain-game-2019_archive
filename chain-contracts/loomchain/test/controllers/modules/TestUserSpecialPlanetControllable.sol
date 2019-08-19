@@ -8,9 +8,7 @@ import "../../../contracts/permanences/UserSpecialPlanetIdToOwnerPermanence.sol"
 
 contract TestUserSpecialPlanetControllable is UserSpecialPlanetControllable {
   UserSpecialPlanetPermanence private _p = new UserSpecialPlanetPermanence();
-  UserSpecialPlanetIdToOwnerPermanence private _idToOwnerP = new UserSpecialPlanetIdToOwnerPermanence(
-
-  );
+  UserSpecialPlanetIdToOwnerPermanence private _idToOwnerP = new UserSpecialPlanetIdToOwnerPermanence();
 
   function beforeAll() public {
     setUserSpecialPlanetPermanence(_p);

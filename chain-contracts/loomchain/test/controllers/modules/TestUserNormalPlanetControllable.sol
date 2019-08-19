@@ -49,15 +49,15 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   function testUserNormalPlanetRecordsCountOf() public {
     address account = address(2);
 
-    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(0), "initial");
+    Assert.equal(uint256(userNormalPlanetRecordsCountOf(account)), uint256(0), "initial");
     _permanence.createElement(account, 10000100000000000000000001);
     _permanence.createElement(account, 20000200000000000000000002);
     _permanence.createElement(account, 30000300000000000000000003);
-    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(3), "added");
+    Assert.equal(uint256(userNormalPlanetRecordsCountOf(account)), uint256(3), "added");
     uint256[] memory a = new uint256[](1);
     a[0] = 10000100001;
     _permanence.update(account, a);
-    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(1), "deleted");
+    Assert.equal(uint256(userNormalPlanetRecordsCountOf(account)), uint256(1), "deleted");
   }
 
   function testUserNormalPlanetRecordOf() public {
@@ -101,14 +101,14 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
 
     // overwrite
-    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(2), "2");
+    Assert.equal(uint256(userNormalPlanetRecordsCountOf(account)), uint256(2), "2");
     mintUserNormalPlanet(account, 7, 7, 7, 1, -1);
     _assertEqual(
       userNormalPlanetRecordOf(account, 2),
       UserNormalPlanetRecord(2, 7, 7, 7, 1, uint32now(), uint32now(), 1, -1),
       "overwritable"
     );
-    Assert.equal(uint(userNormalPlanetRecordsCountOf(account)), uint(2), "still 2");
+    Assert.equal(uint256(userNormalPlanetRecordsCountOf(account)), uint256(2), "still 2");
   }
 
   function testRankupUserNormalPlanet() public {
@@ -117,16 +117,16 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     _permanence.createElement(account, 290010010000100000000000000000001); // id: 1, rank: 29
 
     rankupUserNormalPlanet(account, 0, 2);
-    Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(2), "2");
+    Assert.equal(uint256(userNormalPlanetRecordOf(account, 0).rank), uint256(2), "2");
 
     rankupUserNormalPlanet(account, 0, 3);
-    Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(3), "3");
+    Assert.equal(uint256(userNormalPlanetRecordOf(account, 0).rank), uint256(3), "3");
 
     rankupUserNormalPlanet(account, 0, 5);
-    Assert.equal(uint(userNormalPlanetRecordOf(account, 0).rank), uint(5), "5");
+    Assert.equal(uint256(userNormalPlanetRecordOf(account, 0).rank), uint256(5), "5");
 
     rankupUserNormalPlanet(account, 1, 30);
-    Assert.equal(uint(userNormalPlanetRecordOf(account, 1).rank), uint(30), "30");
+    Assert.equal(uint256(userNormalPlanetRecordOf(account, 1).rank), uint256(30), "30");
 
     bool isSuccessed = address(this).call(
       bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint64,uint8)")),
@@ -238,30 +238,31 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   {
     _reporter.report(
       keccak256(
-        abi.encodePacked(
-          r1.id,
-          r1.normalPlanetId,
-          r1.kind,
-          r1.originalParamCommonLogarithm,
-          r1.rank,
-          r1.rankupedAt,
-          r1.createdAt,
-          r1.axialCoordinateQ,
-          r1.axialCoordinateR
-        )
-      ) == keccak256(
-        abi.encodePacked(
-          r2.id,
-          r2.normalPlanetId,
-          r2.kind,
-          r2.originalParamCommonLogarithm,
-          r2.rank,
-          r2.rankupedAt,
-          r2.createdAt,
-          r2.axialCoordinateQ,
-          r2.axialCoordinateR
-        )
-      ),
+          abi.encodePacked(
+            r1.id,
+            r1.normalPlanetId,
+            r1.kind,
+            r1.originalParamCommonLogarithm,
+            r1.rank,
+            r1.rankupedAt,
+            r1.createdAt,
+            r1.axialCoordinateQ,
+            r1.axialCoordinateR
+          )
+        ) ==
+        keccak256(
+          abi.encodePacked(
+            r2.id,
+            r2.normalPlanetId,
+            r2.kind,
+            r2.originalParamCommonLogarithm,
+            r2.rank,
+            r2.rankupedAt,
+            r2.createdAt,
+            r2.axialCoordinateQ,
+            r2.axialCoordinateR
+          )
+        ),
       message
     );
   }

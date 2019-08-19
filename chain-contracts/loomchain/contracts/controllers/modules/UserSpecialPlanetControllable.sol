@@ -29,8 +29,19 @@ contract UserSpecialPlanetControllable is TimeGettable {
   uint8 constant USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT = 24 + 8 + 8;
   uint8 constant USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT = 24 + 8 + 8 + 8;
   uint8 constant USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT = 24 + 8 + 8 + 8 + 32;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT = 24 + 8 + 8 + 8 + 32 + 32;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT = 24 + 8 + 8 + 8 + 32 + 32 + 16;
+  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT = 24 +
+    8 +
+    8 +
+    8 +
+    32 +
+    32;
+  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT = 24 +
+    8 +
+    8 +
+    8 +
+    32 +
+    32 +
+    16;
 
   function userSpecialPlanetPermanence() public view returns (UserSpecialPlanetPermanence) {
     return _userSpecialPlanetPermanence;
@@ -150,16 +161,17 @@ contract UserSpecialPlanetControllable is TimeGettable {
     pure
     returns (UserSpecialPlanetRecord)
   {
-    return UserSpecialPlanetRecord(
-      uint24(b >> USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT),
-      uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT),
-      uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT),
-      uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT),
-      uint32(b >> USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT),
-      uint32(b >> USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT),
-      int16(b >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT),
-      int16(b >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT)
-    );
+    return
+      UserSpecialPlanetRecord(
+        uint24(b >> USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT),
+        uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT),
+        uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT),
+        uint8(b >> USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT),
+        uint32(b >> USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT),
+        uint32(b >> USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT),
+        int16(b >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT),
+        int16(b >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT)
+      );
   }
 
   function buildBytes32FromUserSpecialPlanetRecord(UserSpecialPlanetRecord r)
@@ -167,21 +179,18 @@ contract UserSpecialPlanetControllable is TimeGettable {
     pure
     returns (bytes32)
   {
-    return (bytes32(r.id) << USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT) | (bytes32(
-      r.kind
-    ) << USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT) | (bytes32(
-      r.originalParamCommonLogarithm
-    ) << USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT) | (bytes32(
-      r.rank
-    ) << USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT) | (bytes32(
-      r.rankupedAt
-    ) << USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT) | (bytes32(
-      r.createdAt
-    ) << USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT) | (bytes32(
-      uint16(r.axialCoordinateQ)
-    ) << USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT) | (bytes32(
-      uint16(r.axialCoordinateR)
-    ) << USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT);
+    return
+      (bytes32(r.id) << USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT) |
+        (bytes32(r.kind) << USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT) |
+        (bytes32(r.originalParamCommonLogarithm) <<
+          USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT) |
+        (bytes32(r.rank) << USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT) |
+        (bytes32(r.rankupedAt) << USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT) |
+        (bytes32(r.createdAt) << USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT) |
+        (bytes32(uint16(r.axialCoordinateQ)) <<
+          USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT) |
+        (bytes32(uint16(r.axialCoordinateR)) <<
+          USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT);
   }
 
   function _userSpecialPlanetRecordWithIndexOf(address account, uint24 userPlanetId)

@@ -30,10 +30,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint256(10) ** 6);
+      mintGold(msg.sender, uint256(10)**6);
     } else {
       confirm(msg.sender);
-      unmintGold(msg.sender, uint256(10) ** planetRecord.priceGoldCommonLogarithm);
+      unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
     }
 
     mintUserNormalPlanet(
@@ -51,7 +51,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
       msg.sender,
       userNormalPlanetId
     );
-    uint knowledge = confirm(msg.sender);
+    uint256 knowledge = confirm(msg.sender);
 
     if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
       revert("invalid targetRank");
@@ -59,10 +59,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     // ckeck time
     if (targetRank == (userPlanet.rank + 1)) {
-      uint diffSec = uint32now() - userPlanet.rankupedAt;
-      int remainingSec = int(_requiredSecForRankup(userPlanet.rank)) - int(diffSec) - int(
-        knowledge
-      ); // TODO: type
+      uint256 diffSec = uint32now() - userPlanet.rankupedAt;
+      int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank)) -
+        int256(diffSec) -
+        int256(knowledge); // TODO: type
       require(remainingSec <= 0, "need more time to rankup");
     } else {
       require(
@@ -72,38 +72,37 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     }
 
     // decrease required gold
-    uint planetPriceGold = uint256(10) ** normalPlanetRecordOf(
-      userPlanet.normalPlanetId
-    ).priceGoldCommonLogarithm;
-    uint rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
+    uint256 planetPriceGold = uint256(10) **
+      normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
+    uint256 rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
     unmintGold(msg.sender, rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
   }
 
-  function _requiredGoldForRankup(uint planetPriceGold, uint8 currentRank, uint8 targetRank)
+  function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
     private
     pure
-    returns (uint)
+    returns (uint256)
   {
-    uint requiredGold = 0;
+    uint256 requiredGold = 0;
     uint8 tmpRank = currentRank;
 
     while (tmpRank < targetRank) {
-      requiredGold += planetPriceGold * (uint256(13) ** (tmpRank - 1)) / (uint256(
-        10
-      ) ** (tmpRank - 1));
+      requiredGold +=
+        (planetPriceGold * (uint256(13)**(tmpRank - 1))) /
+        (uint256(10)**(tmpRank - 1));
       tmpRank++;
     }
 
     return requiredGold;
   }
 
-  function _requiredSecForRankup(uint rank) private pure returns (uint) {
-    uint i = 1;
-    uint memo = 300;
+  function _requiredSecForRankup(uint256 rank) private pure returns (uint256) {
+    uint256 i = 1;
+    uint256 memo = 300;
     while (i < rank) {
-      memo = memo * 14 / 10;
+      memo = (memo * 14) / 10;
       i++;
     }
     return memo;

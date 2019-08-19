@@ -39,11 +39,11 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
 
     uint256[] memory arr = new uint256[](919);
 
-    int q;
-    int r;
-    int start;
-    int end;
-    uint i = 0;
+    int256 q;
+    int256 r;
+    int256 start;
+    int256 end;
+    uint256 i = 0;
     uint16 normalPlanetId;
     uint8 kind;
     uint8 param;

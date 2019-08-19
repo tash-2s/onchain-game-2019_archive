@@ -57,26 +57,26 @@ module.exports = function(deployer, network, accounts) {
 
     await new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress).methods
       .addMinter(controller.address)
-      .send({ from: accounts[0] })
+      .send({from: accounts[0]})
 
     await new web3.eth.Contract(minterAdditionAbi, userNormalPlanetPermanenceAddress).methods
       .addMinter(controller.address)
-      .send({ from: accounts[0] })
+      .send({from: accounts[0]})
     await new web3.eth.Contract(
       minterAdditionAbi,
       userNormalPlanetIdCounterPermanenceAddress
     ).methods
       .addMinter(controller.address)
-      .send({ from: accounts[0] })
+      .send({from: accounts[0]})
 
     await new web3.eth.Contract(minterAdditionAbi, userSpecialPlanetPermanenceAddress).methods
       .addMinter(controller.address)
-      .send({ from: accounts[0] })
+      .send({from: accounts[0]})
     await new web3.eth.Contract(
       minterAdditionAbi,
       userSpecialPlanetIdToOwnerPermanenceAddress
     ).methods
       .addMinter(controller.address)
-      .send({ from: accounts[0] })
+      .send({from: accounts[0]})
   })
 }
