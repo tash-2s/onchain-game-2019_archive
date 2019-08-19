@@ -31,8 +31,7 @@ contract SpecialPlanetShop {
     uint8 originalParamCommonLogarithm = 40;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id =
-      (uint256(version) << ID_VERSION_START_BIT) |
+    uint256 id = (uint256(version) << ID_VERSION_START_BIT) |
       (uint256(shortIdGenerator) << ID_SHORT_ID_START_BIT) |
       (uint256(kind) << ID_KIND_START_BIT) |
       (uint256(originalParamCommonLogarithm) << ID_OPCL_START_BIT) |
