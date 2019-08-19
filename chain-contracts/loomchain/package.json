@@ -14,7 +14,7 @@
     "loom-truffle-provider": "0.12.0",
     "openzeppelin-solidity": "2.0.1",
     "prettier": "*",
-    "prettier-plugin-solidity": "^1.0.0-alpha.18",
+    "prettier-plugin-solidity": "*",
     "truffle": "^5.0.10",
     "truffle-contract": "^4.0.6",
     "truffle-deploy-registry": "^0.5.1",
