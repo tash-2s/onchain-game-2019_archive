@@ -10,9 +10,9 @@
     "test": "yarn generate-ts-types && tsc --noEmit && TS_NODE_FILES=true truffle test"
   },
   "devDependencies": {
+    "@openzeppelin/contracts": "^2.3.0",
     "ethlint": "*",
     "loom-truffle-provider": "0.12.0",
-    "openzeppelin-solidity": "2.0.1",
     "prettier": "*",
     "prettier-plugin-solidity": "*",
     "truffle": "^5.0.10",

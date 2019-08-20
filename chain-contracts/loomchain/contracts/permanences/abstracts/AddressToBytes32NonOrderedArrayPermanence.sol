@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
   mapping(address => bytes32[]) private _addressToBytes32Array;

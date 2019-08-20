@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 contract AddressToUint256NonOrderedArrayPermanence is MinterRole {
   mapping(address => uint256[]) private _addressToUint256Array;

@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 contract AddressArrayPermanence is MinterRole {
   address[] private _addressArray;

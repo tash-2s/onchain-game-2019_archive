@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 contract Uint16ToUint256Permanence is MinterRole {
   mapping(uint16 => uint256) private _uint16ToUint256;

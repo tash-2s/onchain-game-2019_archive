@@ -7,9 +7,9 @@
     "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write"
   },
   "devDependencies": {
+    "@openzeppelin/contracts": "^2.3.0",
     "bip39": "^3.0.2",
     "ethereumjs-wallet": "^0.6.3",
-    "openzeppelin-solidity": "2.0.1",
     "prettier": "*",
     "prettier-plugin-solidity": "*",
     "truffle": "^5.0.10",
