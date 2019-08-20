@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.11;
 
 contract PermanenceInterpretable {
   // ex) (123456789, 4, 6) => 456
