@@ -4,7 +4,8 @@
   "name": "ethereum",
   "version": "0.0.0",
   "scripts": {
-    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write"
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write",
+    "test": "truffle test"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^2.3.0",
