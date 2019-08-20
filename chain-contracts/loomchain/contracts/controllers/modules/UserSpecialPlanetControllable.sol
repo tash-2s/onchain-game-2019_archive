@@ -3,11 +3,11 @@ pragma solidity 0.5.11;
 import "./TimeGettable.sol";
 
 import "../../permanences/UserSpecialPlanetPermanence.sol";
-import "../../permanences/UserSpecialPlanetIdToOwnerPermanence.sol";
+import "../../permanences/UserSpecialPlanetIdToDataPermanence.sol";
 
 contract UserSpecialPlanetControllable is TimeGettable {
   UserSpecialPlanetPermanence private _userSpecialPlanetPermanence;
-  UserSpecialPlanetIdToOwnerPermanence private _userSpecialPlanetIdToOwnerPermanence;
+  UserSpecialPlanetIdToDataPermanence public userSpecialPlanetIdToDataPermanence;
 
   int16 constant INT16_MAX = int16(~(uint16(1) << 15));
   int16 constant AXIAL_COORDINATE_NONE = INT16_MAX;
@@ -51,16 +51,8 @@ contract UserSpecialPlanetControllable is TimeGettable {
     _userSpecialPlanetPermanence = UserSpecialPlanetPermanence(addr);
   }
 
-  function userSpecialPlanetIdToOwnerPermanence()
-    public
-    view
-    returns (UserSpecialPlanetIdToOwnerPermanence)
-  {
-    return _userSpecialPlanetIdToOwnerPermanence;
-  }
-
-  function setUserSpecialPlanetIdToOwnerPermanence(address addr) internal {
-    _userSpecialPlanetIdToOwnerPermanence = UserSpecialPlanetIdToOwnerPermanence(addr);
+  function setUserSpecialPlanetIdToDataPermanence(address addr) internal {
+    userSpecialPlanetIdToDataPermanence = UserSpecialPlanetIdToDataPermanence(addr);
   }
 
   function userSpecialPlanetRecordsOf(address account)
@@ -82,78 +74,68 @@ contract UserSpecialPlanetControllable is TimeGettable {
     return uint16(_userSpecialPlanetPermanence.count(account));
   }
 
-  function userSpecialPlanetRecordOf(address account, uint24 userPlanetId)
-    internal
-    view
-    returns (UserSpecialPlanetRecord memory)
-  {
-    UserSpecialPlanetRecord memory record;
-    (record, ) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
-    return record;
-  }
-
-  // if you know the owner address of the planet, you should use above function instead of this
   function userSpecialPlanetRecordOf(uint24 userPlanetId)
     internal
     view
     returns (UserSpecialPlanetRecord memory)
   {
-    address account = _userSpecialPlanetIdToOwnerPermanence.readElement(userPlanetId - 1);
-    return userSpecialPlanetRecordOf(account, userPlanetId);
+    return
+      buildUserSpecialPlanetRecordFromBytes32(
+        userSpecialPlanetIdToDataPermanence.read(userPlanetId)
+      );
   }
 
-  function mintUserSpecialPlanet(address account, uint8 kind, uint8 paramCommonLogarithm)
-    internal
-    returns (uint24)
-  {
-    uint24 id = uint24(_userSpecialPlanetIdToOwnerPermanence.createElement(account));
-
-    _userSpecialPlanetPermanence.createElement(
-      account,
-      buildBytes32FromUserSpecialPlanetRecord(
+  // TODO: I should check the coordinates
+  function setUserSpecialPlanetToMap(
+    address account,
+    uint24 userPlanetId,
+    uint8 kind,
+    uint8 paramCommonLogarithm,
+    uint64 artSeed, // TODO: use this
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal {
+    bytes32 userPlanetData = userSpecialPlanetIdToDataPermanence.read(userPlanetId);
+    bytes32 newUserPlanetData;
+    if (userPlanetData == bytes32(0)) {
+      newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
         UserSpecialPlanetRecord(
-          id,
+          userPlanetId,
           kind,
           paramCommonLogarithm,
           1,
           uint32now(),
           uint32now(),
-          AXIAL_COORDINATE_NONE,
-          AXIAL_COORDINATE_NONE
-        )
-      )
-    );
-
-    return id;
-  }
-
-  // TODO: I should check the coordinates
-  function updateUserSpecialPlanetAxialCoordinates(
-    address account,
-    uint24 userPlanetId,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
-  ) internal {
-    UserSpecialPlanetRecord memory record;
-    uint16 index;
-    (record, index) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
-
-    _userSpecialPlanetPermanence.updateElement(
-      account,
-      index,
-      buildBytes32FromUserSpecialPlanetRecord(
-        UserSpecialPlanetRecord(
-          record.id,
-          record.kind,
-          record.originalParamCommonLogarithm,
-          record.rank,
-          uint32now(),
-          record.createdAt,
           axialCoordinateQ,
           axialCoordinateR
         )
-      )
-    );
+      );
+      userSpecialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
+    } else {
+      UserSpecialPlanetRecord memory r = buildUserSpecialPlanetRecordFromBytes32(userPlanetData);
+      newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
+        UserSpecialPlanetRecord(
+          r.id,
+          r.kind,
+          r.originalParamCommonLogarithm,
+          r.rank,
+          uint32now(), // rankupedAt
+          r.createdAt,
+          axialCoordinateQ,
+          axialCoordinateR
+        )
+      );
+      userSpecialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
+    }
+
+    _userSpecialPlanetPermanence.createElement(account, newUserPlanetData);
+  }
+
+  function removeUserSpecialPlanetFromMap(address account, uint24 userPlanetId) internal {
+    uint16 index;
+    (, index) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
+
+    _userSpecialPlanetPermanence.deleteElement(account, index);
   }
 
   function buildUserSpecialPlanetRecordFromBytes32(bytes32 b)

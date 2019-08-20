@@ -4,29 +4,33 @@ import "./modules/UserPlanetControllable.sol";
 
 import "./RemarkableUserController.sol";
 import "../tokens/Erc721SpecialPlanet.sol";
+import "../misc/Erc721SpecialPlanetLocker.sol";
 
 contract SpecialPlanetController is UserPlanetControllable {
   RemarkableUserController private _remarkableUserController;
   Erc721SpecialPlanet private _erc721SpecialPlanet;
+  Erc721SpecialPlanetLocker public erc721SpecialPlanetLocker;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
-    address userSpecialPlanetIdToOwnerPermanenceAddress,
+    address userSpecialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
     address remarkableUsersContractAddress,
-    address erc721SpecialPlanetAddress
+    address erc721SpecialPlanetAddress,
+    address erc721SpecialPlanetLockerAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdCounterPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
-      userSpecialPlanetIdToOwnerPermanenceAddress,
+      userSpecialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress
     );
     _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
     _erc721SpecialPlanet = Erc721SpecialPlanet(erc721SpecialPlanetAddress);
+    erc721SpecialPlanetLocker = Erc721SpecialPlanetLocker(erc721SpecialPlanetLockerAddress);
   }
 
   function remarkableUserController() external view returns (RemarkableUserController) {
@@ -74,34 +78,31 @@ contract SpecialPlanetController is UserPlanetControllable {
     return (ids, kinds, params, times, coordinates);
   }
 
-  function getPlanet() external {
-    // TODO: cost
-    uint8 kind = 1; // TODO
-    uint8 paramCommonLogarithm = 40; // TODO
-
-    uint24 id = mintUserSpecialPlanet(msg.sender, kind, paramCommonLogarithm);
-    // TODO
-    // _erc721SpecialPlanet.mintWithTokenURI(msg.sender, id, "");
-  }
-
-  function setPlanet(uint24 userPlanetId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
+  function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
-    updateUserSpecialPlanetAxialCoordinates(
+    (uint24 shortId, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = _transferTokenToLocker(
+      tokenId
+    );
+    setUserSpecialPlanetToMap(
       msg.sender,
-      userPlanetId,
+      shortId,
+      kind,
+      originalParamCommonLogarithm,
+      artSeed,
       axialCoordinateQ,
       axialCoordinateR
     );
     _remarkableUserController.tackle(msg.sender);
   }
 
-  function removePlanet(uint24 userPlanetId) external {
+  function removePlanet(uint24 shortId) external {
     confirm(msg.sender);
-    updateUserSpecialPlanetAxialCoordinates(
-      msg.sender,
-      userPlanetId,
-      AXIAL_COORDINATE_NONE,
-      AXIAL_COORDINATE_NONE
-    );
+    removeUserSpecialPlanetFromMap(msg.sender, shortId);
+    erc721SpecialPlanetLocker.withdrawByShortId(shortId, msg.sender);
+  }
+
+  function _transferTokenToLocker(uint256 tokenId) private returns (uint24, uint8, uint8, uint64) {
+    _erc721SpecialPlanet.safeTransferFrom(msg.sender, address(erc721SpecialPlanetLocker), tokenId);
+    return erc721SpecialPlanetLocker.mapShortIdToTokenIdAndParseTokenId(tokenId);
   }
 }

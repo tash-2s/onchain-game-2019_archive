@@ -13,13 +13,13 @@ contract UserPlanetControllable is
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
-    address userSpecialPlanetIdToOwnerPermanenceAddress,
+    address userSpecialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress
   ) internal {
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
     setUserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
-    setUserSpecialPlanetIdToOwnerPermanence(userSpecialPlanetIdToOwnerPermanenceAddress);
+    setUserSpecialPlanetIdToDataPermanence(userSpecialPlanetIdToDataPermanenceAddress);
     setUserGoldPermanence(userGoldPermanenceAddress);
   }
 
