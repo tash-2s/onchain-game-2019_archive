@@ -9,11 +9,11 @@ contract AddressArrayPermanence is MinterRole {
     return _addressArray.length;
   }
 
-  function read() public view returns (address[]) {
+  function read() public view returns (address[] memory) {
     return _addressArray;
   }
 
-  function update(address[] addrs) public onlyMinter {
+  function update(address[] memory addrs) public onlyMinter {
     _addressArray = addrs;
   }
 
@@ -21,7 +21,7 @@ contract AddressArrayPermanence is MinterRole {
     _addressArray.length = 0;
   }
 
-  function readRange(uint256 start, uint256 end) public view returns (address[]) {
+  function readRange(uint256 start, uint256 end) public view returns (address[] memory) {
     require(start <= end, "wrong range");
     address[] memory addresses = new address[](end - start + 1);
     for (uint256 i = start; i <= end; i++) {

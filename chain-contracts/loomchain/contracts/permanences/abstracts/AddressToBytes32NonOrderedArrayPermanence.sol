@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
   mapping(address => bytes32[]) private _addressToBytes32Array;
 
-  function read(address addr) public view returns (bytes32[]) {
+  function read(address addr) public view returns (bytes32[] memory) {
     return _addressToBytes32Array[addr];
   }
 
@@ -13,7 +13,7 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
     return _addressToBytes32Array[addr].length;
   }
 
-  function update(address addr, bytes32[] b32Array) public onlyMinter {
+  function update(address addr, bytes32[] memory b32Array) public onlyMinter {
     _addressToBytes32Array[addr] = b32Array;
   }
 

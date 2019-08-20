@@ -41,11 +41,11 @@ contract SpecialPlanetController is UserPlanetControllable {
     external
     view
     returns (
-      uint24[], // id
-      uint8[], // kind
-      uint8[], // originalParamCommonLogarithm
-      uint32[], // [rankupedAt, createdAt, ...]
-      int16[] // [q, r, ...]
+      uint24[] memory, // id
+      uint8[] memory, // kind
+      uint8[] memory, // originalParamCommonLogarithm
+      uint32[] memory, // [rankupedAt, createdAt, ...]
+      int16[] memory // [q, r, ...]
     )
   {
     UserSpecialPlanetRecord[] memory userPlanetRecords = userSpecialPlanetRecordsOf(account);

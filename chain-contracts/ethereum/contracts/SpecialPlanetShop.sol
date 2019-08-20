@@ -24,7 +24,7 @@ contract SpecialPlanetShop {
     shortIdGenerator++;
     require(shortIdGenerator <= UINT24_MAX, "short id is too big");
 
-    bytes32 seed = _nextUnsafeSeed();
+    uint256 seed = uint256(_nextUnsafeSeed());
 
     uint8 version = 1;
     uint8 kind = (uint8(seed) % 2) + 1; // 1 or 2

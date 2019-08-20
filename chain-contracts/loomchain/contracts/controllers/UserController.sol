@@ -20,10 +20,10 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     returns (
       uint200 confirmedGold,
       uint32 goldConfirmedAt,
-      uint64[] unpIds, // [id, normalPlanetId, ...]
-      uint8[] unpRanks,
-      uint32[] unpTimes, // [rankupedAt, createdAt, ...]
-      int16[] unpAxialCoordinates // [q, r, ...]
+      uint64[] memory unpIds, // [id, normalPlanetId, ...]
+      uint8[] memory unpRanks,
+      uint32[] memory unpTimes, // [rankupedAt, createdAt, ...]
+      int16[] memory unpAxialCoordinates // [q, r, ...]
     )
   {
     UserGoldRecord memory goldRecord = userGoldRecordOf(account);

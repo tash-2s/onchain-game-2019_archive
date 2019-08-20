@@ -67,7 +67,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   function userNormalPlanetRecordsOf(address account)
     internal
     view
-    returns (UserNormalPlanetRecord[])
+    returns (UserNormalPlanetRecord[] memory)
   {
     uint256[] memory us = _userNormalPlanetPermanence.read(account);
     UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](us.length);
@@ -86,7 +86,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   function userNormalPlanetRecordOf(address account, uint64 userPlanetId)
     internal
     view
-    returns (UserNormalPlanetRecord)
+    returns (UserNormalPlanetRecord memory)
   {
     UserNormalPlanetRecord memory record;
     (record, ) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
@@ -173,7 +173,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   function buildUserNormalPlanetRecordFromUint256(uint256 source)
     internal
     pure
-    returns (UserNormalPlanetRecord)
+    returns (UserNormalPlanetRecord memory)
   {
     uint64 id = uint64(
       interpretPermanenceUint256(
@@ -257,7 +257,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       );
   }
 
-  function buildUint256FromUserNormalPlanetRecord(UserNormalPlanetRecord record)
+  function buildUint256FromUserNormalPlanetRecord(UserNormalPlanetRecord memory record)
     internal
     pure
     returns (uint256)
@@ -322,7 +322,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   function _userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
     private
     view
-    returns (UserNormalPlanetRecord, uint16)
+    returns (UserNormalPlanetRecord memory, uint16)
   {
     uint256[] memory us = _userNormalPlanetPermanence.read(account);
     uint256 target = 0;

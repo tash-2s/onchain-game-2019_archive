@@ -14,7 +14,7 @@ contract RemarkableUserController is UserGoldControllable {
     setUserGoldPermanence(userGoldPermanenceAddress);
   }
 
-  function getUsers() external view returns (address[] accounts, uint200[] golds) {
+  function getUsers() external view returns (address[] memory accounts, uint200[] memory golds) {
     accounts = new address[](USERS_COUNT);
     golds = new uint200[](USERS_COUNT);
 

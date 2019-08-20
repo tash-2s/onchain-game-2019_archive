@@ -27,14 +27,14 @@ contract NormalPlanetControllable is PermanenceInterpretable {
     _normalPlanetPermanence = NormalPlanetPermanence(permanenceAddress);
   }
 
-  function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord) {
+  function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord memory) {
     return buildNormalPlanetRecordFromUint256(_normalPlanetPermanence.read(id));
   }
 
   function buildNormalPlanetRecordFromUint256(uint256 source)
     internal
     pure
-    returns (NormalPlanetRecord)
+    returns (NormalPlanetRecord memory)
   {
     uint8 kind = uint8(
       interpretPermanenceUint256(

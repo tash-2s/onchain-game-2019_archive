@@ -29,7 +29,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     _userGoldPermanence = UserGoldPermanence(permanenceAddress);
   }
 
-  function userGoldRecordOf(address account) internal view returns (UserGoldRecord) {
+  function userGoldRecordOf(address account) internal view returns (UserGoldRecord memory) {
     return buildUserGoldRecordFromUint256(_userGoldPermanence.read(account));
   }
 
@@ -54,11 +54,15 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     updateUserGoldRecord(account, UserGoldRecord(record.balance - uint200(quantity), uint32now()));
   }
 
-  function updateUserGoldRecord(address account, UserGoldRecord record) internal {
+  function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {
     _userGoldPermanence.update(account, buildUint256FromUserGoldRecord(record));
   }
 
-  function buildUint256FromUserGoldRecord(UserGoldRecord record) internal pure returns (uint256) {
+  function buildUint256FromUserGoldRecord(UserGoldRecord memory record)
+    internal
+    pure
+    returns (uint256)
+  {
     uint256 n = reinterpretPermanenceUint256(
       USER_GOLD_PERMANENCE_PLACEHOLDER,
       USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
@@ -74,7 +78,11 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
       );
   }
 
-  function buildUserGoldRecordFromUint256(uint256 source) internal pure returns (UserGoldRecord) {
+  function buildUserGoldRecordFromUint256(uint256 source)
+    internal
+    pure
+    returns (UserGoldRecord memory)
+  {
     uint200 balance = uint200(
       interpretPermanenceUint256(
         source,

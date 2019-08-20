@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 contract AddressToUint256NonOrderedArrayPermanence is MinterRole {
   mapping(address => uint256[]) private _addressToUint256Array;
 
-  function read(address addr) public view returns (uint256[]) {
+  function read(address addr) public view returns (uint256[] memory) {
     return _addressToUint256Array[addr];
   }
 
@@ -13,7 +13,7 @@ contract AddressToUint256NonOrderedArrayPermanence is MinterRole {
     return _addressToUint256Array[addr].length;
   }
 
-  function update(address addr, uint256[] ui256Array) public onlyMinter {
+  function update(address addr, uint256[] memory ui256Array) public onlyMinter {
     _addressToUint256Array[addr] = ui256Array;
   }
 
