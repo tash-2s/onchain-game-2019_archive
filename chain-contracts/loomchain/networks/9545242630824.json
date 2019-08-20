@@ -38,5 +38,65 @@
     "contractName": "Web",
     "address": "0xccC1A3A6E0c5971E0373d0940c0BB527Bb300c14",
     "transactionHash": "0xf714f95a8892c937034b01323b5591afc2bf71995efb1983dfe09ae139c78359"
+  },
+  {
+    "contractName": "Migrations",
+    "address": "0xFf838d14EAaB6aec7E1EA35e5FE0Bb89a161136d",
+    "transactionHash": "0x6aab9778d08970ec83ac589c307965c33bfd9492b1085d241a6ae81fc3efa949"
+  },
+  {
+    "contractName": "Erc721SpecialPlanet",
+    "address": "0xEb6e6d344ed79B644a87Abcfea70815fB6644Bbe",
+    "transactionHash": "0x39f907fd3817f0bfcd637cdb43515e3bf8685b264e0ab16cfb6199b4b0b09b78"
+  },
+  {
+    "contractName": "UserSpecialPlanetPermanence",
+    "address": "0xB7Cbaf718441902C3e99Ab17f592f7a1a682d95A",
+    "transactionHash": "0xdb9d30779e6a2774e9b8c21d9cc0d788ac748577ce087ed14aa26ff96e472054"
+  },
+  {
+    "contractName": "UserSpecialPlanetIdToOwnerPermanence",
+    "address": "0x18696922c8BfBefd63B71F18D064671f79F00326",
+    "transactionHash": "0xb0f8c708b00e543e353949b41eb833c2499fe56d130c5b6588f51096ad42bf35"
+  },
+  {
+    "contractName": "UserNormalPlanetPermanence",
+    "address": "0x065495ce898A466D9A7dc2440C51613c7949a43B",
+    "transactionHash": "0x435194ddb04182aefe46137e2754739dfa0dbad5f4a382e6cd0b1d22f7bca9fe"
+  },
+  {
+    "contractName": "UserNormalPlanetIdCounterPermanence",
+    "address": "0xA3f177D0F65e9080E689d7F7856bCa422f7C40a4",
+    "transactionHash": "0xb0deac4ed2dcf32314d1c77ee98f1b29b9bfaf111036c279203309cbee355b3f"
+  },
+  {
+    "contractName": "NormalPlanetPermanence",
+    "address": "0x2523a7D6ac20a88C1d8155Deef64a842b484C8e8",
+    "transactionHash": "0xc8aba794e79213a2a76b15b27cbba014f809a6c4a4e9f7dda324b4da3e0a28b4"
+  },
+  {
+    "contractName": "UserGoldPermanence",
+    "address": "0x860195ABf5000485ba6754eeb2DC90b2CcF30BBF",
+    "transactionHash": "0xc48da38765ff3ea07d677801e6e9d81e01c7fbcab02e00c90eafe56daef3130a"
+  },
+  {
+    "contractName": "UserController",
+    "address": "0xCD6C1cf339276C4A47e46206228615BB9c864f7F",
+    "transactionHash": "0xf9e1d863f9c969ed352e97f4471512f64394d4bcc43f12d4d517cdb8e91114d5"
+  },
+  {
+    "contractName": "RemarkableUserController",
+    "address": "0xC49D6d0c029b31CCE74F6DC9Fd068cdc2562061f",
+    "transactionHash": "0x0b8bd422af1f6cd1805e9ba349d0cfedb7679ed6ed515ce03053fdc1180a3113"
+  },
+  {
+    "contractName": "NormalPlanetController",
+    "address": "0xaF28EFa026a377bBf8A90f230b2A4f578aD10405",
+    "transactionHash": "0x617c1ba548854abdbe6ad819e3ed5502885c0f8a41e94ae24799f7806cb14053"
+  },
+  {
+    "contractName": "SpecialPlanetController",
+    "address": "0x07e85E4Ccf70B23daDB37E313a0D2Ab1252Fde51",
+    "transactionHash": "0x94c59ad16a0ca99d38f0a3e421de4100f366b9a92b4a71f359331ec0eb5f3747"
   }
 ]
