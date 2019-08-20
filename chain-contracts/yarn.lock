@@ -6375,7 +6375,7 @@ truffle-typings@^1.0.6:
     "@types/chai" "^4.1.4"
     "@types/mocha" "^5.2.5"
 
-truffle@^5.0.10:
+truffle@5.0.10:
   version "5.0.10"
   resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.10.tgz#f773522becbed0f66b372c6a9a1f36d233337e1e"
   integrity sha512-wVp7ruznIm1iX7fTHZwjKZCaOkkQcTR1eWOCi2yTQ85wg1iQITpV7NLDpVandaNcz5Z0e8EdOrH9lFKLgxiAxQ==
