@@ -9,7 +9,7 @@ contract AssertionReporter {
   // this event will be captured by truffle, see Assert.sol of truffle
   event TestEvent(bool indexed result, string message);
 
-  function report(bool result, string message) public {
+  function report(bool result, string memory message) public {
     if (result) emit TestEvent(true, "");
     else emit TestEvent(false, message);
   }
@@ -24,8 +24,8 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
 
   function testNormalPlanetPermanence() public {
     Assert.equal(
-      normalPlanetPermanence(),
-      DeployedAddresses.NormalPlanetPermanence(),
+      address(normalPlanetPermanence()),
+      address(DeployedAddresses.NormalPlanetPermanence()),
       "#normalPlanetPermanence()"
     );
   }
@@ -35,9 +35,8 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
   }
 
   function testBuildNormalPlanetRecordFromUint256() public {
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedBuildNormalPlanetRecordFromUint256(uint256)")),
-      0
+    (bool isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedBuildNormalPlanetRecordFromUint256(uint256)", 0)
     );
     Assert.isFalse(isSuccessed, "0 should fail");
 
@@ -57,7 +56,11 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
     );
   }
 
-  function _assertEqual(NormalPlanetRecord r1, NormalPlanetRecord r2, string message) private {
+  function _assertEqual(
+    NormalPlanetRecord memory r1,
+    NormalPlanetRecord memory r2,
+    string memory message
+  ) private {
     _reporter.report(
       r1.kind == r2.kind &&
         r1.paramCommonLogarithm == r2.paramCommonLogarithm &&

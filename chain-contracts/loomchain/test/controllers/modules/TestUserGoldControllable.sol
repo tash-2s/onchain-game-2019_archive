@@ -8,7 +8,7 @@ import "../../../contracts/permanences/UserGoldPermanence.sol";
 contract AssertionReporter {
   event TestEvent(bool indexed result, string message);
 
-  function report(bool result, string message) public {
+  function report(bool result, string memory message) public {
     if (result) emit TestEvent(true, "");
     else emit TestEvent(false, message);
   }
@@ -19,13 +19,13 @@ contract TestUserGoldControllable is UserGoldControllable {
   UserGoldPermanence private _permanence = new UserGoldPermanence();
 
   function beforeAll() public {
-    setUserGoldPermanence(_permanence);
+    setUserGoldPermanence(address(_permanence));
   }
 
   function testUserGoldPermanence() public {
     Assert.equal(
-      _permanence,
-      userGoldPermanence(),
+      address(_permanence),
+      address(userGoldPermanence()),
       "#userGoldPermanence() should return the same address with the address set by #setUserGoldPermanence()"
     );
   }
@@ -132,10 +132,8 @@ contract TestUserGoldControllable is UserGoldControllable {
 
   function testUnmintGold2() public {
     address account = address(4);
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedUnmintGold(address,uint256)")),
-      account,
-      1
+    (bool isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedUnmintGold(address,uint256)", account, 1)
     );
     Assert.isFalse(isSuccessed, "#unmintGold() should fail when the balance is not enough");
 
@@ -221,7 +219,9 @@ contract TestUserGoldControllable is UserGoldControllable {
     );
   }
 
-  function _assertEqual(UserGoldRecord r1, UserGoldRecord r2, string message) private {
+  function _assertEqual(UserGoldRecord memory r1, UserGoldRecord memory r2, string memory message)
+    private
+  {
     _reporter.report(r1.balance == r2.balance && r1.confirmedAt == r2.confirmedAt, message);
   }
 

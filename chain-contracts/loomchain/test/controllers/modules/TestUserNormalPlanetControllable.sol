@@ -9,7 +9,7 @@ import "../../../contracts/permanences/UserNormalPlanetIdCounterPermanence.sol";
 contract AssertionReporter {
   event TestEvent(bool indexed result, string message);
 
-  function report(bool result, string message) public {
+  function report(bool result, string memory message) public {
     if (result) emit TestEvent(true, "");
     else emit TestEvent(false, message);
   }
@@ -24,14 +24,18 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   UserNormalPlanetIdCounterPermanence private _icp = new UserNormalPlanetIdCounterPermanence();
 
   function beforeAll() public {
-    setUserNormalPlanetPermanence(_permanence);
-    setUserNormalPlanetIdCounterPermanence(_icp);
+    setUserNormalPlanetPermanence(address(_permanence));
+    setUserNormalPlanetIdCounterPermanence(address(_icp));
   }
 
   function testUserNormalPlanetPermanence() public {
-    Assert.equal(userNormalPlanetPermanence(), _permanence, "permanence");
+    Assert.equal(address(userNormalPlanetPermanence()), address(_permanence), "permanence");
 
-    Assert.equal(userNormalPlanetIdCounterPermanence(), _icp, "id counter permanence");
+    Assert.equal(
+      address(userNormalPlanetIdCounterPermanence()),
+      address(_icp),
+      "id counter permanence"
+    );
   }
 
   function testUserNormalPlanetRecordsOf() public {
@@ -63,10 +67,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   function testUserNormalPlanetRecordOf() public {
     address account = address(3);
 
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedUserNormalPlanetRecordOf(address,uint16)")),
-      account,
-      uint16(1)
+    (bool isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedUserNormalPlanetRecordOf(address,uint16)", account, uint16(1))
     );
     Assert.isFalse(isSuccessed, "no data");
 
@@ -76,10 +78,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
     Assert.equal(uint256(userNormalPlanetRecordOf(account, 2).id), uint256(2), "success");
 
-    isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedUserNormalPlanetRecordOf(address,uint16)")),
-      account,
-      uint16(4)
+    (isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedUserNormalPlanetRecordOf(address,uint16)", account, uint16(4))
     );
     Assert.isFalse(isSuccessed, "id 4 is not found");
   }
@@ -128,27 +128,20 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     rankupUserNormalPlanet(account, 1, 30);
     Assert.equal(uint256(userNormalPlanetRecordOf(account, 1).rank), uint256(30), "30");
 
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint64,uint8)")),
-      account,
-      1,
-      31
+    (bool isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedRankupUserNormalPlanet(address,uint64,uint8)", account, 1, 31)
     );
     Assert.isFalse(isSuccessed, "> 30");
 
-    isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedRankupUserNormalPlanet(address,uint64,uint8)")),
-      account,
-      2,
-      7
+    (isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedRankupUserNormalPlanet(address,uint64,uint8)", account, 2, 7)
     );
     Assert.isFalse(isSuccessed, "no target user planet");
   }
 
   function testBuildUserNormalPlanetRecordFromUint256() public {
-    bool isSuccessed = address(this).call(
-      bytes4(keccak256("wrappedBuildUserNormalPlanetRecordFromUint256(uint256)")),
-      0
+    (bool isSuccessed, ) = address(this).call(
+      abi.encodeWithSignature("wrappedBuildUserNormalPlanetRecordFromUint256(uint256)", 0)
     );
     Assert.isFalse(isSuccessed, "0");
 
@@ -233,9 +226,11 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     );
   }
 
-  function _assertEqual(UserNormalPlanetRecord r1, UserNormalPlanetRecord r2, string message)
-    private
-  {
+  function _assertEqual(
+    UserNormalPlanetRecord memory r1,
+    UserNormalPlanetRecord memory r2,
+    string memory message
+  ) private {
     _reporter.report(
       keccak256(
           abi.encodePacked(

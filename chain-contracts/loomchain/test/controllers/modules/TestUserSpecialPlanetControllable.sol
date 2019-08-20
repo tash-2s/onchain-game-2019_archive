@@ -11,8 +11,8 @@ contract TestUserSpecialPlanetControllable is UserSpecialPlanetControllable {
   UserSpecialPlanetIdToOwnerPermanence private _idToOwnerP = new UserSpecialPlanetIdToOwnerPermanence();
 
   function beforeAll() public {
-    setUserSpecialPlanetPermanence(_p);
-    setUserSpecialPlanetIdToOwnerPermanence(_idToOwnerP);
+    setUserSpecialPlanetPermanence(address(_p));
+    setUserSpecialPlanetIdToOwnerPermanence(address(_idToOwnerP));
   }
 
   function testBuildUserSpecialPlanetRecordFromBytes32() public {
@@ -47,9 +47,11 @@ contract TestUserSpecialPlanetControllable is UserSpecialPlanetControllable {
     );
   }
 
-  function _assertEqual(UserSpecialPlanetRecord r1, UserSpecialPlanetRecord r2, string message)
-    private
-  {
+  function _assertEqual(
+    UserSpecialPlanetRecord memory r1,
+    UserSpecialPlanetRecord memory r2,
+    string memory message
+  ) private {
     Assert.equal(
       keccak256(
         abi.encodePacked(
