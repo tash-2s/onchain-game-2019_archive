@@ -1,11 +1,13 @@
 pragma solidity 0.5.11;
 
+import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+
 import "./SpecialPlanet.sol";
 import "./SpecialPlanetShortIdGenerator.sol";
 
 import "../../SpecialPlanetConstants.sol";
 
-contract SpecialPlanetShop is SpecialPlanetConstants {
+contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
   SpecialPlanet public specialPlanet;
   SpecialPlanetShortIdGenerator public specialPlanetShortIdGenerator;
   bytes32 private _s;
@@ -17,8 +19,9 @@ contract SpecialPlanetShop is SpecialPlanetConstants {
     );
   }
 
-  // TODO: get eth
-  function sell() external returns (uint256) {
+  function sell() external payable returns (uint256) {
+    require(msg.value >= 100000000000000000, "shop: insufficient eth"); // 0.1 eth
+
     uint24 shortId = specialPlanetShortIdGenerator.next();
 
     uint256 seed = uint256(_nextUnsafeSeed());
@@ -42,5 +45,9 @@ contract SpecialPlanetShop is SpecialPlanetConstants {
   function _nextUnsafeSeed() private returns (bytes32) {
     _s = keccak256(abi.encodePacked(blockhash(block.number - 1), block.coinbase, _s));
     return _s;
+  }
+
+  function withdrawSales() public onlyMinter {
+    msg.sender.transfer(address(this).balance);
   }
 }
