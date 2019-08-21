@@ -15,7 +15,7 @@ contract SpecialPlanetController is UserPlanetControllable {
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
-    address userSpecialPlanetIdToDataPermanenceAddress,
+    address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
     address remarkableUsersContractAddress,
     address specialPlanetTokenAddress,
@@ -25,7 +25,7 @@ contract SpecialPlanetController is UserPlanetControllable {
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdCounterPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
-      userSpecialPlanetIdToDataPermanenceAddress,
+      specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress
     );
     _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);

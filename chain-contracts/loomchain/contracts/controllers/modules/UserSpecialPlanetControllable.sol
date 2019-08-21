@@ -3,11 +3,11 @@ pragma solidity 0.5.11;
 import "./TimeGettable.sol";
 
 import "../../permanences/UserSpecialPlanetPermanence.sol";
-import "../../permanences/UserSpecialPlanetIdToDataPermanence.sol";
+import "../../permanences/SpecialPlanetIdToDataPermanence.sol";
 
 contract UserSpecialPlanetControllable is TimeGettable {
   UserSpecialPlanetPermanence private _userSpecialPlanetPermanence;
-  UserSpecialPlanetIdToDataPermanence public userSpecialPlanetIdToDataPermanence;
+  SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 
   int16 constant INT16_MAX = int16(~(uint16(1) << 15));
   int16 constant AXIAL_COORDINATE_NONE = INT16_MAX;
@@ -51,8 +51,8 @@ contract UserSpecialPlanetControllable is TimeGettable {
     _userSpecialPlanetPermanence = UserSpecialPlanetPermanence(addr);
   }
 
-  function setUserSpecialPlanetIdToDataPermanence(address addr) internal {
-    userSpecialPlanetIdToDataPermanence = UserSpecialPlanetIdToDataPermanence(addr);
+  function setSpecialPlanetIdToDataPermanence(address addr) internal {
+    specialPlanetIdToDataPermanence = SpecialPlanetIdToDataPermanence(addr);
   }
 
   function userSpecialPlanetRecordsOf(address account)
@@ -80,9 +80,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
     returns (UserSpecialPlanetRecord memory)
   {
     return
-      buildUserSpecialPlanetRecordFromBytes32(
-        userSpecialPlanetIdToDataPermanence.read(userPlanetId)
-      );
+      buildUserSpecialPlanetRecordFromBytes32(specialPlanetIdToDataPermanence.read(userPlanetId));
   }
 
   // TODO: I should check the coordinates
@@ -95,7 +93,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) internal {
-    bytes32 userPlanetData = userSpecialPlanetIdToDataPermanence.read(userPlanetId);
+    bytes32 userPlanetData = specialPlanetIdToDataPermanence.read(userPlanetId);
     bytes32 newUserPlanetData;
     if (userPlanetData == bytes32(0)) {
       newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
@@ -110,7 +108,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
           axialCoordinateR
         )
       );
-      userSpecialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
+      specialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
     } else {
       UserSpecialPlanetRecord memory r = buildUserSpecialPlanetRecordFromBytes32(userPlanetData);
       newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
@@ -125,7 +123,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
           axialCoordinateR
         )
       );
-      userSpecialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
+      specialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
     }
 
     _userSpecialPlanetPermanence.createElement(account, newUserPlanetData);

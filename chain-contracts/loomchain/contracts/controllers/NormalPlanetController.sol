@@ -10,7 +10,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdCounterPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
-    address userSpecialPlanetIdToDataPermanenceAddress,
+    address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
     address normalPlanetPermanenceAddress
   ) public {
@@ -18,7 +18,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdCounterPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
-      userSpecialPlanetIdToDataPermanenceAddress,
+      specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress
     );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);

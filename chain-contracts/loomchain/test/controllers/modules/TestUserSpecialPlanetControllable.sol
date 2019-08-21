@@ -4,15 +4,15 @@ import "truffle/Assert.sol";
 
 import "../../../contracts/controllers/modules/UserSpecialPlanetControllable.sol";
 import "../../../contracts/permanences/UserSpecialPlanetPermanence.sol";
-import "../../../contracts/permanences/UserSpecialPlanetIdToDataPermanence.sol";
+import "../../../contracts/permanences/SpecialPlanetIdToDataPermanence.sol";
 
 contract TestUserSpecialPlanetControllable is UserSpecialPlanetControllable {
   UserSpecialPlanetPermanence private _p = new UserSpecialPlanetPermanence();
-  UserSpecialPlanetIdToDataPermanence private _idToOwnerP = new UserSpecialPlanetIdToDataPermanence();
+  SpecialPlanetIdToDataPermanence private _idToDataP = new SpecialPlanetIdToDataPermanence();
 
   function beforeAll() public {
     setUserSpecialPlanetPermanence(address(_p));
-    setUserSpecialPlanetIdToDataPermanence(address(_idToOwnerP));
+    setSpecialPlanetIdToDataPermanence(address(_idToDataP));
   }
 
   function testBuildUserSpecialPlanetRecordFromBytes32() public {
