@@ -78,6 +78,7 @@ contract SpecialPlanetController is UserPlanetControllable {
     return (ids, kinds, params, times, coordinates);
   }
 
+  // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
     (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = _transferTokenToLocker(
