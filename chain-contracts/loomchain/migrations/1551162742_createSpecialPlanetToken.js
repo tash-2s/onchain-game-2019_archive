@@ -1,11 +1,14 @@
 const helper = require("../migrationHelper")
 
-const erc721 = artifacts.require("./tokens/SpecialPlanetToken") // TODO: fix
+const token = artifacts.require("./tokens/SpecialPlanetToken") // TODO: fix
+const locker = artifacts.require("./misc/SpecialPlanetTokenLocker") // TODO: fix
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {
     const gateway = getGatewayAddress(network, accounts[0])
-    await helper.deployAndRegister(deployer, network, erc721, [gateway])
+    const t = await helper.deployAndRegister(deployer, network, token, [gateway])
+
+    await helper.deployAndRegister(deployer, network, locker, [t.address])
   })
 }
 
