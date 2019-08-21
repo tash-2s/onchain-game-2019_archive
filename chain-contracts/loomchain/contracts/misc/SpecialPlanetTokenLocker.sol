@@ -5,7 +5,9 @@ import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 import "../tokens/SpecialPlanetToken.sol";
 
-contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole {
+import "../../../SpecialPlanetConstants.sol";
+
+contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetConstants {
   SpecialPlanetToken public specialPlanetToken;
 
   mapping(uint24 => uint256) public shortIdToTokenId;
@@ -19,12 +21,11 @@ contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole {
     onlyMinter
     returns (uint24, uint8, uint8, uint64)
   {
-    // TODO: get them from constants
-    uint24 shortId = uint24(tokenId >> 0);
-    // uint8 version = uint8(tokenId >> 24);
-    uint8 kind = uint8(tokenId >> (24 + 8));
-    uint8 originalParamCommonLogarithm = uint8(tokenId >> (24 + 8 + 8));
-    uint64 artSeed = uint64(tokenId >> (24 + 8 + 8));
+    uint24 shortId = uint24(tokenId >> TOKEN_ID_SHORT_ID_START_BIT);
+    // uint8 version = uint8(tokenId >> TOKEN_ID_VERSION_START_BIT);
+    uint8 kind = uint8(tokenId >> TOKEN_ID_KIND_START_BIT);
+    uint8 originalParamCommonLogarithm = uint8(tokenId >> TOKEN_ID_OPCL_START_BIT);
+    uint64 artSeed = uint64(tokenId >> TOKEN_ID_ART_SEED_START_BIT);
 
     shortIdToTokenId[shortId] = tokenId;
 

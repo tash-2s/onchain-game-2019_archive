@@ -3,13 +3,9 @@ pragma solidity 0.5.11;
 import "./SpecialPlanet.sol";
 import "./SpecialPlanetShortIdGenerator.sol";
 
-contract SpecialPlanetShop {
-  uint8 constant ID_SHORT_ID_START_BIT = 0;
-  uint8 constant ID_VERSION_START_BIT = 24;
-  uint8 constant ID_KIND_START_BIT = 24 + 8;
-  uint8 constant ID_OPCL_START_BIT = 24 + 8 + 8;
-  uint8 constant ID_ART_SEED_START_BIT = 24 + 8 + 8 + 8;
+import "../../SpecialPlanetConstants.sol";
 
+contract SpecialPlanetShop is SpecialPlanetConstants {
   SpecialPlanet public specialPlanet;
   SpecialPlanetShortIdGenerator public specialPlanetShortIdGenerator;
   bytes32 private _s;
@@ -32,11 +28,11 @@ contract SpecialPlanetShop {
     uint8 originalParamCommonLogarithm = 40;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = (uint256(shortId) << ID_SHORT_ID_START_BIT) |
-      (uint256(version) << ID_VERSION_START_BIT) |
-      (uint256(kind) << ID_KIND_START_BIT) |
-      (uint256(originalParamCommonLogarithm) << ID_OPCL_START_BIT) |
-      (uint256(artSeed) << ID_ART_SEED_START_BIT);
+    uint256 id = (uint256(shortId) << TOKEN_ID_SHORT_ID_START_BIT) |
+      (uint256(version) << TOKEN_ID_VERSION_START_BIT) |
+      (uint256(kind) << TOKEN_ID_KIND_START_BIT) |
+      (uint256(originalParamCommonLogarithm) << TOKEN_ID_OPCL_START_BIT) |
+      (uint256(artSeed) << TOKEN_ID_ART_SEED_START_BIT);
 
     specialPlanet.mint(msg.sender, id);
     return id;
