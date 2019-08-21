@@ -1,6 +1,7 @@
 pragma solidity 0.5.11;
 
 import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "./SpecialPlanet.sol";
 import "./SpecialPlanetShortIdGenerator.sol";
@@ -8,8 +9,11 @@ import "./SpecialPlanetShortIdGenerator.sol";
 import "../../SpecialPlanetConstants.sol";
 
 contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
+  using SafeMath for uint256;
+
   SpecialPlanet public specialPlanet;
   SpecialPlanetShortIdGenerator public specialPlanetShortIdGenerator;
+  uint256 public price = 100000000000000000; // 0.1 eth
   bytes32 private _s;
 
   constructor(address specialPlanetAddress, address specialPlanetShortIdGeneratorAddress) public {
@@ -20,7 +24,8 @@ contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
   }
 
   function sell() external payable returns (uint256) {
-    require(msg.value >= 100000000000000000, "shop: insufficient eth"); // 0.1 eth
+    require(msg.value >= price, "shop: insufficient eth");
+    price = price.add(price / 100);
 
     uint24 shortId = specialPlanetShortIdGenerator.next();
 
