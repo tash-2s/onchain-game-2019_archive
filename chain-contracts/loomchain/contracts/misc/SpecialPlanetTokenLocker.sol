@@ -19,17 +19,17 @@ contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetCons
   function mapShortIdToTokenIdAndParseTokenId(uint256 tokenId)
     external
     onlyMinter
-    returns (uint24, uint8, uint8, uint64)
+    returns (uint24, uint8, uint8, uint8, uint64)
   {
     uint24 shortId = uint24(tokenId >> TOKEN_ID_SHORT_ID_START_BIT);
-    // uint8 version = uint8(tokenId >> TOKEN_ID_VERSION_START_BIT);
+    uint8 version = uint8(tokenId >> TOKEN_ID_VERSION_START_BIT);
     uint8 kind = uint8(tokenId >> TOKEN_ID_KIND_START_BIT);
     uint8 originalParamCommonLogarithm = uint8(tokenId >> TOKEN_ID_OPCL_START_BIT);
     uint64 artSeed = uint64(tokenId >> TOKEN_ID_ART_SEED_START_BIT);
 
     shortIdToTokenId[shortId] = tokenId;
 
-    return (shortId, kind, originalParamCommonLogarithm, artSeed);
+    return (shortId, version, kind, originalParamCommonLogarithm, artSeed);
   }
 
   function withdraw(uint256 tokenId, address account) public onlyMinter {

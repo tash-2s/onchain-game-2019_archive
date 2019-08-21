@@ -14,6 +14,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
 
   struct UserSpecialPlanetRecord {
     uint24 id;
+    uint8 version;
     uint8 kind;
     uint8 originalParamCommonLogarithm;
     uint8 rank;
@@ -21,27 +22,19 @@ contract UserSpecialPlanetControllable is TimeGettable {
     uint32 createdAt;
     int16 axialCoordinateQ;
     int16 axialCoordinateR;
+    uint64 artSeed;
   }
 
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT = 0;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT = 24;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT = 24 + 8;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT = 24 + 8 + 8;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT = 24 + 8 + 8 + 8;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT = 24 + 8 + 8 + 8 + 32;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT = 24 +
-    8 +
-    8 +
-    8 +
-    32 +
-    32;
-  uint8 constant USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT = 24 +
-    8 +
-    8 +
-    8 +
-    32 +
-    32 +
-    16;
+  uint8 constant SPECIAL_PLANET_DATA_ID_START_BIT = 0;
+  uint8 constant SPECIAL_PLANET_DATA_VERSION_START_BIT = 24;
+  uint8 constant SPECIAL_PLANET_DATA_KIND_START_BIT = 24 + 8;
+  uint8 constant SPECIAL_PLANET_DATA_OPCL_START_BIT = 24 + 8 + 8;
+  uint8 constant SPECIAL_PLANET_DATA_RANK_START_BIT = 24 + 8 + 8 + 8;
+  uint8 constant SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT = 24 + 8 + 8 + 8 + 8;
+  uint8 constant SPECIAL_PLANET_DATA_CREATED_AT_START_BIT = 24 + 8 + 8 + 8 + 8 + 32;
+  uint8 constant SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32;
+  uint8 constant SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32 + 16;
+  uint8 constant SPECIAL_PLANET_DATA_ART_SEED_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32 + 16 + 16;
 
   function userSpecialPlanetPermanence() public view returns (UserSpecialPlanetPermanence) {
     return _userSpecialPlanetPermanence;
@@ -87,9 +80,10 @@ contract UserSpecialPlanetControllable is TimeGettable {
   function setUserSpecialPlanetToMap(
     address account,
     uint24 userPlanetId,
+    uint8 version,
     uint8 kind,
     uint8 paramCommonLogarithm,
-    uint64 artSeed, // TODO: use this
+    uint64 artSeed,
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) internal {
@@ -99,13 +93,15 @@ contract UserSpecialPlanetControllable is TimeGettable {
       newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
         UserSpecialPlanetRecord(
           userPlanetId,
+          version,
           kind,
           paramCommonLogarithm,
           1,
           uint32now(),
           uint32now(),
           axialCoordinateQ,
-          axialCoordinateR
+          axialCoordinateR,
+          artSeed
         )
       );
       specialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
@@ -114,13 +110,15 @@ contract UserSpecialPlanetControllable is TimeGettable {
       newUserPlanetData = buildBytes32FromUserSpecialPlanetRecord(
         UserSpecialPlanetRecord(
           r.id,
+          r.version,
           r.kind,
           r.originalParamCommonLogarithm,
           r.rank,
           uint32now(), // rankupedAt
           r.createdAt,
           axialCoordinateQ,
-          axialCoordinateR
+          axialCoordinateR,
+          r.artSeed
         )
       );
       specialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
@@ -144,14 +142,16 @@ contract UserSpecialPlanetControllable is TimeGettable {
     uint256 ui = uint256(b);
     return
       UserSpecialPlanetRecord(
-        uint24(ui >> USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT),
-        uint8(ui >> USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT),
-        uint8(ui >> USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT),
-        uint8(ui >> USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT),
-        uint32(ui >> USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT),
-        uint32(ui >> USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT),
-        int16(ui >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT),
-        int16(ui >> USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT)
+        uint24(ui >> SPECIAL_PLANET_DATA_ID_START_BIT),
+        uint8(ui >> SPECIAL_PLANET_DATA_VERSION_START_BIT),
+        uint8(ui >> SPECIAL_PLANET_DATA_KIND_START_BIT),
+        uint8(ui >> SPECIAL_PLANET_DATA_OPCL_START_BIT),
+        uint8(ui >> SPECIAL_PLANET_DATA_RANK_START_BIT),
+        uint32(ui >> SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT),
+        uint32(ui >> SPECIAL_PLANET_DATA_CREATED_AT_START_BIT),
+        int16(ui >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT),
+        int16(ui >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT),
+        uint64(ui >> SPECIAL_PLANET_DATA_ART_SEED_START_BIT)
       );
   }
 
@@ -162,17 +162,16 @@ contract UserSpecialPlanetControllable is TimeGettable {
   {
     return
       bytes32(
-        (uint256(r.id) << USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT) |
-          (uint256(r.kind) << USER_SPECIAL_PLANET_PERMANENCE_KIND_START_BIT) |
-          (uint256(r.originalParamCommonLogarithm) <<
-            USER_SPECIAL_PLANET_PERMANENCE_ORIGINAL_PARAM_COMMON_LOGARITHM_START_BIT) |
-          (uint256(r.rank) << USER_SPECIAL_PLANET_PERMANENCE_RANK_START_BIT) |
-          (uint256(r.rankupedAt) << USER_SPECIAL_PLANET_PERMANENCE_RANKUPED_AT_START_BIT) |
-          (uint256(r.createdAt) << USER_SPECIAL_PLANET_PERMANENCE_CREATED_AT_START_BIT) |
-          (uint256(uint16(r.axialCoordinateQ)) <<
-            USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_BIT) |
-          (uint256(uint16(r.axialCoordinateR)) <<
-            USER_SPECIAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_BIT)
+        (uint256(r.id) << SPECIAL_PLANET_DATA_ID_START_BIT) |
+          (uint256(r.version) << SPECIAL_PLANET_DATA_VERSION_START_BIT) |
+          (uint256(r.kind) << SPECIAL_PLANET_DATA_KIND_START_BIT) |
+          (uint256(r.originalParamCommonLogarithm) << SPECIAL_PLANET_DATA_OPCL_START_BIT) |
+          (uint256(r.rank) << SPECIAL_PLANET_DATA_RANK_START_BIT) |
+          (uint256(r.rankupedAt) << SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT) |
+          (uint256(r.createdAt) << SPECIAL_PLANET_DATA_CREATED_AT_START_BIT) |
+          (uint256(uint16(r.axialCoordinateQ)) << SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT) |
+          (uint256(uint16(r.axialCoordinateR)) << SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT) |
+          (uint256(r.artSeed) << SPECIAL_PLANET_DATA_ART_SEED_START_BIT)
       );
   }
 
@@ -186,7 +185,7 @@ contract UserSpecialPlanetControllable is TimeGettable {
     uint16 index;
 
     for (uint16 i = 0; i < us.length; i++) {
-      if (uint24(uint256(us[i] >> USER_SPECIAL_PLANET_PERMANENCE_ID_START_BIT)) == userPlanetId) {
+      if (uint24(uint256(us[i] >> SPECIAL_PLANET_DATA_ID_START_BIT)) == userPlanetId) {
         target = us[i];
         index = i;
         break;

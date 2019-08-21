@@ -80,12 +80,13 @@ contract SpecialPlanetController is UserPlanetControllable {
 
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
-    (uint24 shortId, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = _transferTokenToLocker(
+    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = _transferTokenToLocker(
       tokenId
     );
     setUserSpecialPlanetToMap(
       msg.sender,
       shortId,
+      version,
       kind,
       originalParamCommonLogarithm,
       artSeed,
@@ -101,7 +102,10 @@ contract SpecialPlanetController is UserPlanetControllable {
     specialPlanetTokenLocker.withdrawByShortId(shortId, msg.sender);
   }
 
-  function _transferTokenToLocker(uint256 tokenId) private returns (uint24, uint8, uint8, uint64) {
+  function _transferTokenToLocker(uint256 tokenId)
+    private
+    returns (uint24, uint8, uint8, uint8, uint64)
+  {
     _specialPlanetToken.safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
     return specialPlanetTokenLocker.mapShortIdToTokenIdAndParseTokenId(tokenId);
   }
