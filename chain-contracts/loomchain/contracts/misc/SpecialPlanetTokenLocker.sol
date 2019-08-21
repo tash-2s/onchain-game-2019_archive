@@ -12,15 +12,20 @@ contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetCons
 
   mapping(uint24 => uint256) public shortIdToTokenId;
 
+  mapping(uint256 => address) public tokenIdToOwner;
+
   constructor(address specialPlanetTokenAddress) public {
     specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
   }
 
-  function mapShortIdToTokenIdAndParseTokenId(uint256 tokenId)
+  // this should be called after the transfers of tokens to this contract
+  function setupAndParseTokenId(address owner, uint256 tokenId)
     external
     onlyMinter
     returns (uint24, uint8, uint8, uint8, uint64)
   {
+    require(specialPlanetToken.ownerOf(tokenId) == address(this), "locker: wrong owner");
+
     uint24 shortId = uint24(tokenId >> TOKEN_ID_SHORT_ID_START_BIT);
     uint8 version = uint8(tokenId >> TOKEN_ID_VERSION_START_BIT);
     uint8 kind = uint8(tokenId >> TOKEN_ID_KIND_START_BIT);
@@ -28,19 +33,18 @@ contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetCons
     uint64 artSeed = uint64(tokenId >> TOKEN_ID_ART_SEED_START_BIT);
 
     shortIdToTokenId[shortId] = tokenId;
+    tokenIdToOwner[tokenId] = owner;
 
     return (shortId, version, kind, originalParamCommonLogarithm, artSeed);
   }
 
-  function withdraw(uint256 tokenId, address account) public onlyMinter {
-    specialPlanetToken.safeTransferFrom(address(this), account, tokenId);
-  }
-
-  function withdrawByShortId(uint24 shortId, address account) external onlyMinter {
-    withdraw(shortIdToTokenId[shortId], account);
+  function withdraw(uint24 shortId) external onlyMinter {
+    uint256 tokenId = shortIdToTokenId[shortId];
+    specialPlanetToken.safeTransferFrom(address(this), tokenIdToOwner[tokenId], tokenId);
+    delete tokenIdToOwner[tokenId];
   }
 
   function extractShortIdFromTokenId(uint256 tokenId) public pure returns (uint24) {
-    return uint24(tokenId);
+    return uint24(tokenId >> TOKEN_ID_SHORT_ID_START_BIT);
   }
 }

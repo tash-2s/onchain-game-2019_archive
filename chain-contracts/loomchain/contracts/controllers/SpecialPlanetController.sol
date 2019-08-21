@@ -99,7 +99,7 @@ contract SpecialPlanetController is UserPlanetControllable {
   function removePlanet(uint24 shortId) external {
     confirm(msg.sender);
     removeUserSpecialPlanetFromMap(msg.sender, shortId);
-    specialPlanetTokenLocker.withdrawByShortId(shortId, msg.sender);
+    specialPlanetTokenLocker.withdraw(shortId);
   }
 
   function _transferTokenToLocker(uint256 tokenId)
@@ -107,6 +107,6 @@ contract SpecialPlanetController is UserPlanetControllable {
     returns (uint24, uint8, uint8, uint8, uint64)
   {
     _specialPlanetToken.safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
-    return specialPlanetTokenLocker.mapShortIdToTokenIdAndParseTokenId(tokenId);
+    return specialPlanetTokenLocker.setupAndParseTokenId(msg.sender, tokenId);
   }
 }
