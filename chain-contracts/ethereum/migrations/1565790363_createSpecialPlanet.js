@@ -1,12 +1,19 @@
 const SpecialPlanet = artifacts.require("SpecialPlanet")
 const SpecialPlanetShop = artifacts.require("SpecialPlanetShop")
+const SpecialPlanetShortIdGenerator = artifacts.require("SpecialPlanetShortIdGenerator")
 
 module.exports = function(deployer, network) {
   deployer.then(async function() {
     await deployer.deploy(SpecialPlanet, getGatewayAddress(network))
-    await deployer.deploy(SpecialPlanetShop, SpecialPlanet.address)
+    await deployer.deploy(SpecialPlanetShortIdGenerator)
+    await deployer.deploy(
+      SpecialPlanetShop,
+      SpecialPlanet.address,
+      SpecialPlanetShortIdGenerator.address
+    )
 
     await (await SpecialPlanet.deployed()).addMinter(SpecialPlanetShop.address)
+    await (await SpecialPlanetShortIdGenerator.deployed()).addMinter(SpecialPlanetShop.address)
   })
 }
 

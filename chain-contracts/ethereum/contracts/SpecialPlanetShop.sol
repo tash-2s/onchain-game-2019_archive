@@ -1,10 +1,9 @@
 pragma solidity 0.5.11;
 
 import "./SpecialPlanet.sol";
+import "./SpecialPlanetShortIdGenerator.sol";
 
 contract SpecialPlanetShop {
-  uint24 constant UINT24_MAX = ~uint24(0);
-
   uint8 constant ID_SHORT_ID_START_BIT = 0;
   uint8 constant ID_VERSION_START_BIT = 24;
   uint8 constant ID_KIND_START_BIT = 24 + 8;
@@ -12,17 +11,19 @@ contract SpecialPlanetShop {
   uint8 constant ID_ART_SEED_START_BIT = 24 + 8 + 8 + 8;
 
   SpecialPlanet public specialPlanet;
-  uint256 public shortIdGenerator;
+  SpecialPlanetShortIdGenerator public specialPlanetShortIdGenerator;
   bytes32 private _s;
 
-  constructor(address specialPlanetAddress) public {
+  constructor(address specialPlanetAddress, address specialPlanetShortIdGeneratorAddress) public {
     specialPlanet = SpecialPlanet(specialPlanetAddress);
+    specialPlanetShortIdGenerator = SpecialPlanetShortIdGenerator(
+      specialPlanetShortIdGeneratorAddress
+    );
   }
 
   // TODO: get eth
   function sell() external returns (uint256) {
-    shortIdGenerator++;
-    require(shortIdGenerator <= UINT24_MAX, "short id is too big");
+    uint24 shortId = specialPlanetShortIdGenerator.next();
 
     uint256 seed = uint256(_nextUnsafeSeed());
 
@@ -31,7 +32,7 @@ contract SpecialPlanetShop {
     uint8 originalParamCommonLogarithm = 40;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = (uint256(shortIdGenerator) << ID_SHORT_ID_START_BIT) |
+    uint256 id = (uint256(shortId) << ID_SHORT_ID_START_BIT) |
       (uint256(version) << ID_VERSION_START_BIT) |
       (uint256(kind) << ID_KIND_START_BIT) |
       (uint256(originalParamCommonLogarithm) << ID_OPCL_START_BIT) |
