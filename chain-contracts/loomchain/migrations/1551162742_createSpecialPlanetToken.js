@@ -1,6 +1,6 @@
 const helper = require("../migrationHelper")
 
-const erc721 = artifacts.require("./tokens/Erc721SpecialPlanet") // TODO: fix
+const erc721 = artifacts.require("./tokens/SpecialPlanetToken") // TODO: fix
 
 module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {

@@ -3,13 +3,13 @@ pragma solidity 0.5.11;
 import "./modules/UserPlanetControllable.sol";
 
 import "./RemarkableUserController.sol";
-import "../tokens/Erc721SpecialPlanet.sol";
-import "../misc/Erc721SpecialPlanetLocker.sol";
+import "../tokens/SpecialPlanetToken.sol";
+import "../misc/SpecialPlanetTokenLocker.sol";
 
 contract SpecialPlanetController is UserPlanetControllable {
   RemarkableUserController private _remarkableUserController;
-  Erc721SpecialPlanet private _erc721SpecialPlanet;
-  Erc721SpecialPlanetLocker public erc721SpecialPlanetLocker;
+  SpecialPlanetToken private _specialPlanetToken;
+  SpecialPlanetTokenLocker public specialPlanetTokenLocker;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
@@ -18,8 +18,8 @@ contract SpecialPlanetController is UserPlanetControllable {
     address userSpecialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
     address remarkableUsersContractAddress,
-    address erc721SpecialPlanetAddress,
-    address erc721SpecialPlanetLockerAddress
+    address specialPlanetTokenAddress,
+    address specialPlanetTokenLockerAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
@@ -29,16 +29,16 @@ contract SpecialPlanetController is UserPlanetControllable {
       userGoldPermanenceAddress
     );
     _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
-    _erc721SpecialPlanet = Erc721SpecialPlanet(erc721SpecialPlanetAddress);
-    erc721SpecialPlanetLocker = Erc721SpecialPlanetLocker(erc721SpecialPlanetLockerAddress);
+    _specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
+    specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
   function remarkableUserController() external view returns (RemarkableUserController) {
     return _remarkableUserController;
   }
 
-  function erc721SpecialPlanet() external view returns (Erc721SpecialPlanet) {
-    return _erc721SpecialPlanet;
+  function specialPlanetToken() external view returns (SpecialPlanetToken) {
+    return _specialPlanetToken;
   }
 
   function planets(address account)
@@ -98,11 +98,11 @@ contract SpecialPlanetController is UserPlanetControllable {
   function removePlanet(uint24 shortId) external {
     confirm(msg.sender);
     removeUserSpecialPlanetFromMap(msg.sender, shortId);
-    erc721SpecialPlanetLocker.withdrawByShortId(shortId, msg.sender);
+    specialPlanetTokenLocker.withdrawByShortId(shortId, msg.sender);
   }
 
   function _transferTokenToLocker(uint256 tokenId) private returns (uint24, uint8, uint8, uint64) {
-    _erc721SpecialPlanet.safeTransferFrom(msg.sender, address(erc721SpecialPlanetLocker), tokenId);
-    return erc721SpecialPlanetLocker.mapShortIdToTokenIdAndParseTokenId(tokenId);
+    _specialPlanetToken.safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
+    return specialPlanetTokenLocker.mapShortIdToTokenIdAndParseTokenId(tokenId);
   }
 }

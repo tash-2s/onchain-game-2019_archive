@@ -47,9 +47,9 @@ module.exports = function(deployer, network, accounts) {
       "RemarkableUserController"
     )
 
-    const erc721SpecialPlanetAddress = await helper.getRegistryContractAddress(
+    const specialPlanetTokenAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "Erc721SpecialPlanet"
+      "SpecialPlanetToken"
     )
 
     const controller = await helper.deployAndRegister(deployer, network, SpecialPlanetController, [
@@ -59,7 +59,7 @@ module.exports = function(deployer, network, accounts) {
       userSpecialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress,
       remarkableUsersAddress,
-      erc721SpecialPlanetAddress
+      specialPlanetTokenAddress
     ])
 
     await new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress).methods

@@ -23,7 +23,7 @@ const MnemonicUtil = require("./ethereum/MnemonicUtil.js")
 const InfuraUtil = require("./ethereum/InfuraUtil.js")
 
 const EthereumTokenJSON = require("./ethereum/build/contracts/SpecialPlanet.json")
-const LoomchainTokenJSON = require("./loomchain/build/contracts/Erc721SpecialPlanet.json")
+const LoomchainTokenJSON = require("./loomchain/build/contracts/SpecialPlanetToken.json")
 
 const RinkebyGatewayJSON = require("./Gateway.json")
 

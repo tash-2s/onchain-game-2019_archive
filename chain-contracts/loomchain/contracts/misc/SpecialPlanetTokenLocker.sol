@@ -3,15 +3,15 @@ pragma solidity 0.5.11;
 import "@openzeppelin/contracts/token/ERC721/ERC721Holder.sol";
 import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
-import "../tokens/Erc721SpecialPlanet.sol";
+import "../tokens/SpecialPlanetToken.sol";
 
-contract Erc721SpecialPlanetLocker is ERC721Holder, MinterRole {
-  Erc721SpecialPlanet public erc721SpecialPlanet;
+contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole {
+  SpecialPlanetToken public specialPlanetToken;
 
   mapping(uint24 => uint256) public shortIdToTokenId;
 
-  constructor(address erc721SpecialPlanetAddress) public {
-    erc721SpecialPlanet = Erc721SpecialPlanet(erc721SpecialPlanetAddress);
+  constructor(address specialPlanetTokenAddress) public {
+    specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
   }
 
   function mapShortIdToTokenIdAndParseTokenId(uint256 tokenId)
@@ -32,7 +32,7 @@ contract Erc721SpecialPlanetLocker is ERC721Holder, MinterRole {
   }
 
   function withdraw(uint256 tokenId, address account) public onlyMinter {
-    erc721SpecialPlanet.safeTransferFrom(address(this), account, tokenId);
+    specialPlanetToken.safeTransferFrom(address(this), account, tokenId);
   }
 
   function withdrawByShortId(uint24 shortId, address account) external onlyMinter {
