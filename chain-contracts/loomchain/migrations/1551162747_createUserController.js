@@ -8,9 +8,9 @@ module.exports = function(deployer, network) {
       deployer.network_id,
       "UserNormalPlanetPermanence"
     )
-    const userNormalPlanetIdCounterAddress = await helper.getRegistryContractAddress(
+    const userNormalPlanetIdGeneratorAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "UserNormalPlanetIdCounterPermanence"
+      "UserNormalPlanetIdGeneratorPermanence"
     )
     const userGoldPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
@@ -19,7 +19,7 @@ module.exports = function(deployer, network) {
     await helper.deployAndRegister(deployer, network, UserController, [
       userGoldPermanenceAddress,
       userNormalPlanetAddress,
-      userNormalPlanetIdCounterAddress
+      userNormalPlanetIdGeneratorAddress
     ])
   })
 }

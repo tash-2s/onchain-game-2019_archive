@@ -3,7 +3,7 @@ pragma solidity 0.5.11;
 import "./PermanenceInterpretable.sol";
 import "./TimeGettable.sol";
 import "../../permanences/UserNormalPlanetPermanence.sol";
-import "../../permanences/UserNormalPlanetIdCounterPermanence.sol";
+import "../../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
 contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   struct UserNormalPlanetRecord {
@@ -42,7 +42,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   uint8 constant MAX_USER_NORMAL_PLANET_RANK = 30;
 
   UserNormalPlanetPermanence private _userNormalPlanetPermanence;
-  UserNormalPlanetIdCounterPermanence private _userNormalPlanetIdCounterPermanence;
+  UserNormalPlanetIdGeneratorPermanence private _userNormalPlanetIdGeneratorPermanence;
 
   function userNormalPlanetPermanence() public view returns (UserNormalPlanetPermanence) {
     return _userNormalPlanetPermanence;
@@ -52,16 +52,18 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     _userNormalPlanetPermanence = UserNormalPlanetPermanence(permanenceAddress);
   }
 
-  function userNormalPlanetIdCounterPermanence()
+  function userNormalPlanetIdGeneratorPermanence()
     public
     view
-    returns (UserNormalPlanetIdCounterPermanence)
+    returns (UserNormalPlanetIdGeneratorPermanence)
   {
-    return _userNormalPlanetIdCounterPermanence;
+    return _userNormalPlanetIdGeneratorPermanence;
   }
 
-  function setUserNormalPlanetIdCounterPermanence(address permanenceAddress) internal {
-    _userNormalPlanetIdCounterPermanence = UserNormalPlanetIdCounterPermanence(permanenceAddress);
+  function setUserNormalPlanetIdGeneratorPermanence(address permanenceAddress) internal {
+    _userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
+      permanenceAddress
+    );
   }
 
   function userNormalPlanetRecordsOf(address account)
@@ -114,7 +116,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
       }
     }
 
-    uint64 id = _userNormalPlanetIdCounterPermanence.generate(account);
+    uint64 id = _userNormalPlanetIdGeneratorPermanence.generate(account);
     _userNormalPlanetPermanence.createElement(
       account,
       buildUint256FromUserNormalPlanetRecord(

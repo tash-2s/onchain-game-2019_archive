@@ -7,11 +7,11 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   constructor(
     address userGoldPermanenceAddress,
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress
+    address userNormalPlanetIdGeneratorPermanenceAddress
   ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
+    setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
   }
 
   function debugMintGold(address account, uint256 quantity) external {
@@ -34,7 +34,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   }
 
   function debugMintMaxUserNormalPlanets(address account) external {
-    uint64 counter = userNormalPlanetIdCounterPermanence().read(account);
+    uint64 counter = userNormalPlanetIdGeneratorPermanence().read(account);
     require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
 
     uint256[] memory arr = new uint256[](919);
@@ -92,6 +92,6 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     }
 
     userNormalPlanetPermanence().update(account, arr);
-    userNormalPlanetIdCounterPermanence().update(account, counter);
+    userNormalPlanetIdGeneratorPermanence().update(account, counter);
   }
 }

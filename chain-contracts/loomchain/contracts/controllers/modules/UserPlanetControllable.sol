@@ -11,13 +11,13 @@ contract UserPlanetControllable is
 {
   function setupUserPlanetControllable(
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress,
+    address userNormalPlanetIdGeneratorPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress
   ) internal {
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
+    setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
     setUserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
     setSpecialPlanetIdToDataPermanence(specialPlanetIdToDataPermanenceAddress);
     setUserGoldPermanence(userGoldPermanenceAddress);

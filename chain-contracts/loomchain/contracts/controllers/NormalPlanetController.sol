@@ -8,7 +8,7 @@ import "./modules/UserPlanetControllable.sol";
 contract NormalPlanetController is NormalPlanetControllable, UserPlanetControllable {
   constructor(
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress,
+    address userNormalPlanetIdGeneratorPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
@@ -16,7 +16,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
-      userNormalPlanetIdCounterPermanenceAddress,
+      userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress

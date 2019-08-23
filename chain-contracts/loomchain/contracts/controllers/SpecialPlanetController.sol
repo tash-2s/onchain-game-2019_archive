@@ -13,7 +13,7 @@ contract SpecialPlanetController is UserPlanetControllable {
 
   constructor(
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress,
+    address userNormalPlanetIdGeneratorPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
@@ -23,7 +23,7 @@ contract SpecialPlanetController is UserPlanetControllable {
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
-      userNormalPlanetIdCounterPermanenceAddress,
+      userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress

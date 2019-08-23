@@ -3,8 +3,7 @@ pragma solidity 0.5.11;
 import "./abstracts/AddressToUint64Permanence.sol";
 
 /* solium-disable no-empty-blocks */
-// TODO: rename to Generator
-contract UserNormalPlanetIdCounterPermanence is AddressToUint64Permanence {
+contract UserNormalPlanetIdGeneratorPermanence is AddressToUint64Permanence {
   uint64 constant UINT64_MAX = ~uint64(0);
 
   function generate(address addr) public onlyMinter returns (uint64) {

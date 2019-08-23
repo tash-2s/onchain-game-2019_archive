@@ -7,11 +7,11 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
   constructor(
     address userGoldPermanenceAddress,
     address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdCounterPermanenceAddress
+    address userNormalPlanetIdGeneratorPermanenceAddress
   ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserNormalPlanetIdCounterPermanence(userNormalPlanetIdCounterPermanenceAddress);
+    setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
   }
 
   function getUser(address account)

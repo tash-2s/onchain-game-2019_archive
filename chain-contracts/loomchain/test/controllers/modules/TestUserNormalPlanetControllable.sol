@@ -4,7 +4,7 @@ import "truffle/Assert.sol";
 
 import "../../../contracts/controllers/modules/UserNormalPlanetControllable.sol";
 import "../../../contracts/permanences/UserNormalPlanetPermanence.sol";
-import "../../../contracts/permanences/UserNormalPlanetIdCounterPermanence.sol";
+import "../../../contracts/permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
 contract AssertionReporter {
   event TestEvent(bool indexed result, string message);
@@ -21,18 +21,18 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
 
   AssertionReporter private _reporter = new AssertionReporter();
   UserNormalPlanetPermanence private _permanence = new UserNormalPlanetPermanence();
-  UserNormalPlanetIdCounterPermanence private _icp = new UserNormalPlanetIdCounterPermanence();
+  UserNormalPlanetIdGeneratorPermanence private _icp = new UserNormalPlanetIdGeneratorPermanence();
 
   function beforeAll() public {
     setUserNormalPlanetPermanence(address(_permanence));
-    setUserNormalPlanetIdCounterPermanence(address(_icp));
+    setUserNormalPlanetIdGeneratorPermanence(address(_icp));
   }
 
   function testUserNormalPlanetPermanence() public {
     Assert.equal(address(userNormalPlanetPermanence()), address(_permanence), "permanence");
 
     Assert.equal(
-      address(userNormalPlanetIdCounterPermanence()),
+      address(userNormalPlanetIdGeneratorPermanence()),
       address(_icp),
       "id counter permanence"
     );

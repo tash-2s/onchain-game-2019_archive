@@ -1,13 +1,15 @@
-contract("UserNormalPlanetIdCounterPermanence", async accounts => {
-  const UserNormalPlanetIdCounterPermanence = artifacts.require(
-    "UserNormalPlanetIdCounterPermanence"
+contract("UserNormalPlanetIdGeneratorPermanence", async accounts => {
+  const UserNormalPlanetIdGeneratorPermanence = artifacts.require(
+    "UserNormalPlanetIdGeneratorPermanence"
   )
-  let instance: PromiseGenericsType<ReturnType<typeof UserNormalPlanetIdCounterPermanence.deployed>>
+  let instance: PromiseGenericsType<
+    ReturnType<typeof UserNormalPlanetIdGeneratorPermanence.deployed>
+  >
   let ownerAccount: string
   let strangerAccount: string
 
   beforeEach(async () => {
-    instance = await UserNormalPlanetIdCounterPermanence.deployed()
+    instance = await UserNormalPlanetIdGeneratorPermanence.deployed()
     ownerAccount = accounts[0]
     strangerAccount = accounts[1]
   })
