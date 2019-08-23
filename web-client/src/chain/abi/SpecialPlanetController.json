@@ -71,6 +71,22 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "specialPlanetIdToDataPermanence",
+    "outputs": [
+      {
+        "internalType": "contract SpecialPlanetIdToDataPermanence",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x39786f44"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "userGoldPermanence",
     "outputs": [
       {
@@ -118,6 +134,22 @@
   },
   {
     "constant": true,
+    "inputs": [],
+    "name": "specialPlanetTokenLocker",
+    "outputs": [
+      {
+        "internalType": "contract SpecialPlanetTokenLocker",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xa39d8c78"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
         "internalType": "uint256",
@@ -142,6 +174,44 @@
     "stateMutability": "pure",
     "type": "function",
     "signature": "0xa3f38ca2"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "userSpecialPlanetPermanence",
+    "outputs": [
+      {
+        "internalType": "contract UserSpecialPlanetPermanence",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xb71872fc"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "userSpecialPlanetRecordsCountOf",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xd3070ae2"
   },
   {
     "constant": true,
@@ -185,17 +255,42 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "userGoldPermanenceAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "userNormalPlanetPermanenceAddress",
         "type": "address"
       },
       {
         "internalType": "address",
         "name": "userNormalPlanetIdGeneratorPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "userSpecialPlanetPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "specialPlanetIdToDataPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "userGoldPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "remarkableUsersContractAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "specialPlanetTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "specialPlanetTokenLockerAddress",
         "type": "address"
       }
     ],
@@ -206,6 +301,38 @@
   },
   {
     "constant": true,
+    "inputs": [],
+    "name": "remarkableUserController",
+    "outputs": [
+      {
+        "internalType": "contract RemarkableUserController",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x2c31d9cf"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "specialPlanetToken",
+    "outputs": [
+      {
+        "internalType": "contract SpecialPlanetToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x9cc782c8"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
         "internalType": "address",
@@ -213,42 +340,79 @@
         "type": "address"
       }
     ],
-    "name": "getUser",
+    "name": "planets",
     "outputs": [
       {
-        "internalType": "uint200",
-        "name": "confirmedGold",
-        "type": "uint200"
-      },
-      {
-        "internalType": "uint32",
-        "name": "goldConfirmedAt",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint64[]",
-        "name": "unpIds",
-        "type": "uint64[]"
+        "internalType": "uint24[]",
+        "name": "",
+        "type": "uint24[]"
       },
       {
         "internalType": "uint8[]",
-        "name": "unpRanks",
+        "name": "",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "",
         "type": "uint8[]"
       },
       {
         "internalType": "uint32[]",
-        "name": "unpTimes",
+        "name": "",
         "type": "uint32[]"
       },
       {
         "internalType": "int16[]",
-        "name": "unpAxialCoordinates",
+        "name": "",
         "type": "int16[]"
       }
     ],
     "payable": false,
     "stateMutability": "view",
     "type": "function",
-    "signature": "0x6f77926b"
+    "signature": "0x0aaeed60"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int16",
+        "name": "axialCoordinateQ",
+        "type": "int16"
+      },
+      {
+        "internalType": "int16",
+        "name": "axialCoordinateR",
+        "type": "int16"
+      }
+    ],
+    "name": "setPlanet",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x7ecdce7e"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint24",
+        "name": "shortId",
+        "type": "uint24"
+      }
+    ],
+    "name": "removePlanet",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xff000261"
   }
 ]

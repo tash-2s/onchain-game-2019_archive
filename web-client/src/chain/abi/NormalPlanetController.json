@@ -3,18 +3,22 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "target",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "startDigit",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "endDigit",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "update",
         "type": "uint256"
       }
@@ -22,6 +26,7 @@
     "name": "reinterpretPermanenceUint256",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -37,6 +42,7 @@
     "name": "normalPlanetPermanence",
     "outputs": [
       {
+        "internalType": "contract NormalPlanetPermanence",
         "name": "",
         "type": "address"
       }
@@ -50,14 +56,17 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "target",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "startDigit",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "endDigit",
         "type": "uint256"
       }
@@ -65,6 +74,7 @@
     "name": "interpretPermanenceUint256",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -77,9 +87,26 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "specialPlanetIdToDataPermanence",
+    "outputs": [
+      {
+        "internalType": "contract SpecialPlanetIdToDataPermanence",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x39786f44"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "userGoldPermanence",
     "outputs": [
       {
+        "internalType": "contract UserGoldPermanence",
         "name": "",
         "type": "address"
       }
@@ -92,9 +119,26 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "userNormalPlanetIdGeneratorPermanence",
+    "outputs": [
+      {
+        "internalType": "contract UserNormalPlanetIdGeneratorPermanence",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x6cd54e92"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "userNormalPlanetPermanence",
     "outputs": [
       {
+        "internalType": "contract UserNormalPlanetPermanence",
         "name": "",
         "type": "address"
       }
@@ -108,10 +152,12 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "startDigit",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "endDigit",
         "type": "uint256"
       }
@@ -119,6 +165,7 @@
     "name": "assertInterpretableDigits",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
@@ -131,9 +178,10 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "userNormalPlanetIdCounterPermanence",
+    "name": "userSpecialPlanetPermanence",
     "outputs": [
       {
+        "internalType": "contract UserSpecialPlanetPermanence",
         "name": "",
         "type": "address"
       }
@@ -141,7 +189,29 @@
     "payable": false,
     "stateMutability": "view",
     "type": "function",
-    "signature": "0xb6d0bbd8"
+    "signature": "0xb71872fc"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "userSpecialPlanetRecordsCountOf",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xd3070ae2"
   },
   {
     "constant": true,
@@ -149,6 +219,7 @@
     "name": "uint32now",
     "outputs": [
       {
+        "internalType": "uint32",
         "name": "",
         "type": "uint32"
       }
@@ -162,6 +233,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "account",
         "type": "address"
       }
@@ -169,6 +241,7 @@
     "name": "userNormalPlanetRecordsCountOf",
     "outputs": [
       {
+        "internalType": "uint16",
         "name": "",
         "type": "uint16"
       }
@@ -181,23 +254,33 @@
   {
     "inputs": [
       {
-        "name": "userGoldPermanenceAddress",
-        "type": "address"
-      },
-      {
-        "name": "normalPlanetPermanenceAddress",
-        "type": "address"
-      },
-      {
+        "internalType": "address",
         "name": "userNormalPlanetPermanenceAddress",
         "type": "address"
       },
       {
-        "name": "userNormalPlanetIdCounterPermanenceAddress",
+        "internalType": "address",
+        "name": "userNormalPlanetIdGeneratorPermanenceAddress",
         "type": "address"
       },
       {
-        "name": "remarkableUsersContractAddress",
+        "internalType": "address",
+        "name": "userSpecialPlanetPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "specialPlanetIdToDataPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "userGoldPermanenceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "normalPlanetPermanenceAddress",
         "type": "address"
       }
     ],
@@ -207,32 +290,20 @@
     "signature": "constructor"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "remarkableUserController",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function",
-    "signature": "0x2c31d9cf"
-  },
-  {
     "constant": false,
     "inputs": [
       {
+        "internalType": "uint16",
         "name": "planetId",
         "type": "uint16"
       },
       {
+        "internalType": "int16",
         "name": "axialCoordinateQ",
         "type": "int16"
       },
       {
+        "internalType": "int16",
         "name": "axialCoordinateR",
         "type": "int16"
       }
@@ -248,10 +319,12 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "uint64",
         "name": "userNormalPlanetId",
         "type": "uint64"
       },
       {
+        "internalType": "uint8",
         "name": "targetRank",
         "type": "uint8"
       }
@@ -267,6 +340,7 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "uint64",
         "name": "userNormalPlanetId",
         "type": "uint64"
       }
