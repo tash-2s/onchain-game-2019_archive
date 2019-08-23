@@ -14,25 +14,21 @@ let id = 1
 let param = 1
 let planets: NormalPlanet[] = []
 while (id <= 16) {
-  planets.push(
-    {
-      id: id++,
-      kind: "residence",
-      paramCommonLogarithm: param,
-      priceGoldCommonLogarithm: param * 3,
-      artSeedStr: `${id - 1}`
-    }
-  )
+  planets.push({
+    id: id++,
+    kind: "residence",
+    paramCommonLogarithm: param,
+    priceGoldCommonLogarithm: param * 3,
+    artSeedStr: `${id - 1}`
+  })
   param += 1
-  planets.push(
-    {
-      id: id++,
-      kind: "goldmine",
-      paramCommonLogarithm: param,
-      priceGoldCommonLogarithm: param * 3,
-      artSeedStr: `${id - 1}`
-    }
-  )
+  planets.push({
+    id: id++,
+    kind: "goldmine",
+    paramCommonLogarithm: param,
+    priceGoldCommonLogarithm: param * 3,
+    artSeedStr: `${id - 1}`
+  })
   param += 1
 }
 
