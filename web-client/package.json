@@ -2,7 +2,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "l": "yarn generate-chain-env local && yarn generate-contracts-types && yarn serve:local",
+    "l": "yarn generate-chain-env local && yarn serve:local",
     "serve": "parcel src/index.html --no-hmr",
     "serve:local": "./scripts/cpChainEnv.sh local && yarn serve",
     "serve:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn serve",
@@ -10,8 +10,7 @@
     "build:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn build",
     "build:production": "./scripts/cpChainEnv.sh production && yarn build",
     "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*.js' --no-semi --print-width 100 --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
-    "generate-chain-env": "node scripts/generateChainEnv.js",
-    "generate-contracts-types": "yarn web3x-codegen contracts_types_generator.json"
+    "generate-chain-env": "node scripts/generateChainEnv.js"
   },
   "devDependencies": {
     "@types/bn.js": "^4.11.5",
@@ -27,8 +26,7 @@
     "prettier": "^1.15.3",
     "sass": "^1.20.3",
     "ts-jest": "^23.10.5",
-    "typescript": "*",
-    "web3x-es": "^2.0.3"
+    "typescript": "*"
   },
   "dependencies": {
     "bn.js": "^4.11.8",
