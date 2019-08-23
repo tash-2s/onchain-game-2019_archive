@@ -5,7 +5,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Mintable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721MetadataMintable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
 
-contract SpecialPlanet is ERC721Enumerable, ERC721Mintable, ERC721MetadataMintable, ERC721Pausable {
+contract SpecialPlanetToken is
+  ERC721Enumerable,
+  ERC721Mintable,
+  ERC721MetadataMintable,
+  ERC721Pausable
+{
   // Transfer Gateway contract address
   address public gateway;
 

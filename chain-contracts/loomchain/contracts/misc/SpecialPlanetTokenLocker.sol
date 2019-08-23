@@ -5,9 +5,9 @@ import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 
 import "../tokens/SpecialPlanetToken.sol";
 
-import "../../../SpecialPlanetConstants.sol";
+import "../../../SpecialPlanetTokenConstants.sol";
 
-contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetConstants {
+contract SpecialPlanetTokenLocker is ERC721Holder, MinterRole, SpecialPlanetTokenConstants {
   SpecialPlanetToken public specialPlanetToken;
 
   mapping(uint24 => uint256) public shortIdToTokenId;

@@ -2,9 +2,9 @@ pragma solidity 0.5.11;
 
 import "truffle/Assert.sol";
 
-// import "../contracts/SpecialPlanetShop.sol";
+// import "../contracts/SpecialPlanetTokenShop.sol";
 
-contract TestSpecialPlanetShop {
+contract TestSpecialPlanetTokenShop {
   function testHash() public {
     uint256 max = ~uint256(0);
 

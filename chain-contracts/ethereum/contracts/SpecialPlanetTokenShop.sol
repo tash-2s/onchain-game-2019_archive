@@ -3,23 +3,25 @@ pragma solidity 0.5.11;
 import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-import "./SpecialPlanet.sol";
-import "./SpecialPlanetShortIdGenerator.sol";
+import "./SpecialPlanetToken.sol";
+import "./SpecialPlanetTokenShortIdGenerator.sol";
 
-import "../../SpecialPlanetConstants.sol";
+import "../../SpecialPlanetTokenConstants.sol";
 
-contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
+contract SpecialPlanetTokenShop is SpecialPlanetTokenConstants, MinterRole {
   using SafeMath for uint256;
 
-  SpecialPlanet public specialPlanet;
-  SpecialPlanetShortIdGenerator public specialPlanetShortIdGenerator;
+  SpecialPlanetToken public specialPlanetToken;
+  SpecialPlanetTokenShortIdGenerator public specialPlanetTokenShortIdGenerator;
   uint256 public price = 100000000000000000; // 0.1 eth
   bytes32 private _s;
 
-  constructor(address specialPlanetAddress, address specialPlanetShortIdGeneratorAddress) public {
-    specialPlanet = SpecialPlanet(specialPlanetAddress);
-    specialPlanetShortIdGenerator = SpecialPlanetShortIdGenerator(
-      specialPlanetShortIdGeneratorAddress
+  constructor(address specialPlanetTokenAddress, address specialPlanetTokenShortIdGeneratorAddress)
+    public
+  {
+    specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
+    specialPlanetTokenShortIdGenerator = SpecialPlanetTokenShortIdGenerator(
+      specialPlanetTokenShortIdGeneratorAddress
     );
   }
 
@@ -27,7 +29,7 @@ contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
     require(msg.value >= price, "shop: insufficient eth");
     price = price.add(price / 100);
 
-    uint24 shortId = specialPlanetShortIdGenerator.next();
+    uint24 shortId = specialPlanetTokenShortIdGenerator.next();
 
     uint256 seed = uint256(_nextUnsafeSeed());
 
@@ -42,7 +44,7 @@ contract SpecialPlanetShop is SpecialPlanetConstants, MinterRole {
       (uint256(originalParamCommonLogarithm) << TOKEN_ID_OPCL_START_BIT) |
       (uint256(artSeed) << TOKEN_ID_ART_SEED_START_BIT);
 
-    specialPlanet.mint(msg.sender, id);
+    specialPlanetToken.mint(msg.sender, id);
     return id;
   }
 

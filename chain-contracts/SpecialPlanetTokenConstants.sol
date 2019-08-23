@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-contract SpecialPlanetConstants {
+contract SpecialPlanetTokenConstants {
   uint8 constant TOKEN_ID_SHORT_ID_START_BIT = 0;
   uint8 constant TOKEN_ID_VERSION_START_BIT = 24;
   uint8 constant TOKEN_ID_KIND_START_BIT = 24 + 8;
