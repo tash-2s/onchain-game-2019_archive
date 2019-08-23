@@ -2,11 +2,11 @@ pragma solidity 0.5.11;
 
 import "truffle/Assert.sol";
 
-import "../../../contracts/controllers/modules/UserSpecialPlanetControllable.sol";
+import "../../../contracts/controllers/modules/SpecialPlanetControllable.sol";
 import "../../../contracts/permanences/UserSpecialPlanetPermanence.sol";
 import "../../../contracts/permanences/SpecialPlanetIdToDataPermanence.sol";
 
-contract TestUserSpecialPlanetControllable is UserSpecialPlanetControllable {
+contract TestSpecialPlanetControllable is SpecialPlanetControllable {
   UserSpecialPlanetPermanence private _p = new UserSpecialPlanetPermanence();
   SpecialPlanetIdToDataPermanence private _idToDataP = new SpecialPlanetIdToDataPermanence();
 

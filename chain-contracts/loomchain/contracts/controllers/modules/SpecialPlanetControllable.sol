@@ -5,7 +5,7 @@ import "./TimeGettable.sol";
 import "../../permanences/UserSpecialPlanetPermanence.sol";
 import "../../permanences/SpecialPlanetIdToDataPermanence.sol";
 
-contract UserSpecialPlanetControllable is TimeGettable {
+contract SpecialPlanetControllable is TimeGettable {
   UserSpecialPlanetPermanence private _userSpecialPlanetPermanence;
   SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 

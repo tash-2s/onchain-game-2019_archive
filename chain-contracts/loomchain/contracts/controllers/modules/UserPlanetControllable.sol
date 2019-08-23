@@ -1,12 +1,12 @@
 pragma solidity 0.5.11;
 
 import "./UserNormalPlanetControllable.sol";
-import "./UserSpecialPlanetControllable.sol";
+import "./SpecialPlanetControllable.sol";
 import "./UserGoldControllable.sol";
 
 contract UserPlanetControllable is
   UserNormalPlanetControllable,
-  UserSpecialPlanetControllable,
+  SpecialPlanetControllable,
   UserGoldControllable
 {
   function setupUserPlanetControllable(
