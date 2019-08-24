@@ -5,7 +5,7 @@ import { LoomWeb3 } from "../misc/loom"
 
 const createInitialState = () => {
   return {
-    address: LoomWeb3.isGuest ? null : LoomWeb3.accountAddress,
+    address: LoomWeb3.isGuest ? null : LoomWeb3.loginAddress,
     logining: false
   }
 }
@@ -14,9 +14,9 @@ export type CurrentUserState = ReturnType<typeof createInitialState>
 
 export const createCurrentUserReducer = () =>
   reducerWithInitialState(createInitialState())
-    .case(CurrentUserActions.login, (state, bool) => ({
+    .case(CurrentUserActions.login, (state, payload) => ({
       ...state,
-      address: null,
-      logining: bool
+      address: payload,
+      logining: !payload
     }))
     .build()

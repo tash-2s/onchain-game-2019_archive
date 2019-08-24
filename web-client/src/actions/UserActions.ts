@@ -29,7 +29,7 @@ export class UserActions extends AbstractActions {
         cs.NormalPlanetController.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
       )
 
-      const address = LoomWeb3.accountAddress
+      const address = LoomWeb3.loginAddress
       const response = await callLoomContractMethod(cs =>
         cs.UserController.methods.getUser(address)
       )
@@ -46,7 +46,7 @@ export class UserActions extends AbstractActions {
   static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      const address = LoomWeb3.accountAddress
+      const address = LoomWeb3.loginAddress
       await sendLoomContractMethod(cs =>
         cs.NormalPlanetController.methods.rankupPlanet(userPlanetId, targetRank)
       )
@@ -60,7 +60,7 @@ export class UserActions extends AbstractActions {
   static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      const address = LoomWeb3.accountAddress
+      const address = LoomWeb3.loginAddress
       await sendLoomContractMethod(cs =>
         cs.NormalPlanetController.methods.removePlanet(userPlanetId)
       )

@@ -9,7 +9,7 @@ export class UsersActions extends AbstractActions {
     const response = await callLoomContractMethod(cs =>
       cs.RemarkableUserController.methods.getUsers()
     )
-    const address = LoomWeb3.accountAddress
+    const address = LoomWeb3.loginAddress
 
     this.dispatch(UsersActions.setUsers([address, response]))
   }

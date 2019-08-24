@@ -1,36 +1,91 @@
-import { Client, LocalAddress, CryptoUtils, LoomProvider } from "loom-js"
+import {
+  Client,
+  Address,
+  LocalAddress,
+  CryptoUtils,
+  LoomProvider,
+  Contracts,
+  EthersSigner,
+  createDefaultTxMiddleware,
+  NonceTxMiddleware,
+  SignedEthTxMiddleware
+} from "loom-js"
 import Web3 from "web3"
+import { ethers } from "ethers"
+
 import ChainEnv from "../chain/env.json"
 import UserAbi from "../chain/abi/UserController.json"
 import NormalPlanetAbi from "../chain/abi/NormalPlanetController.json"
 import RemarkableUserAbi from "../chain/abi/RemarkableUserController.json"
 
 export class LoomWeb3 {
-  static isGuest: boolean
+  static isGuest = true
   static web3: Web3
-  static accountAddress: string
+  static web3FromAddress: string
+  static mediatorPrivateKey: Uint8Array
+  static loginAddress: string
 
   static setup() {
-    let privateKey = LoomKeyStorage.readPrivateKey()
-    if (privateKey) {
-      LoomWeb3.isGuest = false
-    } else {
-      privateKey = new Uint8Array(new Array(64).fill(0)) // guest
-      LoomWeb3.isGuest = true
-    }
-
-    LoomWeb3.accountAddress = LoomUtil.getAddressFromPrivateKey(privateKey)
+    const [privateKey, _, address] = LoomUtil.generateAccount()
+    LoomWeb3.mediatorPrivateKey = privateKey
     LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.getClient(), privateKey) as any)
+    LoomWeb3.web3FromAddress = address
   }
 
-  static resetWithNewAccount() {
-    const [privateKey, _, address] = LoomUtil.generateAccount()
-    LoomKeyStorage.writePrivateKey(privateKey)
-    LoomWeb3.isGuest = false
-    LoomWeb3.accountAddress = address
-    LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.getClient(), privateKey) as any)
+  static mediatorPublicKey() {
+    return CryptoUtils.publicKeyFromPrivateKey(LoomWeb3.mediatorPrivateKey)
+  }
 
-    return address
+  static mediatorLocalAddressInstance() {
+    return LocalAddress.fromPublicKey(LoomWeb3.mediatorPublicKey())
+  }
+
+  static mediatorAddress() {
+    return LoomWeb3.mediatorLocalAddressInstance().toChecksumString()
+  }
+
+  static async loginWithEth(signer: ethers.Signer) {
+    const ethAddress = await signer.getAddress()
+
+    const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
+    const client = LoomUtil.getClient()
+    client.txMiddleware = createDefaultTxMiddleware(client, LoomWeb3.mediatorPrivateKey)
+
+    const addressMapper = await Contracts.AddressMapper.createAsync(
+      client,
+      new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance())
+    )
+
+    if (await addressMapper.hasMappingAsync(ethAddressInstance)) {
+      console.log("Mapping already exists.")
+      const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
+      console.log("mapping.to: " + mapping.to.local.toString())
+      console.log("mapping.from: " + mapping.from.local.toString())
+      LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
+    } else {
+      const from = new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance()) // TODO
+      console.log("Mapping " + from + " and " + ethAddressInstance)
+      const ethersSigner = new EthersSigner(signer)
+      await addressMapper.addIdentityMappingAsync(from, ethAddressInstance, ethersSigner)
+      const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
+      console.log("mapping.to: " + mapping.to.local.toString())
+      console.log("mapping.from: " + mapping.from.local.toString())
+      LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
+    }
+
+    const loomProvider = new LoomProvider(client, LoomWeb3.mediatorPrivateKey)
+    loomProvider.callerChainId = "eth"
+    loomProvider.setMiddlewaresForAddress(ethAddressInstance.local.toString(), [
+      new NonceTxMiddleware(ethAddressInstance, client),
+      new SignedEthTxMiddleware(signer)
+    ])
+
+    const newWeb3 = new Web3(loomProvider)
+    LoomWeb3.web3 = newWeb3
+    LoomWeb3.web3FromAddress = ethAddress
+    LoomWeb3.isGuest = false
+
+    return LoomWeb3.loginAddress
   }
 
   static async getLoomTime() {
@@ -53,23 +108,6 @@ const getLoomContracts = () => ({
     ChainEnv.contractsAddresses.RemarkableUserController
   )
 })
-
-const PRIVATE_KEY_NAME = "privateKey"
-class LoomKeyStorage {
-  static readPrivateKey() {
-    const privateKeyString = localStorage.getItem(PRIVATE_KEY_NAME)
-
-    if (privateKeyString) {
-      return Uint8Array.from(Buffer.from(privateKeyString, "hex")) // TODO: right?
-    } else {
-      return false
-    }
-  }
-
-  static writePrivateKey(privateKey: Uint8Array) {
-    localStorage.setItem(PRIVATE_KEY_NAME, Buffer.from(privateKey).toString("hex"))
-  }
-}
 
 class LoomUtil {
   static getClient() {
@@ -96,7 +134,7 @@ export const callLoomContractMethod = async (
 ) => {
   console.time("call-loom")
 
-  const r = await f(getLoomContracts()).call({ from: LoomWeb3.accountAddress })
+  const r = await f(getLoomContracts()).call({ from: LoomWeb3.web3FromAddress })
 
   console.timeEnd("call-loom")
   console.log(r)
@@ -108,8 +146,9 @@ export const sendLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
   console.time("send-loom")
+  console.log(LoomWeb3.web3.eth.defaultAccount)
 
-  const r = await f(getLoomContracts()).send({ from: LoomWeb3.accountAddress })
+  const r = await f(getLoomContracts()).send({ from: LoomWeb3.web3FromAddress })
 
   console.timeEnd("send-loom")
   console.log(r)
