@@ -6,7 +6,8 @@ import { LoomWeb3 } from "../misc/loom"
 const createInitialState = () => {
   return {
     address: LoomWeb3.isGuest ? null : LoomWeb3.loginAddress,
-    logining: false
+    logining: false,
+    blocked: false
   }
 }
 
@@ -18,5 +19,9 @@ export const createCurrentUserReducer = () =>
       ...state,
       address: payload,
       logining: !payload
+    }))
+    .case(CurrentUserActions.block, state => ({
+      ...state,
+      blocked: true
     }))
     .build()

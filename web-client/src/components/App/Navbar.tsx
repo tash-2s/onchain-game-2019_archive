@@ -14,7 +14,13 @@ interface Props {
 export function Navbar(props: Props) {
   // when an error occurs, this should be un-clickable, because the store will continue to have the error state
   const mobileClass = props.activatedNavbarMenuForMobile ? "is-active" : ""
-  const loginModal = props.currentUser.logining ? <LoginModal /> : <></>
+  const modal = props.currentUser.blocked ? (
+    <BlockModal />
+  ) : props.currentUser.logining ? (
+    <LoginModal />
+  ) : (
+    <></>
+  )
 
   return (
     <>
@@ -49,13 +55,30 @@ export function Navbar(props: Props) {
           </div>
         </div>
       </nav>
-      {loginModal}
+      {modal}
     </>
   )
 }
 
+function BlockModal(props: {}) {
+  const clickHandle = () => location.replace(location.pathname)
+
+  return (
+    <ModalWithoutClose>
+      <div>your provider is changed.</div>
+      <button className={"button"} onClick={clickHandle}>
+        Reload
+      </button>
+    </ModalWithoutClose>
+  )
+}
+
 function LoginModal(props: {}) {
-  return <ModalWithoutClose>Sign in with your MetaMask</ModalWithoutClose>
+  return (
+    <ModalWithoutClose>
+      <div className="is-loading">Check your MetaMask...</div>
+    </ModalWithoutClose>
+  )
 }
 
 function NavEndContent(props: Props) {

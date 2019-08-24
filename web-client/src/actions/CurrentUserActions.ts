@@ -12,7 +12,6 @@ export class CurrentUserActions extends AbstractActions {
 
     const provider = (window as any).ethereum
     const isDappBrowser = typeof provider !== "undefined"
-    let account = ""
     if (!isDappBrowser) {
       throw new Error("you need a dapp browser")
       // alert('Looks like you need a Dapp browser to get started.')
@@ -20,7 +19,7 @@ export class CurrentUserActions extends AbstractActions {
     } else {
       try {
         // ask users to sign in and reveal their accounts
-        account = (await provider.enable())[0]
+        await provider.enable()
         // verify the user is on the correct network
         // see also: https://github.com/MetaMask/metamask-extension/issues/3663
         if (provider.networkVersion !== "5777") {
@@ -28,7 +27,10 @@ export class CurrentUserActions extends AbstractActions {
           // alert('This application requires the main network, please switch it in your MetaMask UI.')
         }
 
-        EthWeb3.setup(provider)
+        EthWeb3.setup(provider, () => {
+          new CurrentUserActions(this.dispatch).block()
+          throw new Error("blocked")
+        })
       } catch (error) {
         // the user rejected the request
         throw new Error("maybe rejected")
@@ -39,5 +41,10 @@ export class CurrentUserActions extends AbstractActions {
     const loginAddress = await LoomWeb3.loginWithEth(EthWeb3.signer)
 
     this.dispatch(CurrentUserActions.login(loginAddress))
+  }
+
+  static block = CurrentUserActions.creator("block")
+  block = () => {
+    this.dispatch(CurrentUserActions.block())
   }
 }
