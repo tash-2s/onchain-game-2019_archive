@@ -56,11 +56,7 @@ export class LoomWeb3 {
       new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance())
     )
     if (!(await addressMapper.hasMappingAsync(ethAddressInstance))) {
-      await addressMapper.addIdentityMappingAsync(
-        new Address(client.chainId, LocalAddress.fromHexString(LoomUtil.generateAccount().address)),
-        ethAddressInstance,
-        new EthersSigner(signer)
-      )
+      await addMappingWithNewLoomAccount(signer)
     }
     const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
     console.log(
@@ -107,7 +103,6 @@ const getLoomContracts = () => ({
 class LoomUtil {
   static getClient() {
     const p = [ChainEnv.chainId, ChainEnv.writeUrl, ChainEnv.readUrl] as const
-    console.log(...p)
     return new Client(...p)
   }
 
@@ -122,6 +117,32 @@ class LoomUtil {
     const address = LocalAddress.fromPublicKey(publicKey).toChecksumString()
     return { privateKey, publicKey, address }
   }
+}
+
+const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
+  const ethAddressInstance = new Address(
+    "eth",
+    LocalAddress.fromHexString(await signer.getAddress())
+  )
+  const newLoomAccount = LoomUtil.generateAccount()
+  const client = LoomUtil.getClient()
+  client.txMiddleware = createDefaultTxMiddleware(client, newLoomAccount.privateKey)
+  const newLoomAddressInstance = new Address(
+    client.chainId,
+    LocalAddress.fromPublicKey(newLoomAccount.publicKey)
+  )
+  const addressMapper = await Contracts.AddressMapper.createAsync(client, newLoomAddressInstance)
+
+  // This is needed before calling addIdentityMappingAsync.
+  // Otherwise it throws an error.
+  // Weired implementation...
+  await addressMapper.hasMappingAsync(ethAddressInstance)
+
+  await addressMapper.addIdentityMappingAsync(
+    newLoomAddressInstance,
+    ethAddressInstance,
+    new EthersSigner(signer)
+  )
 }
 
 export const callLoomContractMethod = async (
