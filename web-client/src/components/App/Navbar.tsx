@@ -76,7 +76,8 @@ function BlockModal(props: {}) {
 function LoginModal(props: {}) {
   return (
     <ModalWithoutClose>
-      <div className="is-loading">Check your MetaMask...</div>
+      <div>Check your MetaMask...</div>
+      <div className="loader" />
     </ModalWithoutClose>
   )
 }
