@@ -50,7 +50,7 @@ export class Template extends React.Component<{
         <Navbar
           currentUser={this.props.currentUser}
           activatedNavbarMenuForMobile={this.props.templateUi.activatedNavbarMenuForMobile}
-          signup={this.props.currentUserActions.signup}
+          login={this.props.currentUserActions.login}
           toggleNavbarMenuForMobile={this.props.templateUiActions.toggleNavbarMenuForMobile}
         />
         <section className={"section"}>
