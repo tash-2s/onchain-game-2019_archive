@@ -26,7 +26,7 @@ export class LoomWeb3 {
   static loginAddress: string
 
   static setup() {
-    const [privateKey, _, address] = LoomUtil.generateAccount()
+    const { privateKey, address } = LoomUtil.generateAccount()
     LoomWeb3.mediatorPrivateKey = privateKey
     LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.getClient(), privateKey) as any)
     LoomWeb3.web3FromAddress = address
@@ -55,23 +55,18 @@ export class LoomWeb3 {
       client,
       new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance())
     )
-
-    if (await addressMapper.hasMappingAsync(ethAddressInstance)) {
-      console.log("Mapping already exists.")
-      const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
-      console.log("mapping.to: " + mapping.to.local.toString())
-      console.log("mapping.from: " + mapping.from.local.toString())
-      LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
-    } else {
-      const from = new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance()) // TODO
-      console.log("Mapping " + from + " and " + ethAddressInstance)
-      const ethersSigner = new EthersSigner(signer)
-      await addressMapper.addIdentityMappingAsync(from, ethAddressInstance, ethersSigner)
-      const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
-      console.log("mapping.to: " + mapping.to.local.toString())
-      console.log("mapping.from: " + mapping.from.local.toString())
-      LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
+    if (!(await addressMapper.hasMappingAsync(ethAddressInstance))) {
+      await addressMapper.addIdentityMappingAsync(
+        new Address(client.chainId, LocalAddress.fromHexString(LoomUtil.generateAccount().address)),
+        ethAddressInstance,
+        new EthersSigner(signer)
+      )
     }
+    const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
+    console.log(
+      `eth: ${mapping.from.local.toChecksumString()}, loom: ${mapping.to.local.toChecksumString()}`
+    )
+    LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
 
     const loomProvider = new LoomProvider(client, LoomWeb3.mediatorPrivateKey)
     loomProvider.callerChainId = "eth"
@@ -125,7 +120,7 @@ class LoomUtil {
     const privateKey = CryptoUtils.generatePrivateKey()
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
     const address = LocalAddress.fromPublicKey(publicKey).toChecksumString()
-    return [privateKey, publicKey, address] as const
+    return { privateKey, publicKey, address }
   }
 }
 
@@ -146,7 +141,6 @@ export const sendLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
   console.time("send-loom")
-  console.log(LoomWeb3.web3.eth.defaultAccount)
 
   const r = await f(getLoomContracts()).send({ from: LoomWeb3.web3FromAddress })
 
