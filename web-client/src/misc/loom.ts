@@ -14,9 +14,9 @@ import Web3 from "web3"
 import { ethers } from "ethers"
 
 import ChainEnv from "../chain/env.json"
-import UserAbi from "../chain/abi/UserController.json"
-import NormalPlanetAbi from "../chain/abi/NormalPlanetController.json"
-import RemarkableUserAbi from "../chain/abi/RemarkableUserController.json"
+import UserAbi from "../chain/abi/loom/UserController.json"
+import NormalPlanetAbi from "../chain/abi/loom/NormalPlanetController.json"
+import RemarkableUserAbi from "../chain/abi/loom/RemarkableUserController.json"
 
 export class LoomWeb3 {
   static isGuest = true
@@ -88,21 +88,21 @@ export class LoomWeb3 {
 const getLoomContracts = () => ({
   UserController: new LoomWeb3.web3.eth.Contract(
     UserAbi,
-    ChainEnv.contractsAddresses.UserController
+    ChainEnv.loomContractAddresses.UserController
   ),
   NormalPlanetController: new LoomWeb3.web3.eth.Contract(
     NormalPlanetAbi,
-    ChainEnv.contractsAddresses.NormalPlanetController
+    ChainEnv.loomContractAddresses.NormalPlanetController
   ),
   RemarkableUserController: new LoomWeb3.web3.eth.Contract(
     RemarkableUserAbi,
-    ChainEnv.contractsAddresses.RemarkableUserController
+    ChainEnv.loomContractAddresses.RemarkableUserController
   )
 })
 
 class LoomUtil {
   static getClient() {
-    const p = [ChainEnv.chainId, ChainEnv.writeUrl, ChainEnv.readUrl] as const
+    const p = [ChainEnv.loom.chainId, ChainEnv.loom.writeUrl, ChainEnv.loom.readUrl] as const
     return new Client(...p)
   }
 

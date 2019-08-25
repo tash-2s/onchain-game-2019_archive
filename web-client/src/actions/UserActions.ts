@@ -1,5 +1,6 @@
 import { AbstractActions } from "./AbstractActions"
 import { callLoomContractMethod, sendLoomContractMethod, LoomWeb3 } from "../misc/loom"
+import { EthWeb3 } from "../misc/eth"
 
 export type GetUserResponse = any // TODO
 
@@ -15,6 +16,19 @@ export class UserActions extends AbstractActions {
   setTargetUser = async (address: string) => {
     const response = await callLoomContractMethod(cs => cs.UserController.methods.getUser(address))
     this.dispatch(UserActions.setTargetUser({ address, response }))
+  }
+
+  static setTargetUserSpecialPlanetTokens = UserActions.creator<Array<string>>(
+    "setTargetUserSpecialPlanetTokens"
+  )
+  setTargetUserSpecialPlanetTokens = async (address: string) => {
+    const tokenIds: Array<string> = []
+    const balance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", address)
+    for (let i = 0; i < balance; i++) {
+      tokenIds.push(await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", address, i))
+    }
+
+    this.dispatch(UserActions.setTargetUserSpecialPlanetTokens(tokenIds))
   }
 
   static clearTargetUser = UserActions.creator("clearTargetUser")

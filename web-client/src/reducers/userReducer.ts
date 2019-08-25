@@ -10,6 +10,7 @@ interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
+  specialPlanetTokens: Array<string> | null
 }
 
 export interface UserNormalPlanet {
@@ -32,41 +33,54 @@ export const createUserReducer = () =>
       ...state,
       targetUser: {
         ...restructureUserFromResponse(payload.response),
-        address: payload.address
+        address: payload.address,
+        specialPlanetTokens: null
       }
     }))
+    .case(UserActions.setTargetUserSpecialPlanetTokens, (state, payload) => {
+      if (!state.targetUser) {
+        return { ...state }
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          specialPlanetTokens: payload
+        }
+      }
+    })
     .case(UserActions.clearTargetUser, state => ({
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, (state, payload) => ({
-      ...state,
-      targetUser: {
-        ...restructureUserFromResponse(payload.response),
-        address: payload.address
-      }
-    }))
-    .case(UserActions.rankupUserPlanet, (state, payload) => ({
-      ...state,
-      targetUser: {
-        ...restructureUserFromResponse(payload.response),
-        address: payload.address
-      }
-    }))
-    .case(UserActions.removeUserPlanet, (state, payload) => ({
-      ...state,
-      targetUser: {
-        ...restructureUserFromResponse(payload.response),
-        address: payload.address
-      }
-    }))
+    .case(UserActions.getPlanet, buildStateFromGetUserResponse)
+    .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
+    .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
     .build()
+
+const buildStateFromGetUserResponse = (
+  state: UserState,
+  payload: { address: string; response: GetUserResponse }
+): UserState => {
+  if (!state.targetUser) {
+    return { ...state }
+  }
+  return {
+    ...state,
+    targetUser: {
+      ...state.targetUser,
+      ...restructureUserFromResponse(payload.response),
+      address: payload.address
+    }
+  }
+}
 
 const strToNum = (str: string): number => parseInt(str, 10)
 
 const restructureUserFromResponse = (
   response: GetUserResponse
-): Omit<TargetUserState, "address"> => {
+): Omit<Omit<TargetUserState, "address">, "specialPlanetTokens"> => {
   const confirmedGold = response[0]
   const goldConfirmedAt = response[1]
   const unpIds = response[2]

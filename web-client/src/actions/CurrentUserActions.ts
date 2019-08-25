@@ -2,6 +2,7 @@ import { AbstractActions } from "./AbstractActions"
 import Web3 from "web3"
 import { EthWeb3 } from "../misc/eth"
 import { LoomWeb3 } from "../misc/loom"
+import ChainEnv from "../chain/env.json"
 
 export class CurrentUserActions extends AbstractActions {
   private static creator = CurrentUserActions.getActionCreator()
@@ -22,7 +23,7 @@ export class CurrentUserActions extends AbstractActions {
         await provider.enable()
         // verify the user is on the correct network
         // see also: https://github.com/MetaMask/metamask-extension/issues/3663
-        if (provider.networkVersion !== "5777") {
+        if (provider.networkVersion !== ChainEnv.eth.networkId) {
           throw new Error("wrong network")
           // alert('This application requires the main network, please switch it in your MetaMask UI.')
         }

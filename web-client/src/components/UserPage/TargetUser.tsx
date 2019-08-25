@@ -34,6 +34,7 @@ export function TargetUser(props: {
       <h1 className={"title is-5"}>
         target user is {props.targetUser.address} {isMine ? "[this is me]" : ""}
       </h1>
+      {isMine ? <UserTokens user={props.targetUser} userActions={props.userActions} /> : <></>}
 
       <div className={"columns is-desktop"}>
         <div className={"column"}>
@@ -60,6 +61,26 @@ export function TargetUser(props: {
       </div>
     </>
   )
+}
+
+function UserTokens(props: { user: ComputedTargetUserState; userActions: UserActions }) {
+  React.useEffect(
+    () => {
+      props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
+    },
+    [props.user.address]
+  )
+
+  if (props.user.specialPlanetTokens) {
+    return (
+      <div className={"box"}>
+        <h2>ethereum</h2>
+        {props.user.specialPlanetTokens.join()}
+      </div>
+    )
+  } else {
+    return <div className={"box"}>loading...</div>
+  }
 }
 
 function WrappedPlanetList(props: {

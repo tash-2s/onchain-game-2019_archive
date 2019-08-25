@@ -45,7 +45,8 @@ export const computeUserState = (state: UserState, now: number) => {
       knowledge: knowledge,
       goldPerSec: goldPerSec,
       map: computeMap(ongoingGold, computedUserPlanets),
-      normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length)
+      normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length),
+      specialPlanetTokens: state.targetUser.specialPlanetTokens
     }
   }
 }
