@@ -148,25 +148,15 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
 export const callLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
-  console.time("call-loom")
-
   const r = await f(getLoomContracts()).call({ from: LoomWeb3.web3FromAddress })
-
-  console.timeEnd("call-loom")
   console.log(r)
-
   return r
 }
 
 export const sendLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
-  console.time("send-loom")
-
   const r = await f(getLoomContracts()).send({ from: LoomWeb3.web3FromAddress })
-
-  console.timeEnd("send-loom")
   console.log(r)
-
   return r
 }
