@@ -1,10 +1,7 @@
 {
   "private": true,
   "license": "UNLICENSED",
-  "workspaces": [
-    "loomchain",
-    "ethereum"
-  ],
+  "workspaces": ["eth", "loom"],
   "scripts": {
     "lint": "prettier '*.js' --write"
   },

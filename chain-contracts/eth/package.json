@@ -1,7 +1,7 @@
 {
   "private": true,
   "license": "UNLICENSED",
-  "name": "ethereum",
+  "name": "eth",
   "version": "0.0.0",
   "scripts": {
     "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write",

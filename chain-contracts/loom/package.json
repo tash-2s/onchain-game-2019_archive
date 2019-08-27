@@ -1,7 +1,7 @@
 {
   "private": true,
   "license": "UNLICENSED",
-  "name": "loomchain",
+  "name": "loom",
   "version": "0.0.0",
   "scripts": {
     "loom": "./loom",

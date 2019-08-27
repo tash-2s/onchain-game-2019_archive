@@ -19,15 +19,15 @@ const {
 } = require("loom-js")
 const BN = require("bn.js")
 
-const MnemonicUtil = require("./ethereum/MnemonicUtil.js")
-const InfuraUtil = require("./ethereum/InfuraUtil.js")
-
-const EthereumTokenJSON = require("./ethereum/build/contracts/SpecialPlanet.json")
-const LoomchainTokenJSON = require("./loomchain/build/contracts/SpecialPlanetToken.json")
+const EthTokenJSON = require("./eth/build/contracts/SpecialPlanetToken.json")
+const LoomTokenJSON = require("./loom/build/contracts/SpecialPlanetToken.json")
 
 const RinkebyGatewayJSON = require("./Gateway.json")
 
 function loadRinkebyAccount() {
+  const MnemonicUtil = require("./eth/MnemonicUtil.js")
+  const InfuraUtil = require("./eth/InfuraUtil.js")
+
   const {privateKey} = new MnemonicUtil("rinkeby").getAddressAndPrivateKey()
   const infuraEndpoint = new InfuraUtil().getApiEndpoint()
 
@@ -40,7 +40,7 @@ function loadRinkebyAccount() {
 
 function loadExtdevAccount() {
   const privateKeyStr = fs.readFileSync(
-    path.join(__dirname, "./loomchain/extdev_private_key"),
+    path.join(__dirname, "./loom/extdev_private_key"),
     "utf-8"
   )
   const privateKey = CryptoUtils.B64ToUint8Array(privateKeyStr)
@@ -76,9 +76,9 @@ const mapContracts = async () => {
     const rinkebyNetworkId = await rinkeby.web3js.eth.net.getId()
     const extdevNetworkId = await extdev.web3js.eth.net.getId()
 
-    const tokenRinkebyAddress = EthereumTokenJSON.networks[rinkebyNetworkId].address
-    const rinkebyTxHash = EthereumTokenJSON.networks[rinkebyNetworkId].transactionHash
-    const tokenExtdevAddress = LoomchainTokenJSON.networks[extdevNetworkId].address
+    const tokenRinkebyAddress = EthTokenJSON.networks[rinkebyNetworkId].address
+    const rinkebyTxHash = EthTokenJSON.networks[rinkebyNetworkId].transactionHash
+    const tokenExtdevAddress = LoomTokenJSON.networks[extdevNetworkId].address
 
     const ownerExtdevAddr = Address.fromString(`${client.chainId}:${extdev.account}`)
     const gatewayContract = await Contracts.TransferGateway.createAsync(client, ownerExtdevAddr)
@@ -165,8 +165,8 @@ const withdrawToken = async tokenId => {
         tokenId: tokenId,
         ownerExtdevAddress: extdev.account,
         ownerRinkebyAddress: rinkeby.account.address,
-        tokenExtdevAddress: LoomchainTokenJSON.networks[extdevNetworkId].address,
-        tokenRinkebyAddress: EthereumTokenJSON.networks[rinkebyNetworkId].address,
+        tokenExtdevAddress: LoomTokenJSON.networks[extdevNetworkId].address,
+        tokenRinkebyAddress: EthTokenJSON.networks[rinkebyNetworkId].address,
         timeout: options.timeout ? options.timeout * 1000 : 120000
       })
       console.log(`Token ${tokenId} deposited to DAppChain Gateway...`)
@@ -250,8 +250,8 @@ async function depositTokenToExtdevGateway({
 async function getExtdevTokenContract(web3js) {
   const networkId = await web3js.eth.net.getId()
   return new web3js.eth.Contract(
-    LoomchainTokenJSON.abi,
-    LoomchainTokenJSON.networks[networkId].address
+    LoomTokenJSON.abi,
+    LoomTokenJSON.networks[networkId].address
   )
 }
 
@@ -260,7 +260,7 @@ async function withdrawTokenFromRinkebyGateway({web3js, tokenId, accountAddress,
   const networkId = await web3js.eth.net.getId()
 
   const gasEstimate = await gatewayContract.methods
-    .withdrawERC721(tokenId, signature, EthereumTokenJSON.networks[networkId].address)
+    .withdrawERC721(tokenId, signature, EthTokenJSON.networks[networkId].address)
     .estimateGas({from: accountAddress, gas})
 
   if (gasEstimate == gas) {
@@ -268,7 +268,7 @@ async function withdrawTokenFromRinkebyGateway({web3js, tokenId, accountAddress,
   }
 
   return gatewayContract.methods
-    .withdrawERC721(tokenId, signature, EthereumTokenJSON.networks[networkId].address)
+    .withdrawERC721(tokenId, signature, EthTokenJSON.networks[networkId].address)
     .send({from: accountAddress, gas: gasEstimate})
 }
 
