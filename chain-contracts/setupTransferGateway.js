@@ -1,4 +1,4 @@
-// https://github.com/loomnetwork/truffle-dappchain-example/blob/master/gateway-cli.j://github.com/loomnetwork/truffle-dappchain-example/blob/master/gateway-cli.js
+// https://github.com/loomnetwork/truffle-dappchain-example/blob/master/gateway-cli.js
 // https://loomx.io/developers/en/extdev-transfer-gateway.html
 
 const fs = require("fs")
