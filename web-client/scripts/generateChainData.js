@@ -34,9 +34,9 @@ if (!envDef) {
   throw new Error()
 }
 
-const JSON_PATH = "../k2-chain-contracts/loomchain/build/contracts/"
+const LOOM_JSON_PATH = "../k2-chain-contracts/loom/build/contracts/"
 const loomContractAddresses = {} // TODO: save k2-chain-contracts's commit hash too
-fs.readdirSync(JSON_PATH).forEach(fileName => {
+fs.readdirSync(LOOM_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
 
   if (contractName.slice(-10) !== "Controller") {
@@ -47,7 +47,7 @@ fs.readdirSync(JSON_PATH).forEach(fileName => {
     return
   }
 
-  const file = fs.readFileSync(JSON_PATH + fileName)
+  const file = fs.readFileSync(LOOM_JSON_PATH + fileName)
   const parsedJson = JSON.parse(file)
 
   fs.writeFileSync(
@@ -57,7 +57,7 @@ fs.readdirSync(JSON_PATH).forEach(fileName => {
   loomContractAddresses[contractName] = parsedJson.networks[envDef.loom.networkId].address
 })
 
-const ETH_JSON_PATH = "../k2-chain-contracts/ethereum/build/contracts/"
+const ETH_JSON_PATH = "../k2-chain-contracts/eth/build/contracts/"
 const ethContractAddresses = {}
 fs.readdirSync(ETH_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
