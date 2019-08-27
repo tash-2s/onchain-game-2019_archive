@@ -28,7 +28,7 @@ export class LoomWeb3 {
   static setup() {
     const { privateKey, address } = LoomUtil.generateAccount()
     LoomWeb3.mediatorPrivateKey = privateKey
-    LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.getClient(), privateKey) as any)
+    LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.createClient(), privateKey) as any)
     LoomWeb3.web3FromAddress = address
   }
 
@@ -48,7 +48,7 @@ export class LoomWeb3 {
     const ethAddress = await signer.getAddress()
 
     const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
-    const client = LoomUtil.getClient()
+    const client = LoomUtil.createClient()
     client.txMiddleware = createDefaultTxMiddleware(client, LoomWeb3.mediatorPrivateKey)
 
     const addressMapper = await Contracts.AddressMapper.createAsync(
@@ -72,6 +72,8 @@ export class LoomWeb3 {
     ])
 
     const newWeb3 = new Web3(loomProvider)
+    const oldProvider = LoomWeb3.web3.currentProvider as LoomProvider
+    oldProvider.disconnect()
     LoomWeb3.web3 = newWeb3
     LoomWeb3.web3FromAddress = ethAddress
     LoomWeb3.isGuest = false
@@ -101,14 +103,9 @@ const getLoomContracts = () => ({
 })
 
 class LoomUtil {
-  static getClient() {
+  static createClient() {
     const p = [ChainEnv.loom.chainId, ChainEnv.loom.writeUrl, ChainEnv.loom.readUrl] as const
     return new Client(...p)
-  }
-
-  static getAddressFromPrivateKey(privateKey: Uint8Array) {
-    const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-    return LocalAddress.fromPublicKey(publicKey).toChecksumString()
   }
 
   static generateAccount() {
@@ -125,7 +122,7 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
     LocalAddress.fromHexString(await signer.getAddress())
   )
   const newLoomAccount = LoomUtil.generateAccount()
-  const client = LoomUtil.getClient()
+  const client = LoomUtil.createClient()
   client.txMiddleware = createDefaultTxMiddleware(client, newLoomAccount.privateKey)
   const newLoomAddressInstance = new Address(
     client.chainId,
@@ -143,6 +140,7 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
     ethAddressInstance,
     new EthersSigner(signer)
   )
+  client.disconnect()
 }
 
 export const callLoomContractMethod = async (
