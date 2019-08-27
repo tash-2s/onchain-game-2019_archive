@@ -5,7 +5,7 @@ import { LoomWeb3 } from "../misc/loom"
 
 const createInitialState = () => {
   return {
-    address: LoomWeb3.isGuest ? null : LoomWeb3.loginAddress,
+    address: LoomWeb3.isGuest ? null : LoomWeb3.address,
     logining: false,
     blocked: false
   }

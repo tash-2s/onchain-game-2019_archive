@@ -61,10 +61,11 @@ fs.readdirSync(LOOM_JSON_PATH).forEach(fileName => {
 
 const ETH_JSON_PATH = "../k2-chain-contracts/eth/build/contracts/"
 const ethContractAddresses = {}
+const requiredEthContractNames = ["SpecialPlanetToken", "SpecialPlanetTokenShop"]
 fs.readdirSync(ETH_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
 
-  if (contractName !== "SpecialPlanetToken") {
+  if (!requiredEthContractNames.includes(contractName)) {
     return
   }
 

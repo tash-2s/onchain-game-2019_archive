@@ -28,7 +28,7 @@ export class CurrentUserActions extends AbstractActions {
           // alert('This application requires the main network, please switch it in your MetaMask UI.')
         }
 
-        EthWeb3.setup(provider, () => {
+        await EthWeb3.setup(provider, () => {
           new CurrentUserActions(this.dispatch).block()
           throw new Error("blocked")
         })

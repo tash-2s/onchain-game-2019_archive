@@ -22,9 +22,9 @@ import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 export class LoomWeb3 {
   static isGuest = true
   static web3: Web3
-  static web3FromAddress: string
+  static web3FromAddress: string // eth address
   static mediatorPrivateKey: Uint8Array
-  static loginAddress: string
+  static address: string // loom address
 
   static setup() {
     const { privateKey, address } = LoomUtil.generateAccount()
@@ -63,7 +63,7 @@ export class LoomWeb3 {
     console.log(
       `eth: ${mapping.from.local.toChecksumString()}, loom: ${mapping.to.local.toChecksumString()}`
     )
-    LoomWeb3.loginAddress = mapping.to.local.toChecksumString()
+    LoomWeb3.address = mapping.to.local.toChecksumString()
 
     const loomProvider = new LoomProvider(client, LoomWeb3.mediatorPrivateKey)
     loomProvider.callerChainId = "eth"
@@ -79,7 +79,7 @@ export class LoomWeb3 {
     LoomWeb3.web3FromAddress = ethAddress
     LoomWeb3.isGuest = false
 
-    return LoomWeb3.loginAddress
+    return LoomWeb3.address
   }
 
   static async getLoomTime() {
