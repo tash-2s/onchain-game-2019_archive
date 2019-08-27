@@ -11,6 +11,7 @@ interface TargetUserState {
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
   specialPlanetTokens: { eth: Array<string>; loom: Array<string> } | null
+  specialPlanetTokenBuyTx: string | null
 }
 
 export interface UserNormalPlanet {
@@ -34,7 +35,8 @@ export const createUserReducer = () =>
       targetUser: {
         ...restructureUserFromResponse(payload.response),
         address: payload.address,
-        specialPlanetTokens: null
+        specialPlanetTokens: null,
+        specialPlanetTokenBuyTx: null
       }
     }))
     .case(UserActions.setTargetUserSpecialPlanetTokens, (state, payload) => {
@@ -57,6 +59,19 @@ export const createUserReducer = () =>
     .case(UserActions.getPlanet, buildStateFromGetUserResponse)
     .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
     .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
+    .case(UserActions.buySpecialPlanetToken, (state, payload) => {
+      if (!state.targetUser) {
+        return { ...state }
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          specialPlanetTokenBuyTx: payload
+        }
+      }
+    })
     .build()
 
 const buildStateFromGetUserResponse = (
@@ -80,7 +95,7 @@ const strToNum = (str: string): number => parseInt(str, 10)
 
 const restructureUserFromResponse = (
   response: GetUserResponse
-): Omit<Omit<TargetUserState, "address">, "specialPlanetTokens"> => {
+): Pick<TargetUserState, "gold" | "userNormalPlanets"> => {
   const confirmedGold = response[0]
   const goldConfirmedAt = response[1]
   const unpIds = response[2]

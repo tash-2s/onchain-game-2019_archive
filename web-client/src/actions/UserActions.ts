@@ -23,11 +23,12 @@ export class UserActions extends AbstractActions {
     loom: Array<string>
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
+    const ethAddress = EthWeb3.address // TODO: this is not the target user...
     const ethTokenIds: Array<string> = []
-    const ethBalance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", address)
+    const ethBalance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", ethAddress)
     for (let i = 0; i < ethBalance; i++) {
       ethTokenIds.push(
-        await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", address, i)
+        await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", ethAddress, i)
       )
     }
 
@@ -99,6 +100,17 @@ export class UserActions extends AbstractActions {
         cs.UserController.methods.getUser(address)
       )
       this.dispatch(UserActions.removeUserPlanet({ address, response }))
+    })
+  }
+
+  static buySpecialPlanetToken = UserActions.creator<string>("buySpecialPlanetToken")
+  buySpecialPlanetToken = () => {
+    this.withLoading(async () => {
+      const price = await EthWeb3.callSpecialPlanetTokenShopMethod("price")
+      // I want to finish loading after I get the tx hash
+      EthWeb3.sendSpecialPlanetTokenShopMethod("sell", price).on("transactionHash", hash => {
+        this.dispatch(UserActions.buySpecialPlanetToken(hash))
+      })
     })
   }
 }

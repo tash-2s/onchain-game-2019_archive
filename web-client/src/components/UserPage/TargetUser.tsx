@@ -72,10 +72,15 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
   )
 
   if (props.user.specialPlanetTokens) {
+    const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
     return (
       <div className={"box"}>
         <h2>eth</h2>
         {props.user.specialPlanetTokens.eth.join()}
+        <br />
+        <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
+        {props.user.specialPlanetTokenBuyTx}
+        <button onClick={reload}>reload</button>
         <h2>loom</h2>
         {props.user.specialPlanetTokens.loom.join()}
       </div>
