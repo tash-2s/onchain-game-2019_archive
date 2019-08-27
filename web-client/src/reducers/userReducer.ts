@@ -12,6 +12,7 @@ interface TargetUserState {
   userNormalPlanets: Array<UserNormalPlanet>
   specialPlanetTokens: { eth: Array<string>; loom: Array<string> } | null
   specialPlanetTokenBuyTx: string | null
+  specialPlanetTokenTransferToLoomTx: string | null
 }
 
 export interface UserNormalPlanet {
@@ -36,7 +37,8 @@ export const createUserReducer = () =>
         ...restructureUserFromResponse(payload.response),
         address: payload.address,
         specialPlanetTokens: null,
-        specialPlanetTokenBuyTx: null
+        specialPlanetTokenBuyTx: null,
+        specialPlanetTokenTransferToLoomTx: null
       }
     }))
     .case(UserActions.setTargetUserSpecialPlanetTokens, (state, payload) => {
@@ -69,6 +71,19 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetTokenBuyTx: payload
+        }
+      }
+    })
+    .case(UserActions.transferTokenToLoom, (state, payload) => {
+      if (!state.targetUser) {
+        return { ...state }
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          specialPlanetTokenTransferToLoomTx: payload
         }
       }
     })

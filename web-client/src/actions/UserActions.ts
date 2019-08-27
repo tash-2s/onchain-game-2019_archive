@@ -119,4 +119,18 @@ export class UserActions extends AbstractActions {
       new AppActions(this.dispatch).stopLoading()
     })
   }
+
+  static transferTokenToLoom = UserActions.creator<string>("transferTokenToLoom")
+  transferTokenToLoom = (tokenId: string) => {
+    new AppActions(this.dispatch).startLoading()
+
+    EthWeb3.sendSpecialPlanetTokenMethod("depositToGateway", tokenId).on(
+      "transactionHash",
+      hash => {
+        this.dispatch(UserActions.transferTokenToLoom(hash))
+
+        new AppActions(this.dispatch).stopLoading()
+      }
+    )
+  }
 }

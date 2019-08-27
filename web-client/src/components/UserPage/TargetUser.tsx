@@ -74,10 +74,23 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
 
   if (props.user.specialPlanetTokens) {
     const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
+    const ethTokens = props.user.specialPlanetTokens.eth.map(tokenId => {
+      const onClick = () => props.userActions.transferTokenToLoom(tokenId)
+      return (
+        <li key={tokenId}>
+          {tokenId}
+          <button onClick={onClick}>transfer to loom</button>
+        </li>
+      )
+    })
+    const msg = props.user.specialPlanetTokenTransferToLoomTx
+      ? `requested. this can take a while. eth tx: ${props.user.specialPlanetTokenTransferToLoomTx}`
+      : ""
     return (
       <div className={"box"}>
         <h2>eth</h2>
-        {props.user.specialPlanetTokens.eth.join()}
+        <ul>{ethTokens}</ul>
+        {msg}
         <br />
         <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
         {props.user.specialPlanetTokenBuyTx}

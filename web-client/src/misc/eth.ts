@@ -22,12 +22,22 @@ export class EthWeb3 {
     EthWeb3.address = await EthWeb3.signer.getAddress()
   }
 
-  static callSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
-    const specialPlanetToken = new EthWeb3.web3.eth.Contract(
+  static specialPlanetToken = () => {
+    return new EthWeb3.web3.eth.Contract(
       SpecialPlanetTokenABI,
       ChainEnv.ethContractAddresses.SpecialPlanetToken
     )
-    return EthWeb3.callContractMethod(specialPlanetToken, methodName, ...args)
+  }
+
+  static callSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
+    return EthWeb3.callContractMethod(EthWeb3.specialPlanetToken(), methodName, ...args)
+  }
+
+  static sendSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
+    const from = EthWeb3.address
+    return EthWeb3.specialPlanetToken()
+      .methods[methodName](...args)
+      .send({ from })
   }
 
   static callSpecialPlanetTokenShopMethod = (methodName: string, ...args: Array<any>) => {
