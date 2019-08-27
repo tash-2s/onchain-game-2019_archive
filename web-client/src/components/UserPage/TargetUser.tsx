@@ -74,8 +74,10 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
   if (props.user.specialPlanetTokens) {
     return (
       <div className={"box"}>
-        <h2>ethereum</h2>
-        {props.user.specialPlanetTokens.join()}
+        <h2>eth</h2>
+        {props.user.specialPlanetTokens.eth.join()}
+        <h2>loom</h2>
+        {props.user.specialPlanetTokens.loom.join()}
       </div>
     )
   } else {

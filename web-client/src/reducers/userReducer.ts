@@ -10,7 +10,7 @@ interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
-  specialPlanetTokens: Array<string> | null
+  specialPlanetTokens: { eth: Array<string>; loom: Array<string> } | null
 }
 
 export interface UserNormalPlanet {

@@ -14,9 +14,10 @@ import Web3 from "web3"
 import { ethers } from "ethers"
 
 import ChainEnv from "../chain/env.json"
-import UserAbi from "../chain/abi/loom/UserController.json"
-import NormalPlanetAbi from "../chain/abi/loom/NormalPlanetController.json"
-import RemarkableUserAbi from "../chain/abi/loom/RemarkableUserController.json"
+import UserABI from "../chain/abi/loom/UserController.json"
+import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
+import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
+import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 
 export class LoomWeb3 {
   static isGuest = true
@@ -89,16 +90,20 @@ export class LoomWeb3 {
 
 const getLoomContracts = () => ({
   UserController: new LoomWeb3.web3.eth.Contract(
-    UserAbi,
+    UserABI,
     ChainEnv.loomContractAddresses.UserController
   ),
   NormalPlanetController: new LoomWeb3.web3.eth.Contract(
-    NormalPlanetAbi,
+    NormalPlanetABI,
     ChainEnv.loomContractAddresses.NormalPlanetController
   ),
   RemarkableUserController: new LoomWeb3.web3.eth.Contract(
-    RemarkableUserAbi,
+    RemarkableUserABI,
     ChainEnv.loomContractAddresses.RemarkableUserController
+  ),
+  SpecialPlanetToken: new LoomWeb3.web3.eth.Contract(
+    SpecialPlanetTokenABI,
+    ChainEnv.loomContractAddresses.SpecialPlanetToken
   )
 })
 

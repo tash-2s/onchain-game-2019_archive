@@ -18,17 +18,34 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
-  static setTargetUserSpecialPlanetTokens = UserActions.creator<Array<string>>(
-    "setTargetUserSpecialPlanetTokens"
-  )
+  static setTargetUserSpecialPlanetTokens = UserActions.creator<{
+    eth: Array<string>
+    loom: Array<string>
+  }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
-    const tokenIds: Array<string> = []
-    const balance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", address)
-    for (let i = 0; i < balance; i++) {
-      tokenIds.push(await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", address, i))
+    const ethTokenIds: Array<string> = []
+    const ethBalance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", address)
+    for (let i = 0; i < ethBalance; i++) {
+      ethTokenIds.push(
+        await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", address, i)
+      )
     }
 
-    this.dispatch(UserActions.setTargetUserSpecialPlanetTokens(tokenIds))
+    const loomTokenIds: Array<string> = []
+    const loomBalance = await callLoomContractMethod(cs =>
+      cs.SpecialPlanetToken.methods.balanceOf(address)
+    )
+    for (let i = 0; i < loomBalance; i++) {
+      loomTokenIds.push(
+        await callLoomContractMethod(cs =>
+          cs.SpecialPlanetToken.methods.tokenOfOwnerByIndex(address, i)
+        )
+      )
+    }
+
+    this.dispatch(
+      UserActions.setTargetUserSpecialPlanetTokens({ eth: ethTokenIds, loom: loomTokenIds })
+    )
   }
 
   static clearTargetUser = UserActions.creator("clearTargetUser")

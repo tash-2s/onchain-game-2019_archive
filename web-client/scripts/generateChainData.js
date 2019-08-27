@@ -39,12 +39,14 @@ const loomContractAddresses = {} // TODO: save k2-chain-contracts's commit hash 
 fs.readdirSync(LOOM_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
 
-  if (contractName.slice(-10) !== "Controller") {
-    return
-  }
+  if (contractName !== "SpecialPlanetToken") {
+    if (contractName.slice(-10) !== "Controller") {
+      return
+    }
 
-  if (contractName.slice(-15) === "DebugController") {
-    return
+    if (contractName.slice(-15) === "DebugController") {
+      return
+    }
   }
 
   const file = fs.readFileSync(LOOM_JSON_PATH + fileName)
