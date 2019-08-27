@@ -5,7 +5,8 @@ import { LoomWeb3 } from "../misc/loom"
 
 const createInitialState = () => {
   return {
-    address: LoomWeb3.isGuest ? null : LoomWeb3.address,
+    loomAddress: LoomWeb3.isGuest ? null : LoomWeb3.address,
+    ethAddress: LoomWeb3.isGuest ? null : LoomWeb3.web3FromAddress,
     logining: false,
     blocked: false
   }
@@ -17,7 +18,8 @@ export const createCurrentUserReducer = () =>
   reducerWithInitialState(createInitialState())
     .case(CurrentUserActions.login, (state, payload) => ({
       ...state,
-      address: payload,
+      loomAddress: payload ? payload.loomAddress : null,
+      ethAddress: payload ? payload.ethAddress : null,
       logining: !payload
     }))
     .case(CurrentUserActions.block, state => ({

@@ -7,7 +7,9 @@ import ChainEnv from "../chain/env.json"
 export class CurrentUserActions extends AbstractActions {
   private static creator = CurrentUserActions.getActionCreator()
 
-  static login = CurrentUserActions.creator<string | null>("login")
+  static login = CurrentUserActions.creator<{ ethAddress: string; loomAddress: string } | null>(
+    "login"
+  )
   login = async () => {
     this.dispatch(CurrentUserActions.login(null))
 
@@ -39,9 +41,9 @@ export class CurrentUserActions extends AbstractActions {
       }
     }
 
-    const loginAddress = await LoomWeb3.loginWithEth(EthWeb3.signer)
+    const addresses = await LoomWeb3.loginWithEth(EthWeb3.signer)
 
-    this.dispatch(CurrentUserActions.login(loginAddress))
+    this.dispatch(CurrentUserActions.login(addresses))
   }
 
   static block = CurrentUserActions.creator("block")

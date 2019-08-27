@@ -79,7 +79,7 @@ export class LoomWeb3 {
     LoomWeb3.web3FromAddress = ethAddress
     LoomWeb3.isGuest = false
 
-    return LoomWeb3.address
+    return { ethAddress, loomAddress: LoomWeb3.address }
   }
 
   static async getLoomTime() {

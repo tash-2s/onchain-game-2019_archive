@@ -21,7 +21,7 @@ export function TargetUser(props: {
   userPageUiActions: UserPageUiActions
 }) {
   const isMine = (() => {
-    const address = props.currentUser.address
+    const address = props.currentUser.loomAddress
     if (address) {
       return address === props.targetUser.address
     } else {
@@ -33,6 +33,7 @@ export function TargetUser(props: {
     <>
       <h1 className={"title is-5"}>
         target user is {props.targetUser.address} {isMine ? "[this is me]" : ""}
+        {isMine ? <div>eth: {props.currentUser.ethAddress}</div> : <></>}
       </h1>
       {isMine ? <UserTokens user={props.targetUser} userActions={props.userActions} /> : <></>}
 

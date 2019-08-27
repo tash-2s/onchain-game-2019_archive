@@ -83,7 +83,7 @@ function LoginModal(props: {}) {
 }
 
 function NavEndContent(props: Props) {
-  const address = props.currentUser.address
+  const address = props.currentUser.loomAddress
   if (address) {
     return (
       <div className={"navbar-item has-dropdown is-hoverable"}>
