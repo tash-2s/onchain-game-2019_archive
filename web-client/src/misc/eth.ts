@@ -12,7 +12,27 @@ export class EthWeb3 {
   static address: string
 
   static setup = async (provider: any, providerChangedFn: () => void) => {
+    if (typeof provider === "undefined") {
+      // not dapp browser
+      return false
+    }
+
     provider.autoRefreshOnNetworkChange = false
+
+    try {
+      await provider.enable() // ask user to connect
+    } catch (error) {
+      // user rejected it
+      return false
+    }
+
+    // verify user is on the correct network
+    // see also: https://github.com/MetaMask/metamask-extension/issues/3663
+    if (provider.networkVersion !== ChainEnv.eth.networkId) {
+      // wrong network
+      return false
+    }
+
     provider.on("accountsChanged", providerChangedFn)
     provider.on("networkChanged", providerChangedFn)
 
@@ -20,6 +40,8 @@ export class EthWeb3 {
     EthWeb3.ethersProvider = new ethers.providers.Web3Provider(provider)
     EthWeb3.signer = EthWeb3.ethersProvider.getSigner()
     EthWeb3.address = await EthWeb3.signer.getAddress()
+
+    return true
   }
 
   static specialPlanetToken = () => {
