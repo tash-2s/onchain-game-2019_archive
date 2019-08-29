@@ -38,6 +38,8 @@ export class EthWeb3 {
 
     EthWeb3.web3 = new Web3(provider)
     EthWeb3.ethersProvider = new ethers.providers.Web3Provider(provider)
+    // maybe I need a hack for non metamask provider
+    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
     EthWeb3.signer = EthWeb3.ethersProvider.getSigner()
     EthWeb3.address = await EthWeb3.signer.getAddress()
 

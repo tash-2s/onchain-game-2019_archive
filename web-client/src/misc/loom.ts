@@ -13,11 +13,13 @@ import {
 import Web3 from "web3"
 import { ethers } from "ethers"
 
-import ChainEnv from "../chain/env.json"
+import _ChainEnv from "../chain/env.json"
 import UserABI from "../chain/abi/loom/UserController.json"
 import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
 import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
 import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
+
+export const ChainEnv = _ChainEnv
 
 export class LoomWeb3 {
   static isGuest = true
@@ -116,7 +118,7 @@ const getLoomContracts = () => ({
   )
 })
 
-class LoomUtil {
+export class LoomUtil {
   static createClient() {
     const p = [ChainEnv.loom.chainId, ChainEnv.loom.writeUrl, ChainEnv.loom.readUrl] as const
     return new Client(...p)
@@ -161,7 +163,6 @@ export const callLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
   const r = await f(getLoomContracts()).call({ from: LoomWeb3.web3FromAddress })
-  console.log(r)
   return r
 }
 

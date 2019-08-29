@@ -1,8 +1,22 @@
-import { Address, CryptoUtils, Contracts } from "loom-js"
+import {
+  LocalAddress,
+  Address,
+  CryptoUtils,
+  Contracts,
+  NonceTxMiddleware,
+  SignedEthTxMiddleware,
+  getMetamaskSigner
+} from "loom-js"
 import BN from "bn.js"
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
-import { callLoomContractMethod, sendLoomContractMethod, LoomWeb3 } from "../misc/loom"
+import {
+  callLoomContractMethod,
+  sendLoomContractMethod,
+  LoomWeb3,
+  ChainEnv,
+  LoomUtil
+} from "../misc/loom"
 import { EthWeb3 } from "../misc/eth"
 
 export type GetUserResponse = any // TODO
@@ -148,10 +162,11 @@ export class UserActions extends AbstractActions {
 
 const withdraw = async (tokenId: string) => {
   let signature: string
-  if (true) {
+  if (false) {
+    // TODO: fix
     signature = await depositTokenToLoomGateway(tokenId)
   } else {
-    const loomUserAddress = Address.fromString(`${LoomWeb3.client.chainId}:${LoomWeb3.address}`)
+    const loomUserAddress = Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.address}`)
     const gatewayContract = await Contracts.TransferGateway.createAsync(
       LoomWeb3.client,
       loomUserAddress
@@ -162,6 +177,7 @@ const withdraw = async (tokenId: string) => {
       throw new Error("no withdrawal receipt")
     }
     signature = CryptoUtils.bytesToHexAddr((receipt as any).oracleSignature)
+    tokenId = (receipt as any).tokenId.toString()
   }
   const tx = await withdrawTokenFromEthGateway(tokenId, signature)
 
@@ -171,16 +187,22 @@ const withdraw = async (tokenId: string) => {
 // Returns a promise that will be resolved with a hex string containing the signature that must
 // be submitted to the Ethereum Gateway to withdraw a token.
 async function depositTokenToLoomGateway(tokenId: string) {
+  const client = LoomUtil.createClient()
+  client.txMiddleware = [
+    new NonceTxMiddleware(new Address("eth", LocalAddress.fromHexString(EthWeb3.address)), client),
+    new SignedEthTxMiddleware(EthWeb3.signer)
+  ]
+
   const gatewayContract = await Contracts.TransferGateway.createAsync(
-    LoomWeb3.client,
-    Address.fromString(`${LoomWeb3.client.chainId}:${LoomWeb3.address}`)
+    client,
+    new Address("eth", LocalAddress.fromHexString(EthWeb3.address))
   )
 
   const tokenContract = LoomWeb3.specialPlanetToken()
-  const gatewayAddress = (await tokenContract.methods
-    .gateway()
-    .call({ from: LoomWeb3.address })).toLowerCase() // TODO: I think checksum address is ok
-  await tokenContract.methods.approve(gatewayAddress, tokenId).send({ from: LoomWeb3.address })
+  const gatewayAddress = (await callLoomContractMethod(cs =>
+    cs.SpecialPlanetToken.methods.gateway()
+  )).toLowerCase() // TODO: I think checksum address is ok
+  await sendLoomContractMethod(cs => cs.SpecialPlanetToken.methods.approve(gatewayAddress, tokenId))
 
   const receiveSignedWithdrawalEvent = new Promise((resolve, reject) => {
     const timer = setTimeout(
@@ -201,8 +223,8 @@ async function depositTokenToLoomGateway(tokenId: string) {
 
   await gatewayContract.withdrawERC721Async(
     new BN(tokenId),
-    Address.fromString(`${LoomWeb3.client.chainId}:${tokenContract.options.address}`),
-    Address.fromString(`eth:${EthWeb3.address}`)
+    Address.fromString(`${ChainEnv.loom.chainId}:${tokenContract.options.address}`),
+    Address.fromString(`eth:${EthWeb3.address.toLowerCase()}`)
   )
   const event = (await receiveSignedWithdrawalEvent) as any
 
@@ -220,7 +242,6 @@ async function withdrawTokenFromEthGateway(tokenId: string, signature: string) {
 
 async function getEthGatewayContract() {
   const address = await EthWeb3.callSpecialPlanetTokenMethod("gateway")
-  console.log(address)
   const abi = [
     {
       constant: false,

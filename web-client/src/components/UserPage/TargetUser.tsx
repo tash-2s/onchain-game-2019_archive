@@ -98,6 +98,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
     const msg2 = props.user.specialPlanetTokenTransferToEthTx
       ? `requested. tx: ${props.user.specialPlanetTokenTransferToEthTx}`
       : ""
+    const resume = () => props.userActions.transferTokenToEth("1") // TODO: fix
     return (
       <div className={"box"}>
         <button onClick={reload}>reload</button>
@@ -111,6 +112,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
         <h2 className={"title is-6"}>loom</h2>
         <ul>{loomTokens}</ul>
         {msg2}
+        <button onClick={resume}>resume</button>
       </div>
     )
   } else {
