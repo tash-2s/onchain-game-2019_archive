@@ -5,6 +5,32 @@ import ChainEnv from "../chain/env.json"
 import SpecialPlanetTokenABI from "../chain/abi/eth/SpecialPlanetToken.json"
 import SpecialPlanetTokenShopABI from "../chain/abi/eth/SpecialPlanetTokenShop.json"
 
+const GatewayABI = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: "uid",
+        type: "uint256"
+      },
+      {
+        name: "sig",
+        type: "bytes"
+      },
+      {
+        name: "contractAddress",
+        type: "address"
+      }
+    ],
+    name: "withdrawERC721",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+    signature: "0xc899a86b"
+  }
+]
+
 export class EthWeb3 {
   static web3: Web3
   static ethersProvider: ethers.providers.Web3Provider
@@ -51,6 +77,11 @@ export class EthWeb3 {
       SpecialPlanetTokenABI,
       ChainEnv.ethContractAddresses.SpecialPlanetToken
     )
+  }
+
+  static gateway = async () => {
+    const address = await EthWeb3.callSpecialPlanetTokenMethod("gateway")
+    return new EthWeb3.web3.eth.Contract(GatewayABI, address)
   }
 
   static callSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
