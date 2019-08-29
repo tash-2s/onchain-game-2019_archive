@@ -22,6 +22,7 @@ import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 export class LoomWeb3 {
   static isGuest = true
   static web3: Web3
+  static client: Client
   static web3FromAddress: string // eth address
   static mediatorPrivateKey: Uint8Array
   static address: string // loom address
@@ -76,6 +77,7 @@ export class LoomWeb3 {
     const oldProvider = LoomWeb3.web3.currentProvider as LoomProvider
     oldProvider.disconnect()
     LoomWeb3.web3 = newWeb3
+    LoomWeb3.client = client
     LoomWeb3.web3FromAddress = ethAddress
     LoomWeb3.isGuest = false
 
@@ -85,6 +87,13 @@ export class LoomWeb3 {
   static async getLoomTime() {
     const o = await LoomWeb3.web3.eth.getBlock("latest")
     return o.timestamp
+  }
+
+  static specialPlanetToken = () => {
+    return new LoomWeb3.web3.eth.Contract(
+      SpecialPlanetTokenABI,
+      ChainEnv.loomContractAddresses.SpecialPlanetToken
+    )
   }
 }
 
