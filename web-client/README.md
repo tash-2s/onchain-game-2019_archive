@@ -4,10 +4,10 @@ yarn install
 ```
 
 # Run
-## With testnet (extdev_plasma_us1)
+## With testnet (staging)
 ```
 yarn generate-contracts-types
-yarn serve:extdev_plasma_us1
+yarn serve:staging
 ```
 
 ## With local
