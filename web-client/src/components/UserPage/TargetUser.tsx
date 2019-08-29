@@ -84,7 +84,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
       )
     })
     const msg1 = props.user.specialPlanetTokenTransferToLoomTx
-      ? `requested. this can take a while. eth tx: ${props.user.specialPlanetTokenTransferToLoomTx}`
+      ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetTokenTransferToLoomTx}), it takes additional 15 minutes to see the token on loom`
       : ""
     const loomTokens = props.user.specialPlanetTokens.loom.map(tokenId => {
       const onClick = () => props.userActions.transferTokenToEth(tokenId)
