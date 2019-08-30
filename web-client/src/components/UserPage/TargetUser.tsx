@@ -83,20 +83,38 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
         </li>
       )
     })
-    const msg = props.user.specialPlanetTokenTransferToLoomTx
-      ? `requested. this can take a while. eth tx: ${props.user.specialPlanetTokenTransferToLoomTx}`
+    const msg1 = props.user.specialPlanetTokenTransferToLoomTx
+      ? `Transfer requested. After the confirmation of eth tx (${
+          props.user.specialPlanetTokenTransferToLoomTx
+        }), it takes additional 15 minutes to see the token on loom`
       : ""
+    const loomTokens = props.user.specialPlanetTokens.loom.map(tokenId => {
+      const onClick = () => props.userActions.transferTokenToEth(tokenId)
+      return (
+        <li key={tokenId}>
+          {tokenId}
+          <button onClick={onClick}>transfer to eth</button>
+        </li>
+      )
+    })
+    const msg2 = props.user.specialPlanetTokenTransferToEthTx
+      ? `requested. tx: ${props.user.specialPlanetTokenTransferToEthTx}`
+      : ""
+    const resume = () => props.userActions.transferTokenToEth()
     return (
       <div className={"box"}>
-        <h2>eth</h2>
-        <ul>{ethTokens}</ul>
-        {msg}
-        <br />
-        <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
-        {props.user.specialPlanetTokenBuyTx}
         <button onClick={reload}>reload</button>
-        <h2>loom</h2>
-        {props.user.specialPlanetTokens.loom.join()}
+
+        <h2 className={"title is-6"}>eth</h2>
+        <ul>{ethTokens}</ul>
+        <div>{msg1}</div>
+        <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
+        <div>{props.user.specialPlanetTokenBuyTx}</div>
+
+        <h2 className={"title is-6"}>loom</h2>
+        <ul>{loomTokens}</ul>
+        {msg2}
+        <button onClick={resume}>resume "transfer to eth"</button>
       </div>
     )
   } else {

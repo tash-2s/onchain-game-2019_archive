@@ -5,6 +5,32 @@ import ChainEnv from "../chain/env.json"
 import SpecialPlanetTokenABI from "../chain/abi/eth/SpecialPlanetToken.json"
 import SpecialPlanetTokenShopABI from "../chain/abi/eth/SpecialPlanetTokenShop.json"
 
+const GatewayABI = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: "uid",
+        type: "uint256"
+      },
+      {
+        name: "sig",
+        type: "bytes"
+      },
+      {
+        name: "contractAddress",
+        type: "address"
+      }
+    ],
+    name: "withdrawERC721",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+    signature: "0xc899a86b"
+  }
+]
+
 export class EthWeb3 {
   static web3: Web3
   static ethersProvider: ethers.providers.Web3Provider
@@ -38,6 +64,8 @@ export class EthWeb3 {
 
     EthWeb3.web3 = new Web3(provider)
     EthWeb3.ethersProvider = new ethers.providers.Web3Provider(provider)
+    // maybe I need a hack for non metamask provider
+    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
     EthWeb3.signer = EthWeb3.ethersProvider.getSigner()
     EthWeb3.address = await EthWeb3.signer.getAddress()
 
@@ -49,6 +77,11 @@ export class EthWeb3 {
       SpecialPlanetTokenABI,
       ChainEnv.ethContractAddresses.SpecialPlanetToken
     )
+  }
+
+  static gateway = async () => {
+    const address = await EthWeb3.callSpecialPlanetTokenMethod("gateway")
+    return new EthWeb3.web3.eth.Contract(GatewayABI, address)
   }
 
   static callSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {

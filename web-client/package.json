@@ -5,9 +5,9 @@
     "l": "yarn generate-chain-data local && yarn serve:local",
     "serve": "parcel src/index.html --no-hmr",
     "serve:local": "./scripts/cpChainEnv.sh local && yarn serve",
-    "serve:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn serve",
+    "serve:staging": "./scripts/cpChainEnv.sh staging && yarn serve",
     "build": "rm -rf ./.cache ./dist && parcel build src/index.html --out-dir dist/build --public-url . --no-source-maps",
-    "build:extdev_plasma_us1": "./scripts/cpChainEnv.sh extdev_plasma_us1 && yarn build",
+    "build:staging": "./scripts/cpChainEnv.sh staging && yarn build",
     "build:production": "./scripts/cpChainEnv.sh production && yarn build",
     "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*.js' --no-semi --print-width 100 --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
     "generate-chain-data": "node scripts/generateChainData.js"
