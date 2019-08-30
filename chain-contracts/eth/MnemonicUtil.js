@@ -22,10 +22,6 @@ class MnemonicUtil {
 
   getMnemonic() {
     const mnemonicPath = this.getFilePath()
-    if (!fs.existsSync(mnemonicPath)) {
-      throw new Error("mnemonic not found")
-    }
-
     return fs.readFileSync(mnemonicPath, "utf-8")
   }
 
