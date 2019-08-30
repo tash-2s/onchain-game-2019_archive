@@ -212,7 +212,7 @@ const withdraw = async (tokenId?: string) => {
     return receipt
   })
 
-  if (!receipt) {
+  if (!(receipt && receipt.oracleSignature.length > 0)) {
     throw new Error("no withdrawal receipt")
   }
 
