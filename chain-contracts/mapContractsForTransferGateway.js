@@ -10,8 +10,6 @@ const {
   NonceTxMiddleware,
   SignedTxMiddleware,
   Address,
-  LocalAddress,
-  CryptoUtils,
   LoomProvider,
   Contracts,
   soliditySha3,
@@ -22,86 +20,81 @@ const BN = require("bn.js")
 const EthTokenJSON = require("./eth/build/contracts/SpecialPlanetToken.json")
 const LoomTokenJSON = require("./loom/build/contracts/SpecialPlanetToken.json")
 
-function loadRinkebyAccount() {
+const loadEth = envName => {
   const MnemonicUtil = require("./eth/MnemonicUtil.js")
   const InfuraUtil = require("./eth/InfuraUtil.js")
 
-  const {privateKey} = new MnemonicUtil("rinkeby").getAddressAndPrivateKey()
+  const {privateKey} = new MnemonicUtil(envName).getAddressAndPrivateKey()
   const infuraEndpoint = new InfuraUtil().getApiEndpoint()
 
   const web3js = new Web3(infuraEndpoint)
-  const ownerAccount = web3js.eth.accounts.privateKeyToAccount("0x" + privateKey)
-  web3js.eth.accounts.wallet.add(ownerAccount)
+  const account = web3js.eth.accounts.privateKeyToAccount("0x" + privateKey)
+  web3js.eth.accounts.wallet.add(account)
 
-  return {account: ownerAccount, web3js}
+  return {account: account, web3js}
 }
 
-function loadExtdevAccount() {
-  const privateKeyStr = fs.readFileSync(
-    path.join(__dirname, "./loom/extdev_private_key"),
-    "utf-8"
-  )
-  const privateKey = CryptoUtils.B64ToUint8Array(privateKeyStr)
-  const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-  const client = new Client(
-    "extdev-plasma-us1",
-    "wss://extdev-plasma-us1.dappchains.com/websocket",
-    "wss://extdev-plasma-us1.dappchains.com/queryws"
-  )
+const loadLoom = envName => {
+  const PrivateKeyUtil = require("./loom/PrivateKeyUtil.js")
+  const util = new PrivateKeyUtil(envName)
+  const {publicKey, privateKey} = util.getPublicKeyAndPrivateKey()
+
+  const env = JSON.parse(fs.readFileSync("./loom/envs.json"))[envName]
+  if (!env) {
+    throw new Error("please define env")
+  }
+  const client = new Client(env.chainId, env.writeUrl, env.readUrl)
+
   client.txMiddleware = [
     new NonceTxMiddleware(publicKey, client),
     new SignedTxMiddleware(privateKey)
   ]
-  client.on("error", msg => {
-    console.error("PlasmaChain connection error", msg)
-  })
 
   return {
-    account: LocalAddress.fromPublicKey(publicKey).toString(),
+    account: util.getAddress(),
     web3js: new Web3(new LoomProvider(client, privateKey)),
     client
   }
 }
 
-const mapContracts = async () => {
-  const rinkeby = loadRinkebyAccount()
-  const extdev = loadExtdevAccount()
+const mapContracts = async (ethEnvName, loomEnvName) => {
+  const eth = loadEth(ethEnvName)
+  const loom = loadLoom(loomEnvName)
 
-  const client = extdev.client
+  const ethNetworkId = await eth.web3js.eth.net.getId()
+  const loomNetworkId = await loom.web3js.eth.net.getId()
 
-  const rinkebyNetworkId = await rinkeby.web3js.eth.net.getId()
-  const extdevNetworkId = await extdev.web3js.eth.net.getId()
+  const tokenEthAddress = EthTokenJSON.networks[ethNetworkId].address
+  const ethTxHash = EthTokenJSON.networks[ethNetworkId].transactionHash
+  const tokenLoomAddress = LoomTokenJSON.networks[loomNetworkId].address
 
-  const tokenRinkebyAddress = EthTokenJSON.networks[rinkebyNetworkId].address
-  const rinkebyTxHash = EthTokenJSON.networks[rinkebyNetworkId].transactionHash
-  const tokenExtdevAddress = LoomTokenJSON.networks[extdevNetworkId].address
-
-  const ownerExtdevAddr = Address.fromString(`${client.chainId}:${extdev.account}`)
-  const gatewayContract = await Contracts.TransferGateway.createAsync(client, ownerExtdevAddr)
-  const foreignContract = Address.fromString(`eth:${tokenRinkebyAddress}`)
-  const localContract = Address.fromString(`${client.chainId}:${tokenExtdevAddress}`)
+  const foreignContract = Address.fromString(`eth:${tokenEthAddress}`)
+  const localContract = Address.fromString(`${loom.client.chainId}:${tokenLoomAddress}`)
 
   const hash = soliditySha3(
-    {type: "address", value: tokenRinkebyAddress.slice(2)},
-    {type: "address", value: tokenExtdevAddress.slice(2)}
+    {type: "address", value: tokenEthAddress.slice(2)},
+    {type: "address", value: tokenLoomAddress.slice(2)}
   )
-  const signer = new OfflineWeb3Signer(rinkeby.web3js, rinkeby.account)
+  const signer = new OfflineWeb3Signer(eth.web3js, eth.account)
   const foreignContractCreatorSig = await signer.signAsync(hash)
 
-  const foreignContractCreatorTxHash = Buffer.from(rinkebyTxHash.slice(2), "hex")
+  const foreignContractCreatorTxHash = Buffer.from(ethTxHash.slice(2), "hex")
 
-  await gatewayContract.addContractMappingAsync({
+  const gateway = await Contracts.TransferGateway.createAsync(
+    loom.client,
+    Address.fromString(`${loom.client.chainId}:${loom.account}`)
+  )
+  await gateway.addContractMappingAsync({
     localContract,
     foreignContract,
     foreignContractCreatorSig,
     foreignContractCreatorTxHash
   })
 
-  console.log(`Submitted request to map ${tokenExtdevAddress} to ${tokenRinkebyAddress}`)
-  client.disconnect()
+  console.log(`Submitted request to map ${tokenLoomAddress} to ${tokenEthAddress}`)
+  loom.client.disconnect()
 }
 
 ;(async () => {
-  await mapContracts()
-  console.log("finished!")
+  await mapContracts("rinkeby", "extdev")
 })()
