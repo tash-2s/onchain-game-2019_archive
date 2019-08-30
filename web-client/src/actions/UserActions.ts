@@ -8,6 +8,7 @@ import {
   getMetamaskSigner
 } from "loom-js"
 import BN from "bn.js"
+
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
 import {
@@ -161,7 +162,7 @@ export class UserActions extends AbstractActions {
 }
 
 const withdraw = async (tokenId?: string) => {
-  const gateway = await getGateway()
+  const { gateway, client: gatewayClient } = await getGateway()
 
   if (tokenId) {
     await transferTokenToLoomGateway(tokenId, gateway)
@@ -179,6 +180,8 @@ const withdraw = async (tokenId?: string) => {
     }
     await sleep(5)
   }
+  gatewayClient.disconnect()
+
   if (!receipt) {
     throw new Error("no withdrawal receipt")
   }
@@ -195,7 +198,7 @@ const withdraw = async (tokenId?: string) => {
   return tx.transactionHash
 }
 
-const getGateway = () => {
+const getGateway = async () => {
   const ethAddressInstance = Address.fromString(`eth:${EthWeb3.address}`)
   const client = LoomUtil.createClient()
   client.txMiddleware = [
@@ -203,17 +206,17 @@ const getGateway = () => {
     new SignedEthTxMiddleware(EthWeb3.signer)
   ]
 
-  return Contracts.TransferGateway.createAsync(client, ethAddressInstance)
+  return {
+    gateway: await Contracts.TransferGateway.createAsync(client, ethAddressInstance),
+    client
+  }
 }
 
-const transferTokenToLoomGateway = async (
-  tokenId: string,
-  gatewayContract: Contracts.TransferGateway
-) => {
+const transferTokenToLoomGateway = async (tokenId: string, gateway: Contracts.TransferGateway) => {
   const gatewayAddress = await callLoomContractMethod(cs => cs.SpecialPlanetToken.methods.gateway())
   await sendLoomContractMethod(cs => cs.SpecialPlanetToken.methods.approve(gatewayAddress, tokenId))
 
-  await gatewayContract.withdrawERC721Async(
+  await gateway.withdrawERC721Async(
     new BN(tokenId),
     Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.specialPlanetToken().options.address}`),
     Address.fromString(`eth:${EthWeb3.address}`)
