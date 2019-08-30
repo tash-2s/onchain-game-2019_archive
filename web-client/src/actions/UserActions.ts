@@ -165,15 +165,16 @@ const withdraw = async (tokenId?: string) => {
 
   if (tokenId) {
     await transferTokenToLoomGateway(tokenId, gateway)
-    await sleep(5)
+    await sleep(10)
   }
 
   let receipt: any
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
+    console.log(`signature check polling count: ${i + 1}`)
     receipt = await gateway.withdrawalReceiptAsync(
       Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.address}`)
     )
-    if (receipt) {
+    if (receipt && receipt.oracleSignature.length > 0) {
       break
     }
     await sleep(5)
