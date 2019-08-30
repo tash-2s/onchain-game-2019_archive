@@ -10,7 +10,7 @@ interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
-  specialPlanetTokens: { eth: Array<string>; loom: Array<string> } | null
+  specialPlanetTokens: { eth: Array<string>; loom: Array<string>; needsResume: boolean } | null
   specialPlanetTokenBuyTx: string | null
   specialPlanetTokenTransferToLoomTx: string | null
   specialPlanetTokenTransferToEthTx: string | null
@@ -98,6 +98,12 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
+          specialPlanetTokens: state.targetUser.specialPlanetTokens
+            ? {
+                ...state.targetUser.specialPlanetTokens,
+                needsResume: false
+              }
+            : null,
           specialPlanetTokenTransferToEthTx: payload
         }
       }

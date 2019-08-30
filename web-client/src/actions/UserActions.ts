@@ -1,3 +1,4 @@
+import BN from "bn.js"
 import {
   LocalAddress,
   Address,
@@ -7,7 +8,7 @@ import {
   SignedEthTxMiddleware,
   getMetamaskSigner
 } from "loom-js"
-import BN from "bn.js"
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
@@ -39,6 +40,7 @@ export class UserActions extends AbstractActions {
   static setTargetUserSpecialPlanetTokens = UserActions.creator<{
     eth: Array<string>
     loom: Array<string>
+    needsResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
     if (address !== LoomWeb3.address) {
@@ -66,8 +68,17 @@ export class UserActions extends AbstractActions {
       )
     }
 
+    const needsResume = await withGateway(async gateway => {
+      const receipt = await getWithdrawalReceipt(gateway)
+      return !!receipt
+    })
+
     this.dispatch(
-      UserActions.setTargetUserSpecialPlanetTokens({ eth: ethTokenIds, loom: loomTokenIds })
+      UserActions.setTargetUserSpecialPlanetTokens({
+        eth: ethTokenIds,
+        loom: loomTokenIds,
+        needsResume
+      })
     )
   }
 
@@ -162,25 +173,23 @@ export class UserActions extends AbstractActions {
 }
 
 const withdraw = async (tokenId?: string) => {
-  const { gateway, client: gatewayClient } = await getGateway()
-
-  if (tokenId) {
-    await transferTokenToLoomGateway(tokenId, gateway)
-    await sleep(10)
-  }
-
-  let receipt: any
-  for (let i = 0; i < 15; i++) {
-    console.log(`signature check polling count: ${i + 1}`)
-    receipt = await gateway.withdrawalReceiptAsync(
-      Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.address}`)
-    )
-    if (receipt && receipt.oracleSignature.length > 0) {
-      break
+  const receipt = await withGateway(async gateway => {
+    if (tokenId) {
+      await transferTokenToLoomGateway(tokenId, gateway)
+      await sleep(10)
     }
-    await sleep(5)
-  }
-  gatewayClient.disconnect()
+
+    let receipt: IWithdrawalReceipt | null = null
+    for (let i = 0; i < 15; i++) {
+      console.log(`signature check polling count: ${i + 1}`)
+      receipt = await getWithdrawalReceipt(gateway)
+      if (receipt && receipt.oracleSignature.length > 0) {
+        break
+      }
+      await sleep(5)
+    }
+    return receipt
+  })
 
   if (!receipt) {
     throw new Error("no withdrawal receipt")
@@ -188,14 +197,36 @@ const withdraw = async (tokenId?: string) => {
 
   const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
 
-  const _tokenId = receipt.tokenId.toString()
-  if (tokenId && tokenId !== _tokenId) {
+  const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
+  if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
     throw new Error("wrong token")
   }
 
   const tx = await withdrawTokenFromEthGateway(_tokenId, signature)
 
   return tx.transactionHash
+}
+
+const getWithdrawalReceipt = async (gateway: Contracts.TransferGateway) => {
+  const receipt = await gateway.withdrawalReceiptAsync(
+    Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.address}`)
+  )
+  if (
+    receipt &&
+    receipt.tokenContract.local.toString().toLowerCase() ===
+      EthWeb3.specialPlanetToken().options.address.toLowerCase() &&
+    receipt.tokenOwner.local.toString().toLowerCase() === EthWeb3.address.toLowerCase()
+  ) {
+    return receipt
+  }
+  return null
+}
+
+const withGateway = async <T>(fn: (gateway: Contracts.TransferGateway) => Promise<T>) => {
+  const { gateway, client } = await getGateway()
+  const result = await fn(gateway)
+  client.disconnect()
+  return result
 }
 
 const getGateway = async () => {
@@ -208,7 +239,7 @@ const getGateway = async () => {
 
   return {
     gateway: await Contracts.TransferGateway.createAsync(client, ethAddressInstance),
-    client
+    client: client
   }
 }
 
