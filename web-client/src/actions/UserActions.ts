@@ -186,14 +186,20 @@ export class UserActions extends AbstractActions {
   static transferTokenToEth = UserActions.creator<string>("transferTokenToEth")
   transferTokenToEth = async (tokenId?: string) => {
     new AppActions(this.dispatch).startLoading()
-    const txHash = await withdraw(tokenId)
+    const { tokenId: _tokenId, signature } = await withdrawPreparation(tokenId)
+    const gatewayContract = await EthWeb3.gateway()
+    withdrawTokenFromEthGateway(gatewayContract, _tokenId, signature).on(
+      "transactionHash",
+      (hash: string) => {
+        this.dispatch(UserActions.transferTokenToEth(hash))
 
-    this.dispatch(UserActions.transferTokenToEth(txHash))
-    new AppActions(this.dispatch).stopLoading()
+        new AppActions(this.dispatch).stopLoading()
+      }
+    )
   }
 }
 
-const withdraw = async (tokenId?: string) => {
+const withdrawPreparation = async (tokenId?: string) => {
   const receipt = await withGateway(async gateway => {
     if (tokenId) {
       await transferTokenToLoomGateway(tokenId, gateway)
@@ -223,9 +229,7 @@ const withdraw = async (tokenId?: string) => {
     throw new Error("wrong token")
   }
 
-  const tx = await withdrawTokenFromEthGateway(_tokenId, signature)
-
-  return tx.transactionHash
+  return { tokenId: _tokenId, signature }
 }
 
 const getWithdrawalReceipt = async (gateway: Contracts.TransferGateway) => {
@@ -275,8 +279,7 @@ const transferTokenToLoomGateway = async (tokenId: string, gateway: Contracts.Tr
   )
 }
 
-const withdrawTokenFromEthGateway = async (tokenId: string, signature: string) => {
-  const gatewayContract = await EthWeb3.gateway()
+const withdrawTokenFromEthGateway = (gatewayContract: any, tokenId: string, signature: string) => {
   const tokenAddress = EthWeb3.specialPlanetToken().options.address
 
   return gatewayContract.methods
