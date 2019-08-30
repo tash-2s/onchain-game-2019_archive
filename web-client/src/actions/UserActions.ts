@@ -70,7 +70,28 @@ export class UserActions extends AbstractActions {
 
     const needsResume = await withGateway(async gateway => {
       const receipt = await getWithdrawalReceipt(gateway)
-      return !!receipt
+
+      if (!receipt) {
+        return false
+      }
+      if (!receipt.tokenId) {
+        return false
+      }
+
+      // Receipt removals can be delayed, so I need to check it if it's already withdrew.
+      // If users transfer the token immediately after the resume, users may see wrong resume announcing...
+      const tokenIdStr = receipt.tokenId.toString()
+      let alreadyWithdrew = false
+      ethTokenIds.forEach(id => {
+        if (id === tokenIdStr) {
+          alreadyWithdrew = true
+        }
+      })
+      if (alreadyWithdrew) {
+        return false
+      }
+
+      return true
     })
 
     this.dispatch(
