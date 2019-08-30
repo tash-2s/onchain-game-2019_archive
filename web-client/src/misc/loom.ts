@@ -63,9 +63,9 @@ export class LoomWeb3 {
       await addMappingWithNewLoomAccount(signer)
     }
     const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
-    console.log(
-      `eth: ${mapping.from.local.toChecksumString()}, loom: ${mapping.to.local.toChecksumString()}`
-    )
+    // console.log(
+    //   `eth: ${mapping.from.local.toChecksumString()}, loom: ${mapping.to.local.toChecksumString()}`
+    // )
     LoomWeb3.address = mapping.to.local.toChecksumString()
 
     const loomProvider = new LoomProvider(client, LoomWeb3.mediatorPrivateKey)
@@ -170,6 +170,6 @@ export const sendLoomContractMethod = async (
   f: (cs: ReturnType<typeof getLoomContracts>) => any
 ) => {
   const r = await f(getLoomContracts()).send({ from: LoomWeb3.web3FromAddress })
-  console.log(r)
+  // console.log(r)
   return r
 }
