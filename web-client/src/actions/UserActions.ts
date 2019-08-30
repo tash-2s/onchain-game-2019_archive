@@ -207,7 +207,7 @@ const withdrawPreparation = async (tokenId?: string) => {
     }
 
     let receipt: IWithdrawalReceipt | null = null
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       // console.log(`signature check polling count: ${i + 1}`)
       receipt = await getWithdrawalReceipt(gateway)
       if (receipt && receipt.oracleSignature.length > 0) {
