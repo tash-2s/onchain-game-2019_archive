@@ -24,7 +24,6 @@ export const ChainEnv = _ChainEnv
 export class LoomWeb3 {
   static isGuest = true
   static web3: Web3
-  static client: Client
   static web3FromAddress: string // eth address
   static mediatorPrivateKey: Uint8Array
   static address: string // loom address
@@ -53,7 +52,6 @@ export class LoomWeb3 {
 
     const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
     const client = LoomUtil.createClient()
-    client.txMiddleware = createDefaultTxMiddleware(client, LoomWeb3.mediatorPrivateKey)
 
     const addressMapper = await Contracts.AddressMapper.createAsync(
       client,
@@ -79,7 +77,6 @@ export class LoomWeb3 {
     const oldProvider = LoomWeb3.web3.currentProvider as LoomProvider
     oldProvider.disconnect()
     LoomWeb3.web3 = newWeb3
-    LoomWeb3.client = client
     LoomWeb3.web3FromAddress = ethAddress
     LoomWeb3.isGuest = false
 
