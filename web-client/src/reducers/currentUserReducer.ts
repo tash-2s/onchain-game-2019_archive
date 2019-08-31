@@ -1,12 +1,12 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { CurrentUserActions } from "../actions/CurrentUserActions"
-import { chain } from "../misc/chain"
+import { chains } from "../misc/chains"
 
 const createInitialState = () => {
   return {
-    loomAddress: chain.loom.address,
-    ethAddress: chain.eth.address,
+    loomAddress: chains.loom.address,
+    ethAddress: chains.eth.address,
     logining: false,
     blocked: false
   }

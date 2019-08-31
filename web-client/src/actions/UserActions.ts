@@ -1,7 +1,7 @@
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
 
-import { chain } from "../misc/chain"
+import { chains } from "../misc/chains"
 
 export type GetUserResponse = any // TODO
 
@@ -15,7 +15,7 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<User>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const response = await chain.loom
+    const response = await chains.loom
       .userController()
       .methods.getUser(address)
       .call()
@@ -28,14 +28,14 @@ export class UserActions extends AbstractActions {
     needsResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
-    if (address !== chain.loom.address) {
+    if (address !== chains.loom.address) {
       throw new Error("this function is for my page")
     }
 
-    const ethTokenIds = await getTokenIds(chain.eth)
-    const loomTokenIds = await getTokenIds(chain.loom)
+    const ethTokenIds = await getTokenIds(chains.eth)
+    const loomTokenIds = await getTokenIds(chains.loom)
 
-    const needsResume = await chain.needsSpecialPlanetTokenResume(ethTokenIds)
+    const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
     this.dispatch(
       UserActions.setTargetUserSpecialPlanetTokens({
@@ -55,12 +55,12 @@ export class UserActions extends AbstractActions {
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       const address = loginedAddress()
-      await chain.loom
+      await chains.loom
         .normalPlanetController()
         .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
         .send()
 
-      const response = await chain.loom
+      const response = await chains.loom
         .userController()
         .methods.getUser(address)
         .call()
@@ -79,12 +79,12 @@ export class UserActions extends AbstractActions {
     this.withLoading(async () => {
       const address = loginedAddress()
 
-      await chain.loom
+      await chains.loom
         .normalPlanetController()
         .methods.rankupPlanet(userPlanetId, targetRank)
         .send()
 
-      const response = await chain.loom
+      const response = await chains.loom
         .userController()
         .methods.getUser(address)
         .call()
@@ -98,11 +98,11 @@ export class UserActions extends AbstractActions {
     this.withLoading(async () => {
       const address = loginedAddress()
 
-      await chain.loom
+      await chains.loom
         .normalPlanetController()
         .methods.removePlanet(userPlanetId)
         .send()
-      const response = await chain.loom
+      const response = await chains.loom
         .userController()
         .methods.getUser(address)
         .call()
@@ -115,12 +115,12 @@ export class UserActions extends AbstractActions {
   buySpecialPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = await chain.eth
+    const price = await chains.eth
       .specialPlanetTokenShop()
       .methods.price()
       .call()
 
-    chain.eth
+    chains.eth
       .specialPlanetTokenShop()
       .methods.sell()
       .send({ value: price })
@@ -135,7 +135,7 @@ export class UserActions extends AbstractActions {
   transferTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    chain.eth
+    chains.eth
       .specialPlanetToken()
       .methods.depositToGateway(tokenId)
       .send()
@@ -150,20 +150,20 @@ export class UserActions extends AbstractActions {
   transferTokenToEth = async (tokenId?: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    const ethAddress = chain.eth.address
+    const ethAddress = chains.eth.address
     if (!ethAddress) {
       throw new Error("not logined")
     }
 
-    const { tokenId: _tokenId, signature } = await chain.loom.prepareSpecialPlanetTokenWithdrawal(
-      chain.eth.signer(),
-      chain.eth.specialPlanetToken().options.address,
+    const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
+      chains.eth.signer(),
+      chains.eth.specialPlanetToken().options.address,
       tokenId
     )
 
-    const gatewayContract = await chain.eth.gateway()
+    const gatewayContract = await chains.eth.gateway()
     gatewayContract.methods
-      .withdrawERC721(_tokenId, signature, chain.eth.specialPlanetToken().options.address)
+      .withdrawERC721(_tokenId, signature, chains.eth.specialPlanetToken().options.address)
       .send({ from: ethAddress })
       .on("transactionHash", (hash: string) => {
         this.dispatch(UserActions.transferTokenToEth(hash))
@@ -197,7 +197,7 @@ const getTokenIds = async (c: {
 }
 
 const loginedAddress = () => {
-  const address = chain.loom.address
+  const address = chains.loom.address
   if (!address) {
     throw new Error("must login")
   }

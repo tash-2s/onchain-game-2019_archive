@@ -1,5 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
-import { chain } from "../misc/chain"
+import { chains } from "../misc/chains"
 
 export class CurrentUserActions extends AbstractActions {
   private static creator = CurrentUserActions.getActionCreator()
@@ -10,7 +10,7 @@ export class CurrentUserActions extends AbstractActions {
   login = async () => {
     this.dispatch(CurrentUserActions.login(null))
 
-    const result = await chain.login((window as any).ethereum, this.block)
+    const result = await chains.login((window as any).ethereum, this.block)
 
     if (!result) {
       // TODO: show message to user

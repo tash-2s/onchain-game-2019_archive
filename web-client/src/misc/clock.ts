@@ -1,6 +1,6 @@
 import { Store } from "redux"
 
-import { chain } from "./chain"
+import { chains } from "./chains"
 import { Time } from "./../models/Time"
 import { TimeActions } from "./../actions/TimeActions"
 
@@ -21,7 +21,7 @@ export const startClock = (store: Store) => {
 }
 
 const updateTime = async (store: Store) => {
-  const loomTime = await chain.loom.getLoomTime()
+  const loomTime = await chains.loom.getLoomTime()
   const webTime = Time.now()
   new TimeActions(store.dispatch).updateTime(webTime, loomTime)
 }

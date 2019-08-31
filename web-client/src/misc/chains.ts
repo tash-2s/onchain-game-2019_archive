@@ -1,7 +1,7 @@
 import { Eth } from "./eth"
 import { Loom } from "./loom"
 
-class Chain {
+class Chains {
   constructor(readonly eth: Eth, readonly loom: Loom) {}
 
   login = async (provider: any, providerChangedFn: () => void) => {
@@ -14,15 +14,15 @@ class Chain {
   }
 
   needsSpecialPlanetTokenResume = (existentTokenIds: Array<string>) => {
-    const ethAddress = chain.eth.address
+    const ethAddress = this.eth.address
     if (!ethAddress) {
       throw new Error("not logined")
     }
 
-    return this.loom.withGateway(chain.eth.signer(), async gateway => {
-      const receipt = await chain.loom.getSpecialPlanetTokenWithdrawalReceipt(
+    return this.loom.withGateway(this.eth.signer(), async gateway => {
+      const receipt = await this.loom.getSpecialPlanetTokenWithdrawalReceipt(
         ethAddress,
-        chain.eth.specialPlanetToken().options.address,
+        this.eth.specialPlanetToken().options.address,
         gateway
       )
 
@@ -51,4 +51,4 @@ class Chain {
   }
 }
 
-export const chain = new Chain(new Eth(), new Loom())
+export const chains = new Chains(new Eth(), new Loom())
