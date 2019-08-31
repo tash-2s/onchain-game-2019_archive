@@ -1,7 +1,7 @@
 import { actionCreatorFactory } from "typescript-fsa"
 import { AppActions } from "./AppActions"
 
-export class AbstractActions {
+export abstract class AbstractActions {
   protected static getActionCreator() {
     return actionCreatorFactory(this.name)
   }
