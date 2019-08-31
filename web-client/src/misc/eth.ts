@@ -43,15 +43,6 @@ export class Eth {
     this.address = null
   }
 
-  signer = () => {
-    // maybe I need a hack for non metamask provider
-    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
-    if (!this.ethersProvider) {
-      throw new Error("not logined")
-    }
-    return this.ethersProvider.getSigner()
-  }
-
   login = async (provider: any, providerChangedFn: () => void) => {
     if (typeof provider === "undefined") {
       // not dapp browser
@@ -82,6 +73,15 @@ export class Eth {
     this.address = await this.signer().getAddress()
 
     return true
+  }
+
+  signer = () => {
+    // maybe I need a hack for non metamask provider
+    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
+    if (!this.ethersProvider) {
+      throw new Error("not logined")
+    }
+    return this.ethersProvider.getSigner()
   }
 
   specialPlanetToken = () => {

@@ -1,4 +1,6 @@
 import BN from "bn.js"
+import Web3 from "web3"
+import { ethers } from "ethers"
 import {
   Client,
   Address,
@@ -13,9 +15,6 @@ import {
 } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
-import Web3 from "web3"
-import { ethers } from "ethers"
-
 import ChainEnv from "../chain/env.json"
 
 import UserABI from "../chain/abi/loom/UserController.json"
@@ -28,16 +27,16 @@ export class Loom {
   address: string | null
 
   constructor() {
-    this.web3 = new Web3(Util.createLoomProviderWithDummyAddress())
+    this.web3 = new Web3(LoomUtil.createProviderWithDummyAddress())
     this.address = null
   }
 
-  loginWithEth = async (signer: ethers.Signer) => {
+  login = async (signer: ethers.Signer) => {
     const ethAddress = await signer.getAddress()
 
     const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
-    const client = Util.createClient()
-    const dummyAccount = Util.generateAccount()
+    const client = LoomUtil.createClient()
+    const dummyAccount = LoomUtil.generateAccount()
 
     const addressMapper = await Contracts.AddressMapper.createAsync(
       client,
@@ -99,6 +98,82 @@ export class Loom {
     )
   }
 
+  withGateway = async <T>(
+    ethSigner: ethers.Signer,
+    fn: (gateway: Contracts.TransferGateway) => Promise<T>
+  ) => {
+    const { gateway, client } = await getGateway(ethSigner)
+    const result = await fn(gateway)
+    client.disconnect()
+    return result
+  }
+
+  getSpecialPlanetTokenWithdrawalReceipt = async (
+    ethAddress: string,
+    ethSpecialPlanetTokenAddress: string,
+    gateway: Contracts.TransferGateway
+  ) => {
+    const receipt = await gateway.withdrawalReceiptAsync(
+      Address.fromString(`${ChainEnv.loom.chainId}:${this.address}`)
+    )
+    if (
+      receipt &&
+      receipt.tokenContract.local.toString().toLowerCase() ===
+        ethSpecialPlanetTokenAddress.toLowerCase() &&
+      receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()
+    ) {
+      return receipt
+    }
+    return null
+  }
+
+  prepareSpecialPlanetTokenWithdrawal = async (
+    ethSigner: ethers.Signer,
+    ethSpecialPlanetTokenAddress: string,
+    tokenId?: string
+  ) => {
+    const ethAddress = await ethSigner.getAddress()
+
+    const receipt = await this.withGateway(ethSigner, async gateway => {
+      if (tokenId) {
+        await transferSpecialPlanetTokenToGateway(
+          gateway,
+          this.specialPlanetToken(),
+          tokenId,
+          ethAddress
+        )
+        await sleep(10)
+      }
+
+      let receipt: IWithdrawalReceipt | null = null
+      for (let i = 0; i < 20; i++) {
+        // console.log(`signature check polling count: ${i + 1}`)
+        receipt = await this.getSpecialPlanetTokenWithdrawalReceipt(
+          ethAddress,
+          ethSpecialPlanetTokenAddress,
+          gateway
+        )
+        // check it's signed
+        if (receipt && receipt.oracleSignature.length > 0) {
+          break
+        }
+        await sleep(5)
+      }
+      return receipt
+    })
+
+    if (!(receipt && receipt.oracleSignature.length > 0)) {
+      throw new Error("no withdrawal receipt")
+    }
+
+    const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
+    if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
+      throw new Error("wrong token")
+    }
+
+    return { tokenId: _tokenId, signature: CryptoUtils.bytesToHexAddr(receipt.oracleSignature) }
+  }
+
   // return eth address if logined, otherwise return loom dummy address
   private _callerAddress = () => {
     const provider = this.web3.currentProvider as LoomProvider
@@ -107,7 +182,7 @@ export class Loom {
   }
 }
 
-class Util {
+class LoomUtil {
   static createClient = () => {
     const p = [ChainEnv.loom.chainId, ChainEnv.loom.writeUrl, ChainEnv.loom.readUrl] as const
     return new Client(...p)
@@ -120,9 +195,9 @@ class Util {
     return { privateKey, publicKey, address }
   }
 
-  static createLoomProviderWithDummyAddress = () => {
-    const { privateKey } = Util.generateAccount()
-    return new LoomProvider(Util.createClient(), privateKey)
+  static createProviderWithDummyAddress = () => {
+    const { privateKey } = LoomUtil.generateAccount()
+    return new LoomProvider(LoomUtil.createClient(), privateKey)
   }
 }
 
@@ -131,8 +206,8 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
     "eth",
     LocalAddress.fromHexString(await signer.getAddress())
   )
-  const newLoomAccount = Util.generateAccount()
-  const client = Util.createClient()
+  const newLoomAccount = LoomUtil.generateAccount()
+  const client = LoomUtil.createClient()
   client.txMiddleware = createDefaultTxMiddleware(client, newLoomAccount.privateKey)
   const newLoomAddressInstance = new Address(
     client.chainId,
@@ -153,63 +228,10 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
   client.disconnect()
 }
 
-export const withdrawPreparation = async (
-  chain: any,
-  ethSigner: ethers.Signer,
-  ethSpecialPlanetTokenContractAddress: string,
-  tokenId?: string
-) => {
-  const receipt = await withGateway(ethSigner, async gateway => {
-    if (tokenId) {
-      await transferTokenToLoomGateway(chain, ethSigner, tokenId, gateway)
-      await sleep(10)
-    }
-
-    let receipt: IWithdrawalReceipt | null = null
-    for (let i = 0; i < 20; i++) {
-      // console.log(`signature check polling count: ${i + 1}`)
-      receipt = await getWithdrawalReceipt(
-        chain,
-        ethSigner,
-        ethSpecialPlanetTokenContractAddress,
-        gateway
-      )
-      if (receipt && receipt.oracleSignature.length > 0) {
-        break
-      }
-      await sleep(5)
-    }
-    return receipt
-  })
-
-  if (!(receipt && receipt.oracleSignature.length > 0)) {
-    throw new Error("no withdrawal receipt")
-  }
-
-  const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
-
-  const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
-  if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
-    throw new Error("wrong token")
-  }
-
-  return { tokenId: _tokenId, signature }
-}
-
-export const withGateway = async <T>(
-  ethSigner: ethers.Signer,
-  fn: (gateway: Contracts.TransferGateway) => Promise<T>
-) => {
-  const { gateway, client } = await getGateway(ethSigner)
-  const result = await fn(gateway)
-  client.disconnect()
-  return result
-}
-
 const getGateway = async (ethSigner: ethers.Signer) => {
   const ethAddress = await ethSigner.getAddress()
   const ethAddressInstance = Address.fromString(`eth:${ethAddress}`)
-  const client = Util.createClient()
+  const client = LoomUtil.createClient()
   client.txMiddleware = [
     new NonceTxMiddleware(ethAddressInstance, client),
     new SignedEthTxMiddleware(ethSigner)
@@ -221,50 +243,21 @@ const getGateway = async (ethSigner: ethers.Signer) => {
   }
 }
 
-const transferTokenToLoomGateway = async (
-  chain: any,
-  ethSigner: ethers.Signer,
+type _ExtractInstanceType<T> = new (...args: any) => T
+type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
+const transferSpecialPlanetTokenToGateway = async (
+  gateway: Contracts.TransferGateway,
+  token: ExtractInstanceType<import("web3")["eth"]["Contract"]>,
   tokenId: string,
-  gateway: Contracts.TransferGateway
+  ethAddress: string
 ) => {
-  const gatewayAddress = await chain.loom
-    .specialPlanetToken()
-    .methods.gateway()
-    .call()
-  await chain.loom
-    .specialPlanetToken()
-    .methods.approve(gatewayAddress, tokenId)
-    .send()
-  const ethAddress = await ethSigner.getAddress()
-
+  const gatewayAddress = await token.methods.gateway().call()
+  await token.methods.approve(gatewayAddress, tokenId).send()
   await gateway.withdrawERC721Async(
     new BN(tokenId),
-    Address.fromString(
-      `${ChainEnv.loom.chainId}:${chain.loom.specialPlanetToken().options.address}`
-    ),
+    Address.fromString(`${ChainEnv.loom.chainId}:${token.options.address}`),
     Address.fromString(`eth:${ethAddress}`)
   )
-}
-
-export const getWithdrawalReceipt = async (
-  chain: any,
-  ethSigner: ethers.Signer,
-  ethSpecialPlanetTokenContractAddress: string,
-  gateway: Contracts.TransferGateway
-) => {
-  const receipt = await gateway.withdrawalReceiptAsync(
-    Address.fromString(`${ChainEnv.loom.chainId}:${chain.loom.address}`)
-  )
-  const ethAddress = await ethSigner.getAddress()
-  if (
-    receipt &&
-    receipt.tokenContract.local.toString().toLowerCase() ===
-      ethSpecialPlanetTokenContractAddress.toLowerCase() &&
-    receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()
-  ) {
-    return receipt
-  }
-  return null
 }
 
 const sleep = (sec: number) => {

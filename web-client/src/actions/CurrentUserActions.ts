@@ -10,18 +10,14 @@ export class CurrentUserActions extends AbstractActions {
   login = async () => {
     this.dispatch(CurrentUserActions.login(null))
 
-    const isSuccess = await chain.eth.login((window as any).ethereum, () => {
-      new CurrentUserActions(this.dispatch).block()
-      throw new Error("blocked")
-    })
-    if (!isSuccess) {
+    const result = await chain.login((window as any).ethereum, this.block)
+
+    if (!result) {
       // TODO: show message to user
       throw new Error("failed to setup eth")
     }
 
-    const addresses = await chain.loom.loginWithEth(chain.eth.signer())
-
-    this.dispatch(CurrentUserActions.login(addresses))
+    this.dispatch(CurrentUserActions.login(result))
   }
 
   static block = CurrentUserActions.creator("block")

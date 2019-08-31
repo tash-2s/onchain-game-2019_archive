@@ -2,7 +2,6 @@ import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
 
 import { chain } from "../misc/chain"
-import { withGateway, getWithdrawalReceipt, withdrawPreparation } from "../misc/loom"
 
 export type GetUserResponse = any // TODO
 
@@ -33,64 +32,10 @@ export class UserActions extends AbstractActions {
       throw new Error("this function is for my page")
     }
 
-    const ethTokenIds: Array<string> = []
-    const ethBalance = await chain.eth
-      .specialPlanetToken()
-      .methods.balanceOf(chain.eth.address)
-      .call()
-    for (let i = 0; i < ethBalance; i++) {
-      ethTokenIds.push(
-        await chain.eth
-          .specialPlanetToken()
-          .methods.tokenOfOwnerByIndex(chain.eth.address, i)
-          .call()
-      )
-    }
+    const ethTokenIds = await getTokenIds(chain.eth)
+    const loomTokenIds = await getTokenIds(chain.loom)
 
-    const loomTokenIds: Array<string> = []
-    const loomBalance = await chain.loom
-      .specialPlanetToken()
-      .methods.balanceOf(chain.loom.address)
-      .call()
-    for (let i = 0; i < loomBalance; i++) {
-      loomTokenIds.push(
-        await chain.loom
-          .specialPlanetToken()
-          .methods.tokenOfOwnerByIndex(chain.loom.address, i)
-          .call()
-      )
-    }
-
-    const needsResume = await withGateway(chain.eth.signer(), async gateway => {
-      const receipt = await getWithdrawalReceipt(
-        chain,
-        chain.eth.signer(),
-        chain.eth.specialPlanetToken().options.address,
-        gateway
-      )
-
-      if (!receipt) {
-        return false
-      }
-      if (!receipt.tokenId) {
-        return false
-      }
-
-      // Receipt removals can be delayed, so I need to check it if it's already withdrew.
-      // If users transfer the token immediately after the resume, users may see wrong resume announcing...
-      const tokenIdStr = receipt.tokenId.toString()
-      let alreadyWithdrew = false
-      ethTokenIds.forEach(id => {
-        if (id === tokenIdStr) {
-          alreadyWithdrew = true
-        }
-      })
-      if (alreadyWithdrew) {
-        return false
-      }
-
-      return true
-    })
+    const needsResume = await chain.needsSpecialPlanetTokenResume(ethTokenIds)
 
     this.dispatch(
       UserActions.setTargetUserSpecialPlanetTokens({
@@ -138,6 +83,7 @@ export class UserActions extends AbstractActions {
         .normalPlanetController()
         .methods.rankupPlanet(userPlanetId, targetRank)
         .send()
+
       const response = await chain.loom
         .userController()
         .methods.getUser(address)
@@ -173,6 +119,7 @@ export class UserActions extends AbstractActions {
       .specialPlanetTokenShop()
       .methods.price()
       .call()
+
     chain.eth
       .specialPlanetTokenShop()
       .methods.sell()
@@ -202,22 +149,51 @@ export class UserActions extends AbstractActions {
   static transferTokenToEth = UserActions.creator<string>("transferTokenToEth")
   transferTokenToEth = async (tokenId?: string) => {
     new AppActions(this.dispatch).startLoading()
-    const { tokenId: _tokenId, signature } = await withdrawPreparation(
-      chain,
+
+    const ethAddress = chain.eth.address
+    if (!ethAddress) {
+      throw new Error("not logined")
+    }
+
+    const { tokenId: _tokenId, signature } = await chain.loom.prepareSpecialPlanetTokenWithdrawal(
       chain.eth.signer(),
       chain.eth.specialPlanetToken().options.address,
       tokenId
     )
+
     const gatewayContract = await chain.eth.gateway()
-    withdrawTokenFromEthGateway(gatewayContract, _tokenId, signature).on(
-      "transactionHash",
-      (hash: string) => {
+    gatewayContract.methods
+      .withdrawERC721(_tokenId, signature, chain.eth.specialPlanetToken().options.address)
+      .send({ from: ethAddress })
+      .on("transactionHash", (hash: string) => {
         this.dispatch(UserActions.transferTokenToEth(hash))
 
         new AppActions(this.dispatch).stopLoading()
-      }
+      })
+  }
+}
+
+type _ExtractInstanceType<T> = new (...args: any) => T
+type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
+
+const getTokenIds = async (c: {
+  address: string | null
+  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
+}) => {
+  const ids: Array<string> = []
+  const balance = await c
+    .specialPlanetToken()
+    .methods.balanceOf(c.address)
+    .call()
+  for (let i = 0; i < balance; i++) {
+    ids.push(
+      await c
+        .specialPlanetToken()
+        .methods.tokenOfOwnerByIndex(c.address, i)
+        .call()
     )
   }
+  return ids
 }
 
 const loginedAddress = () => {
@@ -226,12 +202,4 @@ const loginedAddress = () => {
     throw new Error("must login")
   }
   return address
-}
-
-const withdrawTokenFromEthGateway = (gatewayContract: any, tokenId: string, signature: string) => {
-  const tokenAddress = chain.eth.specialPlanetToken().options.address
-
-  return gatewayContract.methods
-    .withdrawERC721(tokenId, signature, tokenAddress)
-    .send({ from: chain.eth.address })
 }

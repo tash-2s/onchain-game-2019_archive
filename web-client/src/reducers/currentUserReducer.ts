@@ -6,7 +6,7 @@ import { chain } from "../misc/chain"
 const createInitialState = () => {
   return {
     loomAddress: chain.loom.address,
-    ethAddress: null as string | null, // TODO
+    ethAddress: chain.eth.address,
     logining: false,
     blocked: false
   }
