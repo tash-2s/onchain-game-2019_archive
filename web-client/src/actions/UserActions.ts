@@ -131,8 +131,10 @@ export class UserActions extends AbstractActions {
       })
   }
 
-  static transferTokenToLoom = UserActions.creator<string>("transferTokenToLoom")
-  transferTokenToLoom = (tokenId: string) => {
+  static transferSpecialPlanetTokenToLoom = UserActions.creator<string>(
+    "transferSpecialPlanetTokenToLoom"
+  )
+  transferSpecialPlanetTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
     chains.eth
@@ -140,14 +142,16 @@ export class UserActions extends AbstractActions {
       .methods.depositToGateway(tokenId)
       .send()
       .on("transactionHash", hash => {
-        this.dispatch(UserActions.transferTokenToLoom(hash))
+        this.dispatch(UserActions.transferSpecialPlanetTokenToLoom(hash))
 
         new AppActions(this.dispatch).stopLoading()
       })
   }
 
-  static transferTokenToEth = UserActions.creator<string>("transferTokenToEth")
-  transferTokenToEth = async (tokenId?: string) => {
+  static transferSpecialPlanetTokenToEth = UserActions.creator<string>(
+    "transferSpecialPlanetTokenToEth"
+  )
+  transferSpecialPlanetTokenToEth = async (tokenId?: string) => {
     new AppActions(this.dispatch).startLoading()
 
     const ethAddress = chains.eth.address
@@ -166,7 +170,7 @@ export class UserActions extends AbstractActions {
       .withdrawERC721(_tokenId, signature, chains.eth.specialPlanetToken().options.address)
       .send({ from: ethAddress })
       .on("transactionHash", (hash: string) => {
-        this.dispatch(UserActions.transferTokenToEth(hash))
+        this.dispatch(UserActions.transferSpecialPlanetTokenToEth(hash))
 
         new AppActions(this.dispatch).stopLoading()
       })
