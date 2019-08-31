@@ -1,7 +1,7 @@
 import { AbstractActions } from "./AbstractActions"
 import Web3 from "web3"
 import { EthWeb3 } from "../misc/eth"
-import { LoomWeb3 } from "../misc/loom"
+import { chain } from "../misc/chain"
 
 export class CurrentUserActions extends AbstractActions {
   private static creator = CurrentUserActions.getActionCreator()
@@ -21,7 +21,7 @@ export class CurrentUserActions extends AbstractActions {
       throw new Error("failed to setup eth")
     }
 
-    const addresses = await LoomWeb3.loginWithEth(EthWeb3.signer)
+    const addresses = await chain.loom.loginWithEth(EthWeb3.signer)
 
     this.dispatch(CurrentUserActions.login(addresses))
   }

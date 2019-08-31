@@ -5,12 +5,10 @@ import { Provider } from "react-redux"
 
 import { createReducer } from "./reducers/rootReducer"
 import { registerStore } from "./misc/route"
-import { LoomWeb3 } from "./misc/loom"
 import { startClock } from "./misc/clock"
 import { AppContainer } from "./containers/AppContainer"
 import { TopLevelErrorBoundary } from "./components/TopLevelErrorBoundary"
 
-LoomWeb3.setup()
 const store = createStore(
   createReducer(),
   (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()

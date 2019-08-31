@@ -1,15 +1,16 @@
 import { AbstractActions } from "./AbstractActions"
-import { callLoomContractMethod, LoomWeb3 } from "../misc/loom"
+import { chain } from "../misc/chain"
 
 export class UsersActions extends AbstractActions {
   private static creator = UsersActions.getActionCreator()
 
-  static setUsers = UsersActions.creator<[string, [string[], string[]]]>("setUsers")
+  static setUsers = UsersActions.creator<[string | null, [string[], string[]]]>("setUsers")
   setUsers = async () => {
-    const response = await callLoomContractMethod(cs =>
-      cs.RemarkableUserController.methods.getUsers()
-    )
-    const address = LoomWeb3.address
+    const response = await chain.loom
+      .remarkableUserController()
+      .methods.getUsers()
+      .call()
+    const address = chain.loom.address
 
     this.dispatch(UsersActions.setUsers([address, response]))
   }

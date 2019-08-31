@@ -1,12 +1,12 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { CurrentUserActions } from "../actions/CurrentUserActions"
-import { LoomWeb3 } from "../misc/loom"
+import { chain } from "../misc/chain"
 
 const createInitialState = () => {
   return {
-    loomAddress: LoomWeb3.isGuest ? null : LoomWeb3.address,
-    ethAddress: LoomWeb3.isGuest ? null : LoomWeb3.web3FromAddress,
+    loomAddress: chain.loom.address,
+    ethAddress: null as string | null, // TODO
     logining: false,
     blocked: false
   }

@@ -1,24 +1,8 @@
-import BN from "bn.js"
-import {
-  LocalAddress,
-  Address,
-  CryptoUtils,
-  Contracts,
-  NonceTxMiddleware,
-  SignedEthTxMiddleware,
-  getMetamaskSigner
-} from "loom-js"
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
-import {
-  callLoomContractMethod,
-  sendLoomContractMethod,
-  LoomWeb3,
-  ChainEnv,
-  LoomUtil
-} from "../misc/loom"
+
+import { chain } from "../misc/chain"
+import { withGateway, getWithdrawalReceipt, withdrawPreparation } from "../misc/loom"
 import { EthWeb3 } from "../misc/eth"
 
 export type GetUserResponse = any // TODO
@@ -33,7 +17,10 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<User>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const response = await callLoomContractMethod(cs => cs.UserController.methods.getUser(address))
+    const response = await chain.loom
+      .userController()
+      .methods.getUser(address)
+      .call()
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
@@ -43,7 +30,7 @@ export class UserActions extends AbstractActions {
     needsResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
-    if (address !== LoomWeb3.address) {
+    if (address !== chain.loom.address) {
       throw new Error("this function is for my page")
     }
 
@@ -57,19 +44,26 @@ export class UserActions extends AbstractActions {
     }
 
     const loomTokenIds: Array<string> = []
-    const loomBalance = await callLoomContractMethod(cs =>
-      cs.SpecialPlanetToken.methods.balanceOf(LoomWeb3.address)
-    )
+    const loomBalance = await chain.loom
+      .specialPlanetToken()
+      .methods.balanceOf(chain.loom.address)
+      .call()
     for (let i = 0; i < loomBalance; i++) {
       loomTokenIds.push(
-        await callLoomContractMethod(cs =>
-          cs.SpecialPlanetToken.methods.tokenOfOwnerByIndex(LoomWeb3.address, i)
-        )
+        await chain.loom
+          .specialPlanetToken()
+          .methods.tokenOfOwnerByIndex(chain.loom.address, i)
+          .call()
       )
     }
 
-    const needsResume = await withGateway(async gateway => {
-      const receipt = await getWithdrawalReceipt(gateway)
+    const needsResume = await withGateway(EthWeb3.signer, async gateway => {
+      const receipt = await getWithdrawalReceipt(
+        chain,
+        EthWeb3.signer,
+        EthWeb3.specialPlanetToken().options.address,
+        gateway
+      )
 
       if (!receipt) {
         return false
@@ -111,14 +105,16 @@ export class UserActions extends AbstractActions {
   static getPlanet = UserActions.creator<User>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      await sendLoomContractMethod(cs =>
-        cs.NormalPlanetController.methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
-      )
+      const address = loginedAddress()
+      await chain.loom
+        .normalPlanetController()
+        .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+        .send()
 
-      const address = LoomWeb3.address
-      const response = await callLoomContractMethod(cs =>
-        cs.UserController.methods.getUser(address)
-      )
+      const response = await chain.loom
+        .userController()
+        .methods.getUser(address)
+        .call()
 
       this.dispatch(
         UserActions.getPlanet({
@@ -132,13 +128,17 @@ export class UserActions extends AbstractActions {
   static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      const address = LoomWeb3.address
-      await sendLoomContractMethod(cs =>
-        cs.NormalPlanetController.methods.rankupPlanet(userPlanetId, targetRank)
-      )
-      const response = await callLoomContractMethod(cs =>
-        cs.UserController.methods.getUser(address)
-      )
+      const address = loginedAddress()
+
+      await chain.loom
+        .normalPlanetController()
+        .methods.rankupPlanet(userPlanetId, targetRank)
+        .send()
+      const response = await chain.loom
+        .userController()
+        .methods.getUser(address)
+        .call()
+
       this.dispatch(UserActions.rankupUserPlanet({ address, response }))
     })
   }
@@ -146,13 +146,17 @@ export class UserActions extends AbstractActions {
   static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      const address = LoomWeb3.address
-      await sendLoomContractMethod(cs =>
-        cs.NormalPlanetController.methods.removePlanet(userPlanetId)
-      )
-      const response = await callLoomContractMethod(cs =>
-        cs.UserController.methods.getUser(address)
-      )
+      const address = loginedAddress()
+
+      await chain.loom
+        .normalPlanetController()
+        .methods.removePlanet(userPlanetId)
+        .send()
+      const response = await chain.loom
+        .userController()
+        .methods.getUser(address)
+        .call()
+
       this.dispatch(UserActions.removeUserPlanet({ address, response }))
     })
   }
@@ -186,7 +190,12 @@ export class UserActions extends AbstractActions {
   static transferTokenToEth = UserActions.creator<string>("transferTokenToEth")
   transferTokenToEth = async (tokenId?: string) => {
     new AppActions(this.dispatch).startLoading()
-    const { tokenId: _tokenId, signature } = await withdrawPreparation(tokenId)
+    const { tokenId: _tokenId, signature } = await withdrawPreparation(
+      chain,
+      EthWeb3.signer,
+      EthWeb3.specialPlanetToken().options.address,
+      tokenId
+    )
     const gatewayContract = await EthWeb3.gateway()
     withdrawTokenFromEthGateway(gatewayContract, _tokenId, signature).on(
       "transactionHash",
@@ -199,84 +208,12 @@ export class UserActions extends AbstractActions {
   }
 }
 
-const withdrawPreparation = async (tokenId?: string) => {
-  const receipt = await withGateway(async gateway => {
-    if (tokenId) {
-      await transferTokenToLoomGateway(tokenId, gateway)
-      await sleep(10)
-    }
-
-    let receipt: IWithdrawalReceipt | null = null
-    for (let i = 0; i < 20; i++) {
-      // console.log(`signature check polling count: ${i + 1}`)
-      receipt = await getWithdrawalReceipt(gateway)
-      if (receipt && receipt.oracleSignature.length > 0) {
-        break
-      }
-      await sleep(5)
-    }
-    return receipt
-  })
-
-  if (!(receipt && receipt.oracleSignature.length > 0)) {
-    throw new Error("no withdrawal receipt")
+const loginedAddress = () => {
+  const address = chain.loom.address
+  if (!address) {
+    throw new Error("must login")
   }
-
-  const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
-
-  const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
-  if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
-    throw new Error("wrong token")
-  }
-
-  return { tokenId: _tokenId, signature }
-}
-
-const getWithdrawalReceipt = async (gateway: Contracts.TransferGateway) => {
-  const receipt = await gateway.withdrawalReceiptAsync(
-    Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.address}`)
-  )
-  if (
-    receipt &&
-    receipt.tokenContract.local.toString().toLowerCase() ===
-      EthWeb3.specialPlanetToken().options.address.toLowerCase() &&
-    receipt.tokenOwner.local.toString().toLowerCase() === EthWeb3.address.toLowerCase()
-  ) {
-    return receipt
-  }
-  return null
-}
-
-const withGateway = async <T>(fn: (gateway: Contracts.TransferGateway) => Promise<T>) => {
-  const { gateway, client } = await getGateway()
-  const result = await fn(gateway)
-  client.disconnect()
-  return result
-}
-
-const getGateway = async () => {
-  const ethAddressInstance = Address.fromString(`eth:${EthWeb3.address}`)
-  const client = LoomUtil.createClient()
-  client.txMiddleware = [
-    new NonceTxMiddleware(ethAddressInstance, client),
-    new SignedEthTxMiddleware(EthWeb3.signer)
-  ]
-
-  return {
-    gateway: await Contracts.TransferGateway.createAsync(client, ethAddressInstance),
-    client: client
-  }
-}
-
-const transferTokenToLoomGateway = async (tokenId: string, gateway: Contracts.TransferGateway) => {
-  const gatewayAddress = await callLoomContractMethod(cs => cs.SpecialPlanetToken.methods.gateway())
-  await sendLoomContractMethod(cs => cs.SpecialPlanetToken.methods.approve(gatewayAddress, tokenId))
-
-  await gateway.withdrawERC721Async(
-    new BN(tokenId),
-    Address.fromString(`${ChainEnv.loom.chainId}:${LoomWeb3.specialPlanetToken().options.address}`),
-    Address.fromString(`eth:${EthWeb3.address}`)
-  )
+  return address
 }
 
 const withdrawTokenFromEthGateway = (gatewayContract: any, tokenId: string, signature: string) => {
@@ -285,10 +222,4 @@ const withdrawTokenFromEthGateway = (gatewayContract: any, tokenId: string, sign
   return gatewayContract.methods
     .withdrawERC721(tokenId, signature, tokenAddress)
     .send({ from: EthWeb3.address })
-}
-
-const sleep = (sec: number) => {
-  return new Promise(resolve => {
-    setTimeout(resolve, sec * 1000)
-  })
 }
