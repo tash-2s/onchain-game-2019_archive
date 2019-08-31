@@ -2,6 +2,7 @@ import Web3 from "web3"
 import { ethers } from "ethers"
 
 import ChainEnv from "../chain/env.json"
+
 import SpecialPlanetTokenABI from "../chain/abi/eth/SpecialPlanetToken.json"
 import SpecialPlanetTokenShopABI from "../chain/abi/eth/SpecialPlanetTokenShop.json"
 
@@ -31,13 +32,18 @@ const GatewayABI = [
   }
 ]
 
-export class EthWeb3 {
-  static web3: Web3
-  static ethersProvider: ethers.providers.Web3Provider
-  static signer: ethers.Signer
-  static address: string
+export class Eth {
+  web3: Web3 | null
+  ethersProvider: ethers.providers.Web3Provider | null
+  address: string | null
 
-  static setup = async (provider: any, providerChangedFn: () => void) => {
+  constructor() {
+    this.web3 = null
+    this.ethersProvider = null
+    this.address = null
+  }
+
+  login = async (provider: any, providerChangedFn: () => void) => {
     if (typeof provider === "undefined") {
       // not dapp browser
       return false
@@ -62,62 +68,54 @@ export class EthWeb3 {
     provider.on("accountsChanged", providerChangedFn)
     provider.on("networkChanged", providerChangedFn)
 
-    EthWeb3.web3 = new Web3(provider)
-    EthWeb3.ethersProvider = new ethers.providers.Web3Provider(provider)
-    // maybe I need a hack for non metamask provider
-    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
-    EthWeb3.signer = EthWeb3.ethersProvider.getSigner()
-    EthWeb3.address = await EthWeb3.signer.getAddress()
+    this.web3 = new Web3(provider)
+    this.ethersProvider = new ethers.providers.Web3Provider(provider)
+    this.address = await this.signer().getAddress()
 
     return true
   }
 
-  static specialPlanetToken = () => {
-    return new EthWeb3.web3.eth.Contract(
+  signer = () => {
+    // maybe I need a hack for non metamask provider
+    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
+    if (!this.ethersProvider) {
+      throw new Error("not logined")
+    }
+    return this.ethersProvider.getSigner()
+  }
+
+  specialPlanetToken = () => {
+    if (!this.web3 || !this.address) {
+      throw new Error("not logined")
+    }
+
+    return new this.web3.eth.Contract(
       SpecialPlanetTokenABI,
-      ChainEnv.ethContractAddresses.SpecialPlanetToken
+      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      { from: this.address }
     )
   }
 
-  static gateway = async () => {
-    const address = await EthWeb3.callSpecialPlanetTokenMethod("gateway")
-    return new EthWeb3.web3.eth.Contract(GatewayABI, address)
-  }
+  specialPlanetTokenShop = () => {
+    if (!this.web3 || !this.address) {
+      throw new Error("not logined")
+    }
 
-  static callSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
-    return EthWeb3.callContractMethod(EthWeb3.specialPlanetToken(), methodName, ...args)
-  }
-
-  static sendSpecialPlanetTokenMethod = (methodName: string, ...args: Array<any>) => {
-    const from = EthWeb3.address
-    return EthWeb3.specialPlanetToken()
-      .methods[methodName](...args)
-      .send({ from })
-  }
-
-  static callSpecialPlanetTokenShopMethod = (methodName: string, ...args: Array<any>) => {
-    const shop = new EthWeb3.web3.eth.Contract(
+    return new this.web3.eth.Contract(
       SpecialPlanetTokenShopABI,
-      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop
+      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop,
+      { from: this.address }
     )
-    return EthWeb3.callContractMethod(shop, methodName, ...args)
   }
 
-  static sendSpecialPlanetTokenShopMethod = (methodName: string, wei: string) => {
-    const shop = new EthWeb3.web3.eth.Contract(
-      SpecialPlanetTokenShopABI,
-      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop
-    )
-    const from = EthWeb3.address
-    return shop.methods[methodName]().send({ from, value: wei })
-  }
+  gateway = async () => {
+    if (!this.web3 || !this.address) {
+      throw new Error("not logined")
+    }
 
-  static callContractMethod = (
-    contract: any,
-    methodName: string,
-    ...args: Array<any>
-  ): Promise<any> => {
-    const from = EthWeb3.address
-    return contract.methods[methodName](...args).call({ from })
+    const address = await this.specialPlanetToken()
+      .methods.gateway()
+      .call()
+    return new this.web3.eth.Contract(GatewayABI, address, { from: this.address })
   }
 }

@@ -1,3 +1,6 @@
+import BN from "bn.js"
+import Web3 from "web3"
+import { ethers } from "ethers"
 import {
   Client,
   Address,
@@ -10,122 +13,191 @@ import {
   NonceTxMiddleware,
   SignedEthTxMiddleware
 } from "loom-js"
-import Web3 from "web3"
-import { ethers } from "ethers"
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
-import _ChainEnv from "../chain/env.json"
+import ChainEnv from "../chain/env.json"
+
 import UserABI from "../chain/abi/loom/UserController.json"
 import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
 import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
 import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 
-export const ChainEnv = _ChainEnv
+export class Loom {
+  web3: Web3
+  address: string | null
 
-export class LoomWeb3 {
-  static isGuest = true
-  static web3: Web3
-  static web3FromAddress: string // eth address
-  static mediatorPrivateKey: Uint8Array
-  static address: string // loom address
-
-  static setup() {
-    const { privateKey, address } = LoomUtil.generateAccount()
-    LoomWeb3.mediatorPrivateKey = privateKey
-    LoomWeb3.web3 = new Web3(new LoomProvider(LoomUtil.createClient(), privateKey) as any)
-    LoomWeb3.web3FromAddress = address
+  constructor() {
+    this.web3 = new Web3(LoomUtil.createProviderWithDummyAddress())
+    this.address = null
   }
 
-  static mediatorPublicKey() {
-    return CryptoUtils.publicKeyFromPrivateKey(LoomWeb3.mediatorPrivateKey)
-  }
-
-  static mediatorLocalAddressInstance() {
-    return LocalAddress.fromPublicKey(LoomWeb3.mediatorPublicKey())
-  }
-
-  static mediatorAddress() {
-    return LoomWeb3.mediatorLocalAddressInstance().toChecksumString()
-  }
-
-  static async loginWithEth(signer: ethers.Signer) {
+  login = async (signer: ethers.Signer) => {
     const ethAddress = await signer.getAddress()
 
     const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
     const client = LoomUtil.createClient()
+    const dummyAccount = LoomUtil.generateAccount()
 
     const addressMapper = await Contracts.AddressMapper.createAsync(
       client,
-      new Address(client.chainId, LoomWeb3.mediatorLocalAddressInstance())
+      new Address(client.chainId, LocalAddress.fromPublicKey(dummyAccount.publicKey))
     )
     if (!(await addressMapper.hasMappingAsync(ethAddressInstance))) {
       await addMappingWithNewLoomAccount(signer)
     }
     const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
-    // console.log(
-    //   `eth: ${mapping.from.local.toChecksumString()}, loom: ${mapping.to.local.toChecksumString()}`
-    // )
-    LoomWeb3.address = mapping.to.local.toChecksumString()
 
-    const loomProvider = new LoomProvider(client, LoomWeb3.mediatorPrivateKey)
+    const loomProvider = new LoomProvider(client, dummyAccount.privateKey)
     loomProvider.callerChainId = "eth"
     loomProvider.setMiddlewaresForAddress(ethAddressInstance.local.toString(), [
       new NonceTxMiddleware(ethAddressInstance, client),
       new SignedEthTxMiddleware(signer)
     ])
 
-    const newWeb3 = new Web3(loomProvider)
-    const oldProvider = LoomWeb3.web3.currentProvider as LoomProvider
+    const oldProvider = this.web3.currentProvider as LoomProvider
     oldProvider.disconnect()
-    LoomWeb3.web3 = newWeb3
-    LoomWeb3.web3FromAddress = ethAddress
-    LoomWeb3.isGuest = false
 
-    return { ethAddress, loomAddress: LoomWeb3.address }
+    this.web3 = new Web3(loomProvider)
+    this.address = mapping.to.local.toChecksumString()
+
+    return { ethAddress, loomAddress: this.address }
   }
 
-  static async getLoomTime() {
-    const o = await LoomWeb3.web3.eth.getBlock("latest")
+  getLoomTime = async () => {
+    const o = await this.web3.eth.getBlock("latest")
     return o.timestamp
   }
 
-  static specialPlanetToken = () => {
-    return new LoomWeb3.web3.eth.Contract(
-      SpecialPlanetTokenABI,
-      ChainEnv.loomContractAddresses.SpecialPlanetToken
+  userController = () => {
+    return new this.web3.eth.Contract(UserABI, ChainEnv.loomContractAddresses.UserController, {
+      from: this._callerAddress()
+    })
+  }
+
+  normalPlanetController = () => {
+    return new this.web3.eth.Contract(
+      NormalPlanetABI,
+      ChainEnv.loomContractAddresses.NormalPlanetController,
+      { from: this._callerAddress() }
     )
+  }
+
+  remarkableUserController = () => {
+    return new this.web3.eth.Contract(
+      RemarkableUserABI,
+      ChainEnv.loomContractAddresses.RemarkableUserController,
+      { from: this._callerAddress() }
+    )
+  }
+
+  specialPlanetToken = () => {
+    return new this.web3.eth.Contract(
+      SpecialPlanetTokenABI,
+      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      { from: this._callerAddress() }
+    )
+  }
+
+  withGateway = async <T>(
+    ethSigner: ethers.Signer,
+    fn: (gateway: Contracts.TransferGateway) => Promise<T>
+  ) => {
+    const { gateway, client } = await getGateway(ethSigner)
+    const result = await fn(gateway)
+    client.disconnect()
+    return result
+  }
+
+  getSpecialPlanetTokenWithdrawalReceipt = async (
+    ethAddress: string,
+    ethSpecialPlanetTokenAddress: string,
+    gateway: Contracts.TransferGateway
+  ) => {
+    const receipt = await gateway.withdrawalReceiptAsync(
+      Address.fromString(`${ChainEnv.loom.chainId}:${this.address}`)
+    )
+    if (
+      receipt &&
+      receipt.tokenContract.local.toString().toLowerCase() ===
+        ethSpecialPlanetTokenAddress.toLowerCase() &&
+      receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()
+    ) {
+      return receipt
+    }
+    return null
+  }
+
+  prepareSpecialPlanetTokenWithdrawal = async (
+    ethSigner: ethers.Signer,
+    ethSpecialPlanetTokenAddress: string,
+    tokenId?: string
+  ) => {
+    const ethAddress = await ethSigner.getAddress()
+
+    const receipt = await this.withGateway(ethSigner, async gateway => {
+      if (tokenId) {
+        await transferSpecialPlanetTokenToGateway(
+          gateway,
+          this.specialPlanetToken(),
+          tokenId,
+          ethAddress
+        )
+        await sleep(10)
+      }
+
+      let receipt: IWithdrawalReceipt | null = null
+      for (let i = 0; i < 20; i++) {
+        // console.log(`signature check polling count: ${i + 1}`)
+        receipt = await this.getSpecialPlanetTokenWithdrawalReceipt(
+          ethAddress,
+          ethSpecialPlanetTokenAddress,
+          gateway
+        )
+        // check it's signed
+        if (receipt && receipt.oracleSignature.length > 0) {
+          break
+        }
+        await sleep(5)
+      }
+      return receipt
+    })
+
+    if (!(receipt && receipt.oracleSignature.length > 0)) {
+      throw new Error("no withdrawal receipt")
+    }
+
+    const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
+    if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
+      throw new Error("wrong token")
+    }
+
+    return { tokenId: _tokenId, signature: CryptoUtils.bytesToHexAddr(receipt.oracleSignature) }
+  }
+
+  // return eth address if logined, otherwise return loom dummy address
+  private _callerAddress = () => {
+    const provider = this.web3.currentProvider as LoomProvider
+    const addresses = Array.from(provider.accounts.keys())
+    return addresses[addresses.length - 1]
   }
 }
 
-const getLoomContracts = () => ({
-  UserController: new LoomWeb3.web3.eth.Contract(
-    UserABI,
-    ChainEnv.loomContractAddresses.UserController
-  ),
-  NormalPlanetController: new LoomWeb3.web3.eth.Contract(
-    NormalPlanetABI,
-    ChainEnv.loomContractAddresses.NormalPlanetController
-  ),
-  RemarkableUserController: new LoomWeb3.web3.eth.Contract(
-    RemarkableUserABI,
-    ChainEnv.loomContractAddresses.RemarkableUserController
-  ),
-  SpecialPlanetToken: new LoomWeb3.web3.eth.Contract(
-    SpecialPlanetTokenABI,
-    ChainEnv.loomContractAddresses.SpecialPlanetToken
-  )
-})
-
-export class LoomUtil {
-  static createClient() {
+class LoomUtil {
+  static createClient = () => {
     const p = [ChainEnv.loom.chainId, ChainEnv.loom.writeUrl, ChainEnv.loom.readUrl] as const
     return new Client(...p)
   }
 
-  static generateAccount() {
+  static generateAccount = () => {
     const privateKey = CryptoUtils.generatePrivateKey()
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
     const address = LocalAddress.fromPublicKey(publicKey).toChecksumString()
     return { privateKey, publicKey, address }
+  }
+
+  static createProviderWithDummyAddress = () => {
+    const { privateKey } = LoomUtil.generateAccount()
+    return new LoomProvider(LoomUtil.createClient(), privateKey)
   }
 }
 
@@ -156,17 +228,40 @@ const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {
   client.disconnect()
 }
 
-export const callLoomContractMethod = async (
-  f: (cs: ReturnType<typeof getLoomContracts>) => any
-) => {
-  const r = await f(getLoomContracts()).call({ from: LoomWeb3.web3FromAddress })
-  return r
+const getGateway = async (ethSigner: ethers.Signer) => {
+  const ethAddress = await ethSigner.getAddress()
+  const ethAddressInstance = Address.fromString(`eth:${ethAddress}`)
+  const client = LoomUtil.createClient()
+  client.txMiddleware = [
+    new NonceTxMiddleware(ethAddressInstance, client),
+    new SignedEthTxMiddleware(ethSigner)
+  ]
+
+  return {
+    gateway: await Contracts.TransferGateway.createAsync(client, ethAddressInstance),
+    client: client
+  }
 }
 
-export const sendLoomContractMethod = async (
-  f: (cs: ReturnType<typeof getLoomContracts>) => any
+type _ExtractInstanceType<T> = new (...args: any) => T
+type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
+const transferSpecialPlanetTokenToGateway = async (
+  gateway: Contracts.TransferGateway,
+  token: ExtractInstanceType<import("web3")["eth"]["Contract"]>,
+  tokenId: string,
+  ethAddress: string
 ) => {
-  const r = await f(getLoomContracts()).send({ from: LoomWeb3.web3FromAddress })
-  // console.log(r)
-  return r
+  const gatewayAddress = await token.methods.gateway().call()
+  await token.methods.approve(gatewayAddress, tokenId).send()
+  await gateway.withdrawERC721Async(
+    new BN(tokenId),
+    Address.fromString(`${ChainEnv.loom.chainId}:${token.options.address}`),
+    Address.fromString(`eth:${ethAddress}`)
+  )
+}
+
+const sleep = (sec: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, sec * 1000)
+  })
 }

@@ -76,7 +76,7 @@ export const createUserReducer = () =>
         }
       }
     })
-    .case(UserActions.transferTokenToLoom, (state, payload) => {
+    .case(UserActions.transferSpecialPlanetTokenToLoom, (state, payload) => {
       if (!state.targetUser) {
         return { ...state }
       }
@@ -89,7 +89,7 @@ export const createUserReducer = () =>
         }
       }
     })
-    .case(UserActions.transferTokenToEth, (state, payload) => {
+    .case(UserActions.transferSpecialPlanetTokenToEth, (state, payload) => {
       if (!state.targetUser) {
         return { ...state }
       }

@@ -75,7 +75,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
   if (props.user.specialPlanetTokens) {
     const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
     const ethTokens = props.user.specialPlanetTokens.eth.map(tokenId => {
-      const onClick = () => props.userActions.transferTokenToLoom(tokenId)
+      const onClick = () => props.userActions.transferSpecialPlanetTokenToLoom(tokenId)
       return (
         <li key={tokenId}>
           {tokenId}
@@ -89,7 +89,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
         }), it takes additional 15 minutes to see the token on loom`
       : ""
     const loomTokens = props.user.specialPlanetTokens.loom.map(tokenId => {
-      const onClick = () => props.userActions.transferTokenToEth(tokenId)
+      const onClick = () => props.userActions.transferSpecialPlanetTokenToEth(tokenId)
       return (
         <li key={tokenId}>
           {tokenId}
@@ -100,7 +100,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
     const msg2 = props.user.specialPlanetTokenTransferToEthTx
       ? `requested. tx: ${props.user.specialPlanetTokenTransferToEthTx}`
       : ""
-    const resumeFn = () => props.userActions.transferTokenToEth()
+    const resumeFn = () => props.userActions.transferSpecialPlanetTokenToEth()
     const resume = props.user.specialPlanetTokens.needsResume ? (
       <button onClick={resumeFn}>you have an ongoing transfer, resume it</button>
     ) : (
