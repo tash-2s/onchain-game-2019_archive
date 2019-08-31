@@ -16,21 +16,20 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import Web3 from "web3"
 import { ethers } from "ethers"
 
-import _ChainEnv from "../chain/env.json"
+import ChainEnv from "../chain/env.json"
+
 import UserABI from "../chain/abi/loom/UserController.json"
 import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
 import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
 import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 
-export const ChainEnv = _ChainEnv
-
 export class Loom {
-  address: string | null
   web3: Web3
+  address: string | null
 
   constructor() {
-    this.address = null
     this.web3 = new Web3(Util.createLoomProviderWithDummyAddress())
+    this.address = null
   }
 
   loginWithEth = async (signer: ethers.Signer) => {
@@ -59,8 +58,8 @@ export class Loom {
     const oldProvider = this.web3.currentProvider as LoomProvider
     oldProvider.disconnect()
 
-    this.address = mapping.to.local.toChecksumString()
     this.web3 = new Web3(loomProvider)
+    this.address = mapping.to.local.toChecksumString()
 
     return { ethAddress, loomAddress: this.address }
   }

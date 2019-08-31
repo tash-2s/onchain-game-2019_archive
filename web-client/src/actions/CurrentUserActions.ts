@@ -1,6 +1,4 @@
 import { AbstractActions } from "./AbstractActions"
-import Web3 from "web3"
-import { EthWeb3 } from "../misc/eth"
 import { chain } from "../misc/chain"
 
 export class CurrentUserActions extends AbstractActions {
@@ -12,7 +10,7 @@ export class CurrentUserActions extends AbstractActions {
   login = async () => {
     this.dispatch(CurrentUserActions.login(null))
 
-    const isSuccess = await EthWeb3.setup((window as any).ethereum, () => {
+    const isSuccess = await chain.eth.login((window as any).ethereum, () => {
       new CurrentUserActions(this.dispatch).block()
       throw new Error("blocked")
     })
@@ -21,7 +19,7 @@ export class CurrentUserActions extends AbstractActions {
       throw new Error("failed to setup eth")
     }
 
-    const addresses = await chain.loom.loginWithEth(EthWeb3.signer)
+    const addresses = await chain.loom.loginWithEth(chain.eth.signer())
 
     this.dispatch(CurrentUserActions.login(addresses))
   }

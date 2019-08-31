@@ -3,7 +3,6 @@ import { AppActions } from "./AppActions"
 
 import { chain } from "../misc/chain"
 import { withGateway, getWithdrawalReceipt, withdrawPreparation } from "../misc/loom"
-import { EthWeb3 } from "../misc/eth"
 
 export type GetUserResponse = any // TODO
 
@@ -34,12 +33,17 @@ export class UserActions extends AbstractActions {
       throw new Error("this function is for my page")
     }
 
-    const ethAddress = EthWeb3.address
     const ethTokenIds: Array<string> = []
-    const ethBalance = await EthWeb3.callSpecialPlanetTokenMethod("balanceOf", ethAddress)
+    const ethBalance = await chain.eth
+      .specialPlanetToken()
+      .methods.balanceOf(chain.eth.address)
+      .call()
     for (let i = 0; i < ethBalance; i++) {
       ethTokenIds.push(
-        await EthWeb3.callSpecialPlanetTokenMethod("tokenOfOwnerByIndex", ethAddress, i)
+        await chain.eth
+          .specialPlanetToken()
+          .methods.tokenOfOwnerByIndex(chain.eth.address, i)
+          .call()
       )
     }
 
@@ -57,11 +61,11 @@ export class UserActions extends AbstractActions {
       )
     }
 
-    const needsResume = await withGateway(EthWeb3.signer, async gateway => {
+    const needsResume = await withGateway(chain.eth.signer(), async gateway => {
       const receipt = await getWithdrawalReceipt(
         chain,
-        EthWeb3.signer,
-        EthWeb3.specialPlanetToken().options.address,
+        chain.eth.signer(),
+        chain.eth.specialPlanetToken().options.address,
         gateway
       )
 
@@ -165,26 +169,34 @@ export class UserActions extends AbstractActions {
   buySpecialPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = await EthWeb3.callSpecialPlanetTokenShopMethod("price")
-    EthWeb3.sendSpecialPlanetTokenShopMethod("sell", price).on("transactionHash", hash => {
-      this.dispatch(UserActions.buySpecialPlanetToken(hash))
+    const price = await chain.eth
+      .specialPlanetTokenShop()
+      .methods.price()
+      .call()
+    chain.eth
+      .specialPlanetTokenShop()
+      .methods.sell()
+      .send({ value: price })
+      .on("transactionHash", hash => {
+        this.dispatch(UserActions.buySpecialPlanetToken(hash))
 
-      new AppActions(this.dispatch).stopLoading()
-    })
+        new AppActions(this.dispatch).stopLoading()
+      })
   }
 
   static transferTokenToLoom = UserActions.creator<string>("transferTokenToLoom")
   transferTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    EthWeb3.sendSpecialPlanetTokenMethod("depositToGateway", tokenId).on(
-      "transactionHash",
-      hash => {
+    chain.eth
+      .specialPlanetToken()
+      .methods.depositToGateway(tokenId)
+      .send()
+      .on("transactionHash", hash => {
         this.dispatch(UserActions.transferTokenToLoom(hash))
 
         new AppActions(this.dispatch).stopLoading()
-      }
-    )
+      })
   }
 
   static transferTokenToEth = UserActions.creator<string>("transferTokenToEth")
@@ -192,11 +204,11 @@ export class UserActions extends AbstractActions {
     new AppActions(this.dispatch).startLoading()
     const { tokenId: _tokenId, signature } = await withdrawPreparation(
       chain,
-      EthWeb3.signer,
-      EthWeb3.specialPlanetToken().options.address,
+      chain.eth.signer(),
+      chain.eth.specialPlanetToken().options.address,
       tokenId
     )
-    const gatewayContract = await EthWeb3.gateway()
+    const gatewayContract = await chain.eth.gateway()
     withdrawTokenFromEthGateway(gatewayContract, _tokenId, signature).on(
       "transactionHash",
       (hash: string) => {
@@ -217,9 +229,9 @@ const loginedAddress = () => {
 }
 
 const withdrawTokenFromEthGateway = (gatewayContract: any, tokenId: string, signature: string) => {
-  const tokenAddress = EthWeb3.specialPlanetToken().options.address
+  const tokenAddress = chain.eth.specialPlanetToken().options.address
 
   return gatewayContract.methods
     .withdrawERC721(tokenId, signature, tokenAddress)
-    .send({ from: EthWeb3.address })
+    .send({ from: chain.eth.address })
 }
