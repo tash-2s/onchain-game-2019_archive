@@ -23,7 +23,7 @@
     "parcel-plugin-inliner": "*",
     "prettier": "^1.15.3",
     "sass": "^1.20.3",
-    "typescript": "*"
+    "typescript": "3.5.3"
   },
   "dependencies": {
     "bulma": "^0.7.5",
