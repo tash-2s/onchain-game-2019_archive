@@ -3,6 +3,7 @@
 const fs = require("fs")
 
 const envName = process.argv[2]
+// TODO: use envs.json
 const envDefs = {
   local: {
     loom: {
