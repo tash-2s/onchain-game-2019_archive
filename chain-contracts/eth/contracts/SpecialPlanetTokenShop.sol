@@ -38,7 +38,7 @@ contract SpecialPlanetTokenShop is SpecialPlanetTokenIdInterpretable, MinterRole
     uint8 originalParamCommonLogarithm = 40;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = interpretSpecialPlanetTokenDataToId(
+    uint256 id = interpretSpecialPlanetTokenFieldsToId(
       shortId,
       version,
       kind,

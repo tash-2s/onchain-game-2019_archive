@@ -83,7 +83,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
-    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToData(
+    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
     );
     _transferTokenToLocker(tokenId, shortId);
@@ -104,6 +104,14 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     confirm(msg.sender);
     removeUserSpecialPlanetFromMap(msg.sender, shortId);
     specialPlanetTokenLocker.withdraw(shortId);
+  }
+
+  function getPlanetFieldsFromTokenId(uint256 tokenId)
+    external
+    pure
+    returns (uint24, uint8, uint8, uint8, uint64)
+  {
+    return interpretSpecialPlanetTokenIdToFields(tokenId);
   }
 
   function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {

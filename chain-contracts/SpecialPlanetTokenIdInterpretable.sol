@@ -7,7 +7,7 @@ contract SpecialPlanetTokenIdInterpretable {
   uint8 constant OPCL_START_BIT = 24 + 8 + 8;
   uint8 constant ART_SEED_START_BIT = 24 + 8 + 8 + 8;
 
-  function interpretSpecialPlanetTokenIdToData(uint256 tokenId)
+  function interpretSpecialPlanetTokenIdToFields(uint256 tokenId)
     internal
     pure
     returns (uint24, uint8, uint8, uint8, uint64)
@@ -21,7 +21,7 @@ contract SpecialPlanetTokenIdInterpretable {
     return (shortId, version, kind, originalParamCommonLogarithm, artSeed);
   }
 
-  function interpretSpecialPlanetTokenDataToId(
+  function interpretSpecialPlanetTokenFieldsToId(
     uint24 shortId,
     uint8 version,
     uint8 kind,
