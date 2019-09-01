@@ -65,12 +65,9 @@ export function TargetUser(props: {
 }
 
 function UserTokens(props: { user: ComputedTargetUserState; userActions: UserActions }) {
-  React.useEffect(
-    () => {
-      props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
-    },
-    [props.user.address]
-  )
+  React.useEffect(() => {
+    props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
+  }, [props.user.address])
 
   if (props.user.specialPlanetTokens) {
     const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
@@ -84,9 +81,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
       )
     })
     const msg1 = props.user.specialPlanetTokenTransferToLoomTx
-      ? `Transfer requested. After the confirmation of eth tx (${
-          props.user.specialPlanetTokenTransferToLoomTx
-        }), it takes additional 15 minutes to see the token on loom`
+      ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetTokenTransferToLoomTx}), it takes additional 15 minutes to see the token on loom`
       : ""
     const loomTokens = props.user.specialPlanetTokens.loom.map(tokenId => {
       const onClick = () => props.userActions.transferSpecialPlanetTokenToEth(tokenId)
