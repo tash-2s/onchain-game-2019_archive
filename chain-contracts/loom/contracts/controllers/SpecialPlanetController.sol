@@ -6,7 +6,9 @@ import "./RemarkableUserController.sol";
 import "../tokens/SpecialPlanetToken.sol";
 import "../misc/SpecialPlanetTokenLocker.sol";
 
-contract SpecialPlanetController is UserPlanetControllable {
+import "../../../SpecialPlanetTokenIdInterpretable.sol";
+
+contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenIdInterpretable {
   RemarkableUserController private _remarkableUserController;
   SpecialPlanetToken private _specialPlanetToken;
   SpecialPlanetTokenLocker public specialPlanetTokenLocker;
@@ -81,9 +83,10 @@ contract SpecialPlanetController is UserPlanetControllable {
   // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
-    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = _transferTokenToLocker(
+    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToData(
       tokenId
     );
+    _transferTokenToLocker(tokenId, shortId);
     setUserSpecialPlanetToMap(
       msg.sender,
       shortId,
@@ -103,11 +106,8 @@ contract SpecialPlanetController is UserPlanetControllable {
     specialPlanetTokenLocker.withdraw(shortId);
   }
 
-  function _transferTokenToLocker(uint256 tokenId)
-    private
-    returns (uint24, uint8, uint8, uint8, uint64)
-  {
+  function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {
     _specialPlanetToken.safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
-    return specialPlanetTokenLocker.setupAndParseTokenId(msg.sender, tokenId);
+    specialPlanetTokenLocker.setup(msg.sender, tokenId, shortId);
   }
 }

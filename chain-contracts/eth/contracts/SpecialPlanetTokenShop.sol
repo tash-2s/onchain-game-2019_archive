@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./SpecialPlanetToken.sol";
 import "./SpecialPlanetTokenShortIdGenerator.sol";
 
-import "../../SpecialPlanetTokenConstants.sol";
+import "../../SpecialPlanetTokenIdInterpretable.sol";
 
-contract SpecialPlanetTokenShop is SpecialPlanetTokenConstants, MinterRole {
+contract SpecialPlanetTokenShop is SpecialPlanetTokenIdInterpretable, MinterRole {
   using SafeMath for uint256;
 
   SpecialPlanetToken public specialPlanetToken;
@@ -38,11 +38,13 @@ contract SpecialPlanetTokenShop is SpecialPlanetTokenConstants, MinterRole {
     uint8 originalParamCommonLogarithm = 40;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = (uint256(shortId) << TOKEN_ID_SHORT_ID_START_BIT) |
-      (uint256(version) << TOKEN_ID_VERSION_START_BIT) |
-      (uint256(kind) << TOKEN_ID_KIND_START_BIT) |
-      (uint256(originalParamCommonLogarithm) << TOKEN_ID_OPCL_START_BIT) |
-      (uint256(artSeed) << TOKEN_ID_ART_SEED_START_BIT);
+    uint256 id = interpretSpecialPlanetTokenDataToId(
+      shortId,
+      version,
+      kind,
+      originalParamCommonLogarithm,
+      artSeed
+    );
 
     specialPlanetToken.mint(msg.sender, id);
     return id;
