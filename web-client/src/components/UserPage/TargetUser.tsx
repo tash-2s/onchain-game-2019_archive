@@ -11,6 +11,7 @@ import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
 import { UserPlanetMap } from "./UserPlanetMap"
 import { PlanetList } from "./PlanetList"
+import { PlanetArt } from "../utils/PlanetArt"
 
 export function TargetUser(props: {
   currentUser: CurrentUserState
@@ -69,34 +70,38 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
     props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
   }, [props.user.address])
 
-  if (props.user.specialPlanetTokens) {
+  if (props.user.specialPlanetToken) {
     const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
-    const ethTokens = props.user.specialPlanetTokens.eth.map(tokenId => {
-      const onClick = () => props.userActions.transferSpecialPlanetTokenToLoom(tokenId)
+    const ethTokens = props.user.specialPlanetToken.ethTokens.map(token => {
+      const onClick = () => props.userActions.transferSpecialPlanetTokenToLoom(token.id)
       return (
-        <li key={tokenId}>
-          {tokenId}
+        <li key={token.id}>
+          {token.id}:{token.shortId}:{token.version}:{token.kind}:
+          {token.originalParamCommonLogarithm}:{token.artSeed.toString()}
+          <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
           <button onClick={onClick}>transfer to loom</button>
         </li>
       )
     })
-    const msg1 = props.user.specialPlanetTokenTransferToLoomTx
-      ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetTokenTransferToLoomTx}), it takes additional 15 minutes to see the token on loom`
+    const msg1 = props.user.specialPlanetToken.transferToLoomTx
+      ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetToken.transferToLoomTx}), it takes additional 15 minutes to see the token on loom`
       : ""
-    const loomTokens = props.user.specialPlanetTokens.loom.map(tokenId => {
-      const onClick = () => props.userActions.transferSpecialPlanetTokenToEth(tokenId)
+    const loomTokens = props.user.specialPlanetToken.loomTokens.map(token => {
+      const onClick = () => props.userActions.transferSpecialPlanetTokenToEth(token.id)
       return (
-        <li key={tokenId}>
-          {tokenId}
+        <li key={token.id}>
+          {token.id}:{token.shortId}:{token.version}:{token.kind}:
+          {token.originalParamCommonLogarithm}:{token.artSeed.toString()}
+          <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
           <button onClick={onClick}>transfer to eth</button>
         </li>
       )
     })
-    const msg2 = props.user.specialPlanetTokenTransferToEthTx
-      ? `requested. tx: ${props.user.specialPlanetTokenTransferToEthTx}`
+    const msg2 = props.user.specialPlanetToken.transferToEthTx
+      ? `requested. tx: ${props.user.specialPlanetToken.transferToEthTx}`
       : ""
     const resumeFn = () => props.userActions.transferSpecialPlanetTokenToEth()
-    const resume = props.user.specialPlanetTokens.needsResume ? (
+    const resume = props.user.specialPlanetToken.needsTransferResume ? (
       <button onClick={resumeFn}>you have an ongoing transfer, resume it</button>
     ) : (
       <></>
@@ -109,7 +114,7 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
         <ul>{ethTokens}</ul>
         <div>{msg1}</div>
         <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
-        <div>{props.user.specialPlanetTokenBuyTx}</div>
+        <div>{props.user.specialPlanetToken.buyTx}</div>
 
         <h2 className={"title is-6"}>loom</h2>
         <ul>{loomTokens}</ul>

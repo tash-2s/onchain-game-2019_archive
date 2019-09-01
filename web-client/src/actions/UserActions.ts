@@ -24,8 +24,10 @@ export class UserActions extends AbstractActions {
 
   static setTargetUserSpecialPlanetTokens = UserActions.creator<{
     eth: Array<string>
+    ethFields: Array<Array<string>>
     loom: Array<string>
-    needsResume: boolean
+    loomFields: Array<Array<string>>
+    needsTransferResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
     if (address !== chains.loom.address) {
@@ -33,15 +35,36 @@ export class UserActions extends AbstractActions {
     }
 
     const ethTokenIds = await getTokenIds(chains.eth)
+    const ethFields: Array<Array<string>> = []
+    for (const tokenId of ethTokenIds) {
+      ethFields.push(
+        await chains.loom
+          .specialPlanetController()
+          .methods.getPlanetFieldsFromTokenId(tokenId)
+          .call()
+      )
+    }
+
     const loomTokenIds = await getTokenIds(chains.loom)
+    const loomFields: Array<Array<string>> = []
+    for (const tokenId of loomTokenIds) {
+      loomFields.push(
+        await chains.loom
+          .specialPlanetController()
+          .methods.getPlanetFieldsFromTokenId(tokenId)
+          .call()
+      )
+    }
 
     const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
     this.dispatch(
       UserActions.setTargetUserSpecialPlanetTokens({
         eth: ethTokenIds,
+        ethFields,
         loom: loomTokenIds,
-        needsResume
+        loomFields,
+        needsTransferResume: needsResume
       })
     )
   }

@@ -105,7 +105,7 @@ function WrappedModal(props: Props) {
     if (up) {
       return (
         <Modal close={props.userPageUiActions.unselectUserPlanet}>
-          <PlanetArt userPlanet={up} size={300} />
+          <PlanetArt kind={up.planet.kind} artSeed={up.planet.artSeed} canvasSize={300} />
           <UserPlanet
             userPlanet={up}
             isMine={props.isMine}

@@ -1,19 +1,24 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { UserActions, GetUserResponse } from "../actions/UserActions"
+import { PlanetKind, planetKinds } from "../constants"
 
 export interface UserState {
   targetUser: TargetUserState | null
 }
 
-interface TargetUserState {
+export interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
-  specialPlanetTokens: { eth: Array<string>; loom: Array<string>; needsResume: boolean } | null
-  specialPlanetTokenBuyTx: string | null
-  specialPlanetTokenTransferToLoomTx: string | null
-  specialPlanetTokenTransferToEthTx: string | null
+  specialPlanetToken: {
+    ethTokens: Array<SpecialPlanetToken>
+    loomTokens: Array<SpecialPlanetToken>
+    needsTransferResume: boolean
+    buyTx: string | null
+    transferToLoomTx: string | null
+    transferToEthTx: string | null
+  } | null
 }
 
 export interface UserNormalPlanet {
@@ -24,6 +29,15 @@ export interface UserNormalPlanet {
   rankupedAt: number
   axialCoordinateQ: number
   axialCoordinateR: number
+}
+
+interface SpecialPlanetToken {
+  id: string
+  shortId: string
+  version: number
+  kind: PlanetKind
+  originalParamCommonLogarithm: number
+  artSeed: string
 }
 
 const initialState: UserState = {
@@ -37,10 +51,7 @@ export const createUserReducer = () =>
       targetUser: {
         ...restructureUserFromResponse(payload.response),
         address: payload.address,
-        specialPlanetTokens: null,
-        specialPlanetTokenBuyTx: null,
-        specialPlanetTokenTransferToLoomTx: null,
-        specialPlanetTokenTransferToEthTx: null
+        specialPlanetToken: null
       }
     }))
     .case(UserActions.setTargetUserSpecialPlanetTokens, (state, payload) => {
@@ -52,7 +63,34 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetTokens: payload
+          specialPlanetToken: {
+            ethTokens: payload.ethFields.map((fs, i) => ({
+              id: payload.eth[i],
+              shortId: fs[0],
+              version: strToNum(fs[1]),
+              kind: planetKinds[strToNum(fs[2]) - 1],
+              originalParamCommonLogarithm: strToNum(fs[3]),
+              artSeed: fs[4]
+            })),
+            loomTokens: payload.loomFields.map((fs, i) => ({
+              id: payload.loom[i],
+              shortId: fs[0],
+              version: strToNum(fs[1]),
+              kind: planetKinds[strToNum(fs[2]) - 1],
+              originalParamCommonLogarithm: strToNum(fs[3]),
+              artSeed: fs[4]
+            })),
+            needsTransferResume: payload.needsTransferResume,
+            buyTx: state.targetUser.specialPlanetToken
+              ? state.targetUser.specialPlanetToken.buyTx
+              : null,
+            transferToLoomTx: state.targetUser.specialPlanetToken
+              ? state.targetUser.specialPlanetToken.transferToLoomTx
+              : null,
+            transferToEthTx: state.targetUser.specialPlanetToken
+              ? state.targetUser.specialPlanetToken.transferToEthTx
+              : null
+          }
         }
       }
     })
@@ -64,7 +102,7 @@ export const createUserReducer = () =>
     .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
     .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
-      if (!state.targetUser) {
+      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
       }
 
@@ -72,12 +110,15 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetTokenBuyTx: payload
+          specialPlanetToken: {
+            ...state.targetUser.specialPlanetToken,
+            buyTx: payload
+          }
         }
       }
     })
     .case(UserActions.transferSpecialPlanetTokenToLoom, (state, payload) => {
-      if (!state.targetUser) {
+      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
       }
 
@@ -85,12 +126,15 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetTokenTransferToLoomTx: payload
+          specialPlanetToken: {
+            ...state.targetUser.specialPlanetToken,
+            transferToLoomTx: payload
+          }
         }
       }
     })
     .case(UserActions.transferSpecialPlanetTokenToEth, (state, payload) => {
-      if (!state.targetUser) {
+      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
       }
 
@@ -98,13 +142,11 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetTokens: state.targetUser.specialPlanetTokens
-            ? {
-                ...state.targetUser.specialPlanetTokens,
-                needsResume: false
-              }
-            : null,
-          specialPlanetTokenTransferToEthTx: payload
+          specialPlanetToken: {
+            ...state.targetUser.specialPlanetToken,
+            needsTransferResume: false,
+            transferToEthTx: payload
+          }
         }
       }
     })

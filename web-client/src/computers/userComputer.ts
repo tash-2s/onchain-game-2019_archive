@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserState } from "../reducers/userReducer"
+import { UserState, TargetUserState } from "../reducers/userReducer"
 import { NormalPlanets, initialNormalPlanetIds, getNormalPlanet } from "../data/NormalPlanets"
 import {
   computeUserNormalPlanetParams,
@@ -46,11 +46,19 @@ export const computeUserState = (state: UserState, now: number) => {
       goldPerSec: goldPerSec,
       map: computeMap(ongoingGold, computedUserPlanets),
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length),
-      specialPlanetTokens: state.targetUser.specialPlanetTokens,
-      specialPlanetTokenBuyTx: state.targetUser.specialPlanetTokenBuyTx,
-      specialPlanetTokenTransferToLoomTx: state.targetUser.specialPlanetTokenTransferToLoomTx,
-      specialPlanetTokenTransferToEthTx: state.targetUser.specialPlanetTokenTransferToEthTx
+      specialPlanetToken: computeSpecialPlanetToken(state.targetUser.specialPlanetToken)
     }
+  }
+}
+
+const computeSpecialPlanetToken = (token: TargetUserState["specialPlanetToken"]) => {
+  if (!token) {
+    return null
+  }
+  return {
+    ...token,
+    ethTokens: token.ethTokens.map(t => ({ ...t, artSeed: new BN(t.artSeed) })),
+    loomTokens: token.loomTokens.map(t => ({ ...t, artSeed: new BN(t.artSeed) }))
   }
 }
 

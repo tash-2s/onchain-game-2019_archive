@@ -19,6 +19,7 @@ import ChainEnv from "../chain/env.json"
 
 import UserABI from "../chain/abi/loom/UserController.json"
 import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
+import SpecialPlanetABI from "../chain/abi/loom/SpecialPlanetController.json"
 import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
 import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 
@@ -82,6 +83,14 @@ export class Loom {
     return new this.web3.eth.Contract(
       NormalPlanetABI,
       ChainEnv.loomContractAddresses.NormalPlanetController,
+      { from: this._callerAddress() }
+    )
+  }
+
+  specialPlanetController = () => {
+    return new this.web3.eth.Contract(
+      SpecialPlanetABI,
+      ChainEnv.loomContractAddresses.SpecialPlanetController,
       { from: this._callerAddress() }
     )
   }

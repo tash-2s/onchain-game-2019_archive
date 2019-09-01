@@ -340,7 +340,7 @@
         "type": "address"
       }
     ],
-    "name": "planets",
+    "name": "getPlanets",
     "outputs": [
       {
         "internalType": "uint24[]",
@@ -371,7 +371,7 @@
     "payable": false,
     "stateMutability": "view",
     "type": "function",
-    "signature": "0x0aaeed60"
+    "signature": "0x2e49cca0"
   },
   {
     "constant": false,
@@ -414,5 +414,47 @@
     "stateMutability": "nonpayable",
     "type": "function",
     "signature": "0xff000261"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPlanetFieldsFromTokenId",
+    "outputs": [
+      {
+        "internalType": "uint24",
+        "name": "",
+        "type": "uint24"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function",
+    "signature": "0x64f84296"
   }
 ]

@@ -46,10 +46,15 @@ export function PlanetHex(props: {
   }
   const onClick = props.setPlanet ? props.setPlanet(props.q, props.r) : props.select
   const size = Math.min(props.hexWidth, props.hexHeight)
+  const art = up ? (
+    <PlanetArt kind={up.planet.kind} artSeed={up.planet.artSeed} canvasSize={size} />
+  ) : (
+    <></>
+  )
 
   return (
     <div style={hexStyle} onClick={onClick}>
-      {up ? <PlanetArt userPlanet={up} size={size} /> : <></>}
+      {art}
       {cover}
     </div>
   )
