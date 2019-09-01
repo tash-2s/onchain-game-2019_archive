@@ -43,7 +43,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     return _specialPlanetToken;
   }
 
-  function planets(address account)
+  function getPlanets(address account)
     external
     view
     returns (
