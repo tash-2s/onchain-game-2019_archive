@@ -19,6 +19,11 @@ class Chains {
       throw new Error("not logined")
     }
 
+    // this doens't work with local env
+    if (this.loom.env.chainId === "default") {
+      return false
+    }
+
     return this.loom.withGateway(this.eth.signer(), async gateway => {
       const receipt = await this.loom.getSpecialPlanetTokenWithdrawalReceipt(
         ethAddress,

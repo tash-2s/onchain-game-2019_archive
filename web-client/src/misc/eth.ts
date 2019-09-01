@@ -32,15 +32,19 @@ const GatewayABI = [
   }
 ]
 
+type Env = (typeof ChainEnv)["eth"]
+
 export class Eth {
   web3: Web3 | null
   ethersProvider: ethers.providers.Web3Provider | null
   address: string | null
+  env: Env
 
   constructor() {
     this.web3 = null
     this.ethersProvider = null
     this.address = null
+    this.env = ChainEnv.eth
   }
 
   login = async (provider: any, providerChangedFn: () => void) => {
@@ -60,7 +64,7 @@ export class Eth {
 
     // verify user is on the correct network
     // see also: https://github.com/MetaMask/metamask-extension/issues/3663
-    if (provider.networkVersion !== ChainEnv.eth.networkId) {
+    if (provider.networkVersion !== this.env.networkId) {
       // wrong network
       return false
     }

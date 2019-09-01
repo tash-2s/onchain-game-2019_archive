@@ -22,13 +22,17 @@ import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
 import RemarkableUserABI from "../chain/abi/loom/RemarkableUserController.json"
 import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
 
+type Env = (typeof ChainEnv)["loom"]
+
 export class Loom {
   web3: Web3
   address: string | null
+  env: Env
 
   constructor() {
     this.web3 = new Web3(LoomUtil.createProviderWithDummyAddress())
     this.address = null
+    this.env = ChainEnv.loom
   }
 
   login = async (signer: ethers.Signer) => {
@@ -114,7 +118,7 @@ export class Loom {
     gateway: Contracts.TransferGateway
   ) => {
     const receipt = await gateway.withdrawalReceiptAsync(
-      Address.fromString(`${ChainEnv.loom.chainId}:${this.address}`)
+      Address.fromString(`${this.env.chainId}:${this.address}`)
     )
     if (
       receipt &&
