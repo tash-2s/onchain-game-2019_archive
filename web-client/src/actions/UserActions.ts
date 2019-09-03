@@ -25,32 +25,31 @@ const getUserAll = async (
 }
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
-export type UserAllResponse = ExtractFromPromise<ReturnType<typeof getUserAll>>
 
-interface User {
+export interface UserAllExceptForTokens {
   address: string
-  response: UserAllResponse
+  response: ExtractFromPromise<ReturnType<typeof getUserAll>>
 }
 
-export type UserAndLoomTokens = User & {
+export type UserAllExceptForEthTokens = UserAllExceptForTokens & {
   loomTokenIds: Array<string>
-  loomFields: Array<Array<string>>
+  loomTokenFields: Array<Array<string>>
 }
 
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
-  static setTargetUser = UserActions.creator<User>("setTargetUser")
+  static setTargetUser = UserActions.creator<UserAllExceptForTokens>("setTargetUser")
   setTargetUser = async (address: string) => {
     const response = await getUserAll(address)
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
   static setTargetUserSpecialPlanetTokens = UserActions.creator<{
-    ethIds: Array<string>
-    ethFields: Array<Array<string>>
-    loomIds: Array<string>
-    loomFields: Array<Array<string>>
+    ethTokenIds: Array<string>
+    ethTokenFields: Array<Array<string>>
+    loomTokenIds: Array<string>
+    loomTokenFields: Array<Array<string>>
     needsTransferResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
   setTargetUserSpecialPlanetTokens = async (address: string) => {
@@ -58,20 +57,20 @@ export class UserActions extends AbstractActions {
       throw new Error("this function is for my page")
     }
 
-    const ethIds = await getTokenIds(chains.eth)
-    const ethFields = await getTokenFields(ethIds)
+    const ethTokenIds = await getTokenIds(chains.eth)
+    const ethTokenFields = await getTokenFields(ethTokenIds)
 
-    const loomIds = await getTokenIds(chains.loom)
-    const loomFields = await getTokenFields(loomIds)
+    const loomTokenIds = await getTokenIds(chains.loom)
+    const loomTokenFields = await getTokenFields(loomTokenIds)
 
-    const needsResume = await chains.needsSpecialPlanetTokenResume(ethIds)
+    const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
     this.dispatch(
       UserActions.setTargetUserSpecialPlanetTokens({
-        ethIds,
-        ethFields,
-        loomIds,
-        loomFields,
+        ethTokenIds,
+        ethTokenFields,
+        loomTokenIds,
+        loomTokenFields,
         needsTransferResume: needsResume
       })
     )
@@ -82,7 +81,7 @@ export class UserActions extends AbstractActions {
     this.dispatch(UserActions.clearTargetUser())
   }
 
-  static getPlanet = UserActions.creator<User>("getPlanet")
+  static getPlanet = UserActions.creator<UserAllExceptForTokens>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
@@ -103,7 +102,7 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
+  static rankupUserPlanet = UserActions.creator<UserAllExceptForTokens>("rankupUserPlanet")
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
@@ -119,7 +118,7 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
+  static removeUserPlanet = UserActions.creator<UserAllExceptForTokens>("removeUserPlanet")
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
@@ -135,7 +134,7 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static setSpecialPlanetTokenToMap = UserActions.creator<UserAndLoomTokens>(
+  static setSpecialPlanetTokenToMap = UserActions.creator<UserAllExceptForEthTokens>(
     "setSpecialPlanetTokenToMap"
   )
   setSpecialPlanetTokenToMap = (
@@ -165,20 +164,20 @@ export class UserActions extends AbstractActions {
 
       const response = await getUserAll(address)
       const loomTokenIds = await getTokenIds(chains.loom)
-      const loomFields = await getTokenFields(loomTokenIds)
+      const loomTokenFields = await getTokenFields(loomTokenIds)
 
       this.dispatch(
         UserActions.setSpecialPlanetTokenToMap({
           address,
           response,
           loomTokenIds,
-          loomFields
+          loomTokenFields
         })
       )
     })
   }
 
-  static removeUserSpecialPlanetFromMap = UserActions.creator<UserAndLoomTokens>(
+  static removeUserSpecialPlanetFromMap = UserActions.creator<UserAllExceptForEthTokens>(
     "removeUserSpecialPlanetFromMap"
   )
   removeUserSpecialPlanetFromMap = (userSpecialPlanetId: string) => {
@@ -192,14 +191,14 @@ export class UserActions extends AbstractActions {
 
       const response = await getUserAll(address)
       const loomTokenIds = await getTokenIds(chains.loom)
-      const loomFields = await getTokenFields(loomTokenIds)
+      const loomTokenFields = await getTokenFields(loomTokenIds)
 
       this.dispatch(
         UserActions.removeUserSpecialPlanetFromMap({
           address,
           response,
           loomTokenIds,
-          loomFields
+          loomTokenFields
         })
       )
     })

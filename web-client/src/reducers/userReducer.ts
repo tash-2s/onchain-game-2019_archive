@@ -1,6 +1,10 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserActions, UserAllResponse, UserAndLoomTokens } from "../actions/UserActions"
+import {
+  UserActions,
+  UserAllExceptForTokens,
+  UserAllExceptForEthTokens
+} from "../actions/UserActions"
 import { PlanetKind, planetKinds } from "../constants"
 
 export interface UserState {
@@ -61,7 +65,7 @@ export const createUserReducer = () =>
     .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
       targetUser: {
-        ...restructureUserFromResponse(payload.response),
+        ...restructureFromUserAllResponse(payload.response),
         address: payload.address,
         specialPlanetToken: null
       }
@@ -76,8 +80,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: restructureTokens(payload.ethIds, payload.ethFields),
-            loomTokens: restructureTokens(payload.loomIds, payload.loomFields),
+            ethTokens: restructureTokens(payload.ethTokenIds, payload.ethTokenFields),
+            loomTokens: restructureTokens(payload.loomTokenIds, payload.loomTokenFields),
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx
@@ -96,11 +100,11 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, buildStateFromUserAll)
-    .case(UserActions.rankupUserPlanet, buildStateFromUserAll)
-    .case(UserActions.removeUserPlanet, buildStateFromUserAll)
-    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromUserAllAndLoomTokens)
-    .case(UserActions.removeUserSpecialPlanetFromMap, buildStateFromUserAllAndLoomTokens)
+    .case(UserActions.getPlanet, buildStateFromUserAllExceptForTokens)
+    .case(UserActions.rankupUserPlanet, buildStateFromUserAllExceptForTokens)
+    .case(UserActions.removeUserPlanet, buildStateFromUserAllExceptForTokens)
+    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromUserAllExceptForEthTokens)
+    .case(UserActions.removeUserSpecialPlanetFromMap, buildStateFromUserAllExceptForEthTokens)
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
@@ -152,9 +156,9 @@ export const createUserReducer = () =>
     })
     .build()
 
-const buildStateFromUserAll = (
+const buildStateFromUserAllExceptForTokens = (
   state: UserState,
-  payload: { address: string; response: UserAllResponse }
+  payload: UserAllExceptForTokens
 ): UserState => {
   if (!state.targetUser) {
     return { ...state }
@@ -163,13 +167,16 @@ const buildStateFromUserAll = (
     ...state,
     targetUser: {
       ...state.targetUser,
-      ...restructureUserFromResponse(payload.response),
+      ...restructureFromUserAllResponse(payload.response),
       address: payload.address
     }
   }
 }
 
-const buildStateFromUserAllAndLoomTokens = (state: UserState, payload: UserAndLoomTokens) => {
+const buildStateFromUserAllExceptForEthTokens = (
+  state: UserState,
+  payload: UserAllExceptForEthTokens
+) => {
   if (!state.targetUser || !state.targetUser.specialPlanetToken) {
     return { ...state }
   }
@@ -178,11 +185,11 @@ const buildStateFromUserAllAndLoomTokens = (state: UserState, payload: UserAndLo
     ...state,
     targetUser: {
       ...state.targetUser,
-      ...restructureUserFromResponse(payload.response),
+      ...restructureFromUserAllResponse(payload.response),
       address: payload.address,
       specialPlanetToken: {
         ...state.targetUser.specialPlanetToken,
-        loomTokens: restructureTokens(payload.loomTokenIds, payload.loomFields)
+        loomTokens: restructureTokens(payload.loomTokenIds, payload.loomTokenFields)
       }
     }
   }
@@ -190,8 +197,8 @@ const buildStateFromUserAllAndLoomTokens = (state: UserState, payload: UserAndLo
 
 const strToNum = (str: string): number => parseInt(str, 10)
 
-const restructureUserFromResponse = (
-  response: UserAllResponse
+const restructureFromUserAllResponse = (
+  response: UserAllExceptForTokens["response"]
 ): Pick<TargetUserState, "gold" | "userNormalPlanets" | "userSpecialPlanets"> => {
   const confirmedGold = response[0][0]
   const goldConfirmedAt = response[0][1]
@@ -207,42 +214,42 @@ const restructureUserFromResponse = (
   const uspArtSeeds = response[1][5]
 
   const unps: Array<UserNormalPlanet> = []
-  let i = 0
-  let counter = 0
+  let iNormal = 0
+  let counterNormal = 0
 
-  while (i < unpRanks.length) {
+  while (iNormal < unpRanks.length) {
     unps.push({
-      id: unpIds[counter],
-      normalPlanetId: strToNum(unpIds[counter + 1]),
-      rank: strToNum(unpRanks[i]),
-      rankupedAt: strToNum(unpTimes[counter]),
-      createdAt: strToNum(unpTimes[counter + 1]),
-      axialCoordinateQ: strToNum(unpAxialCoordinates[counter]),
-      axialCoordinateR: strToNum(unpAxialCoordinates[counter + 1])
+      id: unpIds[counterNormal],
+      normalPlanetId: strToNum(unpIds[counterNormal + 1]),
+      rank: strToNum(unpRanks[iNormal]),
+      rankupedAt: strToNum(unpTimes[counterNormal]),
+      createdAt: strToNum(unpTimes[counterNormal + 1]),
+      axialCoordinateQ: strToNum(unpAxialCoordinates[counterNormal]),
+      axialCoordinateR: strToNum(unpAxialCoordinates[counterNormal + 1])
     })
 
-    i += 1
-    counter += 2
+    iNormal += 1
+    counterNormal += 2
   }
 
   const usps: Array<UserSpecialPlanet> = []
-  let iS = 0
-  let counterS = 0
+  let iSpecial = 0
+  let counterSpecial = 0
 
-  while (iS < uspIds.length) {
+  while (iSpecial < uspIds.length) {
     usps.push({
-      id: uspIds[iS],
-      kind: planetKinds[strToNum(uspKinds[iS]) - 1],
-      originalParamCommonLogarithm: strToNum(uspParams[iS]),
-      rankupedAt: strToNum(uspTimes[counterS]),
-      createdAt: strToNum(uspTimes[counterS + 1]),
-      axialCoordinateQ: strToNum(uspCoordinates[counterS]),
-      axialCoordinateR: strToNum(uspCoordinates[counterS + 1]),
-      artSeed: uspArtSeeds[iS]
+      id: uspIds[iSpecial],
+      kind: planetKinds[strToNum(uspKinds[iSpecial]) - 1],
+      originalParamCommonLogarithm: strToNum(uspParams[iSpecial]),
+      rankupedAt: strToNum(uspTimes[counterSpecial]),
+      createdAt: strToNum(uspTimes[counterSpecial + 1]),
+      axialCoordinateQ: strToNum(uspCoordinates[counterSpecial]),
+      axialCoordinateR: strToNum(uspCoordinates[counterSpecial + 1]),
+      artSeed: uspArtSeeds[iSpecial]
     })
 
-    iS += 1
-    counterS += 2
+    iSpecial += 1
+    counterSpecial += 2
   }
 
   return {
