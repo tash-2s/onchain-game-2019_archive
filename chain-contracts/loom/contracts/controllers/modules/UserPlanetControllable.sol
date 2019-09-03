@@ -42,6 +42,8 @@ contract UserPlanetControllable is
 
     if (diffGold > 0) {
       mintGold(account, uint200(diffGold));
+    } else {
+      touchGold(account);
     }
 
     return knowledge;

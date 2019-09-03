@@ -54,6 +54,11 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     updateUserGoldRecord(account, UserGoldRecord(record.balance - uint200(quantity), uint32now()));
   }
 
+  function touchGold(address account) internal {
+    UserGoldRecord memory record = userGoldRecordOf(account);
+    updateUserGoldRecord(account, UserGoldRecord(record.balance, uint32now()));
+  }
+
   function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {
     _userGoldPermanence.update(account, buildUint256FromUserGoldRecord(record));
   }
