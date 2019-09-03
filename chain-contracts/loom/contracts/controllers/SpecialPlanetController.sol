@@ -51,7 +51,8 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       uint8[] memory, // kind
       uint8[] memory, // originalParamCommonLogarithm
       uint32[] memory, // [rankupedAt, createdAt, ...]
-      int16[] memory // [q, r, ...]
+      int16[] memory, // [q, r, ...]
+      uint64[] memory
     )
   {
     UserSpecialPlanetRecord[] memory userPlanetRecords = userSpecialPlanetRecordsOf(account);
@@ -62,6 +63,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     uint8[] memory params = new uint8[](userPlanetsCount);
     uint32[] memory times = new uint32[](userPlanetsCount * 2);
     int16[] memory coordinates = new int16[](userPlanetsCount * 2);
+    uint64[] memory artSeeds = new uint64[](userPlanetsCount);
 
     uint16 counter = 0;
 
@@ -73,11 +75,12 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       times[counter + 1] = userPlanetRecords[i].createdAt;
       coordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
       coordinates[counter + 1] = userPlanetRecords[i].axialCoordinateR;
+      artSeeds[i] = userPlanetRecords[i].artSeed;
 
       counter += 2;
     }
 
-    return (ids, kinds, params, times, coordinates);
+    return (ids, kinds, params, times, coordinates, artSeeds);
   }
 
   // sender needs to approve the transfer of this token before call this function
