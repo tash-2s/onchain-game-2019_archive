@@ -53,7 +53,10 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
     const hexes = this.props.user.map.hexes.map(h => {
       const settable =
-        this.props.isMine && !!this.props.userPageUi.selectedNormalPlanetId && h.settable
+        this.props.isMine &&
+        h.settable &&
+        (!!this.props.userPageUi.selectedNormalPlanetId ||
+          !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet)
       const selectFn = () => {
         !h.userPlanet || this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
       }
@@ -87,11 +90,22 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
   setPlanet = (q: number, r: number) => {
     return () => {
-      if (!this.props.userPageUi.selectedNormalPlanetId) {
-        throw new Error("this must be called with target")
+      if (this.props.userPageUi.selectedNormalPlanetId) {
+        this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
+        this.props.userPageUiActions.unselectPlanet()
+        return
       }
-      this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
-      this.props.userPageUiActions.unselectPlanet()
+      if (this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
+        this.props.userActions.setSpecialPlanetTokenToMap(
+          this.props.userPageUi.selectedSpecialPlanetTokenIdForSet,
+          q,
+          r
+        )
+        this.props.userPageUiActions.unselectSpecialPlanetTokenForSet()
+        return
+      }
+
+      throw new Error("this must be called with target")
     }
   }
 }

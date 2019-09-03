@@ -30,13 +30,23 @@ export function TargetUser(props: {
     }
   })()
 
+  const userTokens = isMine ? (
+    <UserTokens
+      user={props.targetUser}
+      userActions={props.userActions}
+      userPageUiActions={props.userPageUiActions}
+    />
+  ) : (
+    <></>
+  )
+
   return (
     <>
       <h1 className={"title is-5"}>
         target user is {props.targetUser.address} {isMine ? "[this is me]" : ""}
         {isMine ? <div>eth: {props.currentUser.ethAddress}</div> : <></>}
       </h1>
-      {isMine ? <UserTokens user={props.targetUser} userActions={props.userActions} /> : <></>}
+      {userTokens}
 
       <div className={"columns is-desktop"}>
         <div className={"column"}>
@@ -65,7 +75,11 @@ export function TargetUser(props: {
   )
 }
 
-function UserTokens(props: { user: ComputedTargetUserState; userActions: UserActions }) {
+function UserTokens(props: {
+  user: ComputedTargetUserState
+  userActions: UserActions
+  userPageUiActions: UserPageUiActions
+}) {
   React.useEffect(() => {
     props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
   }, [props.user.address])
@@ -87,13 +101,15 @@ function UserTokens(props: { user: ComputedTargetUserState; userActions: UserAct
       ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetToken.transferToLoomTx}), it takes additional 15 minutes to see the token on loom`
       : ""
     const loomTokens = props.user.specialPlanetToken.loomTokens.map(token => {
-      const onClick = () => props.userActions.transferSpecialPlanetTokenToEth(token.id)
+      const transferFn = () => props.userActions.transferSpecialPlanetTokenToEth(token.id)
+      const selectForSetFn = () => props.userPageUiActions.selectSpecialPlanetTokenForSet(token.id)
       return (
         <li key={token.id}>
           {token.id}:{token.shortId}:{token.version}:{token.kind}:
           {token.originalParamCommonLogarithm}:{token.artSeed.toString()}
           <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
-          <button onClick={onClick}>transfer to eth</button>
+          <button onClick={transferFn}>transfer to eth</button>
+          <button onClick={selectForSetFn}>set to map</button>
         </li>
       )
     })

@@ -77,7 +77,7 @@ export class UserActions extends AbstractActions {
   static getPlanet = UserActions.creator<User>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
       await chains.loom
         .normalPlanetController()
         .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
@@ -100,7 +100,7 @@ export class UserActions extends AbstractActions {
   static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
 
       await chains.loom
         .normalPlanetController()
@@ -119,7 +119,7 @@ export class UserActions extends AbstractActions {
   static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
 
       await chains.loom
         .normalPlanetController()
@@ -131,6 +131,47 @@ export class UserActions extends AbstractActions {
         .call()
 
       this.dispatch(UserActions.removeUserPlanet({ address, response }))
+    })
+  }
+
+  static setSpecialPlanetTokenToMap = UserActions.creator<User>("setSpecialPlanetTokenToMap")
+  setSpecialPlanetTokenToMap = (
+    tokenId: string,
+    axialCoordinateQ: number,
+    axialCoordinateR: number
+  ) => {
+    this.withLoading(async () => {
+      const address = loginedLoomAddress()
+
+      const controllerAddress = chains.loom.specialPlanetController().options.address
+      const isApproved = await chains.loom
+        .specialPlanetToken()
+        .methods.isApprovedForAll(address, controllerAddress)
+        .call()
+      if (!isApproved) {
+        await chains.loom
+          .specialPlanetToken()
+          .methods.setApprovalForAll(controllerAddress, true)
+          .send()
+      }
+
+      await chains.loom
+        .specialPlanetController()
+        .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
+        .send()
+
+      // TODO: change
+      const response = await chains.loom
+        .userController()
+        .methods.getUser(address)
+        .call()
+
+      this.dispatch(
+        UserActions.setSpecialPlanetTokenToMap({
+          address,
+          response
+        })
+      )
     })
   }
 
@@ -223,7 +264,7 @@ const getTokenIds = async (c: {
   return ids
 }
 
-const loginedAddress = () => {
+const loginedLoomAddress = () => {
   const address = chains.loom.address
   if (!address) {
     throw new Error("must login")
