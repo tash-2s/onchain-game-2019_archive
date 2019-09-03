@@ -32,6 +32,11 @@ interface User {
   response: UserAllResponse
 }
 
+export type UserAndLoomTokens = User & {
+  loomTokenIds: Array<string>
+  loomFields: Array<Array<string>>
+}
+
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
@@ -130,9 +135,9 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static setSpecialPlanetTokenToMap = UserActions.creator<
-    User & { loomTokenIds: Array<string>; loomFields: Array<Array<string>> }
-  >("setSpecialPlanetTokenToMap")
+  static setSpecialPlanetTokenToMap = UserActions.creator<UserAndLoomTokens>(
+    "setSpecialPlanetTokenToMap"
+  )
   setSpecialPlanetTokenToMap = (
     tokenId: string,
     axialCoordinateQ: number,
@@ -164,6 +169,33 @@ export class UserActions extends AbstractActions {
 
       this.dispatch(
         UserActions.setSpecialPlanetTokenToMap({
+          address,
+          response,
+          loomTokenIds,
+          loomFields
+        })
+      )
+    })
+  }
+
+  static removeUserSpecialPlanetFromMap = UserActions.creator<UserAndLoomTokens>(
+    "removeUserSpecialPlanetFromMap"
+  )
+  removeUserSpecialPlanetFromMap = (userSpecialPlanetId: string) => {
+    this.withLoading(async () => {
+      const address = loginedLoomAddress()
+
+      await chains.loom
+        .specialPlanetController()
+        .methods.removePlanet(userSpecialPlanetId)
+        .send()
+
+      const response = await getUserAll(address)
+      const loomTokenIds = await getTokenIds(chains.loom)
+      const loomFields = await getTokenFields(loomTokenIds)
+
+      this.dispatch(
+        UserActions.removeUserSpecialPlanetFromMap({
           address,
           response,
           loomTokenIds,

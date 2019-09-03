@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserActions, UserAllResponse } from "../actions/UserActions"
+import { UserActions, UserAllResponse, UserAndLoomTokens } from "../actions/UserActions"
 import { PlanetKind, planetKinds } from "../constants"
 
 export interface UserState {
@@ -33,7 +33,7 @@ export interface UserNormalPlanet {
 }
 
 export interface UserSpecialPlanet {
-  id: string
+  id: string // short id, not token id
   kind: PlanetKind
   originalParamCommonLogarithm: number
   createdAt: number
@@ -44,7 +44,7 @@ export interface UserSpecialPlanet {
 }
 
 interface SpecialPlanetToken {
-  id: string
+  id: string // token id
   shortId: string
   version: number
   kind: PlanetKind
@@ -96,27 +96,11 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.setSpecialPlanetTokenToMap, (state, payload) => {
-      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
-        return { ...state }
-      }
-
-      return {
-        ...state,
-        targetUser: {
-          ...state.targetUser,
-          ...restructureUserFromResponse(payload.response),
-          address: payload.address,
-          specialPlanetToken: {
-            ...state.targetUser.specialPlanetToken,
-            loomTokens: restructureTokens(payload.loomTokenIds, payload.loomFields)
-          }
-        }
-      }
-    })
+    .case(UserActions.getPlanet, buildStateFromUserAll)
+    .case(UserActions.rankupUserPlanet, buildStateFromUserAll)
+    .case(UserActions.removeUserPlanet, buildStateFromUserAll)
+    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromUserAllAndLoomTokens)
+    .case(UserActions.removeUserSpecialPlanetFromMap, buildStateFromUserAllAndLoomTokens)
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
@@ -168,7 +152,7 @@ export const createUserReducer = () =>
     })
     .build()
 
-const buildStateFromGetUserResponse = (
+const buildStateFromUserAll = (
   state: UserState,
   payload: { address: string; response: UserAllResponse }
 ): UserState => {
@@ -181,6 +165,25 @@ const buildStateFromGetUserResponse = (
       ...state.targetUser,
       ...restructureUserFromResponse(payload.response),
       address: payload.address
+    }
+  }
+}
+
+const buildStateFromUserAllAndLoomTokens = (state: UserState, payload: UserAndLoomTokens) => {
+  if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+    return { ...state }
+  }
+
+  return {
+    ...state,
+    targetUser: {
+      ...state.targetUser,
+      ...restructureUserFromResponse(payload.response),
+      address: payload.address,
+      specialPlanetToken: {
+        ...state.targetUser.specialPlanetToken,
+        loomTokens: restructureTokens(payload.loomTokenIds, payload.loomFields)
+      }
     }
   }
 }

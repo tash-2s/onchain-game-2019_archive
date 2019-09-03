@@ -9,6 +9,7 @@ import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
 import { PlanetArt } from "../utils/PlanetArt"
+import { PrettyBN } from "../utils/PrettyBN"
 
 interface Props {
   user: ComputedTargetUserState
@@ -145,9 +146,16 @@ function WrappedModal(props: Props) {
     )
     // this must be always true
     if (up) {
+      const buttonFn = () => props.userActions.removeUserSpecialPlanetFromMap(up.id)
+      const button = props.isMine ? <button onClick={buttonFn}>Remove</button> : <></>
       return (
         <Modal close={props.userPageUiActions.unselectUserSpecialPlanetForModal}>
           <PlanetArt kind={up.kind} artSeed={up.artSeed} canvasSize={300} />
+          <div>
+            Kind: {up.kind}
+            Param: <PrettyBN bn={up.param} />
+            {button}
+          </div>
         </Modal>
       )
     }
