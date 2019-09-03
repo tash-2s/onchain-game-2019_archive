@@ -54,26 +54,10 @@ export class UserActions extends AbstractActions {
     }
 
     const ethTokenIds = await getTokenIds(chains.eth)
-    const ethFields: Array<Array<string>> = []
-    for (const tokenId of ethTokenIds) {
-      ethFields.push(
-        await chains.loom
-          .specialPlanetController()
-          .methods.getPlanetFieldsFromTokenId(tokenId)
-          .call()
-      )
-    }
+    const ethFields = await getTokenFields(ethTokenIds)
 
     const loomTokenIds = await getTokenIds(chains.loom)
-    const loomFields: Array<Array<string>> = []
-    for (const tokenId of loomTokenIds) {
-      loomFields.push(
-        await chains.loom
-          .specialPlanetController()
-          .methods.getPlanetFieldsFromTokenId(tokenId)
-          .call()
-      )
-    }
+    const loomFields = await getTokenFields(loomTokenIds)
 
     const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
@@ -146,7 +130,9 @@ export class UserActions extends AbstractActions {
     })
   }
 
-  static setSpecialPlanetTokenToMap = UserActions.creator<User>("setSpecialPlanetTokenToMap")
+  static setSpecialPlanetTokenToMap = UserActions.creator<
+    User & { loomTokenIds: Array<string>; loomFields: Array<Array<string>> }
+  >("setSpecialPlanetTokenToMap")
   setSpecialPlanetTokenToMap = (
     tokenId: string,
     axialCoordinateQ: number,
@@ -173,11 +159,15 @@ export class UserActions extends AbstractActions {
         .send()
 
       const response = await getUserAll(address)
+      const loomTokenIds = await getTokenIds(chains.loom)
+      const loomFields = await getTokenFields(loomTokenIds)
 
       this.dispatch(
         UserActions.setSpecialPlanetTokenToMap({
           address,
-          response
+          response,
+          loomTokenIds,
+          loomFields
         })
       )
     })
@@ -270,6 +260,20 @@ const getTokenIds = async (c: {
     )
   }
   return ids
+}
+
+const getTokenFields = async (tokenIds: Array<string>) => {
+  const fields: Array<Array<string>> = []
+  for (const tokenId of tokenIds) {
+    fields.push(
+      await chains.loom
+        .specialPlanetController()
+        .methods.getPlanetFieldsFromTokenId(tokenId)
+        .call()
+    )
+  }
+
+  return fields
 }
 
 const loginedLoomAddress = () => {

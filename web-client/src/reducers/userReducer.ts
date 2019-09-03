@@ -76,22 +76,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: payload.ethFields.map((fs, i) => ({
-              id: payload.eth[i],
-              shortId: fs[0],
-              version: strToNum(fs[1]),
-              kind: planetKinds[strToNum(fs[2]) - 1],
-              originalParamCommonLogarithm: strToNum(fs[3]),
-              artSeed: fs[4]
-            })),
-            loomTokens: payload.loomFields.map((fs, i) => ({
-              id: payload.loom[i],
-              shortId: fs[0],
-              version: strToNum(fs[1]),
-              kind: planetKinds[strToNum(fs[2]) - 1],
-              originalParamCommonLogarithm: strToNum(fs[3]),
-              artSeed: fs[4]
-            })),
+            ethTokens: restructureTokens(payload.eth, payload.ethFields),
+            loomTokens: restructureTokens(payload.loom, payload.loomFields),
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx
@@ -113,7 +99,24 @@ export const createUserReducer = () =>
     .case(UserActions.getPlanet, buildStateFromGetUserResponse)
     .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
     .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromGetUserResponse)
+    .case(UserActions.setSpecialPlanetTokenToMap, (state, payload) => {
+      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+        return { ...state }
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          ...restructureUserFromResponse(payload.response),
+          address: payload.address,
+          specialPlanetToken: {
+            ...state.targetUser.specialPlanetToken,
+            loomTokens: restructureTokens(payload.loomTokenIds, payload.loomFields)
+          }
+        }
+      }
+    })
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
@@ -247,4 +250,15 @@ const restructureUserFromResponse = (
     userNormalPlanets: unps,
     userSpecialPlanets: usps
   }
+}
+
+const restructureTokens = (tokenIds: Array<string>, tokenFields: Array<Array<string>>) => {
+  return tokenFields.map((fields, i) => ({
+    id: tokenIds[i],
+    shortId: fields[0],
+    version: strToNum(fields[1]),
+    kind: planetKinds[strToNum(fields[2]) - 1],
+    originalParamCommonLogarithm: strToNum(fields[3]),
+    artSeed: fields[4]
+  }))
 }
