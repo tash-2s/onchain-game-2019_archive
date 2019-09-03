@@ -225,7 +225,7 @@ const restructureUserFromResponse = (
 
   while (iS < uspIds.length) {
     usps.push({
-      id: uspIds[counterS],
+      id: uspIds[iS],
       kind: planetKinds[strToNum(uspKinds[iS]) - 1],
       originalParamCommonLogarithm: strToNum(uspParams[iS]),
       rankupedAt: strToNum(uspTimes[counterS]),
