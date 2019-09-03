@@ -52,4 +52,32 @@ export class UserPageUiActions extends AbstractActions {
   clear = () => {
     this.dispatch(UserPageUiActions.clear())
   }
+
+  static selectSpecialPlanetTokenForSet = UserPageUiActions.creator<string>(
+    "selectSpecialPlanetTokenForSet"
+  )
+  selectSpecialPlanetTokenForSet = (tokenId: string) => {
+    this.dispatch(UserPageUiActions.selectSpecialPlanetTokenForSet(tokenId))
+  }
+
+  static unselectSpecialPlanetTokenForSet = UserPageUiActions.creator(
+    "unselectSpecialPlanetTokenForSet"
+  )
+  unselectSpecialPlanetTokenForSet = () => {
+    this.dispatch(UserPageUiActions.unselectSpecialPlanetTokenForSet())
+  }
+
+  static selectUserSpecialPlanetForModal = UserPageUiActions.creator<string>(
+    "selectUserSpecialPlanetForModal"
+  )
+  selectUserSpecialPlanetForModal = (userSpecialPlanetId: string) => {
+    this.dispatch(UserPageUiActions.selectUserSpecialPlanetForModal(userSpecialPlanetId))
+  }
+
+  static unselectUserSpecialPlanetForModal = UserPageUiActions.creator(
+    "unselectUserSpecialPlanetForModal"
+  )
+  unselectUserSpecialPlanetForModal = () => {
+    this.dispatch(UserPageUiActions.unselectUserSpecialPlanetForModal())
+  }
 }

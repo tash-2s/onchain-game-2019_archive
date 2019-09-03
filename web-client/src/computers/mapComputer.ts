@@ -1,14 +1,18 @@
 import BN from "bn.js"
 
-export const computeMap = <T extends { axialCoordinateQ: number; axialCoordinateR: number }>(
+export const computeMap = <
+  T1 extends { axialCoordinateQ: number; axialCoordinateR: number },
+  T2 extends { axialCoordinateQ: number; axialCoordinateR: number }
+>(
   gold: BN,
-  userPlanets: Array<T>
+  userNormalPlanets: Array<T1>,
+  userSpecialPlanets: Array<T2>
 ) => {
   const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(gold)
   const {
     userPlanetsByCoordinates,
     userPlanetsBiggestRadius
-  } = UserPlanetsMapUtil.userPlanetsAndThierBiggestRadius(userPlanets)
+  } = UserPlanetsMapUtil.userPlanetsAndThierBiggestRadius(userNormalPlanets, userSpecialPlanets)
   const shownRadius = Math.max(userPlanetsBiggestRadius, usableRadius)
   const hexes = UserPlanetsMapUtil.hexesFromMapRadius(shownRadius).map(h => {
     const q = h[0]
@@ -93,19 +97,35 @@ class UserPlanetsMapUtil {
   }
 
   static userPlanetsAndThierBiggestRadius = <
-    T extends { axialCoordinateQ: number; axialCoordinateR: number }
+    T1 extends { axialCoordinateQ: number; axialCoordinateR: number },
+    T2 extends { axialCoordinateQ: number; axialCoordinateR: number }
   >(
-    userNormalPlanets: Array<T>
+    userNormalPlanets: Array<T1>,
+    userSpecialPlanets: Array<T2>
   ) => {
     const userPlanetsByCoordinates: {
-      [key: string]: T | null
+      [key: string]: (T1 & { isNormal: true }) | (T2 & { isNormal: false }) | null
     } = {}
     let userPlanetsBiggestRadius = 0
 
     userNormalPlanets.forEach(up => {
       userPlanetsByCoordinates[
         UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
-      ] = up
+      ] = { ...up, isNormal: true }
+
+      const distance = UserPlanetsMapUtil.distanceFromCenter(
+        up.axialCoordinateQ,
+        up.axialCoordinateR
+      )
+      if (userPlanetsBiggestRadius < distance) {
+        userPlanetsBiggestRadius = distance
+      }
+    })
+
+    userSpecialPlanets.forEach(up => {
+      userPlanetsByCoordinates[
+        UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
+      ] = { ...up, isNormal: false }
 
       const distance = UserPlanetsMapUtil.distanceFromCenter(
         up.axialCoordinateQ,

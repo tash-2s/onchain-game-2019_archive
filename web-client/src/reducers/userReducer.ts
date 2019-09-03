@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserActions, GetUserResponse } from "../actions/UserActions"
+import { UserActions, UserAllResponse, UserAndLoomTokens } from "../actions/UserActions"
 import { PlanetKind, planetKinds } from "../constants"
 
 export interface UserState {
@@ -11,6 +11,7 @@ export interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
+  userSpecialPlanets: Array<UserSpecialPlanet>
   specialPlanetToken: {
     ethTokens: Array<SpecialPlanetToken>
     loomTokens: Array<SpecialPlanetToken>
@@ -31,8 +32,19 @@ export interface UserNormalPlanet {
   axialCoordinateR: number
 }
 
+export interface UserSpecialPlanet {
+  id: string // short id, not token id
+  kind: PlanetKind
+  originalParamCommonLogarithm: number
+  createdAt: number
+  rankupedAt: number
+  axialCoordinateQ: number
+  axialCoordinateR: number
+  artSeed: string
+}
+
 interface SpecialPlanetToken {
-  id: string
+  id: string // token id
   shortId: string
   version: number
   kind: PlanetKind
@@ -64,22 +76,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: payload.ethFields.map((fs, i) => ({
-              id: payload.eth[i],
-              shortId: fs[0],
-              version: strToNum(fs[1]),
-              kind: planetKinds[strToNum(fs[2]) - 1],
-              originalParamCommonLogarithm: strToNum(fs[3]),
-              artSeed: fs[4]
-            })),
-            loomTokens: payload.loomFields.map((fs, i) => ({
-              id: payload.loom[i],
-              shortId: fs[0],
-              version: strToNum(fs[1]),
-              kind: planetKinds[strToNum(fs[2]) - 1],
-              originalParamCommonLogarithm: strToNum(fs[3]),
-              artSeed: fs[4]
-            })),
+            ethTokens: restructureTokens(payload.eth, payload.ethFields),
+            loomTokens: restructureTokens(payload.loom, payload.loomFields),
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx
@@ -98,9 +96,11 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActions.getPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
-    .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
+    .case(UserActions.getPlanet, buildStateFromUserAll)
+    .case(UserActions.rankupUserPlanet, buildStateFromUserAll)
+    .case(UserActions.removeUserPlanet, buildStateFromUserAll)
+    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromUserAllAndLoomTokens)
+    .case(UserActions.removeUserSpecialPlanetFromMap, buildStateFromUserAllAndLoomTokens)
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
@@ -152,9 +152,9 @@ export const createUserReducer = () =>
     })
     .build()
 
-const buildStateFromGetUserResponse = (
+const buildStateFromUserAll = (
   state: UserState,
-  payload: { address: string; response: GetUserResponse }
+  payload: { address: string; response: UserAllResponse }
 ): UserState => {
   if (!state.targetUser) {
     return { ...state }
@@ -169,17 +169,42 @@ const buildStateFromGetUserResponse = (
   }
 }
 
+const buildStateFromUserAllAndLoomTokens = (state: UserState, payload: UserAndLoomTokens) => {
+  if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+    return { ...state }
+  }
+
+  return {
+    ...state,
+    targetUser: {
+      ...state.targetUser,
+      ...restructureUserFromResponse(payload.response),
+      address: payload.address,
+      specialPlanetToken: {
+        ...state.targetUser.specialPlanetToken,
+        loomTokens: restructureTokens(payload.loomTokenIds, payload.loomFields)
+      }
+    }
+  }
+}
+
 const strToNum = (str: string): number => parseInt(str, 10)
 
 const restructureUserFromResponse = (
-  response: GetUserResponse
-): Pick<TargetUserState, "gold" | "userNormalPlanets"> => {
-  const confirmedGold = response[0]
-  const goldConfirmedAt = response[1]
-  const unpIds = response[2]
-  const unpRanks = response[3]
-  const unpTimes = response[4]
-  const unpAxialCoordinates = response[5]
+  response: UserAllResponse
+): Pick<TargetUserState, "gold" | "userNormalPlanets" | "userSpecialPlanets"> => {
+  const confirmedGold = response[0][0]
+  const goldConfirmedAt = response[0][1]
+  const unpIds = response[0][2]
+  const unpRanks = response[0][3]
+  const unpTimes = response[0][4]
+  const unpAxialCoordinates = response[0][5]
+  const uspIds = response[1][0]
+  const uspKinds = response[1][1]
+  const uspParams = response[1][2]
+  const uspTimes = response[1][3]
+  const uspCoordinates = response[1][4]
+  const uspArtSeeds = response[1][5]
 
   const unps: Array<UserNormalPlanet> = []
   let i = 0
@@ -200,11 +225,43 @@ const restructureUserFromResponse = (
     counter += 2
   }
 
+  const usps: Array<UserSpecialPlanet> = []
+  let iS = 0
+  let counterS = 0
+
+  while (iS < uspIds.length) {
+    usps.push({
+      id: uspIds[iS],
+      kind: planetKinds[strToNum(uspKinds[iS]) - 1],
+      originalParamCommonLogarithm: strToNum(uspParams[iS]),
+      rankupedAt: strToNum(uspTimes[counterS]),
+      createdAt: strToNum(uspTimes[counterS + 1]),
+      axialCoordinateQ: strToNum(uspCoordinates[counterS]),
+      axialCoordinateR: strToNum(uspCoordinates[counterS + 1]),
+      artSeed: uspArtSeeds[iS]
+    })
+
+    iS += 1
+    counterS += 2
+  }
+
   return {
     gold: {
       confirmed: confirmedGold,
       confirmedAt: strToNum(goldConfirmedAt)
     },
-    userNormalPlanets: unps
+    userNormalPlanets: unps,
+    userSpecialPlanets: usps
   }
+}
+
+const restructureTokens = (tokenIds: Array<string>, tokenFields: Array<Array<string>>) => {
+  return tokenFields.map((fields, i) => ({
+    id: tokenIds[i],
+    shortId: fields[0],
+    version: strToNum(fields[1]),
+    kind: planetKinds[strToNum(fields[2]) - 1],
+    originalParamCommonLogarithm: strToNum(fields[3]),
+    artSeed: fields[4]
+  }))
 }

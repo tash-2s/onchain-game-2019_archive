@@ -9,7 +9,9 @@ export const initialUserPageUiState = {
   selectedUserPlanetId: null as string | null,
   selectedPlanetKind: "all" as PlanetKindWithAll,
   selectedUserPlanetSortKind: "Newest" as UserPlanetSortKind,
-  planetListVisibilityForMobile: false
+  planetListVisibilityForMobile: false,
+  selectedSpecialPlanetTokenIdForSet: null as string | null,
+  selectedUserSpecialPlanetIdForModal: null as string | null
 }
 
 export type UserPageUiState = typeof initialUserPageUiState
@@ -23,7 +25,8 @@ export const createUserPageUiReducer = () =>
     .case(UserPageUiActions.selectPlanet, (state, payload) => ({
       ...state,
       selectedUserPlanetViewKind: "map",
-      selectedNormalPlanetId: payload
+      selectedNormalPlanetId: payload,
+      selectedSpecialPlanetTokenIdForSet: null
     }))
     .case(UserPageUiActions.unselectPlanet, state => ({
       ...state,
@@ -31,7 +34,8 @@ export const createUserPageUiReducer = () =>
     }))
     .case(UserPageUiActions.selectUserPlanet, (state, payload) => ({
       ...state,
-      selectedUserPlanetId: payload
+      selectedUserPlanetId: payload,
+      selectedUserSpecialPlanetIdForModal: null
     }))
     .case(UserPageUiActions.unselectUserPlanet, state => ({
       ...state,
@@ -52,5 +56,24 @@ export const createUserPageUiReducer = () =>
     .case(UserPageUiActions.clear, state => ({
       ...state,
       ...initialUserPageUiState
+    }))
+    .case(UserPageUiActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
+      ...state,
+      selectedUserPlanetViewKind: "map",
+      selectedNormalPlanetId: null,
+      selectedSpecialPlanetTokenIdForSet: payload
+    }))
+    .case(UserPageUiActions.unselectSpecialPlanetTokenForSet, state => ({
+      ...state,
+      selectedSpecialPlanetTokenIdForSet: null
+    }))
+    .case(UserPageUiActions.selectUserSpecialPlanetForModal, (state, payload) => ({
+      ...state,
+      selectedUserPlanetId: null,
+      selectedUserSpecialPlanetIdForModal: payload
+    }))
+    .case(UserPageUiActions.unselectUserSpecialPlanetForModal, state => ({
+      ...state,
+      selectedUserSpecialPlanetIdForModal: null
     }))
     .build()

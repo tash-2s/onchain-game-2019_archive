@@ -3,11 +3,38 @@ import { AppActions } from "./AppActions"
 
 import { chains } from "../misc/chains"
 
-export type GetUserResponse = any // TODO
+const getUserAll = async (
+  address: string
+): Promise<
+  [
+    [string, string, Array<string>, Array<string>, Array<string>, Array<string>],
+    [Array<string>, Array<string>, Array<string>, Array<string>, Array<string>, Array<string>]
+  ]
+> => {
+  const response1 = await chains.loom
+    .userController()
+    .methods.getUser(address)
+    .call()
+
+  const response2 = await chains.loom
+    .specialPlanetController()
+    .methods.getPlanets(address)
+    .call()
+
+  return [response1, response2]
+}
+
+type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
+export type UserAllResponse = ExtractFromPromise<ReturnType<typeof getUserAll>>
 
 interface User {
   address: string
-  response: GetUserResponse
+  response: UserAllResponse
+}
+
+export type UserAndLoomTokens = User & {
+  loomTokenIds: Array<string>
+  loomFields: Array<Array<string>>
 }
 
 export class UserActions extends AbstractActions {
@@ -15,10 +42,7 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<User>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const response = await chains.loom
-      .userController()
-      .methods.getUser(address)
-      .call()
+    const response = await getUserAll(address)
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
@@ -35,26 +59,10 @@ export class UserActions extends AbstractActions {
     }
 
     const ethTokenIds = await getTokenIds(chains.eth)
-    const ethFields: Array<Array<string>> = []
-    for (const tokenId of ethTokenIds) {
-      ethFields.push(
-        await chains.loom
-          .specialPlanetController()
-          .methods.getPlanetFieldsFromTokenId(tokenId)
-          .call()
-      )
-    }
+    const ethFields = await getTokenFields(ethTokenIds)
 
     const loomTokenIds = await getTokenIds(chains.loom)
-    const loomFields: Array<Array<string>> = []
-    for (const tokenId of loomTokenIds) {
-      loomFields.push(
-        await chains.loom
-          .specialPlanetController()
-          .methods.getPlanetFieldsFromTokenId(tokenId)
-          .call()
-      )
-    }
+    const loomFields = await getTokenFields(loomTokenIds)
 
     const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
@@ -77,16 +85,14 @@ export class UserActions extends AbstractActions {
   static getPlanet = UserActions.creator<User>("getPlanet")
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
+
       await chains.loom
         .normalPlanetController()
         .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
         .send()
 
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+      const response = await getUserAll(address)
 
       this.dispatch(
         UserActions.getPlanet({
@@ -100,17 +106,14 @@ export class UserActions extends AbstractActions {
   static rankupUserPlanet = UserActions.creator<User>("rankupUserPlanet")
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
 
       await chains.loom
         .normalPlanetController()
         .methods.rankupPlanet(userPlanetId, targetRank)
         .send()
 
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+      const response = await getUserAll(address)
 
       this.dispatch(UserActions.rankupUserPlanet({ address, response }))
     })
@@ -119,18 +122,86 @@ export class UserActions extends AbstractActions {
   static removeUserPlanet = UserActions.creator<User>("removeUserPlanet")
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      const address = loginedAddress()
+      const address = loginedLoomAddress()
 
       await chains.loom
         .normalPlanetController()
         .methods.removePlanet(userPlanetId)
         .send()
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+
+      const response = await getUserAll(address)
 
       this.dispatch(UserActions.removeUserPlanet({ address, response }))
+    })
+  }
+
+  static setSpecialPlanetTokenToMap = UserActions.creator<UserAndLoomTokens>(
+    "setSpecialPlanetTokenToMap"
+  )
+  setSpecialPlanetTokenToMap = (
+    tokenId: string,
+    axialCoordinateQ: number,
+    axialCoordinateR: number
+  ) => {
+    this.withLoading(async () => {
+      const address = loginedLoomAddress()
+
+      const controllerAddress = chains.loom.specialPlanetController().options.address
+      const isApproved = await chains.loom
+        .specialPlanetToken()
+        .methods.isApprovedForAll(address, controllerAddress)
+        .call()
+      if (!isApproved) {
+        await chains.loom
+          .specialPlanetToken()
+          .methods.setApprovalForAll(controllerAddress, true)
+          .send()
+      }
+
+      await chains.loom
+        .specialPlanetController()
+        .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
+        .send()
+
+      const response = await getUserAll(address)
+      const loomTokenIds = await getTokenIds(chains.loom)
+      const loomFields = await getTokenFields(loomTokenIds)
+
+      this.dispatch(
+        UserActions.setSpecialPlanetTokenToMap({
+          address,
+          response,
+          loomTokenIds,
+          loomFields
+        })
+      )
+    })
+  }
+
+  static removeUserSpecialPlanetFromMap = UserActions.creator<UserAndLoomTokens>(
+    "removeUserSpecialPlanetFromMap"
+  )
+  removeUserSpecialPlanetFromMap = (userSpecialPlanetId: string) => {
+    this.withLoading(async () => {
+      const address = loginedLoomAddress()
+
+      await chains.loom
+        .specialPlanetController()
+        .methods.removePlanet(userSpecialPlanetId)
+        .send()
+
+      const response = await getUserAll(address)
+      const loomTokenIds = await getTokenIds(chains.loom)
+      const loomFields = await getTokenFields(loomTokenIds)
+
+      this.dispatch(
+        UserActions.removeUserSpecialPlanetFromMap({
+          address,
+          response,
+          loomTokenIds,
+          loomFields
+        })
+      )
     })
   }
 
@@ -223,7 +294,21 @@ const getTokenIds = async (c: {
   return ids
 }
 
-const loginedAddress = () => {
+const getTokenFields = async (tokenIds: Array<string>) => {
+  const fields: Array<Array<string>> = []
+  for (const tokenId of tokenIds) {
+    fields.push(
+      await chains.loom
+        .specialPlanetController()
+        .methods.getPlanetFieldsFromTokenId(tokenId)
+        .call()
+    )
+  }
+
+  return fields
+}
+
+const loginedLoomAddress = () => {
   const address = chains.loom.address
   if (!address) {
     throw new Error("must login")

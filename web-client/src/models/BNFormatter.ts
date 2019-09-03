@@ -21,7 +21,7 @@ export class BNFormatter {
       )
 
     const alphabetIndex = separated.length - 1
-    if (alphabetIndex >= 26) {
+    if (alphabetIndex >= alphabet.length) {
       throw new Error("out of range")
     }
     const symbol = alphabet[alphabetIndex]

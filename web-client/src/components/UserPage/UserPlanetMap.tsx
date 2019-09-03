@@ -9,6 +9,7 @@ import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
 import { PlanetArt } from "../utils/PlanetArt"
+import { PrettyBN } from "../utils/PrettyBN"
 
 interface Props {
   user: ComputedTargetUserState
@@ -53,9 +54,19 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
     const hexes = this.props.user.map.hexes.map(h => {
       const settable =
-        this.props.isMine && !!this.props.userPageUi.selectedNormalPlanetId && h.settable
+        this.props.isMine &&
+        h.settable &&
+        (!!this.props.userPageUi.selectedNormalPlanetId ||
+          !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet)
       const selectFn = () => {
-        !h.userPlanet || this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
+        if (!h.userPlanet) {
+          return
+        }
+        if (h.userPlanet.isNormal) {
+          this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
+        } else {
+          this.props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
+        }
       }
 
       return (
@@ -87,11 +98,22 @@ export class UserPlanetMap extends React.Component<Props, State> {
 
   setPlanet = (q: number, r: number) => {
     return () => {
-      if (!this.props.userPageUi.selectedNormalPlanetId) {
-        throw new Error("this must be called with target")
+      if (this.props.userPageUi.selectedNormalPlanetId) {
+        this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
+        this.props.userPageUiActions.unselectPlanet()
+        return
       }
-      this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
-      this.props.userPageUiActions.unselectPlanet()
+      if (this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
+        this.props.userActions.setSpecialPlanetTokenToMap(
+          this.props.userPageUi.selectedSpecialPlanetTokenIdForSet,
+          q,
+          r
+        )
+        this.props.userPageUiActions.unselectSpecialPlanetTokenForSet()
+        return
+      }
+
+      throw new Error("this must be called with target")
     }
   }
 }
@@ -117,5 +139,27 @@ function WrappedModal(props: Props) {
       )
     }
   }
+
+  if (props.userPageUi.selectedUserSpecialPlanetIdForModal) {
+    const up = props.user.userSpecialPlanets.find(
+      up => up.id === props.userPageUi.selectedUserSpecialPlanetIdForModal
+    )
+    // this must be always true
+    if (up) {
+      const buttonFn = () => props.userActions.removeUserSpecialPlanetFromMap(up.id)
+      const button = props.isMine ? <button onClick={buttonFn}>Remove</button> : <></>
+      return (
+        <Modal close={props.userPageUiActions.unselectUserSpecialPlanetForModal}>
+          <PlanetArt kind={up.kind} artSeed={up.artSeed} canvasSize={300} />
+          <div>
+            Kind: {up.kind}
+            Param: <PrettyBN bn={up.param} />
+            {button}
+          </div>
+        </Modal>
+      )
+    }
+  }
+
   return <></>
 }
