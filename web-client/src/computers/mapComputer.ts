@@ -1,9 +1,11 @@
 import BN from "bn.js"
 
-export const computeMap = <
-  T1 extends { axialCoordinateQ: number; axialCoordinateR: number },
-  T2 extends { axialCoordinateQ: number; axialCoordinateR: number }
->(
+interface Coordinates {
+  axialCoordinateQ: number
+  axialCoordinateR: number
+}
+
+export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
   gold: BN,
   userNormalPlanets: Array<T1>,
   userSpecialPlanets: Array<T2>
@@ -96,10 +98,7 @@ class UserPlanetsMapUtil {
     return null
   }
 
-  static userPlanetsAndThierBiggestRadius = <
-    T1 extends { axialCoordinateQ: number; axialCoordinateR: number },
-    T2 extends { axialCoordinateQ: number; axialCoordinateR: number }
-  >(
+  static userPlanetsAndThierBiggestRadius = <T1 extends Coordinates, T2 extends Coordinates>(
     userNormalPlanets: Array<T1>,
     userSpecialPlanets: Array<T2>
   ) => {
@@ -108,11 +107,7 @@ class UserPlanetsMapUtil {
     } = {}
     let userPlanetsBiggestRadius = 0
 
-    userNormalPlanets.forEach(up => {
-      userPlanetsByCoordinates[
-        UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
-      ] = { ...up, isNormal: true }
-
+    const tackleBiggestRadius = (up: T1 | T2) => {
       const distance = UserPlanetsMapUtil.distanceFromCenter(
         up.axialCoordinateQ,
         up.axialCoordinateR
@@ -120,6 +115,14 @@ class UserPlanetsMapUtil {
       if (userPlanetsBiggestRadius < distance) {
         userPlanetsBiggestRadius = distance
       }
+    }
+
+    userNormalPlanets.forEach(up => {
+      userPlanetsByCoordinates[
+        UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
+      ] = { ...up, isNormal: true }
+
+      tackleBiggestRadius(up)
     })
 
     userSpecialPlanets.forEach(up => {
@@ -127,13 +130,7 @@ class UserPlanetsMapUtil {
         UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
       ] = { ...up, isNormal: false }
 
-      const distance = UserPlanetsMapUtil.distanceFromCenter(
-        up.axialCoordinateQ,
-        up.axialCoordinateR
-      )
-      if (userPlanetsBiggestRadius < distance) {
-        userPlanetsBiggestRadius = distance
-      }
+      tackleBiggestRadius(up)
     })
 
     return { userPlanetsByCoordinates, userPlanetsBiggestRadius }
