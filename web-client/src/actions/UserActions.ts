@@ -3,11 +3,33 @@ import { AppActions } from "./AppActions"
 
 import { chains } from "../misc/chains"
 
-export type GetUserResponse = any // TODO
+const getUserAll = async (
+  address: string
+): Promise<
+  [
+    [string, string, Array<string>, Array<string>, Array<string>, Array<string>],
+    [Array<string>, Array<string>, Array<string>, Array<string>, Array<string>, Array<string>]
+  ]
+> => {
+  const response1 = await chains.loom
+    .userController()
+    .methods.getUser(address)
+    .call()
+
+  const response2 = await chains.loom
+    .specialPlanetController()
+    .methods.getPlanets(address)
+    .call()
+
+  return [response1, response2]
+}
+
+type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
+export type UserAllResponse = ExtractFromPromise<ReturnType<typeof getUserAll>>
 
 interface User {
   address: string
-  response: GetUserResponse
+  response: UserAllResponse
 }
 
 export class UserActions extends AbstractActions {
@@ -15,10 +37,7 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<User>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const response = await chains.loom
-      .userController()
-      .methods.getUser(address)
-      .call()
+    const response = await getUserAll(address)
     this.dispatch(UserActions.setTargetUser({ address, response }))
   }
 
@@ -78,15 +97,13 @@ export class UserActions extends AbstractActions {
   getPlanet = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
+
       await chains.loom
         .normalPlanetController()
         .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
         .send()
 
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+      const response = await getUserAll(address)
 
       this.dispatch(
         UserActions.getPlanet({
@@ -107,10 +124,7 @@ export class UserActions extends AbstractActions {
         .methods.rankupPlanet(userPlanetId, targetRank)
         .send()
 
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+      const response = await getUserAll(address)
 
       this.dispatch(UserActions.rankupUserPlanet({ address, response }))
     })
@@ -125,10 +139,8 @@ export class UserActions extends AbstractActions {
         .normalPlanetController()
         .methods.removePlanet(userPlanetId)
         .send()
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+
+      const response = await getUserAll(address)
 
       this.dispatch(UserActions.removeUserPlanet({ address, response }))
     })
@@ -160,11 +172,7 @@ export class UserActions extends AbstractActions {
         .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
         .send()
 
-      // TODO: change
-      const response = await chains.loom
-        .userController()
-        .methods.getUser(address)
-        .call()
+      const response = await getUserAll(address)
 
       this.dispatch(
         UserActions.setSpecialPlanetTokenToMap({

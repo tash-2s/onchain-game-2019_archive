@@ -6,7 +6,7 @@ import { PlanetArt } from "../utils/PlanetArt"
 export function PlanetHex(props: {
   q: number
   r: number
-  userPlanet: ComputedTargetUserState["userNormalPlanets"][number] | null
+  userPlanet: ComputedTargetUserState["map"]["hexes"][number]["userPlanet"]
   shiftTop: number
   shiftLeft: number
   hexSize: number
@@ -47,7 +47,11 @@ export function PlanetHex(props: {
   const onClick = props.setPlanet ? props.setPlanet(props.q, props.r) : props.select
   const size = Math.min(props.hexWidth, props.hexHeight)
   const art = up ? (
-    <PlanetArt kind={up.planet.kind} artSeed={up.planet.artSeed} canvasSize={size} />
+    <PlanetArt
+      kind={up.isNormal ? up.planet.kind : up.kind}
+      artSeed={up.isNormal ? up.planet.artSeed : up.artSeed}
+      canvasSize={size}
+    />
   ) : (
     <></>
   )

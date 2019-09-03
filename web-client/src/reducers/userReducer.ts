@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserActions, GetUserResponse } from "../actions/UserActions"
+import { UserActions, UserAllResponse } from "../actions/UserActions"
 import { PlanetKind, planetKinds } from "../constants"
 
 export interface UserState {
@@ -11,6 +11,7 @@ export interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
   userNormalPlanets: Array<UserNormalPlanet>
+  userSpecialPlanets: Array<UserSpecialPlanet>
   specialPlanetToken: {
     ethTokens: Array<SpecialPlanetToken>
     loomTokens: Array<SpecialPlanetToken>
@@ -29,6 +30,17 @@ export interface UserNormalPlanet {
   rankupedAt: number
   axialCoordinateQ: number
   axialCoordinateR: number
+}
+
+export interface UserSpecialPlanet {
+  id: string
+  kind: PlanetKind
+  originalParamCommonLogarithm: number
+  createdAt: number
+  rankupedAt: number
+  axialCoordinateQ: number
+  axialCoordinateR: number
+  artSeed: string
 }
 
 interface SpecialPlanetToken {
@@ -101,6 +113,7 @@ export const createUserReducer = () =>
     .case(UserActions.getPlanet, buildStateFromGetUserResponse)
     .case(UserActions.rankupUserPlanet, buildStateFromGetUserResponse)
     .case(UserActions.removeUserPlanet, buildStateFromGetUserResponse)
+    .case(UserActions.setSpecialPlanetTokenToMap, buildStateFromGetUserResponse)
     .case(UserActions.buySpecialPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
         return { ...state }
@@ -154,7 +167,7 @@ export const createUserReducer = () =>
 
 const buildStateFromGetUserResponse = (
   state: UserState,
-  payload: { address: string; response: GetUserResponse }
+  payload: { address: string; response: UserAllResponse }
 ): UserState => {
   if (!state.targetUser) {
     return { ...state }
@@ -172,14 +185,20 @@ const buildStateFromGetUserResponse = (
 const strToNum = (str: string): number => parseInt(str, 10)
 
 const restructureUserFromResponse = (
-  response: GetUserResponse
-): Pick<TargetUserState, "gold" | "userNormalPlanets"> => {
-  const confirmedGold = response[0]
-  const goldConfirmedAt = response[1]
-  const unpIds = response[2]
-  const unpRanks = response[3]
-  const unpTimes = response[4]
-  const unpAxialCoordinates = response[5]
+  response: UserAllResponse
+): Pick<TargetUserState, "gold" | "userNormalPlanets" | "userSpecialPlanets"> => {
+  const confirmedGold = response[0][0]
+  const goldConfirmedAt = response[0][1]
+  const unpIds = response[0][2]
+  const unpRanks = response[0][3]
+  const unpTimes = response[0][4]
+  const unpAxialCoordinates = response[0][5]
+  const uspIds = response[1][0]
+  const uspKinds = response[1][1]
+  const uspParams = response[1][2]
+  const uspTimes = response[1][3]
+  const uspCoordinates = response[1][4]
+  const uspArtSeeds = response[1][5]
 
   const unps: Array<UserNormalPlanet> = []
   let i = 0
@@ -200,11 +219,32 @@ const restructureUserFromResponse = (
     counter += 2
   }
 
+  const usps: Array<UserSpecialPlanet> = []
+  let iS = 0
+  let counterS = 0
+
+  while (iS < uspIds.length) {
+    usps.push({
+      id: uspIds[counterS],
+      kind: planetKinds[strToNum(uspKinds[iS]) - 1],
+      originalParamCommonLogarithm: strToNum(uspParams[iS]),
+      rankupedAt: strToNum(uspTimes[counterS]),
+      createdAt: strToNum(uspTimes[counterS + 1]),
+      axialCoordinateQ: strToNum(uspCoordinates[counterS]),
+      axialCoordinateR: strToNum(uspCoordinates[counterS + 1]),
+      artSeed: uspArtSeeds[iS]
+    })
+
+    iS += 1
+    counterS += 2
+  }
+
   return {
     gold: {
       confirmed: confirmedGold,
       confirmedAt: strToNum(goldConfirmedAt)
     },
-    userNormalPlanets: unps
+    userNormalPlanets: unps,
+    userSpecialPlanets: usps
   }
 }

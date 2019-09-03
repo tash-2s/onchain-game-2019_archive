@@ -58,7 +58,14 @@ export class UserPlanetMap extends React.Component<Props, State> {
         (!!this.props.userPageUi.selectedNormalPlanetId ||
           !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet)
       const selectFn = () => {
-        !h.userPlanet || this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
+        if (!h.userPlanet) {
+          return
+        }
+        if (h.userPlanet.isNormal) {
+          this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
+        } else {
+          this.props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
+        }
       }
 
       return (
@@ -131,5 +138,20 @@ function WrappedModal(props: Props) {
       )
     }
   }
+
+  if (props.userPageUi.selectedUserSpecialPlanetIdForModal) {
+    const up = props.user.userSpecialPlanets.find(
+      up => up.id === props.userPageUi.selectedUserSpecialPlanetIdForModal
+    )
+    // this must be always true
+    if (up) {
+      return (
+        <Modal close={props.userPageUiActions.unselectUserSpecialPlanetForModal}>
+          <PlanetArt kind={up.kind} artSeed={up.artSeed} canvasSize={300} />
+        </Modal>
+      )
+    }
+  }
+
   return <></>
 }

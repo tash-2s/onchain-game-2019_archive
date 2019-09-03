@@ -6,6 +6,7 @@ import {
   computeUserNormalPlanetParams,
   computeUserNormalPlanetRankStatuses
 } from "./userNormalPlanetComputer"
+import { computeUserSpecialPlanets } from "./userSpecialPlanetComputer"
 import { computeGold } from "./goldComputer"
 import { computeMap } from "./mapComputer"
 
@@ -17,9 +18,21 @@ export const computeUserState = (state: UserState, now: number) => {
     return { targetUser: null }
   }
 
-  const { userNormalPlanets, population, productivity, knowledge } = computeUserNormalPlanetParams(
-    state.targetUser.userNormalPlanets
-  )
+  const {
+    userNormalPlanets,
+    population: normalPopulation,
+    productivity: normalProductivity,
+    knowledge: normalKnowledge
+  } = computeUserNormalPlanetParams(state.targetUser.userNormalPlanets)
+  const {
+    userSpecialPlanets,
+    population: specialPopulation,
+    productivity: specialProductivity,
+    knowledge: specialKnowledge
+  } = computeUserSpecialPlanets(state.targetUser.userSpecialPlanets)
+  const population = normalPopulation.add(specialPopulation)
+  const productivity = normalProductivity.add(specialProductivity)
+  const knowledge = normalKnowledge + specialKnowledge
 
   const { goldPerSec, ongoingGold } = computeGold(
     population,
@@ -40,11 +53,12 @@ export const computeUserState = (state: UserState, now: number) => {
       address: state.targetUser.address,
       gold: ongoingGold,
       userNormalPlanets: computedUserPlanets.sort((a, b) => a.createdAt - b.createdAt),
+      userSpecialPlanets: userSpecialPlanets,
       population: population,
       productivity: productivity,
       knowledge: knowledge,
       goldPerSec: goldPerSec,
-      map: computeMap(ongoingGold, computedUserPlanets),
+      map: computeMap(ongoingGold, computedUserPlanets, userSpecialPlanets),
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length),
       specialPlanetToken: computeSpecialPlanetToken(state.targetUser.specialPlanetToken)
     }
