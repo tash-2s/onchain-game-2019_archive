@@ -76,8 +76,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: restructureTokens(payload.eth, payload.ethFields),
-            loomTokens: restructureTokens(payload.loom, payload.loomFields),
+            ethTokens: restructureTokens(payload.ethIds, payload.ethFields),
+            loomTokens: restructureTokens(payload.loomIds, payload.loomFields),
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx

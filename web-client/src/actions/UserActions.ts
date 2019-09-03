@@ -47,9 +47,9 @@ export class UserActions extends AbstractActions {
   }
 
   static setTargetUserSpecialPlanetTokens = UserActions.creator<{
-    eth: Array<string>
+    ethIds: Array<string>
     ethFields: Array<Array<string>>
-    loom: Array<string>
+    loomIds: Array<string>
     loomFields: Array<Array<string>>
     needsTransferResume: boolean
   }>("setTargetUserSpecialPlanetTokens")
@@ -58,19 +58,19 @@ export class UserActions extends AbstractActions {
       throw new Error("this function is for my page")
     }
 
-    const ethTokenIds = await getTokenIds(chains.eth)
-    const ethFields = await getTokenFields(ethTokenIds)
+    const ethIds = await getTokenIds(chains.eth)
+    const ethFields = await getTokenFields(ethIds)
 
-    const loomTokenIds = await getTokenIds(chains.loom)
-    const loomFields = await getTokenFields(loomTokenIds)
+    const loomIds = await getTokenIds(chains.loom)
+    const loomFields = await getTokenFields(loomIds)
 
-    const needsResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
+    const needsResume = await chains.needsSpecialPlanetTokenResume(ethIds)
 
     this.dispatch(
       UserActions.setTargetUserSpecialPlanetTokens({
-        eth: ethTokenIds,
+        ethIds,
         ethFields,
-        loom: loomTokenIds,
+        loomIds,
         loomFields,
         needsTransferResume: needsResume
       })
