@@ -47,23 +47,29 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     external
     view
     returns (
-      uint24[] memory, // id
-      uint8[] memory, // kind
-      uint8[] memory, // originalParamCommonLogarithm
-      uint32[] memory, // [rankupedAt, createdAt, ...]
-      int16[] memory, // [q, r, ...]
-      uint64[] memory
+      uint200 confirmedGold,
+      uint32 goldConfirmedAt,
+      uint24[] memory ids, // id
+      uint8[] memory kinds, // kind
+      uint8[] memory params, // originalParamCommonLogarithm
+      uint32[] memory times, // [rankupedAt, createdAt, ...]
+      int16[] memory coordinates, // [q, r, ...]
+      uint64[] memory artSeeds
     )
   {
+    UserGoldRecord memory goldRecord = userGoldRecordOf(account);
+    confirmedGold = goldRecord.balance;
+    goldConfirmedAt = goldRecord.confirmedAt;
+
     UserSpecialPlanetRecord[] memory userPlanetRecords = userSpecialPlanetRecordsOf(account);
     uint16 userPlanetsCount = uint16(userPlanetRecords.length);
 
-    uint24[] memory ids = new uint24[](userPlanetsCount);
-    uint8[] memory kinds = new uint8[](userPlanetsCount);
-    uint8[] memory params = new uint8[](userPlanetsCount);
-    uint32[] memory times = new uint32[](userPlanetsCount * 2);
-    int16[] memory coordinates = new int16[](userPlanetsCount * 2);
-    uint64[] memory artSeeds = new uint64[](userPlanetsCount);
+    ids = new uint24[](userPlanetsCount);
+    kinds = new uint8[](userPlanetsCount);
+    params = new uint8[](userPlanetsCount);
+    times = new uint32[](userPlanetsCount * 2);
+    coordinates = new int16[](userPlanetsCount * 2);
+    artSeeds = new uint64[](userPlanetsCount);
 
     uint16 counter = 0;
 
@@ -80,7 +86,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       counter += 2;
     }
 
-    return (ids, kinds, params, times, coordinates, artSeeds);
+    return (confirmedGold, goldConfirmedAt, ids, kinds, params, times, coordinates, artSeeds);
   }
 
   // sender needs to approve the transfer of this token before call this function
