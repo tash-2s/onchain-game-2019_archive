@@ -2,12 +2,12 @@ import * as React from "react"
 
 import { PrettyBN } from "../utils/PrettyBN"
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { UserActions } from "../../actions/UserActions"
+import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 interface UserPlanetProps {
   userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
   knowledge: number
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   now: number
   isMine: boolean
 }
@@ -97,20 +97,20 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   }
 
   rankupButtonHandler = () => {
-    this.props.userActions.rankupUserPlanet(
+    this.props.userActions.normal.rankupUserPlanet(
       this.props.userPlanet.id,
       this.props.userPlanet.rank + 1
     )
   }
 
   bulkRankupButtonHandler = () => {
-    this.props.userActions.rankupUserPlanet(
+    this.props.userActions.normal.rankupUserPlanet(
       this.props.userPlanet.id,
       this.props.userPlanet.rank + this.props.userPlanet.rankupableCount
     )
   }
 
   removeButtonHandler = () => {
-    this.props.userActions.removeUserPlanet(this.props.userPlanet.id)
+    this.props.userActions.normal.removeUserPlanet(this.props.userPlanet.id)
   }
 }

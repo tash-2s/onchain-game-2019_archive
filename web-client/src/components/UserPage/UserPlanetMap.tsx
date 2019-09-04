@@ -1,9 +1,9 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { UserActions } from "../../actions/UserActions"
 import { UserPageUiActions } from "../../actions/UserPageUiActions"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
+import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { PlanetHex } from "./PlanetHex"
 import { Modal } from "../utils/Modal"
@@ -13,7 +13,7 @@ import { PrettyBN } from "../utils/PrettyBN"
 
 interface Props {
   user: ComputedTargetUserState
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   userPageUi: UserPageUiState
   userPageUiActions: UserPageUiActions
   now: number
@@ -99,12 +99,16 @@ export class UserPlanetMap extends React.Component<Props, State> {
   setPlanet = (q: number, r: number) => {
     return () => {
       if (this.props.userPageUi.selectedNormalPlanetId) {
-        this.props.userActions.getPlanet(this.props.userPageUi.selectedNormalPlanetId, q, r)
+        this.props.userActions.normal.setPlanetToMap(
+          this.props.userPageUi.selectedNormalPlanetId,
+          q,
+          r
+        )
         this.props.userPageUiActions.unselectPlanet()
         return
       }
       if (this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
-        this.props.userActions.setSpecialPlanetTokenToMap(
+        this.props.userActions.special.setPlanetTokenToMap(
           this.props.userPageUi.selectedSpecialPlanetTokenIdForSet,
           q,
           r
@@ -146,7 +150,7 @@ function WrappedModal(props: Props) {
     )
     // this must be always true
     if (up) {
-      const buttonFn = () => props.userActions.removeUserSpecialPlanetFromMap(up.id)
+      const buttonFn = () => props.userActions.special.removeUserPlanetFromMap(up.id)
       const button = props.isMine ? <button onClick={buttonFn}>Remove</button> : <></>
       return (
         <Modal close={props.userPageUiActions.unselectUserSpecialPlanetForModal}>

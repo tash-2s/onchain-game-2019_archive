@@ -5,7 +5,7 @@ import { ComputedTimeState } from "../../computers/timeComputer"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { UserPageUiActions } from "../../actions/UserPageUiActions"
-import { UserActions } from "../../actions/UserActions"
+import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
@@ -17,7 +17,7 @@ export function TargetUser(props: {
   currentUser: CurrentUserState
   time: ComputedTimeState
   targetUser: ComputedTargetUserState
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   userPageUi: UserPageUiState
   userPageUiActions: UserPageUiActions
 }) {
@@ -77,17 +77,17 @@ export function TargetUser(props: {
 
 function UserTokens(props: {
   user: ComputedTargetUserState
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   userPageUiActions: UserPageUiActions
 }) {
   React.useEffect(() => {
-    props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
+    props.userActions.special.setTargetUserPlanetTokens()
   }, [props.user.address])
 
   if (props.user.specialPlanetToken) {
-    const reload = () => props.userActions.setTargetUserSpecialPlanetTokens(props.user.address)
+    const reload = () => props.userActions.special.setTargetUserPlanetTokens()
     const ethTokens = props.user.specialPlanetToken.ethTokens.map(token => {
-      const onClick = () => props.userActions.transferSpecialPlanetTokenToLoom(token.id)
+      const onClick = () => props.userActions.special.transferPlanetTokenToLoom(token.id)
       return (
         <li key={token.id}>
           {token.id}:{token.shortId}:{token.version}:{token.kind}:
@@ -101,7 +101,7 @@ function UserTokens(props: {
       ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetToken.transferToLoomTx}), it takes additional 15 minutes to see the token on loom`
       : ""
     const loomTokens = props.user.specialPlanetToken.loomTokens.map(token => {
-      const transferFn = () => props.userActions.transferSpecialPlanetTokenToEth(token.id)
+      const transferFn = () => props.userActions.special.transferPlanetTokenToEth(token.id)
       const selectForSetFn = () => props.userPageUiActions.selectSpecialPlanetTokenForSet(token.id)
       return (
         <li key={token.id}>
@@ -116,7 +116,7 @@ function UserTokens(props: {
     const msg2 = props.user.specialPlanetToken.transferToEthTx
       ? `requested. tx: ${props.user.specialPlanetToken.transferToEthTx}`
       : ""
-    const resumeFn = () => props.userActions.transferSpecialPlanetTokenToEth()
+    const resumeFn = () => props.userActions.special.transferPlanetTokenToEth()
     const resume = props.user.specialPlanetToken.needsTransferResume ? (
       <button onClick={resumeFn}>you have an ongoing transfer, resume it</button>
     ) : (
@@ -129,7 +129,7 @@ function UserTokens(props: {
         <h2 className={"title is-6"}>eth</h2>
         <ul>{ethTokens}</ul>
         <div>{msg1}</div>
-        <button onClick={props.userActions.buySpecialPlanetToken}>buy a planet</button>
+        <button onClick={props.userActions.special.buyPlanetToken}>buy a planet</button>
         <div>{props.user.specialPlanetToken.buyTx}</div>
 
         <h2 className={"title is-6"}>loom</h2>
@@ -180,7 +180,7 @@ function WrappedPlanetList(props: {
 
 function ViewKindRouter(props: {
   targetUser: ComputedTargetUserState
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   userPageUi: UserPageUiState
   userPageUiActions: UserPageUiActions
   now: number

@@ -6,6 +6,8 @@ import { computeUserState } from "../computers/userComputer"
 import { computeTimeState } from "../computers/timeComputer"
 import { UserPage } from "../components/UserPage"
 import { UserActions } from "../actions/UserActions"
+import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
+import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { UserPageUiActions } from "../actions/UserPageUiActions"
 
 const mapStateToProps = (state: RootState) => {
@@ -22,13 +24,17 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
-    userActions: new UserActions(dispatch),
+    userActions: {
+      main: new UserActions(dispatch),
+      normal: new UserActionsForNormalPlanet(dispatch),
+      special: new UserActionsForSpecialPlanet(dispatch)
+    },
     userPageUiActions: new UserPageUiActions(dispatch)
   }
 }
 
-export type UserDispatchProps = ReturnType<typeof mapDispatchToProps>
-export type UserProps = ReturnType<typeof mapStateToProps> & UserDispatchProps
+export type UserPageActionsProps = ReturnType<typeof mapDispatchToProps>
+export type UserPageProps = ReturnType<typeof mapStateToProps> & UserPageActionsProps
 
 export const UserPageContainer = connect(
   mapStateToProps,

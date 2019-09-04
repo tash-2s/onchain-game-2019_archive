@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { UserProps } from "../containers/UserPageContainer"
+import { UserPageProps } from "../containers/UserPageContainer"
 import { TargetUser } from "./UserPage/TargetUser"
 import { initialUserPageUiState } from "../reducers/userPageUiReducer"
 
-export class UserPage extends React.Component<UserProps> {
+export class UserPage extends React.Component<UserPageProps> {
   render = () => {
     if (
       this.props.user.targetUser &&
@@ -26,10 +26,10 @@ export class UserPage extends React.Component<UserProps> {
   }
 
   componentDidMount = () => {
-    this.props.userActions.setTargetUser(this.props.route.params[0])
+    this.props.userActions.main.setTargetUser(this.props.route.params[0])
   }
 
-  componentDidUpdate(prevProps: UserProps) {
+  componentDidUpdate(prevProps: UserPageProps) {
     if (
       this.props.user.targetUser &&
       this.props.user.targetUser.address !== this.props.route.params[0]
@@ -38,12 +38,12 @@ export class UserPage extends React.Component<UserProps> {
         this.props.userPageUiActions.clear()
         return
       }
-      this.props.userActions.setTargetUser(this.props.route.params[0])
+      this.props.userActions.main.setTargetUser(this.props.route.params[0])
     }
   }
 
   componentWillUnmount = () => {
-    this.props.userActions.clearTargetUser()
+    this.props.userActions.main.clearTargetUser()
     this.props.userPageUiActions.clear()
   }
 }

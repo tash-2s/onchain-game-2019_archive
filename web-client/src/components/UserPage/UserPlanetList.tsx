@@ -5,11 +5,11 @@ import { UserPlanet } from "./UserPlanet"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { userPlanetSortKinds, planetKindsWithAll } from "../../constants"
 import { UserPageUiActions } from "../../actions/UserPageUiActions"
-import { UserActions } from "../../actions/UserActions"
+import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 export function UserPlanetList(props: {
   user: ComputedTargetUserState
-  userActions: UserActions
+  userActions: UserPageActionsProps["userActions"]
   userPageUi: UserPageUiState
   userPageUiActions: UserPageUiActions
   now: number
