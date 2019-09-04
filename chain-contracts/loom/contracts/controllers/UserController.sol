@@ -14,6 +14,7 @@ contract UserController is UserGoldControllable, UserNormalPlanetControllable {
     setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
   }
 
+  // TODO: move to normal planet controller as same as special?
   function getUser(address account)
     external
     view
