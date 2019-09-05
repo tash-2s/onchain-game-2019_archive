@@ -13,7 +13,8 @@ import {
   UserActionsForSpecialPlanet,
   UserAndUserSpecialPlanetsAndLoomTokensResponse
 } from "../actions/UserActionsForSpecialPlanet"
-import { PlanetKind, planetKinds } from "../constants"
+import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
+import { SpecialPlanetTokenFields } from "../models/SpecialPlanetTokenFields"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -173,7 +174,6 @@ export const createUserReducer = () =>
     .build()
 
 const strToNum = (str: string) => parseInt(str, 10)
-const planetKindNumToKind = (kindNum: number) => planetKinds[kindNum - 1]
 
 const buildUser = (response: UserResponse): Pick<TargetUserState, "gold"> => {
   return {
@@ -247,15 +247,21 @@ const buildUserSpecialPlanets = (
   return usps
 }
 
-const buildTokens = (tokenIds: Array<string>, tokenFields: Array<Array<string>>) => {
-  return tokenFields.map((fields, i) => ({
-    id: tokenIds[i],
-    shortId: fields[0],
-    version: strToNum(fields[1]),
-    kind: planetKindNumToKind(strToNum(fields[2])),
-    originalParamCommonLogarithm: strToNum(fields[3]),
-    artSeed: fields[4]
-  }))
+const buildTokens = (
+  tokenIds: Array<string>,
+  tokenFields: Array<Array<string>>
+): Array<SpecialPlanetToken> => {
+  return tokenFields.map((fieldsArr, i) => {
+    const fields = new SpecialPlanetTokenFields(fieldsArr)
+    return {
+      id: tokenIds[i],
+      shortId: fields.shortId,
+      version: fields.version,
+      kind: fields.kind,
+      originalParamCommonLogarithm: fields.originalParamCommonLogarithm,
+      artSeed: fields.artSeedStr
+    }
+  })
 }
 
 const buildStateFromUserAndUserNormalPlanets = (

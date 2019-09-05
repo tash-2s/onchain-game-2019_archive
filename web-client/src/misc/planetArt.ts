@@ -82,6 +82,8 @@ const drawV0 = (
         const endRad = rotationOrCutout ? r.random() * FULL_RAD : FULL_RAD
         drawCircle(ctx, sizeBase, startRad, endRad)
         break
+      default:
+        throw new Error("undefined kind")
     }
 
     ctx.stroke()

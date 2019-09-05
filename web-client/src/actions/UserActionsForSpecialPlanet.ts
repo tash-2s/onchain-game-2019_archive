@@ -200,12 +200,12 @@ const getTokenIds = async (c: {
 const getTokenFields = async (tokenIds: Array<string>) => {
   const fields: Array<Array<string>> = []
   for (const tokenId of tokenIds) {
-    fields.push(
-      await chains.loom
-        .specialPlanetController()
-        .methods.getPlanetFieldsFromTokenId(tokenId)
-        .call()
-    )
+    const fs = await chains.loom
+      .specialPlanetController()
+      .methods.getPlanetFieldsFromTokenId(tokenId)
+      .call()
+    // web3js returns "array like object", so let's transform it to true array
+    fields.push([fs[0], fs[1], fs[2], fs[3], fs[4]])
   }
 
   return fields

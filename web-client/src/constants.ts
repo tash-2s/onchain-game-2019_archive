@@ -1,9 +1,22 @@
 export const planetKinds = ["residence", "goldmine", "technology"] as const
 export type PlanetKind = (typeof planetKinds)[number]
+export const planetKindNumToKind = (kindNum: number) => {
+  if (kindNum > planetKinds.length) {
+    throw new Error("invalid kindNum")
+  }
+  return planetKinds[kindNum - 1]
+}
 export const planetKindsWithAll = ["all", "residence", "goldmine", "technology"] as const
 export type PlanetKindWithAll = (typeof planetKindsWithAll)[number]
 
-export const routeIds = ["/", "/users", "/:address", "/about", "/not_found"] as const
+export const routeIds = [
+  "/",
+  "/users",
+  "/:address",
+  "/about",
+  "/planet_arts/:fields",
+  "/not_found"
+] as const
 export type RouteId = (typeof routeIds)[number]
 export interface RouteState {
   id: RouteId
