@@ -13,11 +13,8 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
   >("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
-    const ethTokenIds = await getTokenIds(chains.eth)
-    const ethTokenFields = await getTokenFields(ethTokenIds)
-
-    const loomTokenIds = await getTokenIds(chains.loom)
-    const loomTokenFields = await getTokenFields(loomTokenIds)
+    const { ids: ethTokenIds, fields: ethTokenFields } = await getTokens(chains.eth)
+    const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
 
     const needsTransferResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
 
@@ -57,8 +54,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .send()
 
       const response = await getUserAndUserSpecialPlanets(address)
-      const loomTokenIds = await getTokenIds(chains.loom)
-      const loomTokenFields = await getTokenFields(loomTokenIds)
+      const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
 
       this.dispatch(
         UserActionsForSpecialPlanet.setPlanetTokenToMap({
@@ -81,8 +77,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .send()
 
       const response = await getUserAndUserSpecialPlanets(loginedLoomAddress())
-      const loomTokenIds = await getTokenIds(chains.loom)
-      const loomTokenFields = await getTokenFields(loomTokenIds)
+      const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
 
       this.dispatch(
         UserActionsForSpecialPlanet.removeUserPlanetFromMap({
@@ -172,6 +167,15 @@ interface PlanetTokensResponse {
 
 type _ExtractInstanceType<T> = new (...args: any) => T
 type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
+
+const getTokens = async (c: {
+  address: string | null
+  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
+}) => {
+  const ids = await getTokenIds(c)
+  const fields = await getTokenFields(ids)
+  return { ids, fields }
+}
 
 const getTokenIds = async (c: {
   address: string | null
