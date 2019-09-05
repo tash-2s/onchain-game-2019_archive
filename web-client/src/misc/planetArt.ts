@@ -90,6 +90,7 @@ const drawV0 = (
   }
 
   ctx.restore()
+  canvas.dataset.drawn = "1"
 
   // if (debugStr) {
   //   const parentDiv = document.createElement("div"),
