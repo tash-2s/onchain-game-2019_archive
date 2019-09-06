@@ -5,7 +5,7 @@ import { RouteState } from "../../constants"
 import { UsersPageContainer } from "../../containers/UsersPageContainer"
 import { UserPageContainer } from "../../containers/UserPageContainer"
 import { AboutPage } from "../AboutPage"
-import { PlanetArtPage } from "../PlanetArtPage"
+import { SpecialPlanetTokenMetadataPage } from "../SpecialPlanetTokenMetadataPage"
 
 export function Router(props: { route: RouteState }) {
   switch (props.route.id) {
@@ -17,8 +17,8 @@ export function Router(props: { route: RouteState }) {
       return <UserPageContainer />
     case "/about":
       return <AboutPage />
-    case "/planet_arts/:fields":
-      return <PlanetArtPage fieldsStr={props.route.params[0]} />
+    case "/special_planet_token_metadata/:fields":
+      return <SpecialPlanetTokenMetadataPage fieldsStr={props.route.params[0]} />
     case "/not_found":
     default:
       return <div>not found</div>

@@ -14,7 +14,7 @@ export const routeIds = [
   "/users",
   "/:address",
   "/about",
-  "/planet_arts/:fields",
+  "/special_planet_token_metadata/:fields",
   "/not_found"
 ] as const
 export type RouteId = (typeof routeIds)[number]
