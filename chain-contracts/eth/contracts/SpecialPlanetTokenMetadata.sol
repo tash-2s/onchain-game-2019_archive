@@ -34,31 +34,15 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
   function tokenURI(uint256 tokenId) external view returns (string memory) {
     require(_exists(tokenId), "URI query for nonexistent token");
 
-    return _concatStrings(tokenURIPrefix, _uintToString(tokenId), tokenURISuffix);
+    return string(abi.encodePacked(tokenURIPrefix, _uintToString(tokenId), tokenURISuffix));
   }
 
-  function updateBaseURI(string calldata prefix, string calldata suffix) external onlyMinter {
+  function updateTokenURIAffixes(string calldata prefix, string calldata suffix)
+    external
+    onlyMinter
+  {
     tokenURIPrefix = prefix;
     tokenURISuffix = suffix;
-  }
-
-  function _concatStrings(string memory _a, string memory _b, string memory _c)
-    private
-    pure
-    returns (string memory)
-  {
-    bytes memory a = bytes(_a);
-    bytes memory b = bytes(_b);
-    bytes memory c = bytes(_c);
-
-    bytes memory abc = bytes(new string(a.length + b.length + c.length));
-    uint256 k = 0;
-
-    for (uint256 i = 0; i < a.length; i++) abc[k++] = a[i];
-    for (uint256 i = 0; i < b.length; i++) abc[k++] = b[i];
-    for (uint256 i = 0; i < c.length; i++) abc[k++] = c[i];
-
-    return string(abc);
   }
 
   function _uintToString(uint256 value) private pure returns (string memory) {
