@@ -4,6 +4,8 @@ import { getUserAndUserSpecialPlanets, UserAndUserSpecialPlanetsResponse } from 
 
 import { chains } from "../misc/chains"
 
+import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
 
@@ -160,9 +162,9 @@ export type UserAndUserSpecialPlanetsAndLoomTokensResponse = UserAndUserSpecialP
 
 interface PlanetTokensResponse {
   ethTokenIds: Array<string>
-  ethTokenFields: Array<Array<string>>
+  ethTokenFields: Array<SpecialPlanetTokenFields>
   loomTokenIds: Array<string>
-  loomTokenFields: Array<Array<string>>
+  loomTokenFields: Array<SpecialPlanetTokenFields>
 }
 
 type _ExtractInstanceType<T> = new (...args: any) => T
@@ -198,16 +200,10 @@ const getTokenIds = async (c: {
 }
 
 const getTokenFields = async (tokenIds: Array<string>) => {
-  const fields: Array<Array<string>> = []
+  const fields: Array<SpecialPlanetTokenFields> = []
   for (const tokenId of tokenIds) {
-    const fs = await chains.loom
-      .specialPlanetController()
-      .methods.getPlanetFieldsFromTokenId(tokenId)
-      .call()
-    // web3js returns "array like object", so let's transform it to true array
-    fields.push([fs[0], fs[1], fs[2], fs[3], fs[4]])
+    fields.push(await ChainContractMethods.getSpecialPlanetTokenFields(tokenId))
   }
-
   return fields
 }
 

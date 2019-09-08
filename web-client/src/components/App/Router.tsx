@@ -18,7 +18,7 @@ export function Router(props: { route: RouteState }) {
     case "/about":
       return <AboutPage />
     case "/special_planet_token_metadata/:fields":
-      return <SpecialPlanetTokenMetadataPage fieldsStr={props.route.params[0]} />
+      return <SpecialPlanetTokenMetadataPage params={props.route.params} />
     case "/not_found":
     default:
       return <div>not found</div>

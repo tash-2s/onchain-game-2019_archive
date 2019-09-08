@@ -14,7 +14,6 @@ import {
   UserAndUserSpecialPlanetsAndLoomTokensResponse
 } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
-import { SpecialPlanetTokenFields } from "../models/SpecialPlanetTokenFields"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -248,18 +247,17 @@ const buildUserSpecialPlanets = (
 }
 
 const buildTokens = (
-  tokenIds: Array<string>,
-  tokenFields: Array<Array<string>>
+  tokenIds: UserAndUserSpecialPlanetsAndLoomTokensResponse["loomTokenIds"],
+  tokenFields: UserAndUserSpecialPlanetsAndLoomTokensResponse["loomTokenFields"]
 ): Array<SpecialPlanetToken> => {
-  return tokenFields.map((fieldsArr, i) => {
-    const fields = new SpecialPlanetTokenFields(fieldsArr)
+  return tokenFields.map((fields, i) => {
     return {
       id: tokenIds[i],
       shortId: fields.shortId,
       version: fields.version,
       kind: fields.kind,
       originalParamCommonLogarithm: fields.originalParamCommonLogarithm,
-      artSeed: fields.artSeedStr
+      artSeed: fields.artSeed
     }
   })
 }

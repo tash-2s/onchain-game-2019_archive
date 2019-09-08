@@ -1,24 +1,34 @@
 import * as React from "react"
 import BN from "bn.js"
 
-import { SpecialPlanetTokenFields } from "../models/SpecialPlanetTokenFields"
 import { BNFormatter } from "../models/BNFormatter"
+import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
 import { PlanetArt } from "./utils/PlanetArt"
 
-export function SpecialPlanetTokenMetadataPage(props: { fieldsStr: string }) {
-  const [tokenId, ...others] = props.fieldsStr.split(":")
-  const fields = new SpecialPlanetTokenFields(others)
-  const json = buildJSON(tokenId, fields)
+export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
+  const tokenId = props.params[0]
+  const [fields, setFields] = React.useState<null | SpecialPlanetTokenFields>(null)
 
-  return (
-    <div>
-      <div id={"planet-token-id"}>{tokenId}</div>
-      <div id={"planet-json"}>{json}</div>
-      <div id={"planet-art"}>
-        <PlanetArt kind={fields.kind} artSeed={fields.artSeed} canvasSize={500} />
+  React.useEffect(() => {
+    ChainContractMethods.getSpecialPlanetTokenFields(tokenId).then(f => {
+      setFields(f)
+    })
+  }, [tokenId])
+
+  if (fields) {
+    const json = buildJSON(tokenId, fields)
+
+    return (
+      <div>
+        <div id={"planet-json"}>{json}</div>
+        <div id={"planet-art"}>
+          <PlanetArt kind={fields.kind} artSeed={new BN(fields.artSeed)} canvasSize={500} />
+        </div>
       </div>
-    </div>
-  )
+    )
+  } else {
+    return <div>loading...</div>
+  }
 }
 
 const buildJSON = (tokenId: string, fields: SpecialPlanetTokenFields) => {
