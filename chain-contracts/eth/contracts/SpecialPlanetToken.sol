@@ -2,20 +2,19 @@ pragma solidity 0.5.11;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Mintable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721MetadataMintable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
+
+import "./SpecialPlanetTokenMetadata.sol";
 
 contract SpecialPlanetToken is
   ERC721Enumerable,
   ERC721Mintable,
-  ERC721MetadataMintable,
-  ERC721Pausable
+  ERC721Pausable,
+  SpecialPlanetTokenMetadata
 {
-  // Transfer Gateway contract address
   address public gateway;
 
-  // TODO: change name
-  constructor(address gatewayAddress) public ERC721Metadata("HOGEHOGE", "HOG") {
+  constructor(address gatewayAddress) public {
     gateway = gatewayAddress;
   }
 
