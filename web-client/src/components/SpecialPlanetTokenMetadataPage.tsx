@@ -7,15 +7,17 @@ import { PlanetArt } from "./utils/PlanetArt"
 
 export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
   const tokenId = props.params[0]
-  const [fields, setFields] = React.useState<null | SpecialPlanetTokenFields>(null)
+  const [fields, setFields] = React.useState<null | { tokenId: string } & SpecialPlanetTokenFields>(
+    null
+  )
 
   React.useEffect(() => {
     ChainContractMethods.getSpecialPlanetTokenFields(tokenId).then(f => {
-      setFields(f)
+      setFields({ tokenId, ...f })
     })
   }, [tokenId])
 
-  if (fields) {
+  if (fields && tokenId === fields.tokenId) {
     const json = buildJSON(tokenId, fields)
 
     return (
