@@ -15,7 +15,7 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
    */
   bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
 
-  string public tokenURIPrefix = "https://example.com/";
+  string public tokenURIPrefix = "https://d3fivknrylrhff.cloudfront.net/special-planet-token-jsons/";
   string public tokenURISuffix = ".json";
 
   constructor() public {
