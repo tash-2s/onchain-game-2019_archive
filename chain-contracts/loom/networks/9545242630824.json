@@ -228,5 +228,70 @@
     "contractName": "SpecialPlanetController",
     "address": "0x542a2b1044fb23E12456E7b92026cb4a4b337603",
     "transactionHash": "0x263b93a72b0db4cc8e1c48404ba2845d9f823eab04f1a2f1c67cf9936e215643"
+  },
+  {
+    "contractName": "Migrations",
+    "address": "0x7e185eE12dcD51018c010760aE98c26Ed2b8cDC5",
+    "transactionHash": "0x5ca4547985e10b67c2886c87d70311e9ae5aff0d01b9316e39a5f0cd47ead081"
+  },
+  {
+    "contractName": "SpecialPlanetToken",
+    "address": "0x1126431bd9bA09B3892A8Eb78d6796139524EfB8",
+    "transactionHash": "0xc448fcfef9e52dd52484fd327063ec29e85ca1b7210de1714bafc2723d7f8094"
+  },
+  {
+    "contractName": "SpecialPlanetTokenLocker",
+    "address": "0xEC6F789ad531D1f6269C7327FD2F0aD3434B21B7",
+    "transactionHash": "0x26c6674db437ecd2f9386ff44785f19968c08b0021b8181856c9c7b35e5fcbb1"
+  },
+  {
+    "contractName": "UserSpecialPlanetPermanence",
+    "address": "0x60De466ec9CBC3A3d31fB12c7a9757075e6396B7",
+    "transactionHash": "0xa4c9cb0c14dfe716f7e52f2d7254962850a0a2f310a24ae7285e7a7d6a375e3e"
+  },
+  {
+    "contractName": "SpecialPlanetIdToDataPermanence",
+    "address": "0x00C3306Fa934E4761e9C093922C44D2600Ae951A",
+    "transactionHash": "0x7ed3543208474f75f62d8f95b57ef554e5a6f33dbab474e127fcdbb9e1887b28"
+  },
+  {
+    "contractName": "UserNormalPlanetPermanence",
+    "address": "0xbA62380467E67880e29658393a73Bb403884B870",
+    "transactionHash": "0xdf91d5b55bf2ac2fa8724b6161f69f3ec248d53a64eeae325b0de13ffec80d0a"
+  },
+  {
+    "contractName": "UserNormalPlanetIdGeneratorPermanence",
+    "address": "0xc7B3e2ACcc7C761d47e96bD009c18174Ac941B03",
+    "transactionHash": "0xa08cfe7a0e42e999f196673039ab7f8fb558cd738c2cfff1e80d8a25872389e3"
+  },
+  {
+    "contractName": "NormalPlanetPermanence",
+    "address": "0x5fCC70E373E31F47A75FCf998c2473Ed2B63150D",
+    "transactionHash": "0xd9c02ceb774415d65003e834dcef8e9164f3c862203c84ca2f50bcd19447a94e"
+  },
+  {
+    "contractName": "UserGoldPermanence",
+    "address": "0xA443C1FD2bbB490eB0Fdef5508D139a715Ee6B8E",
+    "transactionHash": "0x7e5cbc4e0d26b40f3aebbab058ab94d2cc37d795b869a24c28c45ae221c48b86"
+  },
+  {
+    "contractName": "UserController",
+    "address": "0xc25052Da6760Af28F040e05fc84c16556E6104e8",
+    "transactionHash": "0xcbd734015a690892fd85107731f5a18948327199566bddf36dcf48bf48baf00a"
+  },
+  {
+    "contractName": "RemarkableUserController",
+    "address": "0xEa04260b50D73a1492c77f8426B3EA77472B8431",
+    "transactionHash": "0x26fbb1b05e51f9351f3bc245b7eb841f1cac84c8acc2fe79f46f692a9d84e3c6"
+  },
+  {
+    "contractName": "NormalPlanetController",
+    "address": "0xfb24fED83cb2F779b7843a32fF2E538308787Ba2",
+    "transactionHash": "0xf711bbe896f514b5cf51132c66212ba4e9c1d3008b449528f7e244680b464c4c"
+  },
+  {
+    "contractName": "SpecialPlanetController",
+    "address": "0xa3197FE9C69f5Ab2B6b13b29790A86215eA8f46f",
+    "transactionHash": "0x6fca4ecf3c843e1949333ba2ef3e931ee10ca6b21618a9926ceeca8bd512ad3d"
   }
 ]
