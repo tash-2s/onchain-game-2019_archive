@@ -1,9 +1,8 @@
 pragma solidity 0.5.11;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
 
-contract SpecialPlanetToken is ERC721Full, ERC721Pausable {
+contract SpecialPlanetToken is ERC721Full {
   // Transfer Gateway contract address
   address public gateway;
 
