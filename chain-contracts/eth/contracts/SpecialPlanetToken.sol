@@ -3,6 +3,7 @@ pragma solidity 0.5.11;
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Mintable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
+import "@openzeppelin/contracts/ownership/Ownable.sol";
 
 import "./SpecialPlanetTokenMetadata.sol";
 
@@ -10,7 +11,8 @@ contract SpecialPlanetToken is
   ERC721Enumerable,
   ERC721Mintable,
   ERC721Pausable,
-  SpecialPlanetTokenMetadata
+  SpecialPlanetTokenMetadata,
+  Ownable
 {
   address public gateway;
 
