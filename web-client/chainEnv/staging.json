@@ -9,14 +9,14 @@
     "networkId": "4"
   },
   "loomContractAddresses": {
-    "NormalPlanetController": "0x1B612E43E8D06c4Ef3555874F271898df3361d4f",
-    "RemarkableUserController": "0xD1b2407AA9DEc5DA568ceD41b04e763922d147eA",
-    "SpecialPlanetController": "0x542a2b1044fb23E12456E7b92026cb4a4b337603",
-    "SpecialPlanetToken": "0x9aF45e52E4cd9975997f3d5C63a1CCf38596233C",
-    "UserController": "0x422019A4D6C6B23ADAF7891f9ec87834D0781C23"
+    "NormalPlanetController": "0xfb24fED83cb2F779b7843a32fF2E538308787Ba2",
+    "RemarkableUserController": "0xEa04260b50D73a1492c77f8426B3EA77472B8431",
+    "SpecialPlanetController": "0xa3197FE9C69f5Ab2B6b13b29790A86215eA8f46f",
+    "SpecialPlanetToken": "0x1126431bd9bA09B3892A8Eb78d6796139524EfB8",
+    "UserController": "0xc25052Da6760Af28F040e05fc84c16556E6104e8"
   },
   "ethContractAddresses": {
-    "SpecialPlanetToken": "0x586a192Fbe2cA096e14f22Ad8a753216Aa52bA7A",
-    "SpecialPlanetTokenShop": "0xE3b7386B00E560bA4c2534B3b44408f885164720"
+    "SpecialPlanetToken": "0xf6218Df2A32E375B8Eb70D55745e11c0Dc2e1954",
+    "SpecialPlanetTokenShop": "0x2e99bC65BEB347619f377b8b883234Ee2d98D130"
   }
 }

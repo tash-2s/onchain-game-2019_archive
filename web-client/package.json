@@ -3,6 +3,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "l": "yarn generate-chain-data local && yarn serve:local",
+    "l:staging": "yarn generate-chain-data staging && yarn serve:staging",
     "serve": "parcel src/index.html --no-hmr",
     "serve:local": "./scripts/cpChainEnv.sh local && yarn serve",
     "serve:staging": "./scripts/cpChainEnv.sh staging && yarn serve",
