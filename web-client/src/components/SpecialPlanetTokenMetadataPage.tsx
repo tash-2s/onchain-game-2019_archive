@@ -36,8 +36,8 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
 const buildJSON = (tokenId: string, fields: SpecialPlanetTokenFields) => {
   const param = new BN(10).pow(new BN(fields.originalParamCommonLogarithm))
   const obj = {
-    name: `Fuga ${fields.shortId}`,
-    description: `piyopiyo ${tokenId}`,
+    name: `Fuga #${fields.shortId}`,
+    description: `Full ID: ${tokenId}`,
     image: "<IMAGE_URL>",
     attributes: [
       { trait_type: "kind", value: fields.kind },
