@@ -196,26 +196,36 @@ const getTokenIds = async (c: {
   specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
 }) => {
   const ids: Array<string> = []
-  const balance = await c
-    .specialPlanetToken()
-    .methods.balanceOf(c.address)
-    .call()
-  for (let i = 0; i < balance; i++) {
-    ids.push(
-      await c
-        .specialPlanetToken()
-        .methods.tokenOfOwnerByIndex(c.address, i)
-        .call()
-    )
+
+  let index = "0"
+  while (true) {
+    const r = await c
+      .specialPlanetToken()
+      .methods.tokensOfOwnerByIndex(c.address, index)
+      .call()
+
+    ids.push(...r.tokenIds)
+
+    if (r.nextIndex === "0") {
+      break
+    }
+
+    index = r.nextIndex
   }
+
   return ids
 }
 
 const getTokenFields = async (tokenIds: Array<string>) => {
   const fields: Array<SpecialPlanetTokenFields> = []
-  for (const tokenId of tokenIds) {
-    fields.push(await ChainContractMethods.getSpecialPlanetTokenFields(tokenId))
+  const batchSize = 100
+
+  for (let i = 0; i < tokenIds.length; i += batchSize) {
+    const ids = tokenIds.slice(i, i + batchSize)
+    const fs = await ChainContractMethods.getSpecialPlanetTokenFields(ids)
+    fields.push(...fs)
   }
+
   return fields
 }
 

@@ -167,16 +167,6 @@
   },
   {
     "constant": false,
-    "inputs": [],
-    "name": "unpause",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0x3f4ba83a"
-  },
-  {
-    "constant": false,
     "inputs": [
       {
         "internalType": "address",
@@ -206,22 +196,32 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "owner",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
       }
     ],
-    "name": "isPauser",
+    "name": "tokensOfOwnerByIndex",
     "outputs": [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nextIndex",
+        "type": "uint256"
       }
     ],
     "payable": false,
     "stateMutability": "view",
     "type": "function",
-    "signature": "0x46fbf68e"
+    "signature": "0x4707f44f"
   },
   {
     "constant": true,
@@ -247,22 +247,6 @@
   },
   {
     "constant": true,
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function",
-    "signature": "0x5c975abb"
-  },
-  {
-    "constant": true,
     "inputs": [
       {
         "internalType": "uint256",
@@ -282,16 +266,6 @@
     "stateMutability": "view",
     "type": "function",
     "signature": "0x6352211e"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "renouncePauser",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "signature": "0x6ef8d66d"
   },
   {
     "constant": true,
@@ -317,29 +291,45 @@
   },
   {
     "constant": false,
-    "inputs": [
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x715018a6"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "addPauser",
-    "outputs": [],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function",
-    "signature": "0x82dc1ec4"
+    "signature": "0x8da5cb5b"
   },
   {
-    "constant": false,
+    "constant": true,
     "inputs": [],
-    "name": "pause",
-    "outputs": [],
+    "name": "isOwner",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function",
-    "signature": "0x8456cb59"
+    "signature": "0x8f32d59b"
   },
   {
     "constant": true,
@@ -362,6 +352,32 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "addMinter",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x983b2d56"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "renounceMinter",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x98650275"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "to",
         "type": "address"
       },
@@ -377,6 +393,28 @@
     "stateMutability": "nonpayable",
     "type": "function",
     "signature": "0xa22cb465"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "isMinter",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xaa271e1a"
   },
   {
     "constant": false,
@@ -410,6 +448,43 @@
     "signature": "0xb88d4fde"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "prefix",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "suffix",
+        "type": "string"
+      }
+    ],
+    "name": "updateTokenURIAffixes",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xbf190b45"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "tokenURIPrefix",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xc0ac9983"
+  },
+  {
     "constant": true,
     "inputs": [
       {
@@ -430,6 +505,22 @@
     "stateMutability": "view",
     "type": "function",
     "signature": "0xc87b56dd"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "tokenURISuffix",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xdbbc853b"
   },
   {
     "constant": true,
@@ -459,6 +550,22 @@
     "signature": "0xe985e9c5"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xf2fde38b"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -475,29 +582,21 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "account",
+        "name": "previousOwner",
         "type": "address"
-      }
-    ],
-    "name": "Paused",
-    "type": "event",
-    "signature": "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+      },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "account",
+        "name": "newOwner",
         "type": "address"
       }
     ],
-    "name": "Unpaused",
+    "name": "OwnershipTransferred",
     "type": "event",
-    "signature": "0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa"
+    "signature": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0"
   },
   {
     "anonymous": false,
@@ -509,9 +608,9 @@
         "type": "address"
       }
     ],
-    "name": "PauserAdded",
+    "name": "MinterAdded",
     "type": "event",
-    "signature": "0x6719d08c1888103bea251a4ed56406bd0c3e69723c8a1686e017e7bbe159b6f8"
+    "signature": "0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6"
   },
   {
     "anonymous": false,
@@ -523,9 +622,9 @@
         "type": "address"
       }
     ],
-    "name": "PauserRemoved",
+    "name": "MinterRemoved",
     "type": "event",
-    "signature": "0xcd265ebaf09df2871cc7bd4133404a235ba12eff2041bb89d9c714a2621c7c7e"
+    "signature": "0xe94479a9f7e1952cc78f2d6baab678adc1b772d936c6583def489e524cb66692"
   },
   {
     "anonymous": false,

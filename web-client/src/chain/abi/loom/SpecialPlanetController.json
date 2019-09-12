@@ -434,42 +434,42 @@
     "constant": true,
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
       }
     ],
-    "name": "getPlanetFieldsFromTokenId",
+    "name": "getPlanetFieldsFromTokenIds",
     "outputs": [
       {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
+        "internalType": "uint24[]",
+        "name": "shortIds",
+        "type": "uint24[]"
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
+        "internalType": "uint8[]",
+        "name": "versions",
+        "type": "uint8[]"
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
+        "internalType": "uint8[]",
+        "name": "kinds",
+        "type": "uint8[]"
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
+        "internalType": "uint8[]",
+        "name": "originalParamCommonLogarithms",
+        "type": "uint8[]"
       },
       {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
+        "internalType": "uint64[]",
+        "name": "artSeeds",
+        "type": "uint64[]"
       }
     ],
     "payable": false,
     "stateMutability": "pure",
     "type": "function",
-    "signature": "0x64f84296"
+    "signature": "0xf934e1ef"
   }
 ]

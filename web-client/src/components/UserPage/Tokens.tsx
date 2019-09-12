@@ -20,7 +20,10 @@ export function Tokens(props: {
     return <div className={"box"}>loading...</div>
   }
 
-  const reload = () => props.userActionsForSpecialPlanet.setTargetUserPlanetTokens()
+  const reload = () => {
+    props.userActionsForSpecialPlanet.clearTargetUserPlanetTokens()
+    props.userActionsForSpecialPlanet.setTargetUserPlanetTokens()
+  }
   const ethTokens = props.user.specialPlanetToken.ethTokens.map(token => {
     const onClick = () => props.userActionsForSpecialPlanet.transferPlanetTokenToLoom(token.id)
     return (

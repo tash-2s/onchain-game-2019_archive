@@ -12,8 +12,8 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
   )
 
   React.useEffect(() => {
-    ChainContractMethods.getSpecialPlanetTokenFields(tokenId).then(f => {
-      setFields({ tokenId, ...f })
+    ChainContractMethods.getSpecialPlanetTokenFields([tokenId]).then(f => {
+      setFields({ tokenId, ...f[0] })
     })
   }, [tokenId])
 

@@ -2,26 +2,30 @@ import { chains } from "../misc/chains"
 import { planetKindNumToKind } from "../constants"
 
 export class ChainContractMethods {
-  static getSpecialPlanetTokenFields = async (tokenId: string) => {
-    const f = await chains.loom
+  static getSpecialPlanetTokenFields = async (
+    tokenIds: Array<string>
+  ): Promise<Array<SpecialPlanetTokenFields>> => {
+    const r = await chains.loom
       .specialPlanetController()
-      .methods.getPlanetFieldsFromTokenId(tokenId)
+      .methods.getPlanetFieldsFromTokenIds(tokenIds)
       .call()
 
-    return {
-      shortId: f[0] as string,
-      version: strToNum(f[1]),
-      kind: planetKindNumToKind(strToNum(f[2])),
-      originalParamCommonLogarithm: strToNum(f[3]),
-      artSeed: f[4] as string
-    }
+    return tokenIds.map((_, i) => ({
+      shortId: r.shortIds[i],
+      version: strToNum(r.versions[i]),
+      kind: planetKindNumToKind(strToNum(r.kinds[i])),
+      originalParamCommonLogarithm: strToNum(r.originalParamCommonLogarithms[i]),
+      artSeed: r.artSeeds[i]
+    }))
   }
 }
 
-const _ChainContractMethodsgetTokenFields = ChainContractMethods.getSpecialPlanetTokenFields
-type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
-export type SpecialPlanetTokenFields = ExtractFromPromise<
-  ReturnType<typeof _ChainContractMethodsgetTokenFields>
->
+export interface SpecialPlanetTokenFields {
+  shortId: string
+  version: number
+  kind: "residence" | "goldmine" | "technology"
+  originalParamCommonLogarithm: number
+  artSeed: string
+}
 
 const strToNum = (str: string) => parseInt(str, 10)
