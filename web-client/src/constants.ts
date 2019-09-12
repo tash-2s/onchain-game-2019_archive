@@ -23,6 +23,9 @@ export interface RouteState {
   params: Array<string>
 }
 
+export const userPageViewKinds = ["main", "tokens"] as const
+export type UserPageViewKind = (typeof userPageViewKinds)[number]
+
 export const userPlanetViewKinds = ["map", "list"] as const
 export type UserPlanetViewKind = (typeof userPlanetViewKinds)[number]
 

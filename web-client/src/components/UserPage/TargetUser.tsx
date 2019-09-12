@@ -11,7 +11,6 @@ import { UserProfile } from "./UserProfile"
 import { UserPlanetList } from "./UserPlanetList"
 import { UserPlanetMap } from "./UserPlanetMap"
 import { PlanetList } from "./PlanetList"
-import { PlanetArt } from "../utils/PlanetArt"
 
 export function TargetUser(props: {
   currentUser: CurrentUserState
@@ -30,23 +29,15 @@ export function TargetUser(props: {
     }
   })()
 
-  const userTokens = isMine ? (
-    <UserTokens
-      user={props.targetUser}
-      userActions={props.userActions}
-      userPageUiActions={props.userPageUiActions}
-    />
-  ) : (
-    <></>
-  )
+  const goTokensView = () => props.userPageUiActions.selectViewKind("tokens")
 
   return (
     <>
       <h1 className={"title is-5"}>
         target user is {props.targetUser.address} {isMine ? "[this is me]" : ""}
         {isMine ? <div>eth: {props.currentUser.ethAddress}</div> : <></>}
+        {isMine ? <button onClick={goTokensView}>see tokens view</button> : <></>}
       </h1>
-      {userTokens}
 
       <div className={"columns is-desktop"}>
         <div className={"column"}>
@@ -73,74 +64,6 @@ export function TargetUser(props: {
       </div>
     </>
   )
-}
-
-function UserTokens(props: {
-  user: ComputedTargetUserState
-  userActions: UserPageActionsProps["userActions"]
-  userPageUiActions: UserPageUiActions
-}) {
-  React.useEffect(() => {
-    props.userActions.special.setTargetUserPlanetTokens()
-  }, [props.user.address])
-
-  if (props.user.specialPlanetToken) {
-    const reload = () => props.userActions.special.setTargetUserPlanetTokens()
-    const ethTokens = props.user.specialPlanetToken.ethTokens.map(token => {
-      const onClick = () => props.userActions.special.transferPlanetTokenToLoom(token.id)
-      return (
-        <li key={token.id}>
-          {token.id}:{token.shortId}:{token.version}:{token.kind}:
-          {token.originalParamCommonLogarithm}:{token.artSeed.toString()}
-          <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
-          <button onClick={onClick}>transfer to loom</button>
-        </li>
-      )
-    })
-    const msg1 = props.user.specialPlanetToken.transferToLoomTx
-      ? `Transfer requested. After the confirmation of eth tx (${props.user.specialPlanetToken.transferToLoomTx}), it takes additional 15 minutes to see the token on loom`
-      : ""
-    const loomTokens = props.user.specialPlanetToken.loomTokens.map(token => {
-      const transferFn = () => props.userActions.special.transferPlanetTokenToEth(token.id)
-      const selectForSetFn = () => props.userPageUiActions.selectSpecialPlanetTokenForSet(token.id)
-      return (
-        <li key={token.id}>
-          {token.id}:{token.shortId}:{token.version}:{token.kind}:
-          {token.originalParamCommonLogarithm}:{token.artSeed.toString()}
-          <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
-          <button onClick={transferFn}>transfer to eth</button>
-          <button onClick={selectForSetFn}>set to map</button>
-        </li>
-      )
-    })
-    const msg2 = props.user.specialPlanetToken.transferToEthTx
-      ? `requested. tx: ${props.user.specialPlanetToken.transferToEthTx}`
-      : ""
-    const resumeFn = () => props.userActions.special.transferPlanetTokenToEth()
-    const resume = props.user.specialPlanetToken.needsTransferResume ? (
-      <button onClick={resumeFn}>you have an ongoing transfer, resume it</button>
-    ) : (
-      <></>
-    )
-    return (
-      <div className={"box"}>
-        <button onClick={reload}>reload</button>
-
-        <h2 className={"title is-6"}>eth</h2>
-        <ul>{ethTokens}</ul>
-        <div>{msg1}</div>
-        <button onClick={props.userActions.special.buyPlanetToken}>buy a planet</button>
-        <div>{props.user.specialPlanetToken.buyTx}</div>
-
-        <h2 className={"title is-6"}>loom</h2>
-        <ul>{loomTokens}</ul>
-        <div>{msg2}</div>
-        {resume}
-      </div>
-    )
-  } else {
-    return <div className={"box"}>loading...</div>
-  }
 }
 
 function WrappedPlanetList(props: {

@@ -1,8 +1,13 @@
 import { AbstractActions } from "./AbstractActions"
-import { UserPlanetSortKind, PlanetKindWithAll } from "../constants"
+import { UserPageViewKind, UserPlanetSortKind, PlanetKindWithAll } from "../constants"
 
 export class UserPageUiActions extends AbstractActions {
   private static creator = UserPageUiActions.getActionCreator()
+
+  static selectViewKind = UserPageUiActions.creator<UserPageViewKind>("selectViewKind")
+  selectViewKind = (kind: UserPageViewKind) => {
+    this.dispatch(UserPageUiActions.selectViewKind(kind))
+  }
 
   static toggleUserPlanetViewKind = UserPageUiActions.creator("toggleUserPlanetViewKind")
   toggleUserPlanetViewKind = () => {

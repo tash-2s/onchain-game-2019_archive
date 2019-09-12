@@ -31,8 +31,15 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     )
   }
 
+  static clearTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator(
+    "clearTargetUserPlanetTokens"
+  )
+  clearTargetUserPlanetTokens = () => {
+    this.dispatch(UserActionsForSpecialPlanet.clearTargetUserPlanetTokens())
+  }
+
   static setPlanetTokenToMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsAndLoomTokensResponse
+    UserAndUserSpecialPlanetsResponse
   >("setPlanetTokenToMap")
   setPlanetTokenToMap = (tokenId: string, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
@@ -56,20 +63,17 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .send()
 
       const response = await getUserAndUserSpecialPlanets(address)
-      const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
 
       this.dispatch(
         UserActionsForSpecialPlanet.setPlanetTokenToMap({
-          ...response,
-          loomTokenIds,
-          loomTokenFields
+          ...response
         })
       )
     })
   }
 
   static removeUserPlanetFromMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsAndLoomTokensResponse
+    UserAndUserSpecialPlanetsResponse
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
@@ -79,13 +83,10 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .send()
 
       const response = await getUserAndUserSpecialPlanets(loginedLoomAddress())
-      const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
 
       this.dispatch(
         UserActionsForSpecialPlanet.removeUserPlanetFromMap({
-          ...response,
-          loomTokenIds,
-          loomTokenFields
+          ...response
         })
       )
     })
@@ -156,9 +157,6 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       })
   }
 }
-
-export type UserAndUserSpecialPlanetsAndLoomTokensResponse = UserAndUserSpecialPlanetsResponse &
-  Pick<PlanetTokensResponse, "loomTokenIds" | "loomTokenFields">
 
 interface PlanetTokensResponse {
   ethTokenIds: Array<string>

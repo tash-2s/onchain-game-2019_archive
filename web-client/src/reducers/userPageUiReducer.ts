@@ -1,9 +1,15 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { UserPageUiActions } from "../actions/UserPageUiActions"
-import { UserPlanetViewKind, PlanetKindWithAll, UserPlanetSortKind } from "../constants"
+import {
+  UserPageViewKind,
+  UserPlanetViewKind,
+  PlanetKindWithAll,
+  UserPlanetSortKind
+} from "../constants"
 
 export const initialUserPageUiState = {
+  selectedViewKind: "main" as UserPageViewKind,
   selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
   selectedNormalPlanetId: null as number | null,
   selectedUserPlanetId: null as string | null,
@@ -18,6 +24,10 @@ export type UserPageUiState = typeof initialUserPageUiState
 
 export const createUserPageUiReducer = () =>
   reducerWithInitialState(initialUserPageUiState)
+    .case(UserPageUiActions.selectViewKind, (state, payload) => ({
+      ...state,
+      selectedViewKind: payload
+    }))
     .case(UserPageUiActions.toggleUserPlanetViewKind, state => ({
       ...state,
       selectedUserPlanetViewKind: state.selectedUserPlanetViewKind === "map" ? "list" : "map"
@@ -59,6 +69,7 @@ export const createUserPageUiReducer = () =>
     }))
     .case(UserPageUiActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
       ...state,
+      selectedViewKind: "main",
       selectedUserPlanetViewKind: "map",
       selectedNormalPlanetId: null,
       selectedSpecialPlanetTokenIdForSet: payload

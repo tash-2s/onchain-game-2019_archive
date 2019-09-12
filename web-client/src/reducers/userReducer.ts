@@ -9,11 +9,9 @@ import {
   UserAndUserSpecialPlanetsResponse
 } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
-import {
-  UserActionsForSpecialPlanet,
-  UserAndUserSpecialPlanetsAndLoomTokensResponse
-} from "../actions/UserActionsForSpecialPlanet"
+import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
+import { SpecialPlanetTokenFields } from "../models/ChainContractMethods"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -113,13 +111,23 @@ export const createUserReducer = () =>
         }
       }
     })
-    .case(
-      UserActionsForSpecialPlanet.setPlanetTokenToMap,
-      buildStateFromUserAndUserSpecialPlanetsAndLoomTokens
-    )
+    .case(UserActionsForSpecialPlanet.clearTargetUserPlanetTokens, state => {
+      if (!state.targetUser) {
+        throw new Error("invalid state")
+      }
+
+      return {
+        ...state,
+        targetUser: {
+          ...state.targetUser,
+          specialPlanetToken: null
+        }
+      }
+    })
+    .case(UserActionsForSpecialPlanet.setPlanetTokenToMap, buildStateFromUserAndUserSpecialPlanets)
     .case(
       UserActionsForSpecialPlanet.removeUserPlanetFromMap,
-      buildStateFromUserAndUserSpecialPlanetsAndLoomTokens
+      buildStateFromUserAndUserSpecialPlanets
     )
     .case(UserActionsForSpecialPlanet.buyPlanetToken, (state, payload) => {
       if (!state.targetUser || !state.targetUser.specialPlanetToken) {
@@ -247,8 +255,8 @@ const buildUserSpecialPlanets = (
 }
 
 const buildTokens = (
-  tokenIds: UserAndUserSpecialPlanetsAndLoomTokensResponse["loomTokenIds"],
-  tokenFields: UserAndUserSpecialPlanetsAndLoomTokensResponse["loomTokenFields"]
+  tokenIds: Array<string>,
+  tokenFields: Array<SpecialPlanetTokenFields>
 ): Array<SpecialPlanetToken> => {
   return tokenFields.map((fields, i) => {
     return {
@@ -280,11 +288,11 @@ const buildStateFromUserAndUserNormalPlanets = (
   }
 }
 
-const buildStateFromUserAndUserSpecialPlanetsAndLoomTokens = (
+const buildStateFromUserAndUserSpecialPlanets = (
   state: UserState,
-  payload: UserAndUserSpecialPlanetsAndLoomTokensResponse
+  payload: UserAndUserSpecialPlanetsResponse
 ): UserState => {
-  if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+  if (!state.targetUser) {
     throw new Error("invalid state")
   }
 
@@ -294,10 +302,7 @@ const buildStateFromUserAndUserSpecialPlanetsAndLoomTokens = (
       ...state.targetUser,
       ...buildUser(payload.user),
       userSpecialPlanets: buildUserSpecialPlanets(payload.userSpecialPlanets),
-      specialPlanetToken: {
-        ...state.targetUser.specialPlanetToken,
-        loomTokens: buildTokens(payload.loomTokenIds, payload.loomTokenFields)
-      }
+      specialPlanetToken: null
     }
   }
 }
