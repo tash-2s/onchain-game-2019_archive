@@ -1,13 +1,13 @@
 pragma solidity 0.5.11;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
+import "../../../SpecialPlanetTokenCommon.sol";
 
-contract SpecialPlanetToken is ERC721Full {
+contract SpecialPlanetToken is SpecialPlanetTokenCommon {
   // Transfer Gateway contract address
   address public gateway;
 
   // TODO: change name
-  constructor(address gatewayAddress) public ERC721Full("HOGEHOGE", "HOG") {
+  constructor(address gatewayAddress) public {
     gateway = gatewayAddress;
   }
 
