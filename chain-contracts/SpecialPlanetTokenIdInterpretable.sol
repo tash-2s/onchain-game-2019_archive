@@ -10,15 +10,19 @@ contract SpecialPlanetTokenIdInterpretable {
   function interpretSpecialPlanetTokenIdToFields(uint256 tokenId)
     internal
     pure
-    returns (uint24, uint8, uint8, uint8, uint64)
+    returns (
+      uint24 shortId,
+      uint8 version,
+      uint8 kind,
+      uint8 originalParamCommonLogarithm,
+      uint64 artSeed
+    )
   {
-    uint24 shortId = uint24(tokenId >> SHORT_ID_START_BIT);
-    uint8 version = uint8(tokenId >> VERSION_START_BIT);
-    uint8 kind = uint8(tokenId >> KIND_START_BIT);
-    uint8 originalParamCommonLogarithm = uint8(tokenId >> OPCL_START_BIT);
-    uint64 artSeed = uint64(tokenId >> ART_SEED_START_BIT);
-
-    return (shortId, version, kind, originalParamCommonLogarithm, artSeed);
+    shortId = uint24(tokenId >> SHORT_ID_START_BIT);
+    version = uint8(tokenId >> VERSION_START_BIT);
+    kind = uint8(tokenId >> KIND_START_BIT);
+    originalParamCommonLogarithm = uint8(tokenId >> OPCL_START_BIT);
+    artSeed = uint64(tokenId >> ART_SEED_START_BIT);
   }
 
   function interpretSpecialPlanetTokenFieldsToId(

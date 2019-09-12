@@ -115,12 +115,36 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     specialPlanetTokenLocker.withdraw(shortId);
   }
 
-  function getPlanetFieldsFromTokenId(uint256 tokenId)
+  function getPlanetFieldsFromTokenIds(uint256[] calldata tokenIds)
     external
     pure
-    returns (uint24, uint8, uint8, uint8, uint64)
+    returns (
+      uint24[] memory shortIds,
+      uint8[] memory versions,
+      uint8[] memory kinds,
+      uint8[] memory originalParamCommonLogarithms,
+      uint64[] memory artSeeds
+    )
   {
-    return interpretSpecialPlanetTokenIdToFields(tokenId);
+    uint256 size = tokenIds.length;
+
+    shortIds = new uint24[](size);
+    versions = new uint8[](size);
+    kinds = new uint8[](size);
+    originalParamCommonLogarithms = new uint8[](size);
+    artSeeds = new uint64[](size);
+
+    for (uint256 i = 0; i < size; i++) {
+      (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
+        tokenIds[i]
+      );
+
+      shortIds[i] = shortId;
+      versions[i] = version;
+      kinds[i] = kind;
+      originalParamCommonLogarithms[i] = originalParamCommonLogarithm;
+      artSeeds[i] = artSeed;
+    }
   }
 
   function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {
