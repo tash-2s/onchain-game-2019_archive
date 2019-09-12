@@ -13,7 +13,7 @@ class Chains {
     return this.loom.login(this.eth.signer())
   }
 
-  needsSpecialPlanetTokenResume = (existentTokenIds: Array<string>) => {
+  getSpecialPlanetTokenTransferResumeReceipt = async () => {
     const ethAddress = this.eth.address
     if (!ethAddress) {
       throw new Error("not logined")
@@ -21,7 +21,7 @@ class Chains {
 
     // this doens't work with local env
     if (this.loom.env.chainId === "default") {
-      return false
+      return null
     }
 
     return this.loom.withGateway(this.eth.signer(), async gateway => {
@@ -31,27 +31,7 @@ class Chains {
         gateway
       )
 
-      if (!receipt) {
-        return false
-      }
-      if (!receipt.tokenId) {
-        return false
-      }
-
-      // Receipt removals can be delayed, so I need to check it if it's already withdrew.
-      // If users transfer the token immediately after the resume, users may see wrong resume announcing...
-      const tokenIdStr = receipt.tokenId.toString()
-      let alreadyWithdrew = false
-      existentTokenIds.forEach(id => {
-        if (id === tokenIdStr) {
-          alreadyWithdrew = true
-        }
-      })
-      if (alreadyWithdrew) {
-        return false
-      }
-
-      return true
+      return receipt
     })
   }
 }

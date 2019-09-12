@@ -15,10 +15,24 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
   >("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
-    const { ids: ethTokenIds, fields: ethTokenFields } = await getTokens(chains.eth)
-    const { ids: loomTokenIds, fields: loomTokenFields } = await getTokens(chains.loom)
+    const [
+      { ids: ethTokenIds, fields: ethTokenFields },
+      { ids: loomTokenIds, fields: loomTokenFields },
+      receipt
+    ] = await Promise.all([
+      getTokens(chains.eth),
+      getTokens(chains.loom),
+      chains.getSpecialPlanetTokenTransferResumeReceipt()
+    ])
 
-    const needsTransferResume = await chains.needsSpecialPlanetTokenResume(ethTokenIds)
+    // Receipt removals can be delayed, so I need to check it if it's already withdrew.
+    // If users transfer the token immediately after the resume, users may see wrong resume announcing...
+    const needsTransferResume =
+      !!receipt &&
+      !!receipt.tokenId &&
+      (receiptTokenId => ethTokenIds.every(ethTokenId => ethTokenId !== receiptTokenId))(
+        receipt.tokenId.toString()
+      )
 
     this.dispatch(
       UserActionsForSpecialPlanet.setTargetUserPlanetTokens({
