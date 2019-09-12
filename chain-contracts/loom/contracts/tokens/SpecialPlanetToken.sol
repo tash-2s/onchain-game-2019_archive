@@ -3,10 +3,8 @@ pragma solidity 0.5.11;
 import "../../../SpecialPlanetTokenCommon.sol";
 
 contract SpecialPlanetToken is SpecialPlanetTokenCommon {
-  // Transfer Gateway contract address
   address public gateway;
 
-  // TODO: change name
   constructor(address gatewayAddress) public {
     gateway = gatewayAddress;
   }
