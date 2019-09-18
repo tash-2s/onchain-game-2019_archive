@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol";
 
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 
 contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metadata {
@@ -69,7 +70,12 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
   }
 }
 
-contract SpecialPlanetTokenCommon is SpecialPlanetTokenMetadata, ERC721Enumerable, Ownable {
+contract SpecialPlanetTokenCommon is
+  SpecialPlanetTokenMetadata,
+  ERC721Enumerable,
+  ERC721Burnable,
+  Ownable
+{
   function tokensOfOwnerByIndex(address owner, uint256 index)
     external
     view
