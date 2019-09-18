@@ -51,9 +51,9 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       uint32 goldConfirmedAt,
       uint24[] memory ids, // id
       uint8[] memory kinds, // kind
-      uint8[] memory params, // originalParamCommonLogarithm
+      uint8[] memory originalParamCommonLogarithms, // originalParamCommonLogarithm
       uint32[] memory times, // [rankupedAt, createdAt, ...]
-      int16[] memory coordinates, // [q, r, ...]
+      int16[] memory axialCoordinates, // [q, r, ...]
       uint64[] memory artSeeds
     )
   {
@@ -66,9 +66,9 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
 
     ids = new uint24[](userPlanetsCount);
     kinds = new uint8[](userPlanetsCount);
-    params = new uint8[](userPlanetsCount);
+    originalParamCommonLogarithms = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
-    coordinates = new int16[](userPlanetsCount * 2);
+    axialCoordinates = new int16[](userPlanetsCount * 2);
     artSeeds = new uint64[](userPlanetsCount);
 
     uint16 counter = 0;
@@ -76,17 +76,15 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     for (uint16 i = 0; i < userPlanetsCount; i++) {
       ids[i] = userPlanetRecords[i].id;
       kinds[i] = userPlanetRecords[i].kind;
-      params[i] = userPlanetRecords[i].originalParamCommonLogarithm;
+      originalParamCommonLogarithms[i] = userPlanetRecords[i].originalParamCommonLogarithm;
       times[counter] = userPlanetRecords[i].rankupedAt;
       times[counter + 1] = userPlanetRecords[i].createdAt;
-      coordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
-      coordinates[counter + 1] = userPlanetRecords[i].axialCoordinateR;
+      axialCoordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
+      axialCoordinates[counter + 1] = userPlanetRecords[i].axialCoordinateR;
       artSeeds[i] = userPlanetRecords[i].artSeed;
 
       counter += 2;
     }
-
-    return (confirmedGold, goldConfirmedAt, ids, kinds, params, times, coordinates, artSeeds);
   }
 
   // sender needs to approve the transfer of this token before call this function
