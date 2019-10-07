@@ -2,7 +2,7 @@ pragma solidity 0.5.11;
 
 import "./modules/UserGoldControllable.sol";
 
-contract RemarkableUserController is UserGoldControllable {
+contract HighlightedUserController is UserGoldControllable {
   uint8 constant USERS_COUNT = 100;
   uint200 public thresholdGold = 0;
 

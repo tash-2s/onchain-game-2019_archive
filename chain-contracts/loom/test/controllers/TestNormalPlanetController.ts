@@ -1,6 +1,6 @@
 contract("NormalPlanetController", async accounts => {
   const NormalPlanetController = artifacts.require("NormalPlanetController")
-  const RemarkableUserController = artifacts.require("RemarkableUserController")
+  const HighlightedUserController = artifacts.require("HighlightedUserController")
   const UserController = artifacts.require("UserController")
   const UserNormalPlanetPermanence = artifacts.require("UserNormalPlanetPermanence")
   const UserGoldPermanence = artifacts.require("UserGoldPermanence")
@@ -15,11 +15,11 @@ contract("NormalPlanetController", async accounts => {
     strangerAccount = accounts[1]
   })
 
-  describe("#remarkableUserController()", async () => {
+  describe("#highlightedUserController()", async () => {
     it("should return a correct address", async () => {
       assert.equal(
-        await instance.remarkableUserController(),
-        (await RemarkableUserController.deployed()).address
+        await instance.highlightedUserController(),
+        (await HighlightedUserController.deployed()).address
       )
     })
   })

@@ -1,12 +1,12 @@
-contract("RemarkableUserController", async accounts => {
-  const RemarkableUserController = artifacts.require("RemarkableUserController")
+contract("HighlightedUserController", async accounts => {
+  const HighlightedUserController = artifacts.require("HighlightedUserController")
 
-  let instance: PromiseGenericsType<ReturnType<typeof RemarkableUserController.deployed>>
+  let instance: PromiseGenericsType<ReturnType<typeof HighlightedUserController.deployed>>
   let ownerAccount: string
   let strangerAccount: string
 
   beforeEach(async () => {
-    instance = await RemarkableUserController.deployed()
+    instance = await HighlightedUserController.deployed()
     ownerAccount = accounts[0]
     strangerAccount = accounts[1]
   })

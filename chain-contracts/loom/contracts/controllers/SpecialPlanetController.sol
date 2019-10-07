@@ -2,14 +2,14 @@ pragma solidity 0.5.11;
 
 import "./modules/UserPlanetControllable.sol";
 
-import "./RemarkableUserController.sol";
+import "./HighlightedUserController.sol";
 import "../tokens/SpecialPlanetToken.sol";
 import "../misc/SpecialPlanetTokenLocker.sol";
 
 import "../../../SpecialPlanetTokenIdInterpretable.sol";
 
 contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenIdInterpretable {
-  RemarkableUserController private _remarkableUserController;
+  HighlightedUserController private _highlightedUserController;
   SpecialPlanetToken private _specialPlanetToken;
   SpecialPlanetTokenLocker public specialPlanetTokenLocker;
 
@@ -19,7 +19,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
-    address remarkableUsersContractAddress,
+    address highlightedUsersContractAddress,
     address specialPlanetTokenAddress,
     address specialPlanetTokenLockerAddress
   ) public {
@@ -30,13 +30,13 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress
     );
-    _remarkableUserController = RemarkableUserController(remarkableUsersContractAddress);
+    _highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
     _specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
     specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
-  function remarkableUserController() external view returns (RemarkableUserController) {
-    return _remarkableUserController;
+  function highlightedUserController() external view returns (HighlightedUserController) {
+    return _highlightedUserController;
   }
 
   function specialPlanetToken() external view returns (SpecialPlanetToken) {
@@ -104,7 +104,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       axialCoordinateQ,
       axialCoordinateR
     );
-    _remarkableUserController.tackle(msg.sender);
+    _highlightedUserController.tackle(msg.sender);
   }
 
   function removePlanet(uint24 shortId) external {

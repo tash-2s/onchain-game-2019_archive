@@ -42,9 +42,9 @@ module.exports = function(deployer, network, accounts) {
       "SpecialPlanetIdToDataPermanence"
     )
 
-    const remarkableUsersAddress = await helper.getRegistryContractAddress(
+    const highlightedUsersAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "RemarkableUserController"
+      "HighlightedUserController"
     )
 
     const specialPlanetTokenAddress = await helper.getRegistryContractAddress(
@@ -63,7 +63,7 @@ module.exports = function(deployer, network, accounts) {
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress,
-      remarkableUsersAddress,
+      highlightedUsersAddress,
       specialPlanetTokenAddress,
       specialPlanetTokenLockerAddress
     ])
