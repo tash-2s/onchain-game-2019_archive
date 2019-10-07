@@ -192,6 +192,22 @@
     "signature": "0x42842e0e"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x42966c68"
+  },
+  {
     "constant": true,
     "inputs": [
       {

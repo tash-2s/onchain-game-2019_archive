@@ -280,7 +280,7 @@
       },
       {
         "internalType": "address",
-        "name": "remarkableUsersContractAddress",
+        "name": "highlightedUsersContractAddress",
         "type": "address"
       },
       {
@@ -302,10 +302,10 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "remarkableUserController",
+    "name": "highlightedUserController",
     "outputs": [
       {
-        "internalType": "contract RemarkableUserController",
+        "internalType": "contract HighlightedUserController",
         "name": "",
         "type": "address"
       }
@@ -313,7 +313,7 @@
     "payable": false,
     "stateMutability": "view",
     "type": "function",
-    "signature": "0x2c31d9cf"
+    "signature": "0x59a07a84"
   },
   {
     "constant": true,
@@ -364,7 +364,7 @@
       },
       {
         "internalType": "uint8[]",
-        "name": "params",
+        "name": "originalParamCommonLogarithms",
         "type": "uint8[]"
       },
       {
@@ -374,7 +374,7 @@
       },
       {
         "internalType": "int16[]",
-        "name": "coordinates",
+        "name": "axialCoordinates",
         "type": "int16[]"
       },
       {

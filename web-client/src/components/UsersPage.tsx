@@ -23,7 +23,7 @@ export class UsersPage extends React.Component<UsersProps> {
     })
     return (
       <>
-        <h1 className={"title"}>Remarkable Users</h1>
+        <h1 className={"title"}>Highlighted Users</h1>
         <table className={"table is-bordered is-fullwidth"}>
           <tbody>{users}</tbody>
         </table>

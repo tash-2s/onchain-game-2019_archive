@@ -1,8 +1,0 @@
-{
-  "outputPath": "./src/chain/types",
-  "contracts": {
-    "UserController": "./src/chain/abi/UserController.json",
-    "NormalPlanetController": "./src/chain/abi/NormalPlanetController.json",
-    "RemarkableUserController": "./src/chain/abi/RemarkableUserController.json"
-  }
-}

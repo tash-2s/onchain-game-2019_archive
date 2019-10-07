@@ -7,7 +7,7 @@ export class UsersActions extends AbstractActions {
   static setUsers = UsersActions.creator<[string | null, [string[], string[]]]>("setUsers")
   setUsers = async () => {
     const response = await chains.loom
-      .remarkableUserController()
+      .highlightedUserController()
       .methods.getUsers()
       .call()
     const address = chains.loom.address

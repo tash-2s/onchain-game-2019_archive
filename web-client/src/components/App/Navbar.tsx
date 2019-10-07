@@ -41,7 +41,7 @@ export function Navbar(props: Props) {
           <div className={`navbar-menu ${mobileClass}`}>
             <div className={"navbar-start"}>
               <InternalLink className={"navbar-item"} to={"/users"}>
-                Remarkable Users
+                Highlighted Users
               </InternalLink>
 
               <InternalLink className={"navbar-item"} to={"/about"}>
