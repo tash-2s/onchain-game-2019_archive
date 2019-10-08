@@ -79,7 +79,7 @@ const paramBasedOnRank = (planetParam: BN, currentRank: number) => {
 
 const requiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
   const previousRank = new BN(currentRank - 1)
-  return planetPriceGold.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
+  return planetPriceGold.mul(new BN(14).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
 const remainingSecForRankup = (
@@ -98,13 +98,7 @@ const remainingSecForRankup = (
 }
 
 const requiredSecForRankup = (currentRank: number) => {
-  let i = 1
-  let memo = 300
-  while (i < currentRank) {
-    memo = Math.floor((memo * 14) / 10)
-    i++
-  }
-  return memo
+  return 300 * 14 ** (currentRank - 1) / 10 ** (currentRank - 1)
 }
 
 const rankupableCount = (

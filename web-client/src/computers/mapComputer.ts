@@ -33,27 +33,26 @@ export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
   }
 }
 
-class UserPlanetsMapUtil {
-  static mapRadiusAndRequiredGold = [
-    [1, new BN("0")],
-    [2, new BN("10000")],
-    [3, new BN("400000")],
-    [4, new BN("25600000")],
-    [5, new BN("2611200000")],
-    [6, new BN("425625600000")],
-    [7, new BN("110662656000000")],
-    [8, new BN("46035664896000000")],
-    [9, new BN("30613717155840000000")],
-    [10, new BN("32572995053813760000000")],
-    [11, new BN("55439237581591019520000000")],
-    [12, new BN("150961043934672346152960000000")],
-    [13, new BN("657586307379432739842293760000000")],
-    [14, new BN("4582718976127266763960945213440000000")],
-    [15, new BN("51097316583819024418164539129856000000000")],
-    [16, new BN("911576127855331395620055378076631040000000000")],
-    [17, new BN("26020028993502579356578860711819356405760000000000")]
-  ].reverse() as Array<[number, BN]>
+const RADIUS_GOLD_THRESHOLD = [
+  "100000",
+  "10000000",
+  "1000000000",
+  "100000000000",
+  "100000000000000",
+  "1000000000000000000",
+  "100000000000000000000000",
+  "100000000000000000000000000",
+  "10000000000000000000000000000",
+  "1000000000000000000000000000000",
+  "100000000000000000000000000000000",
+  "1000000000000000000000000000000000",
+  "10000000000000000000000000000000000",
+  "100000000000000000000000000000000000",
+  "1000000000000000000000000000000000000",
+  "10000000000000000000000000000000000000"
+].map(s => new BN(s))
 
+class UserPlanetsMapUtil {
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
     const z = r
@@ -81,19 +80,19 @@ class UserPlanetsMapUtil {
   static coordinatesKey = (q: number, r: number) => `${q}/${r}`
 
   static mapRadiusFromGold = (gold: BN) => {
-    for (const d of UserPlanetsMapUtil.mapRadiusAndRequiredGold) {
-      if (d[1].lte(gold)) {
-        return d[0]
+    for (let i = RADIUS_GOLD_THRESHOLD.length; i > 0; i--) {
+      const bn = RADIUS_GOLD_THRESHOLD[i - 1]
+      if (bn.lte(gold)) {
+        return i + 1
       }
     }
-
-    throw new Error("'data' must be wrong")
+    return 1
   }
 
   static requiredGoldFromMapRadius = (radius: number) => {
-    const d = UserPlanetsMapUtil.mapRadiusAndRequiredGold.find(d => d[0] === radius)
-    if (d) {
-      return d[1]
+    const result = RADIUS_GOLD_THRESHOLD[radius - 1]
+    if (result) {
+      return result
     }
     return null
   }
