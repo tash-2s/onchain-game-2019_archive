@@ -45,7 +45,7 @@ export interface UserNormalPlanet {
 export interface UserSpecialPlanet {
   id: string // short id, not token id
   kind: PlanetKind
-  originalParamCommonLogarithm: number
+  paramRate: number
   createdAt: number
   rankupedAt: number
   axialCoordinateQ: number
@@ -58,7 +58,7 @@ interface SpecialPlanetToken {
   shortId: string
   version: number
   kind: PlanetKind
-  originalParamCommonLogarithm: number
+  paramRate: number
   artSeed: string
 }
 
@@ -239,7 +239,7 @@ const buildUserSpecialPlanets = (
     usps.push({
       id: uspIds[i],
       kind: planetKindNumToKind(strToNum(uspKinds[i])),
-      originalParamCommonLogarithm: strToNum(uspParams[i]),
+      paramRate: strToNum(uspParams[i]),
       rankupedAt: strToNum(uspTimes[counter]),
       createdAt: strToNum(uspTimes[counter + 1]),
       axialCoordinateQ: strToNum(uspCoordinates[counter]),
@@ -264,7 +264,7 @@ const buildTokens = (
       shortId: fields.shortId,
       version: fields.version,
       kind: fields.kind,
-      originalParamCommonLogarithm: fields.originalParamCommonLogarithm,
+      paramRate: fields.paramRate,
       artSeed: fields.artSeed
     }
   })

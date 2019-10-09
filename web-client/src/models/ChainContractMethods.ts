@@ -14,7 +14,7 @@ export class ChainContractMethods {
       shortId: r.shortIds[i],
       version: strToNum(r.versions[i]),
       kind: planetKindNumToKind(strToNum(r.kinds[i])),
-      originalParamCommonLogarithm: strToNum(r.originalParamCommonLogarithms[i]),
+      paramRate: strToNum(r.paramRates[i]),
       artSeed: r.artSeeds[i]
     }))
   }
@@ -24,7 +24,7 @@ export interface SpecialPlanetTokenFields {
   shortId: string
   version: number
   kind: "residence" | "goldmine" | "technology"
-  originalParamCommonLogarithm: number
+  paramRate: number
   artSeed: string
 }
 

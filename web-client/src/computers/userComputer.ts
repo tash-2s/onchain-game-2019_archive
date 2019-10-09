@@ -22,17 +22,21 @@ export const computeUserState = (state: UserState, now: number) => {
     userNormalPlanets,
     population: normalPopulation,
     productivity: normalProductivity,
-    knowledge: normalKnowledge
+    knowledge,
+    biggestUserNormalPlanetPopulation,
+    biggestUserNormalPlanetProductivity
   } = computeUserNormalPlanetParams(state.targetUser.userNormalPlanets)
   const {
     userSpecialPlanets,
     population: specialPopulation,
-    productivity: specialProductivity,
-    knowledge: specialKnowledge
-  } = computeUserSpecialPlanets(state.targetUser.userSpecialPlanets)
+    productivity: specialProductivity
+  } = computeUserSpecialPlanets(
+    state.targetUser.userSpecialPlanets,
+    biggestUserNormalPlanetPopulation,
+    biggestUserNormalPlanetProductivity
+  )
   const population = normalPopulation.add(specialPopulation)
   const productivity = normalProductivity.add(specialProductivity)
-  const knowledge = normalKnowledge + specialKnowledge
 
   const { goldPerSec, ongoingGold } = computeGold(
     population,

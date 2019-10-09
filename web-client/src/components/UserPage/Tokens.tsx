@@ -28,8 +28,8 @@ export function Tokens(props: {
     const onClick = () => props.userActionsForSpecialPlanet.transferPlanetTokenToLoom(token.id)
     return (
       <li key={token.id}>
-        {token.id}:{token.shortId}:{token.version}:{token.kind}:{token.originalParamCommonLogarithm}
-        :{token.artSeed.toString()}
+        {token.id}:{token.shortId}:{token.version}:{token.kind}:{token.paramRate}:
+        {token.artSeed.toString()}
         <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
         <button onClick={onClick}>transfer to loom</button>
       </li>
@@ -43,8 +43,8 @@ export function Tokens(props: {
     const selectForSetFn = () => props.userPageUiActions.selectSpecialPlanetTokenForSet(token.id)
     return (
       <li key={token.id}>
-        {token.id}:{token.shortId}:{token.version}:{token.kind}:{token.originalParamCommonLogarithm}
-        :{token.artSeed.toString()}
+        {token.id}:{token.shortId}:{token.version}:{token.kind}:{token.paramRate}:
+        {token.artSeed.toString()}
         <PlanetArt kind={token.kind} artSeed={token.artSeed} canvasSize={100} />
         <button onClick={transferFn}>transfer to eth</button>
         <button onClick={selectForSetFn}>set to map</button>

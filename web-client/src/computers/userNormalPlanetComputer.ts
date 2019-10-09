@@ -4,9 +4,12 @@ import { UserNormalPlanet } from "../reducers/userReducer"
 import { getNormalPlanet } from "../data/NormalPlanets"
 
 export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPlanet>) => {
-  let population = new BN(0)
-  let productivity = new BN(0)
-  let knowledge = new BN(0)
+  const population = new BN(0)
+  const productivity = new BN(0)
+  const knowledge = new BN(0)
+
+  let biggestUserNormalPlanetPopulation = new BN(0)
+  let biggestUserNormalPlanetProductivity = new BN(0)
 
   const userNormalPlanets = rawUserPlanets.map(up => {
     const p = getNormalPlanet(up.normalPlanetId)
@@ -14,13 +17,19 @@ export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPl
 
     switch (p.kind) {
       case "residence":
-        population = population.add(param)
+        population.iadd(param)
+        if (param.gt(biggestUserNormalPlanetPopulation)) {
+          biggestUserNormalPlanetPopulation = param
+        }
         break
       case "goldmine":
-        productivity = productivity.add(param)
+        productivity.iadd(param)
+        if (param.gt(biggestUserNormalPlanetProductivity)) {
+          biggestUserNormalPlanetProductivity = param
+        }
         break
       case "technology":
-        knowledge = knowledge.add(param)
+        knowledge.iadd(param)
         break
       default:
         throw new Error("undefined kind")
@@ -33,7 +42,14 @@ export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPl
     }
   })
 
-  return { userNormalPlanets, population, productivity, knowledge: knowledge.toNumber() }
+  return {
+    userNormalPlanets,
+    population,
+    productivity,
+    knowledge: knowledge.toNumber(),
+    biggestUserNormalPlanetPopulation,
+    biggestUserNormalPlanetProductivity
+  }
 }
 
 export const computeUserNormalPlanetRankStatuses = (
@@ -98,7 +114,7 @@ const remainingSecForRankup = (
 }
 
 const requiredSecForRankup = (currentRank: number) => {
-  return 300 * 14 ** (currentRank - 1) / 10 ** (currentRank - 1)
+  return (300 * 14 ** (currentRank - 1)) / 10 ** (currentRank - 1)
 }
 
 const rankupableCount = (
