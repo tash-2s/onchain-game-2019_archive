@@ -84,9 +84,9 @@ export const getUserAndUserSpecialPlanets = async (
     userSpecialPlanets: [
       response.ids,
       response.kinds,
-      response.params,
+      response.paramRates,
       response.times,
-      response.coordinates,
+      response.axialCoordinates,
       response.artSeeds
     ]
   }
