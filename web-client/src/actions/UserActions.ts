@@ -12,8 +12,10 @@ export class UserActions extends AbstractActions {
     userSpecialPlanets: UserSpecialPlanetsResponse
   }>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const userNormalPlanetsResponse = await getUserAndUserNormalPlanets(address)
-    const userSpecialPlanetsResponse = await getUserAndUserSpecialPlanets(address)
+    const [userNormalPlanetsResponse, userSpecialPlanetsResponse] = await Promise.all([
+      getUserAndUserNormalPlanets(address),
+      getUserAndUserSpecialPlanets(address)
+    ])
 
     this.dispatch(
       UserActions.setTargetUser({
