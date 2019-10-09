@@ -6,6 +6,7 @@ module.exports = async function(callback) {
   const token = await Token.deployed()
   const myAddress = await token.gateway()
 
+  // param: 20
   const ids = [
     "1548652898818403248009998164295681",
     "3299382340499235320930069433548802",
