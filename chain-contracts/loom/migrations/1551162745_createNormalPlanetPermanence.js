@@ -8,7 +8,7 @@ module.exports = function(deployer, network) {
   deployer.then(async function() {
     const planet = await helper.deployAndRegister(deployer, network, NormalPlanetPermanence)
 
-    const data = JSON.parse(fs.readFileSync("./NormalPlanets.json"))
+    const data = JSON.parse(fs.readFileSync(`${__dirname}/NormalPlanets.json`))
 
     for (let i = 0; i < data.length; i++) {
       const r = data[i]
