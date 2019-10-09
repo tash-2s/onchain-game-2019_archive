@@ -364,7 +364,7 @@
       },
       {
         "internalType": "uint8[]",
-        "name": "originalParamCommonLogarithms",
+        "name": "paramRates",
         "type": "uint8[]"
       },
       {
@@ -458,7 +458,7 @@
       },
       {
         "internalType": "uint8[]",
-        "name": "originalParamCommonLogarithms",
+        "name": "paramRates",
         "type": "uint8[]"
       },
       {
