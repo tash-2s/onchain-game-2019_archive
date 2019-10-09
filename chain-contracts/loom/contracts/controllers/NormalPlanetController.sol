@@ -91,7 +91,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     while (tmpRank < targetRank) {
       requiredGold +=
-        (planetPriceGold * (uint256(13)**(tmpRank - 1))) /
+        (planetPriceGold * (uint256(14)**(tmpRank - 1))) /
         (uint256(10)**(tmpRank - 1));
       tmpRank++;
     }
@@ -100,13 +100,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   }
 
   function _requiredSecForRankup(uint256 rank) private pure returns (uint256) {
-    uint256 i = 1;
-    uint256 memo = 300;
-    while (i < rank) {
-      memo = (memo * 14) / 10;
-      i++;
-    }
-    return memo;
+    return (uint256(300) * uint256(14)**(rank - 1)) / uint256(10)**(rank - 1);
   }
 
   function removePlanet(uint64 userNormalPlanetId) external {

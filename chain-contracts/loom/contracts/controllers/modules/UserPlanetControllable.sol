@@ -24,16 +24,17 @@ contract UserPlanetControllable is
   }
 
   function confirm(address account) internal returns (uint256) {
-    (uint256 normalPopulation, uint256 normalProductivity, uint256 normalKnowledge) = _calculateUserNormalPlanetParams(
+    (uint256 normalPopulation, uint256 normalProductivity, uint256 knowledge, uint256 biggestUserNormalPlanetPopulation, uint256 biggestUserNormalPlanetProductivity) = _calculateUserNormalPlanetParams(
       account
     );
-    (uint256 specialPopulation, uint256 specialProductivity, uint256 specialKnowledge) = _calculateUserSpecialPlanetParams(
-      account
+    (uint256 specialPopulation, uint256 specialProductivity) = _calculateUserSpecialPlanetParams(
+      account,
+      biggestUserNormalPlanetPopulation,
+      biggestUserNormalPlanetProductivity
     );
 
     uint256 population = normalPopulation + specialPopulation;
     uint256 productivity = normalProductivity + specialProductivity;
-    uint256 knowledge = normalKnowledge + specialKnowledge;
 
     // TODO: type
     uint256 goldPerSec = population * productivity;
@@ -52,11 +53,14 @@ contract UserPlanetControllable is
   function _calculateUserNormalPlanetParams(address account)
     private
     view
-    returns (uint256, uint256, uint256)
+    returns (uint256, uint256, uint256, uint256, uint256)
   {
     uint256 population = 0;
     uint256 productivity = 0;
     uint256 knowledge = 0;
+
+    uint256 biggestUserNormalPlanetPopulation = 0;
+    uint256 biggestUserNormalPlanetProductivity = 0;
 
     UserNormalPlanetRecord[] memory userPlanets = userNormalPlanetRecordsOf(account);
     UserNormalPlanetRecord memory userPlanet;
@@ -69,10 +73,17 @@ contract UserPlanetControllable is
         ((uint256(10)**userPlanet.originalParamCommonLogarithm) *
           (uint256(13)**(userPlanet.rank - 1))) /
         (uint256(10)**(userPlanet.rank - 1));
+
       if (userPlanet.kind == 1) {
         population += rated;
+        if (rated > biggestUserNormalPlanetPopulation) {
+          biggestUserNormalPlanetPopulation = rated;
+        }
       } else if (userPlanet.kind == 2) {
         productivity += rated;
+        if (rated > biggestUserNormalPlanetProductivity) {
+          biggestUserNormalPlanetProductivity = rated;
+        }
       } else if (userPlanet.kind == 3) {
         knowledge += rated;
       } else {
@@ -80,37 +91,38 @@ contract UserPlanetControllable is
       }
     }
 
-    return (population, productivity, knowledge);
+    return (
+      population,
+      productivity,
+      knowledge,
+      biggestUserNormalPlanetPopulation,
+      biggestUserNormalPlanetProductivity
+    );
   }
 
-  function _calculateUserSpecialPlanetParams(address account)
-    private
-    view
-    returns (uint256, uint256, uint256)
-  {
+  function _calculateUserSpecialPlanetParams(
+    address account,
+    uint256 biggestUserNormalPlanetPopulation,
+    uint256 biggestUserNormalPlanetProductivity
+  ) private view returns (uint256, uint256) {
     uint256 population = 0;
     uint256 productivity = 0;
-    uint256 knowledge = 0;
 
     UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
     UserSpecialPlanetRecord memory userPlanet;
-    uint256 param;
 
     for (uint16 i = 0; i < userPlanets.length; i++) {
       userPlanet = userPlanets[i];
 
-      param = uint256(10)**userPlanet.originalParamCommonLogarithm;
       if (userPlanet.kind == 1) {
-        population += param;
+        population += biggestUserNormalPlanetPopulation * userPlanet.paramRate;
       } else if (userPlanet.kind == 2) {
-        productivity += param;
-      } else if (userPlanet.kind == 3) {
-        knowledge += param;
+        productivity += biggestUserNormalPlanetProductivity * userPlanet.paramRate;
       } else {
-        revert("undefined special planet kind");
+        revert("undefined or unsupported special planet kind");
       }
     }
 
-    return (population, productivity, knowledge);
+    return (population, productivity);
   }
 }

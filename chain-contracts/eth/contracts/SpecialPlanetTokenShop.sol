@@ -35,16 +35,10 @@ contract SpecialPlanetTokenShop is SpecialPlanetTokenIdInterpretable, MinterRole
 
     uint8 version = 1;
     uint8 kind = (uint8(seed) % 2) + 1; // 1 or 2
-    uint8 originalParamCommonLogarithm = 20;
+    uint8 paramRate = 15;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = interpretSpecialPlanetTokenFieldsToId(
-      shortId,
-      version,
-      kind,
-      originalParamCommonLogarithm,
-      artSeed
-    );
+    uint256 id = interpretSpecialPlanetTokenFieldsToId(shortId, version, kind, paramRate, artSeed);
 
     specialPlanetToken.mint(msg.sender, id);
     return id;

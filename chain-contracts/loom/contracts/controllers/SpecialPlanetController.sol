@@ -49,9 +49,9 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     returns (
       uint200 confirmedGold,
       uint32 goldConfirmedAt,
-      uint24[] memory ids, // id
-      uint8[] memory kinds, // kind
-      uint8[] memory originalParamCommonLogarithms, // originalParamCommonLogarithm
+      uint24[] memory ids,
+      uint8[] memory kinds,
+      uint8[] memory paramRates,
       uint32[] memory times, // [rankupedAt, createdAt, ...]
       int16[] memory axialCoordinates, // [q, r, ...]
       uint64[] memory artSeeds
@@ -66,7 +66,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
 
     ids = new uint24[](userPlanetsCount);
     kinds = new uint8[](userPlanetsCount);
-    originalParamCommonLogarithms = new uint8[](userPlanetsCount);
+    paramRates = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
     axialCoordinates = new int16[](userPlanetsCount * 2);
     artSeeds = new uint64[](userPlanetsCount);
@@ -76,7 +76,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     for (uint16 i = 0; i < userPlanetsCount; i++) {
       ids[i] = userPlanetRecords[i].id;
       kinds[i] = userPlanetRecords[i].kind;
-      originalParamCommonLogarithms[i] = userPlanetRecords[i].originalParamCommonLogarithm;
+      paramRates[i] = userPlanetRecords[i].paramRate;
       times[counter] = userPlanetRecords[i].rankupedAt;
       times[counter + 1] = userPlanetRecords[i].createdAt;
       axialCoordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
@@ -90,7 +90,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
-    (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
+    (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
     );
     _transferTokenToLocker(tokenId, shortId);
@@ -99,7 +99,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       shortId,
       version,
       kind,
-      originalParamCommonLogarithm,
+      paramRate,
       artSeed,
       axialCoordinateQ,
       axialCoordinateR
@@ -120,7 +120,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       uint24[] memory shortIds,
       uint8[] memory versions,
       uint8[] memory kinds,
-      uint8[] memory originalParamCommonLogarithms,
+      uint8[] memory paramRates,
       uint64[] memory artSeeds
     )
   {
@@ -129,18 +129,18 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     shortIds = new uint24[](size);
     versions = new uint8[](size);
     kinds = new uint8[](size);
-    originalParamCommonLogarithms = new uint8[](size);
+    paramRates = new uint8[](size);
     artSeeds = new uint64[](size);
 
     for (uint256 i = 0; i < size; i++) {
-      (uint24 shortId, uint8 version, uint8 kind, uint8 originalParamCommonLogarithm, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
+      (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
         tokenIds[i]
       );
 
       shortIds[i] = shortId;
       versions[i] = version;
       kinds[i] = kind;
-      originalParamCommonLogarithms[i] = originalParamCommonLogarithm;
+      paramRates[i] = paramRate;
       artSeeds[i] = artSeed;
     }
   }
