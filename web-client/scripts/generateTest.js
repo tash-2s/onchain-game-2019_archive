@@ -17,8 +17,13 @@ Object.keys(def).forEach(contractName => {
 
   const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
     const args = fnABI.inputs.map(i => i.name)
+    const argsWithType = args.map(a => `${a}: string`).join(", ")
+    const _types = fnABI.outputs
+      .map(o => `${o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
+      .join(", ")
+    const returnType = fnABI.constant ? `Promise<{ ${_types} }>` : "Promise<any>"
 
-    return `  static ${fnABI.name} = (${args.map(a => `${a}: string`).join(", ")}) => {
+    return `  static ${fnABI.name} = (${argsWithType}): ${returnType} => {
     return chains.loom
       .${lowerContractName}()
       .methods.${fnABI.name}(${args.join(", ")})
