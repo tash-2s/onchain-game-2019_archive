@@ -34,7 +34,7 @@ export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
 }
 
 const RADIUS_GOLD_THRESHOLD = [
-  "100000",
+  "100001", // to avoid radius up by initial planet
   "10000000",
   "1000000000",
   "100000000000",
