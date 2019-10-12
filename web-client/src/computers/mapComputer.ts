@@ -90,7 +90,10 @@ class UserPlanetsMapUtil {
   }
 
   static requiredGoldFromMapRadius = (radius: number) => {
-    const result = RADIUS_GOLD_THRESHOLD[radius - 1]
+    if (radius <= 1) {
+      return new BN(0)
+    }
+    const result = RADIUS_GOLD_THRESHOLD[radius - 2]
     if (result) {
       return result
     }
