@@ -96,11 +96,7 @@ const computeNormalPlanets = (gold: BN, userPlanetCount: number) => {
   return NormalPlanets.map(p => {
     let gettable = false
     if (onlyAvailableId) {
-      if (onlyAvailableId === p.id) {
-        gettable = true
-      } else {
-        gettable = false
-      }
+      gettable = onlyAvailableId === p.id
     } else {
       gettable = gold.gte(p.priceGold)
     }
