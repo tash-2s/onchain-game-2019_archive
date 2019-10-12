@@ -1,4 +1,5 @@
 const fs = require("fs")
+const prettier = require("prettier")
 
 const def = {
   SpecialPlanetController: [
@@ -23,20 +24,25 @@ Object.keys(def).forEach(contractName => {
       .join(", ")
     const returnType = fnABI.constant ? `Promise<{ ${_types} }>` : "Promise<any>"
 
-    return `  static ${fnABI.name} = (${argsWithType}): ${returnType} => {
-    return chains.loom
-      .${lowerContractName}()
-      .methods.${fnABI.name}(${args.join(", ")})
-      .${fnABI.constant ? "call" : "send"}()
-  }`
+    return `
+static ${fnABI.name} = (${argsWithType}): ${returnType} => {
+  return chains.loom
+    .${lowerContractName}()
+    .methods.${fnABI.name}(${args.join(", ")})
+    .${fnABI.constant ? "call" : "send"}()
+}
+`
   })
 
-  const body = `import { chains } from "./misc/chains"
+  const body = `
+import { chains } from "./misc/chains"
 
 export class ${contractName} {
-${functionStrings.join("\n\n")}
+${functionStrings.join("\n")}
 }
 `
 
-  fs.writeFileSync(`./src/${contractName}.ts`, body)
+  const options = prettier.resolveConfig.sync(".")
+  const formatted = prettier.format(body, { ...options, parser: "typescript" })
+  fs.writeFileSync(`./src/${contractName}.ts`, formatted)
 })
