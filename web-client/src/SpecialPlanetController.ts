@@ -91,7 +91,7 @@ export class SpecialPlanetController {
   }
 
   static getPlanetFieldsFromTokenIds = (
-    tokenIds: string
+    tokenIds: Array<string>
   ): Promise<{
     shortIds: Array<string>
     versions: Array<string>

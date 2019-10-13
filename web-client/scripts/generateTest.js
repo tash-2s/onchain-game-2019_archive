@@ -16,8 +16,10 @@ Object.keys(def).forEach(contractName => {
   const ABI = JSON.parse(fs.readFileSync(`./src/chain/abi/loom/${contractName}.json`))
 
   const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
-    const args = fnABI.inputs.map(i => i.name)
-    const argsWithType = args.map(a => `${a}: string`).join(", ")
+    const args = fnABI.inputs.map(i => i.name).join(", ")
+    const argsWithType = fnABI.inputs
+      .map(a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
+      .join(", ")
     const _types = fnABI.outputs
       .map(o => `${o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
       .join(", ")
@@ -29,7 +31,7 @@ static ${fnABI.name} = (${argsWithType}): ${returnType} => {
     [${JSON.stringify(fnABI)}],
     ChainEnv.loomContractAddresses.${contractName}
   ).methods
-    .${fnABI.name}(${args.join(", ")})
+    .${fnABI.name}(${args})
     .${fnABI.constant ? "call" : "send"}({ from: chains.loom.callerAddress() })
 }
 `

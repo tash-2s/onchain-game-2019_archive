@@ -1,14 +1,12 @@
 import { chains } from "../misc/chains"
 import { planetKindNumToKind } from "../constants"
+import { SpecialPlanetController } from "../SpecialPlanetController"
 
 export class ChainContractMethods {
   static getSpecialPlanetTokenFields = async (
     tokenIds: Array<string>
   ): Promise<Array<SpecialPlanetTokenFields>> => {
-    const r = await chains.loom
-      .specialPlanetController()
-      .methods.getPlanetFieldsFromTokenIds(tokenIds)
-      .call()
+    const r = await SpecialPlanetController.getPlanetFieldsFromTokenIds(tokenIds)
 
     return tokenIds.map((_, i) => ({
       shortId: r.shortIds[i],

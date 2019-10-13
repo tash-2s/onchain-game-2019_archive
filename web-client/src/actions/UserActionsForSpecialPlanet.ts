@@ -7,6 +7,8 @@ import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainC
 
 import { SpecialPlanetController } from "../SpecialPlanetController"
 
+import ChainEnv from "../chain/env.json"
+
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
 export class UserActionsForSpecialPlanet extends AbstractActions {
@@ -62,7 +64,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
 
-      const controllerAddress = chains.loom.specialPlanetController().options.address
+      const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
       const isApproved = await chains.loom
         .specialPlanetToken()
         .methods.isApprovedForAll(address, controllerAddress)
@@ -74,10 +76,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
           .send()
       }
 
-      await chains.loom
-        .specialPlanetController()
-        .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
-        .send()
+      await SpecialPlanetController.setPlanet(
+        tokenId,
+        axialCoordinateQ.toString(),
+        axialCoordinateR.toString()
+      )
 
       const response = await SpecialPlanetController.getPlanets(address)
 
@@ -94,10 +97,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
-      await chains.loom
-        .specialPlanetController()
-        .methods.removePlanet(userSpecialPlanetId)
-        .send()
+      await SpecialPlanetController.removePlanet(userSpecialPlanetId)
 
       const response = await SpecialPlanetController.getPlanets(loginedLoomAddress())
 
