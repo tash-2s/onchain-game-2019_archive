@@ -2,7 +2,10 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { BNFormatter } from "../models/BNFormatter"
-import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import {
+  getSpecialPlanetTokenFields,
+  SpecialPlanetTokenFields
+} from "../chain/clients/loom/organized"
 import { PlanetArt } from "./utils/PlanetArt"
 
 export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
@@ -12,7 +15,7 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
   )
 
   React.useEffect(() => {
-    ChainContractMethods.getSpecialPlanetTokenFields([tokenId]).then(f => {
+    getSpecialPlanetTokenFields([tokenId]).then(f => {
       setFields({ tokenId, ...f[0] })
     })
   }, [tokenId])

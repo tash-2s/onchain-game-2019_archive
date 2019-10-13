@@ -9,7 +9,7 @@ import {
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
-import { SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import { SpecialPlanetTokenFields } from "../chain/clients/loom/organized"
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 export interface UserState {

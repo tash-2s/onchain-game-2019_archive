@@ -3,7 +3,10 @@ import { AppActions } from "./AppActions"
 
 import { chains } from "../misc/chains"
 
-import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import {
+  getSpecialPlanetTokenFields,
+  SpecialPlanetTokenFields
+} from "../chain/clients/loom/organized"
 
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
@@ -225,7 +228,7 @@ const getTokenFields = async (tokenIds: Array<string>) => {
 
   for (let i = 0; i < tokenIds.length; i += batchSize) {
     const ids = tokenIds.slice(i, i + batchSize)
-    const fs = await ChainContractMethods.getSpecialPlanetTokenFields(ids)
+    const fs = await getSpecialPlanetTokenFields(ids)
     fields.push(...fs)
   }
 
