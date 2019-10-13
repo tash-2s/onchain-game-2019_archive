@@ -10,7 +10,7 @@
     "build": "rm -rf ./.cache ./dist && parcel build src/index.html --out-dir dist/build --public-url . --no-source-maps",
     "build:staging": "./scripts/cpChainEnv.sh staging && yarn build",
     "build:production": "./scripts/cpChainEnv.sh production && yarn build",
-    "lint": "prettier 'src/**/*' '!src/chain/**/*' 'scripts/**/*.js' --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
+    "lint": "prettier 'src/**/*' '!src/chain/abi/**/*' 'scripts/**/*.js' --write && lynt 'src/**/*.ts' 'src/**/*.tsx' --typescript --react --fix --ignore 'src/chain/**/*'",
     "generate-chain-data": "node scripts/generateChainData.js"
   },
   "devDependencies": {
