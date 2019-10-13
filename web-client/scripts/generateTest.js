@@ -14,7 +14,6 @@ Object.keys(def).forEach(contractName => {
   const functionNames = def[contractName]
 
   const ABI = JSON.parse(fs.readFileSync(`./src/chain/abi/loom/${contractName}.json`))
-  const lowerContractName = contractName.charAt(0).toLowerCase() + contractName.slice(1)
 
   const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
     const args = fnABI.inputs.map(i => i.name)
@@ -26,16 +25,19 @@ Object.keys(def).forEach(contractName => {
 
     return `
 static ${fnABI.name} = (${argsWithType}): ${returnType} => {
-  return chains.loom
-    .${lowerContractName}()
-    .methods.${fnABI.name}(${args.join(", ")})
-    .${fnABI.constant ? "call" : "send"}()
+  return new chains.loom.web3.eth.Contract(
+    [${JSON.stringify(fnABI)}],
+    ChainEnv.loomContractAddresses.${contractName}
+  ).methods
+    .${fnABI.name}(${args.join(", ")})
+    .${fnABI.constant ? "call" : "send"}({ from: chains.loom.callerAddress() })
 }
 `
   })
 
   const body = `
 import { chains } from "./misc/chains"
+import ChainEnv from "./chain/env.json"
 
 export class ${contractName} {
 ${functionStrings.join("\n")}

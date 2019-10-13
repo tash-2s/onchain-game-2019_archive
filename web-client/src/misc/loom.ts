@@ -75,7 +75,7 @@ export class Loom {
 
   userController = () => {
     return new this.web3.eth.Contract(UserABI, ChainEnv.loomContractAddresses.UserController, {
-      from: this._callerAddress()
+      from: this.callerAddress()
     })
   }
 
@@ -83,7 +83,7 @@ export class Loom {
     return new this.web3.eth.Contract(
       NormalPlanetABI,
       ChainEnv.loomContractAddresses.NormalPlanetController,
-      { from: this._callerAddress() }
+      { from: this.callerAddress() }
     )
   }
 
@@ -91,7 +91,7 @@ export class Loom {
     return new this.web3.eth.Contract(
       SpecialPlanetABI,
       ChainEnv.loomContractAddresses.SpecialPlanetController,
-      { from: this._callerAddress() }
+      { from: this.callerAddress() }
     )
   }
 
@@ -99,7 +99,7 @@ export class Loom {
     return new this.web3.eth.Contract(
       HighlightedUserABI,
       ChainEnv.loomContractAddresses.HighlightedUserController,
-      { from: this._callerAddress() }
+      { from: this.callerAddress() }
     )
   }
 
@@ -107,7 +107,7 @@ export class Loom {
     return new this.web3.eth.Contract(
       SpecialPlanetTokenABI,
       ChainEnv.loomContractAddresses.SpecialPlanetToken,
-      { from: this._callerAddress() }
+      { from: this.callerAddress() }
     )
   }
 
@@ -188,7 +188,7 @@ export class Loom {
   }
 
   // return eth address if logined, otherwise return loom dummy address
-  private _callerAddress = () => {
+  callerAddress = () => {
     const provider = this.web3.currentProvider as LoomProvider
     const addresses = Array.from(provider.accounts.keys())
     return addresses[addresses.length - 1]
