@@ -36,10 +36,11 @@ export class SpecialPlanetController {
           signature: "0x2e49cca0"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController
+      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      { from: chains.loom.callerAddress() }
     ).methods
       .getPlanets(account)
-      .call({ from: chains.loom.callerAddress() })
+      .call()
   }
 
   static setPlanet = (
@@ -64,10 +65,11 @@ export class SpecialPlanetController {
           signature: "0x7ecdce7e"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController
+      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      { from: chains.loom.callerAddress() }
     ).methods
       .setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
-      .send({ from: chains.loom.callerAddress() })
+      .send()
   }
 
   static removePlanet = (shortId: string): Promise<any> => {
@@ -84,10 +86,11 @@ export class SpecialPlanetController {
           signature: "0xff000261"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController
+      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      { from: chains.loom.callerAddress() }
     ).methods
       .removePlanet(shortId)
-      .send({ from: chains.loom.callerAddress() })
+      .send()
   }
 
   static getPlanetFieldsFromTokenIds = (
@@ -118,9 +121,10 @@ export class SpecialPlanetController {
           signature: "0xf934e1ef"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController
+      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      { from: chains.loom.callerAddress() }
     ).methods
       .getPlanetFieldsFromTokenIds(tokenIds)
-      .call({ from: chains.loom.callerAddress() })
+      .call()
   }
 }

@@ -29,10 +29,11 @@ Object.keys(def).forEach(contractName => {
 static ${fnABI.name} = (${argsWithType}): ${returnType} => {
   return new chains.loom.web3.eth.Contract(
     [${JSON.stringify(fnABI)}],
-    ChainEnv.loomContractAddresses.${contractName}
+    ChainEnv.loomContractAddresses.${contractName},
+    { from: chains.loom.callerAddress() }
   ).methods
     .${fnABI.name}(${args})
-    .${fnABI.constant ? "call" : "send"}({ from: chains.loom.callerAddress() })
+    .${fnABI.constant ? "call" : "send"}()
 }
 `
   })
@@ -48,5 +49,5 @@ ${functionStrings.join("\n")}
 
   const options = prettier.resolveConfig.sync(".")
   const formatted = prettier.format(body, { ...options, parser: "typescript" })
-  fs.writeFileSync(`./src/${contractName}.ts`, formatted)
+  fs.writeFileSync(`./src/chain/clients/loom/${contractName}.ts`, formatted)
 })
