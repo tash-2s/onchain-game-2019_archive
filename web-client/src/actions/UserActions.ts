@@ -2,6 +2,10 @@ import { AbstractActions } from "./AbstractActions"
 
 import { chains } from "../misc/chains"
 
+import { SpecialPlanetController } from "../SpecialPlanetController"
+
+type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
+
 export class UserActions extends AbstractActions {
   private static creator = UserActions.getActionCreator()
 
@@ -9,12 +13,12 @@ export class UserActions extends AbstractActions {
     address: string
     user: UserResponse
     userNormalPlanets: UserNormalPlanetsResponse
-    userSpecialPlanets: UserSpecialPlanetsResponse
+    specialPlanets: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
   }>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const [userNormalPlanetsResponse, userSpecialPlanetsResponse] = await Promise.all([
+    const [userNormalPlanetsResponse, specialPlanets] = await Promise.all([
       getUserAndUserNormalPlanets(address),
-      getUserAndUserSpecialPlanets(address)
+      SpecialPlanetController.getPlanets(address)
     ])
 
     this.dispatch(
@@ -22,7 +26,7 @@ export class UserActions extends AbstractActions {
         address,
         user: userNormalPlanetsResponse.user,
         userNormalPlanets: userNormalPlanetsResponse.userNormalPlanets,
-        userSpecialPlanets: userSpecialPlanetsResponse.userSpecialPlanets
+        specialPlanets: specialPlanets
       })
     )
   }
@@ -55,39 +59,6 @@ export const getUserAndUserNormalPlanets = async (
       response.unpRanks,
       response.unpTimes,
       response.unpAxialCoordinates
-    ]
-  }
-}
-
-export type UserSpecialPlanetsResponse = [
-  Array<string>,
-  Array<string>,
-  Array<string>,
-  Array<string>,
-  Array<string>,
-  Array<string>
-]
-export interface UserAndUserSpecialPlanetsResponse {
-  user: UserResponse
-  userSpecialPlanets: UserSpecialPlanetsResponse
-}
-export const getUserAndUserSpecialPlanets = async (
-  address: string
-): Promise<UserAndUserSpecialPlanetsResponse> => {
-  const response = await chains.loom
-    .specialPlanetController()
-    .methods.getPlanets(address)
-    .call()
-
-  return {
-    user: [response.confirmedGold, response.goldConfirmedAt],
-    userSpecialPlanets: [
-      response.ids,
-      response.kinds,
-      response.paramRates,
-      response.times,
-      response.axialCoordinates,
-      response.artSeeds
     ]
   }
 }

@@ -4,14 +4,13 @@ import {
   UserActions,
   UserResponse,
   UserNormalPlanetsResponse,
-  UserAndUserNormalPlanetsResponse,
-  UserSpecialPlanetsResponse,
-  UserAndUserSpecialPlanetsResponse
+  UserAndUserNormalPlanetsResponse
 } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
 import { SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import { SpecialPlanetController } from "../SpecialPlanetController"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -74,7 +73,7 @@ export const createUserReducer = () =>
         ...buildUser(payload.user),
         address: payload.address,
         userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets),
-        userSpecialPlanets: buildUserSpecialPlanets(payload.userSpecialPlanets),
+        userSpecialPlanets: buildUserSpecialPlanets(payload.specialPlanets),
         specialPlanetToken: null
       }
     }))
@@ -221,15 +220,16 @@ const buildUserNormalPlanets = (
   return unps
 }
 
+type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 const buildUserSpecialPlanets = (
-  response: UserSpecialPlanetsResponse
+  response: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
 ): TargetUserState["userSpecialPlanets"] => {
-  const uspIds = response[0]
-  const uspKinds = response[1]
-  const uspParams = response[2]
-  const uspTimes = response[3]
-  const uspCoordinates = response[4]
-  const uspArtSeeds = response[5]
+  const uspIds = response.ids
+  const uspKinds = response.kinds
+  const uspParams = response.paramRates
+  const uspTimes = response.times
+  const uspCoordinates = response.axialCoordinates
+  const uspArtSeeds = response.artSeeds
 
   const usps: Array<UserSpecialPlanet> = []
   let i = 0
@@ -290,7 +290,7 @@ const buildStateFromUserAndUserNormalPlanets = (
 
 const buildStateFromUserAndUserSpecialPlanets = (
   state: UserState,
-  payload: UserAndUserSpecialPlanetsResponse
+  payload: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -300,8 +300,8 @@ const buildStateFromUserAndUserSpecialPlanets = (
     ...state,
     targetUser: {
       ...state.targetUser,
-      ...buildUser(payload.user),
-      userSpecialPlanets: buildUserSpecialPlanets(payload.userSpecialPlanets),
+      ...buildUser([payload.confirmedGold, payload.goldConfirmedAt]),
+      userSpecialPlanets: buildUserSpecialPlanets(payload),
       specialPlanetToken: null
     }
   }

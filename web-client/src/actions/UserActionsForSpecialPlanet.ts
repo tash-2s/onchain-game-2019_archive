@@ -1,10 +1,13 @@
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
-import { getUserAndUserSpecialPlanets, UserAndUserSpecialPlanetsResponse } from "./UserActions"
 
 import { chains } from "../misc/chains"
 
 import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+
+import { SpecialPlanetController } from "../SpecialPlanetController"
+
+type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
@@ -53,7 +56,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static setPlanetTokenToMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsResponse
+    ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
   >("setPlanetTokenToMap")
   setPlanetTokenToMap = (tokenId: string, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
@@ -76,7 +79,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
         .send()
 
-      const response = await getUserAndUserSpecialPlanets(address)
+      const response = await SpecialPlanetController.getPlanets(address)
 
       this.dispatch(
         UserActionsForSpecialPlanet.setPlanetTokenToMap({
@@ -87,7 +90,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static removeUserPlanetFromMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsResponse
+    ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
@@ -96,7 +99,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         .methods.removePlanet(userSpecialPlanetId)
         .send()
 
-      const response = await getUserAndUserSpecialPlanets(loginedLoomAddress())
+      const response = await SpecialPlanetController.getPlanets(loginedLoomAddress())
 
       this.dispatch(
         UserActionsForSpecialPlanet.removeUserPlanetFromMap({
