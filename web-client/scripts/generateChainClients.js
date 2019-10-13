@@ -39,8 +39,8 @@ static ${fnABI.name} = (${argsWithType}): ${returnType} => {
   })
 
   const body = `
-import { chains } from "./misc/chains"
-import ChainEnv from "./chain/env.json"
+import { chains } from "../../../misc/chains"
+import ChainEnv from "../../../chain/env.json"
 
 export class ${contractName} {
 ${functionStrings.join("\n")}

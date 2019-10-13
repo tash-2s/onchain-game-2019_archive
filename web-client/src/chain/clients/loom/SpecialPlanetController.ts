@@ -1,5 +1,5 @@
-import { chains } from "./misc/chains"
-import ChainEnv from "./chain/env.json"
+import { chains } from "../../../misc/chains"
+import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetController {
   static getPlanets = (

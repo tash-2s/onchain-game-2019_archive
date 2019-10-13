@@ -10,7 +10,7 @@ import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlane
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
 import { SpecialPlanetTokenFields } from "../models/ChainContractMethods"
-import { SpecialPlanetController } from "../SpecialPlanetController"
+import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 export interface UserState {
   targetUser: TargetUserState | null

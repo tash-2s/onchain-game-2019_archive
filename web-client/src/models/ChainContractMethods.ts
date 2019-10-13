@@ -1,6 +1,6 @@
 import { chains } from "../misc/chains"
 import { planetKindNumToKind } from "../constants"
-import { SpecialPlanetController } from "../SpecialPlanetController"
+import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 export class ChainContractMethods {
   static getSpecialPlanetTokenFields = async (

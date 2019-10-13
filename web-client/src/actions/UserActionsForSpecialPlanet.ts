@@ -5,7 +5,7 @@ import { chains } from "../misc/chains"
 
 import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
 
-import { SpecialPlanetController } from "../SpecialPlanetController"
+import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 import ChainEnv from "../chain/env.json"
 

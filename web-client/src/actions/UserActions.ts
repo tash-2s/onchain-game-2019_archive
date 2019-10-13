@@ -2,7 +2,7 @@ import { AbstractActions } from "./AbstractActions"
 
 import { chains } from "../misc/chains"
 
-import { SpecialPlanetController } from "../SpecialPlanetController"
+import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
