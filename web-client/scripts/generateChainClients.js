@@ -2,12 +2,16 @@ const fs = require("fs")
 const prettier = require("prettier")
 
 const def = {
+  HighlightedUserController: ["getUsers"],
+  NormalPlanetController: ["setPlanet", "rankupPlanet", "removePlanet"],
   SpecialPlanetController: [
     "getPlanets",
     "setPlanet",
     "removePlanet",
     "getPlanetFieldsFromTokenIds"
-  ]
+  ],
+  SpecialPlanetToken: ["approve", "ApprovedForAll", "setApprovalForAll"],
+  UserController: ["getUser"]
 }
 
 Object.keys(def).forEach(contractName => {
