@@ -5,7 +5,9 @@ import { chains } from "../misc/chains"
 
 import {
   getSpecialPlanetTokenFields,
-  SpecialPlanetTokenFields
+  SpecialPlanetTokenFields,
+  ReturnTypeOfGetUserSpecialPlanets,
+  getUserSpecialPlanets
 } from "../chain/clients/loom/organized"
 
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
@@ -61,7 +63,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static setPlanetTokenToMap = UserActionsForSpecialPlanet.creator<
-    ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
+    ReturnTypeOfGetUserSpecialPlanets
   >("setPlanetTokenToMap")
   setPlanetTokenToMap = (tokenId: string, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
@@ -85,7 +87,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         axialCoordinateR.toString()
       )
 
-      const response = await SpecialPlanetController.getPlanets(address)
+      const response = await getUserSpecialPlanets(address)
 
       this.dispatch(
         UserActionsForSpecialPlanet.setPlanetTokenToMap({
@@ -96,13 +98,13 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static removeUserPlanetFromMap = UserActionsForSpecialPlanet.creator<
-    ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
+    ReturnTypeOfGetUserSpecialPlanets
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
       await SpecialPlanetController.removePlanet(userSpecialPlanetId)
 
-      const response = await SpecialPlanetController.getPlanets(loginedLoomAddress())
+      const response = await getUserSpecialPlanets(loginedLoomAddress())
 
       this.dispatch(
         UserActionsForSpecialPlanet.removeUserPlanetFromMap({

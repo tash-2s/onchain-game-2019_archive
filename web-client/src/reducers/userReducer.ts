@@ -9,8 +9,10 @@ import {
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
-import { SpecialPlanetTokenFields } from "../chain/clients/loom/organized"
-import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
+import {
+  SpecialPlanetTokenFields,
+  ReturnTypeOfGetUserSpecialPlanets
+} from "../chain/clients/loom/organized"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -73,7 +75,7 @@ export const createUserReducer = () =>
         ...buildUser(payload.user),
         address: payload.address,
         userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets),
-        userSpecialPlanets: buildUserSpecialPlanets(payload.specialPlanets),
+        userSpecialPlanets: payload.userSpecialPlanets.userSpecialPlanets,
         specialPlanetToken: null
       }
     }))
@@ -220,40 +222,6 @@ const buildUserNormalPlanets = (
   return unps
 }
 
-type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
-const buildUserSpecialPlanets = (
-  response: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
-): TargetUserState["userSpecialPlanets"] => {
-  const uspIds = response.ids
-  const uspKinds = response.kinds
-  const uspParams = response.paramRates
-  const uspTimes = response.times
-  const uspCoordinates = response.axialCoordinates
-  const uspArtSeeds = response.artSeeds
-
-  const usps: Array<UserSpecialPlanet> = []
-  let i = 0
-  let counter = 0
-
-  while (i < uspIds.length) {
-    usps.push({
-      id: uspIds[i],
-      kind: planetKindNumToKind(strToNum(uspKinds[i])),
-      paramRate: strToNum(uspParams[i]),
-      rankupedAt: strToNum(uspTimes[counter]),
-      createdAt: strToNum(uspTimes[counter + 1]),
-      axialCoordinateQ: strToNum(uspCoordinates[counter]),
-      axialCoordinateR: strToNum(uspCoordinates[counter + 1]),
-      artSeed: uspArtSeeds[i]
-    })
-
-    i += 1
-    counter += 2
-  }
-
-  return usps
-}
-
 const buildTokens = (
   tokenIds: Array<string>,
   tokenFields: Array<SpecialPlanetTokenFields>
@@ -290,7 +258,7 @@ const buildStateFromUserAndUserNormalPlanets = (
 
 const buildStateFromUserAndUserSpecialPlanets = (
   state: UserState,
-  payload: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
+  payload: ReturnTypeOfGetUserSpecialPlanets
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -300,8 +268,8 @@ const buildStateFromUserAndUserSpecialPlanets = (
     ...state,
     targetUser: {
       ...state.targetUser,
-      ...buildUser([payload.confirmedGold, payload.goldConfirmedAt]),
-      userSpecialPlanets: buildUserSpecialPlanets(payload),
+      gold: { confirmed: payload.user.confirmedGold, confirmedAt: payload.user.goldConfirmedAt },
+      userSpecialPlanets: payload.userSpecialPlanets,
       specialPlanetToken: null
     }
   }

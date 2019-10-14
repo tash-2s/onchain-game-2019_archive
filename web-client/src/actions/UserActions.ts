@@ -3,6 +3,10 @@ import { AbstractActions } from "./AbstractActions"
 import { chains } from "../misc/chains"
 
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
+import {
+  getUserSpecialPlanets,
+  ReturnTypeOfGetUserSpecialPlanets
+} from "../chain/clients/loom/organized"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -13,12 +17,12 @@ export class UserActions extends AbstractActions {
     address: string
     user: UserResponse
     userNormalPlanets: UserNormalPlanetsResponse
-    specialPlanets: ExtractFromPromise<ReturnType<typeof SpecialPlanetController.getPlanets>>
+    userSpecialPlanets: ReturnTypeOfGetUserSpecialPlanets
   }>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const [userNormalPlanetsResponse, specialPlanets] = await Promise.all([
+    const [userNormalPlanetsResponse, userSpecialPlanets] = await Promise.all([
       getUserAndUserNormalPlanets(address),
-      SpecialPlanetController.getPlanets(address)
+      getUserSpecialPlanets(address)
     ])
 
     this.dispatch(
@@ -26,7 +30,7 @@ export class UserActions extends AbstractActions {
         address,
         user: userNormalPlanetsResponse.user,
         userNormalPlanets: userNormalPlanetsResponse.userNormalPlanets,
-        specialPlanets: specialPlanets
+        userSpecialPlanets: userSpecialPlanets
       })
     )
   }
