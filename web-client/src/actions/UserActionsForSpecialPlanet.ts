@@ -16,7 +16,7 @@ import { getSpecialPlanetTokens } from "../chain/clients/organized"
 import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
 import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
 import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
-import { Gateway } from "../chain/clients/eth/organized";
+import { Gateway } from "../chain/clients/eth/organized"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -114,12 +114,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
 
     const price = (await SpecialPlanetTokenShop.price())[0]
 
-    SpecialPlanetTokenShop.sell({ value: price })
-      .on("transactionHash", hash => {
-        this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
+    SpecialPlanetTokenShop.sell({ value: price }).on("transactionHash", hash => {
+      this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
 
   static transferPlanetTokenToLoom = UserActionsForSpecialPlanet.creator<string>(
@@ -128,12 +127,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   transferPlanetTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    EthSPT.depositToGateway(tokenId)
-      .on("transactionHash", hash => {
-        this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
+    EthSPT.depositToGateway(tokenId).on("transactionHash", hash => {
+      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
 
   static transferPlanetTokenToEth = UserActionsForSpecialPlanet.creator<string>(
@@ -158,12 +156,16 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     )
 
     const gatewayAddress = (await EthSPT.gateway())[0]
-    Gateway.withdrawERC721(gatewayAddress, _tokenId, signature, ChainEnv.ethContractAddresses.SpecialPlanetToken)
-      .on("transactionHash", (hash: string) => {
-        this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
+    Gateway.withdrawERC721(
+      gatewayAddress,
+      _tokenId,
+      signature,
+      ChainEnv.ethContractAddresses.SpecialPlanetToken
+    ).on("transactionHash", (hash: string) => {
+      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
 }
 

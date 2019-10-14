@@ -1,7 +1,12 @@
 import { chains } from "../../../misc/chains"
 
 export class Gateway {
-  static withdrawERC721 = (gatewayAddress: string, tokenId: string, signature: string, tokenAddress: string) => {
+  static withdrawERC721 = (
+    gatewayAddress: string,
+    tokenId: string,
+    signature: string,
+    tokenAddress: string
+  ) => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }

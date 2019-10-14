@@ -33,8 +33,9 @@ Object.keys(def).forEach(chainName => {
 
     const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
       const args = fnABI.inputs.map(i => i.name).join(", ")
-      const argsWithType = fnABI.inputs
-        .map(a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
+      const argsWithType = fnABI.inputs.map(
+        a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`
+      )
       if (!fnABI.constant) {
         argsWithType.push("txOption?: {}")
       }
