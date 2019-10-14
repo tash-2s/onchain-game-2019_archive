@@ -1,6 +1,9 @@
 import { getSpecialPlanetTokensByIds } from "./loom/organized"
 
-type TypeOfTokensOfOwnerByIndex = (owner: string, index: string) => Promise<{ tokenIds: Array<string>; nextIndex: string }>
+type TypeOfTokensOfOwnerByIndex = (
+  owner: string,
+  index: string
+) => Promise<{ tokenIds: Array<string>; nextIndex: string }>
 
 export const getSpecialPlanetTokens = async (address: string, fn: TypeOfTokensOfOwnerByIndex) => {
   const ids = await getSpecialPlanetTokenIds(address, fn)
@@ -26,4 +29,3 @@ const getSpecialPlanetTokenIds = async (address: string, fn: TypeOfTokensOfOwner
 
   return ids
 }
-

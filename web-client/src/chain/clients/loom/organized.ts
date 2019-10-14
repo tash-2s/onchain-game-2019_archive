@@ -1,6 +1,6 @@
 import { PlanetKind, planetKindNumToKind } from "../../../constants"
 import { SpecialPlanetController } from "./SpecialPlanetController"
-import { UserController } from "./UserController";
+import { UserController } from "./UserController"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -14,7 +14,7 @@ export const getUserNormalPlanets = async (address: string) => {
     rankupedAt: strToNum(r.unpTimes[i * 2]),
     createdAt: strToNum(r.unpTimes[i * 2 + 1]),
     axialCoordinateQ: strToNum(r.unpAxialCoordinates[i * 2]),
-    axialCoordinateR: strToNum(r.unpAxialCoordinates[i * 2 + 1]),
+    axialCoordinateR: strToNum(r.unpAxialCoordinates[i * 2 + 1])
   }))
 
   return {
@@ -62,9 +62,7 @@ export const getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
   return fields
 }
 
-const _getSpecialPlanetTokensByIds = async (
-  tokenIds: Array<string>
-) => {
+const _getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
   const r = await SpecialPlanetController.getPlanetFieldsFromTokenIds(tokenIds)
 
   return tokenIds.map((id, i) => ({

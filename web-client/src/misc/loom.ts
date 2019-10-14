@@ -107,7 +107,9 @@ export class Loom {
       if (tokenId) {
         await gateway.withdrawERC721Async(
           new BN(tokenId),
-          Address.fromString(`${ChainEnv.loom.chainId}:${ChainEnv.loomContractAddresses.SpecialPlanetToken}`),
+          Address.fromString(
+            `${ChainEnv.loom.chainId}:${ChainEnv.loomContractAddresses.SpecialPlanetToken}`
+          ),
           Address.fromString(`eth:${ethAddress}`)
         )
         await sleep(10)
@@ -211,6 +213,7 @@ const getGateway = async (ethSigner: ethers.Signer) => {
   }
 }
 
-const sleep = (sec: number) => new Promise(resolve => {
-  setTimeout(resolve, sec * 1000)
-})
+const sleep = (sec: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, sec * 1000)
+  })

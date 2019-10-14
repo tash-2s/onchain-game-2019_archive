@@ -4,7 +4,7 @@ import {
   getUserNormalPlanets,
   ReturnTypeOfGetUserNormalPlanets,
   getUserSpecialPlanets,
-  ReturnTypeOfGetUserSpecialPlanets,
+  ReturnTypeOfGetUserSpecialPlanets
 } from "../chain/clients/loom/organized"
 
 export class UserActions extends AbstractActions {

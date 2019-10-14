@@ -1,8 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import {
-  UserActions,
-} from "../actions/UserActions"
+import { UserActions } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
@@ -172,7 +170,10 @@ export const createUserReducer = () =>
 
 const strToNum = (str: string) => parseInt(str, 10)
 
-const buildUser = (obj: { confirmedGold: string, goldConfirmedAt: number }): Pick<TargetUserState, "gold"> => {
+const buildUser = (obj: {
+  confirmedGold: string
+  goldConfirmedAt: number
+}): Pick<TargetUserState, "gold"> => {
   return {
     gold: {
       confirmed: obj.confirmedGold,

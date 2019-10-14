@@ -2,17 +2,12 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { BNFormatter } from "../models/BNFormatter"
-import {
-  getSpecialPlanetTokensByIds,
-  SpecialPlanetToken
-} from "../chain/clients/loom/organized"
+import { getSpecialPlanetTokensByIds, SpecialPlanetToken } from "../chain/clients/loom/organized"
 import { PlanetArt } from "./utils/PlanetArt"
 
 export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
   const tokenId = props.params[0]
-  const [token, setToken] = React.useState<null | SpecialPlanetToken>(
-    null
-  )
+  const [token, setToken] = React.useState<null | SpecialPlanetToken>(null)
 
   React.useEffect(() => {
     getSpecialPlanetTokensByIds([tokenId]).then(tokens => {

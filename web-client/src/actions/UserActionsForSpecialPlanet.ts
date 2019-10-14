@@ -12,31 +12,25 @@ import {
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 import ChainEnv from "../chain/env.json"
-import { getSpecialPlanetTokens } from "../chain/clients/organized";
-import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken";
-import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken";
-import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop";
+import { getSpecialPlanetTokens } from "../chain/clients/organized"
+import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
+import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
+import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
 
-  static setTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator<
-    {
-      ethTokens: Array<SpecialPlanetToken>,
-      loomTokens: Array<SpecialPlanetToken>,
-      needsTransferResume: boolean
-    }
-  >("setTargetUserPlanetTokens")
+  static setTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator<{
+    ethTokens: Array<SpecialPlanetToken>
+    loomTokens: Array<SpecialPlanetToken>
+    needsTransferResume: boolean
+  }>("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
     const address = loginedLoomAddress() // show my tokens
 
-    const [
-      ethTokens,
-      loomTokens,
-      receipt
-    ] = await Promise.all([
+    const [ethTokens, loomTokens, receipt] = await Promise.all([
       getSpecialPlanetTokens(address, EthSPT.tokensOfOwnerByIndex),
       getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()

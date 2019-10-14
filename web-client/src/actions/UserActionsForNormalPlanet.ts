@@ -1,8 +1,11 @@
 import { AbstractActions } from "./AbstractActions"
 
 import { chains } from "../misc/chains"
-import { NormalPlanetController } from "../chain/clients/loom/NormalPlanetController";
-import { getUserNormalPlanets, ReturnTypeOfGetUserNormalPlanets } from "../chain/clients/loom/organized";
+import { NormalPlanetController } from "../chain/clients/loom/NormalPlanetController"
+import {
+  getUserNormalPlanets,
+  ReturnTypeOfGetUserNormalPlanets
+} from "../chain/clients/loom/organized"
 
 export class UserActionsForNormalPlanet extends AbstractActions {
   private static creator = UserActionsForNormalPlanet.getActionCreator()
@@ -12,7 +15,11 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   setPlanetToMap = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      await NormalPlanetController.setPlanet(planetId.toString(), axialCoordinateQ.toString(), axialCoordinateR.toString())
+      await NormalPlanetController.setPlanet(
+        planetId.toString(),
+        axialCoordinateQ.toString(),
+        axialCoordinateR.toString()
+      )
 
       const response = await getUserNormalPlanets(loginedAddress())
 

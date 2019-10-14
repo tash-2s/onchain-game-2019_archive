@@ -11,7 +11,12 @@ const def = {
       "removePlanet",
       "getPlanetFieldsFromTokenIds"
     ],
-    SpecialPlanetToken: ["approve", "isApprovedForAll", "setApprovalForAll", "tokensOfOwnerByIndex"],
+    SpecialPlanetToken: [
+      "approve",
+      "isApprovedForAll",
+      "setApprovalForAll",
+      "tokensOfOwnerByIndex"
+    ],
     UserController: ["getUser"]
   },
   eth: {
@@ -32,13 +37,22 @@ Object.keys(def).forEach(chainName => {
         .map(a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
         .join(", ")
       const _types = fnABI.outputs
-        .map((o, i) => `${o.name === "" ? `${i}` : o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
+        .map(
+          (o, i) =>
+            `${o.name === "" ? `${i}` : o.name}: ${
+              o.type.slice(-2) === "[]" ? "Array<string>" : "string"
+            }`
+        )
         .join(", ")
       const returnType = fnABI.constant ? `Promise<{ ${_types} }>` : "Promise<any>"
 
       return `
   static ${fnABI.name} = (${argsWithType}): ${returnType} => {
-    ${chainName === "loom" ? "" : 'if (!chains.eth.web3 || !chains.eth.address) { throw new Error("not logined") }'}
+    ${
+      chainName === "loom"
+        ? ""
+        : 'if (!chains.eth.web3 || !chains.eth.address) { throw new Error("not logined") }'
+    }
     return new chains.${chainName}.web3.eth.Contract(
       [${JSON.stringify(fnABI)}],
       ChainEnv.${chainName}ContractAddresses.${contractName},
