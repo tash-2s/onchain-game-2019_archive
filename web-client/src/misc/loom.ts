@@ -105,11 +105,10 @@ export class Loom {
 
     const receipt = await this.withGateway(ethSigner, async gateway => {
       if (tokenId) {
-        await transferSpecialPlanetTokenToGateway(
-          gateway,
-          this.specialPlanetToken(),
-          tokenId,
-          ethAddress
+        await gateway.withdrawERC721Async(
+          new BN(tokenId),
+          Address.fromString(`${ChainEnv.loom.chainId}:${ChainEnv.loomContractAddresses.SpecialPlanetToken}`),
+          Address.fromString(`eth:${ethAddress}`)
         )
         await sleep(10)
       }
@@ -212,25 +211,6 @@ const getGateway = async (ethSigner: ethers.Signer) => {
   }
 }
 
-type _ExtractInstanceType<T> = new (...args: any) => T
-type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
-const transferSpecialPlanetTokenToGateway = async (
-  gateway: Contracts.TransferGateway,
-  token: ExtractInstanceType<import("web3")["eth"]["Contract"]>,
-  tokenId: string,
-  ethAddress: string
-) => {
-  const gatewayAddress = await token.methods.gateway().call()
-  await token.methods.approve(gatewayAddress, tokenId).send()
-  await gateway.withdrawERC721Async(
-    new BN(tokenId),
-    Address.fromString(`${ChainEnv.loom.chainId}:${token.options.address}`),
-    Address.fromString(`eth:${ethAddress}`)
-  )
-}
-
-const sleep = (sec: number) => {
-  return new Promise(resolve => {
-    setTimeout(resolve, sec * 1000)
-  })
-}
+const sleep = (sec: number) => new Promise(resolve => {
+  setTimeout(resolve, sec * 1000)
+})

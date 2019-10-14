@@ -14,6 +14,8 @@ import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetCont
 import ChainEnv from "../chain/env.json"
 import { getSpecialPlanetTokens } from "../chain/clients/organized";
 import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken";
+import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken";
+import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop";
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -35,7 +37,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       loomTokens,
       receipt
     ] = await Promise.all([
-      getTokens(chains.eth), // TODO: fix
+      getSpecialPlanetTokens(address, EthSPT.tokensOfOwnerByIndex),
       getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
@@ -115,11 +117,9 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   buyPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = await chains.eth
-      .specialPlanetTokenShop()
-      .methods.price()
-      .call()
+    const price = (await SpecialPlanetTokenShop.price())[0]
 
+    // TODO: fix
     chains.eth
       .specialPlanetTokenShop()
       .methods.sell()
@@ -159,6 +159,10 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       throw new Error("not logined")
     }
 
+    if (tokenId) {
+      const gatewayAddress = (await EthSPT.gateway())[0]
+      await EthSPT.approve(gatewayAddress, tokenId)
+    }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
       chains.eth.specialPlanetToken().options.address,
