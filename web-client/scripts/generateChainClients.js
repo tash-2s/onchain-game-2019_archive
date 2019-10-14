@@ -10,7 +10,7 @@ const def = {
     "removePlanet",
     "getPlanetFieldsFromTokenIds"
   ],
-  SpecialPlanetToken: ["approve", "ApprovedForAll", "setApprovalForAll"],
+  SpecialPlanetToken: ["approve", "isApprovedForAll", "setApprovalForAll", "tokensOfOwnerByIndex"],
   UserController: ["getUser"]
 }
 
@@ -25,7 +25,7 @@ Object.keys(def).forEach(contractName => {
       .map(a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
       .join(", ")
     const _types = fnABI.outputs
-      .map(o => `${o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
+      .map((o, i) => `${o.name === "" ? `${i}` : o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
       .join(", ")
     const returnType = fnABI.constant ? `Promise<{ ${_types} }>` : "Promise<any>"
 

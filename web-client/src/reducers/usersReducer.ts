@@ -9,10 +9,10 @@ const initialState: { users: Array<{ address: string; gold: string }> } = {
 
 export const createUsersReducer = () =>
   reducerWithInitialState(initialState)
-    .case(UsersActions.setUsers, (state, [address, response]) => {
-      const addresses = response[0]
-      const golds = response[1].map(g => new BN(g))
-      const addrs = [address]
+    .case(UsersActions.setUsers, (state, payload) => {
+      const addresses = payload[1].accounts
+      const golds = payload[1].golds.map(g => new BN(g))
+      const addrs = [payload[0]]
 
       const users = golds
         .map((gold, i) => ({ address: addresses[i], gold: gold }))

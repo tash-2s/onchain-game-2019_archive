@@ -4,8 +4,7 @@ import { AppActions } from "./AppActions"
 import { chains } from "../misc/chains"
 
 import {
-  getSpecialPlanetTokenFields,
-  SpecialPlanetTokenFields,
+  SpecialPlanetToken,
   ReturnTypeOfGetUserSpecialPlanets,
   getUserSpecialPlanets
 } from "../chain/clients/loom/organized"
@@ -13,6 +12,8 @@ import {
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
 import ChainEnv from "../chain/env.json"
+import { getSpecialPlanetTokens } from "../chain/clients/organized";
+import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken";
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -20,18 +21,22 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
 
   static setTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator<
-    PlanetTokensResponse & {
+    {
+      ethTokens: Array<SpecialPlanetToken>,
+      loomTokens: Array<SpecialPlanetToken>,
       needsTransferResume: boolean
     }
   >("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
+    const address = loginedLoomAddress() // show my tokens
+
     const [
-      { ids: ethTokenIds, fields: ethTokenFields },
-      { ids: loomTokenIds, fields: loomTokenFields },
+      ethTokens,
+      loomTokens,
       receipt
     ] = await Promise.all([
-      getTokens(chains.eth),
-      getTokens(chains.loom),
+      getTokens(chains.eth), // TODO: fix
+      getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
 
@@ -40,16 +45,14 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     const needsTransferResume =
       !!receipt &&
       !!receipt.tokenId &&
-      (receiptTokenId => ethTokenIds.every(ethTokenId => ethTokenId !== receiptTokenId))(
+      (receiptTokenId => ethTokens.every(ethToken => ethToken.id !== receiptTokenId))(
         receipt.tokenId.toString()
       )
 
     this.dispatch(
       UserActionsForSpecialPlanet.setTargetUserPlanetTokens({
-        ethTokenIds,
-        ethTokenFields,
-        loomTokenIds,
-        loomTokenFields,
+        ethTokens,
+        loomTokens,
         needsTransferResume
       })
     )
@@ -70,15 +73,9 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       const address = loginedLoomAddress()
 
       const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
-      const isApproved = await chains.loom
-        .specialPlanetToken()
-        .methods.isApprovedForAll(address, controllerAddress)
-        .call()
-      if (!isApproved) {
-        await chains.loom
-          .specialPlanetToken()
-          .methods.setApprovalForAll(controllerAddress, true)
-          .send()
+      const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
+      if (!isApproved[0]) {
+        await LoomSPT.setApprovalForAll(controllerAddress, true.toString()) // TODO: right?
       }
 
       await SpecialPlanetController.setPlanet(
@@ -178,63 +175,6 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         new AppActions(this.dispatch).stopLoading()
       })
   }
-}
-
-interface PlanetTokensResponse {
-  ethTokenIds: Array<string>
-  ethTokenFields: Array<SpecialPlanetTokenFields>
-  loomTokenIds: Array<string>
-  loomTokenFields: Array<SpecialPlanetTokenFields>
-}
-
-type _ExtractInstanceType<T> = new (...args: any) => T
-type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
-
-const getTokens = async (c: {
-  address: string | null
-  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
-}) => {
-  const ids = await getTokenIds(c)
-  const fields = await getTokenFields(ids)
-  return { ids, fields }
-}
-
-const getTokenIds = async (c: {
-  address: string | null
-  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
-}) => {
-  const ids: Array<string> = []
-
-  let index = "0"
-  while (true) {
-    const r = await c
-      .specialPlanetToken()
-      .methods.tokensOfOwnerByIndex(c.address, index)
-      .call()
-
-    ids.push(...r.tokenIds)
-
-    if (r.nextIndex === "0") {
-      break
-    }
-
-    index = r.nextIndex
-  }
-
-  return ids
-}
-
-const getTokenFields = async (tokenIds: Array<string>) => {
-  const fields: Array<SpecialPlanetTokenFields> = []
-  const batchSize = 100
-
-  for (let i = 0; i < tokenIds.length; i += batchSize) {
-    const ids = tokenIds.slice(i, i + batchSize)
-    const fs = await getSpecialPlanetTokenFields(ids)
-    fields.push(...fs)
-  }
-
-  return fields
 }
 
 const loginedLoomAddress = () => {

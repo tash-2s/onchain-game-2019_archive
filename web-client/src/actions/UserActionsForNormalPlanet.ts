@@ -1,54 +1,46 @@
 import { AbstractActions } from "./AbstractActions"
-import { getUserAndUserNormalPlanets, UserAndUserNormalPlanetsResponse } from "./UserActions"
 
 import { chains } from "../misc/chains"
+import { NormalPlanetController } from "../chain/clients/loom/NormalPlanetController";
+import { getUserNormalPlanets, ReturnTypeOfGetUserNormalPlanets } from "../chain/clients/loom/organized";
 
 export class UserActionsForNormalPlanet extends AbstractActions {
   private static creator = UserActionsForNormalPlanet.getActionCreator()
 
-  static setPlanetToMap = UserActionsForNormalPlanet.creator<UserAndUserNormalPlanetsResponse>(
+  static setPlanetToMap = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
     "setPlanetToMap"
   )
   setPlanetToMap = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      await chains.loom
-        .normalPlanetController()
-        .methods.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
-        .send()
+      await NormalPlanetController.setPlanet(planetId.toString(), axialCoordinateQ.toString(), axialCoordinateR.toString())
 
-      const response = await getUserAndUserNormalPlanets(loginedAddress())
+      const response = await getUserNormalPlanets(loginedAddress())
 
       this.dispatch(UserActionsForNormalPlanet.setPlanetToMap(response))
     })
   }
 
-  static rankupUserPlanet = UserActionsForNormalPlanet.creator<UserAndUserNormalPlanetsResponse>(
+  static rankupUserPlanet = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
     "rankupUserPlanet"
   )
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      await chains.loom
-        .normalPlanetController()
-        .methods.rankupPlanet(userPlanetId, targetRank)
-        .send()
+      await NormalPlanetController.rankupPlanet(userPlanetId, targetRank.toString())
 
-      const response = await getUserAndUserNormalPlanets(loginedAddress())
+      const response = await getUserNormalPlanets(loginedAddress())
 
       this.dispatch(UserActionsForNormalPlanet.rankupUserPlanet(response))
     })
   }
 
-  static removeUserPlanet = UserActionsForNormalPlanet.creator<UserAndUserNormalPlanetsResponse>(
+  static removeUserPlanet = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
     "removeUserPlanet"
   )
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      await chains.loom
-        .normalPlanetController()
-        .methods.removePlanet(userPlanetId)
-        .send()
+      await NormalPlanetController.removePlanet(userPlanetId)
 
-      const response = await getUserAndUserNormalPlanets(loginedAddress())
+      const response = await getUserNormalPlanets(loginedAddress())
 
       this.dispatch(UserActionsForNormalPlanet.removeUserPlanet(response))
     })

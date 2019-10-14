@@ -17,11 +17,6 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import ChainEnv from "../chain/env.json"
 
-import UserABI from "../chain/abi/loom/UserController.json"
-import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
-import HighlightedUserABI from "../chain/abi/loom/HighlightedUserController.json"
-import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
-
 type Env = (typeof ChainEnv)["loom"]
 
 export class Loom {
@@ -70,36 +65,6 @@ export class Loom {
   getLoomTime = async () => {
     const o = await this.web3.eth.getBlock("latest")
     return o.timestamp
-  }
-
-  userController = () => {
-    return new this.web3.eth.Contract(UserABI, ChainEnv.loomContractAddresses.UserController, {
-      from: this.callerAddress()
-    })
-  }
-
-  normalPlanetController = () => {
-    return new this.web3.eth.Contract(
-      NormalPlanetABI,
-      ChainEnv.loomContractAddresses.NormalPlanetController,
-      { from: this.callerAddress() }
-    )
-  }
-
-  highlightedUserController = () => {
-    return new this.web3.eth.Contract(
-      HighlightedUserABI,
-      ChainEnv.loomContractAddresses.HighlightedUserController,
-      { from: this.callerAddress() }
-    )
-  }
-
-  specialPlanetToken = () => {
-    return new this.web3.eth.Contract(
-      SpecialPlanetTokenABI,
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
-      { from: this.callerAddress() }
-    )
   }
 
   withGateway = async <T>(

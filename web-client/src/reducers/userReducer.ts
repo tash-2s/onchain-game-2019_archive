@@ -2,16 +2,14 @@ import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import {
   UserActions,
-  UserResponse,
-  UserNormalPlanetsResponse,
-  UserAndUserNormalPlanetsResponse
 } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
 import {
-  SpecialPlanetTokenFields,
-  ReturnTypeOfGetUserSpecialPlanets
+  SpecialPlanetToken,
+  ReturnTypeOfGetUserSpecialPlanets,
+  ReturnTypeOfGetUserNormalPlanets
 } from "../chain/clients/loom/organized"
 
 export interface UserState {
@@ -54,15 +52,6 @@ export interface UserSpecialPlanet {
   artSeed: string
 }
 
-interface SpecialPlanetToken {
-  id: string // token id
-  shortId: string
-  version: number
-  kind: PlanetKind
-  paramRate: number
-  artSeed: string
-}
-
 const initialState: UserState = {
   targetUser: null
 }
@@ -72,10 +61,10 @@ export const createUserReducer = () =>
     .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
       targetUser: {
-        ...buildUser(payload.user),
+        ...buildUser(payload.normal.user),
         address: payload.address,
-        userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets),
-        userSpecialPlanets: payload.userSpecialPlanets.userSpecialPlanets,
+        userNormalPlanets: payload.normal.userNormalPlanets,
+        userSpecialPlanets: payload.special.userSpecialPlanets,
         specialPlanetToken: null
       }
     }))
@@ -96,8 +85,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: buildTokens(payload.ethTokenIds, payload.ethTokenFields),
-            loomTokens: buildTokens(payload.loomTokenIds, payload.loomTokenFields),
+            ethTokens: payload.ethTokens,
+            loomTokens: payload.loomTokens,
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx
@@ -183,64 +172,18 @@ export const createUserReducer = () =>
 
 const strToNum = (str: string) => parseInt(str, 10)
 
-const buildUser = (response: UserResponse): Pick<TargetUserState, "gold"> => {
+const buildUser = (obj: { confirmedGold: string, goldConfirmedAt: number }): Pick<TargetUserState, "gold"> => {
   return {
     gold: {
-      confirmed: response[0],
-      confirmedAt: strToNum(response[1])
+      confirmed: obj.confirmedGold,
+      confirmedAt: obj.goldConfirmedAt
     }
   }
-}
-
-const buildUserNormalPlanets = (
-  response: UserNormalPlanetsResponse
-): TargetUserState["userNormalPlanets"] => {
-  const unpIds = response[0]
-  const unpRanks = response[1]
-  const unpTimes = response[2]
-  const unpAxialCoordinates = response[3]
-
-  const unps: Array<UserNormalPlanet> = []
-  let i = 0
-  let counter = 0
-
-  while (i < unpRanks.length) {
-    unps.push({
-      id: unpIds[counter],
-      normalPlanetId: strToNum(unpIds[counter + 1]),
-      rank: strToNum(unpRanks[i]),
-      rankupedAt: strToNum(unpTimes[counter]),
-      createdAt: strToNum(unpTimes[counter + 1]),
-      axialCoordinateQ: strToNum(unpAxialCoordinates[counter]),
-      axialCoordinateR: strToNum(unpAxialCoordinates[counter + 1])
-    })
-
-    i += 1
-    counter += 2
-  }
-
-  return unps
-}
-
-const buildTokens = (
-  tokenIds: Array<string>,
-  tokenFields: Array<SpecialPlanetTokenFields>
-): Array<SpecialPlanetToken> => {
-  return tokenFields.map((fields, i) => {
-    return {
-      id: tokenIds[i],
-      shortId: fields.shortId,
-      version: fields.version,
-      kind: fields.kind,
-      paramRate: fields.paramRate,
-      artSeed: fields.artSeed
-    }
-  })
 }
 
 const buildStateFromUserAndUserNormalPlanets = (
   state: UserState,
-  payload: UserAndUserNormalPlanetsResponse
+  payload: ReturnTypeOfGetUserNormalPlanets
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -251,7 +194,7 @@ const buildStateFromUserAndUserNormalPlanets = (
     targetUser: {
       ...state.targetUser,
       ...buildUser(payload.user),
-      userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets)
+      userNormalPlanets: payload.userNormalPlanets
     }
   }
 }
