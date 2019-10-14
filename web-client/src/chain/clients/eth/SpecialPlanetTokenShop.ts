@@ -26,7 +26,7 @@ export class SpecialPlanetTokenShop {
       .call()
   }
 
-  static sell = (): Promise<any> => {
+  static sell = (txOption?: {}) => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }
@@ -47,6 +47,6 @@ export class SpecialPlanetTokenShop {
       { from: chains.eth.address }
     ).methods
       .sell()
-      .send()
+      .send(txOption)
   }
 }

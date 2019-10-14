@@ -20,7 +20,7 @@ const def = {
     UserController: ["getUser"]
   },
   eth: {
-    SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway"],
+    SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway", "depositToGateway"],
     SpecialPlanetTokenShop: ["price", "sell"]
   }
 }
@@ -35,7 +35,9 @@ Object.keys(def).forEach(chainName => {
       const args = fnABI.inputs.map(i => i.name).join(", ")
       const argsWithType = fnABI.inputs
         .map(a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
-        .join(", ")
+      if (!fnABI.constant) {
+        argsWithType.push("txOption?: {}")
+      }
       const _types = fnABI.outputs
         .map(
           (o, i) =>
@@ -44,10 +46,10 @@ Object.keys(def).forEach(chainName => {
             }`
         )
         .join(", ")
-      const returnType = fnABI.constant ? `Promise<{ ${_types} }>` : "Promise<any>"
+      const returnType = fnABI.constant ? `: Promise<{ ${_types} }>` : ""
 
       return `
-  static ${fnABI.name} = (${argsWithType}): ${returnType} => {
+  static ${fnABI.name} = (${argsWithType.join(", ")})${returnType} => {
     ${
       chainName === "loom"
         ? ""
@@ -59,7 +61,7 @@ Object.keys(def).forEach(chainName => {
       { from: ${chainName === "loom" ? "chains.loom.callerAddress()" : "chains.eth.address"} }
     ).methods
       .${fnABI.name}(${args})
-      .${fnABI.constant ? "call" : "send"}()
+      .${fnABI.constant ? "call()" : "send(txOption)"}
   }
   `
     })

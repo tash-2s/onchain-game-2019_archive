@@ -5,8 +5,9 @@ export class NormalPlanetController {
   static setPlanet = (
     planetId: string,
     axialCoordinateQ: string,
-    axialCoordinateR: string
-  ): Promise<any> => {
+    axialCoordinateR: string,
+    txOption?: {}
+  ) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -28,10 +29,10 @@ export class NormalPlanetController {
       { from: chains.loom.callerAddress() }
     ).methods
       .setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
-      .send()
+      .send(txOption)
   }
 
-  static rankupPlanet = (userNormalPlanetId: string, targetRank: string): Promise<any> => {
+  static rankupPlanet = (userNormalPlanetId: string, targetRank: string, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -52,10 +53,10 @@ export class NormalPlanetController {
       { from: chains.loom.callerAddress() }
     ).methods
       .rankupPlanet(userNormalPlanetId, targetRank)
-      .send()
+      .send(txOption)
   }
 
-  static removePlanet = (userNormalPlanetId: string): Promise<any> => {
+  static removePlanet = (userNormalPlanetId: string, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -73,6 +74,6 @@ export class NormalPlanetController {
       { from: chains.loom.callerAddress() }
     ).methods
       .removePlanet(userNormalPlanetId)
-      .send()
+      .send(txOption)
   }
 }

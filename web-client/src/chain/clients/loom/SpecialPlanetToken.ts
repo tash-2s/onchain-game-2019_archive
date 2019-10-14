@@ -2,7 +2,7 @@ import { chains } from "../../../misc/chains"
 import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetToken {
-  static approve = (to: string, tokenId: string): Promise<any> => {
+  static approve = (to: string, tokenId: string, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -23,7 +23,7 @@ export class SpecialPlanetToken {
       { from: chains.loom.callerAddress() }
     ).methods
       .approve(to, tokenId)
-      .send()
+      .send(txOption)
   }
 
   static tokensOfOwnerByIndex = (
@@ -56,7 +56,7 @@ export class SpecialPlanetToken {
       .call()
   }
 
-  static setApprovalForAll = (to: string, approved: string): Promise<any> => {
+  static setApprovalForAll = (to: string, approved: string, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -77,7 +77,7 @@ export class SpecialPlanetToken {
       { from: chains.loom.callerAddress() }
     ).methods
       .setApprovalForAll(to, approved)
-      .send()
+      .send(txOption)
   }
 
   static isApprovedForAll = (owner: string, operator: string): Promise<{ 0: string }> => {

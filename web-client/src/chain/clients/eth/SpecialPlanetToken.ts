@@ -2,7 +2,7 @@ import { chains } from "../../../misc/chains"
 import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetToken {
-  static approve = (to: string, tokenId: string): Promise<any> => {
+  static approve = (to: string, tokenId: string, txOption?: {}) => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }
@@ -26,7 +26,7 @@ export class SpecialPlanetToken {
       { from: chains.eth.address }
     ).methods
       .approve(to, tokenId)
-      .send()
+      .send(txOption)
   }
 
   static gateway = (): Promise<{ 0: string }> => {
@@ -84,5 +84,29 @@ export class SpecialPlanetToken {
     ).methods
       .tokensOfOwnerByIndex(owner, index)
       .call()
+  }
+
+  static depositToGateway = (id: string, txOption?: {}) => {
+    if (!chains.eth.web3 || !chains.eth.address) {
+      throw new Error("not logined")
+    }
+    return new chains.eth.web3.eth.Contract(
+      [
+        {
+          constant: false,
+          inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
+          name: "depositToGateway",
+          outputs: [],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function",
+          signature: "0x9267daba"
+        }
+      ],
+      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      { from: chains.eth.address }
+    ).methods
+      .depositToGateway(id)
+      .send(txOption)
   }
 }

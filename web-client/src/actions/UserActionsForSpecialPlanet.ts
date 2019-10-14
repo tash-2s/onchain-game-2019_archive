@@ -16,6 +16,7 @@ import { getSpecialPlanetTokens } from "../chain/clients/organized"
 import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
 import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
 import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
+import { Gateway } from "../chain/clients/eth/organized";
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
@@ -113,11 +114,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
 
     const price = (await SpecialPlanetTokenShop.price())[0]
 
-    // TODO: fix
-    chains.eth
-      .specialPlanetTokenShop()
-      .methods.sell()
-      .send({ value: price })
+    SpecialPlanetTokenShop.sell({ value: price })
       .on("transactionHash", hash => {
         this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
 
@@ -131,10 +128,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   transferPlanetTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    chains.eth
-      .specialPlanetToken()
-      .methods.depositToGateway(tokenId)
-      .send()
+    EthSPT.depositToGateway(tokenId)
       .on("transactionHash", hash => {
         this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
 
@@ -159,14 +153,12 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
-      chains.eth.specialPlanetToken().options.address,
+      ChainEnv.ethContractAddresses.SpecialPlanetToken,
       tokenId
     )
 
-    const gateway = await chains.eth.gateway()
-    gateway.methods
-      .withdrawERC721(_tokenId, signature, chains.eth.specialPlanetToken().options.address)
-      .send({ from: ethAddress })
+    const gatewayAddress = (await EthSPT.gateway())[0]
+    Gateway.withdrawERC721(gatewayAddress, _tokenId, signature, ChainEnv.ethContractAddresses.SpecialPlanetToken)
       .on("transactionHash", (hash: string) => {
         this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
 
