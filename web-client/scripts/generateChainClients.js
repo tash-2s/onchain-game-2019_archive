@@ -29,7 +29,7 @@ Object.keys(def).forEach(chainName => {
   Object.keys(def[chainName]).forEach(contractName => {
     const functionNames = def[chainName][contractName]
 
-    const ABI = JSON.parse(fs.readFileSync(`./src/chain/abi/${chainName}/${contractName}.json`))
+    const ABI = JSON.parse(fs.readFileSync(`./.abi/${chainName}/${contractName}.json`))
 
     const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
       const args = fnABI.inputs.map(i => i.name).join(", ")

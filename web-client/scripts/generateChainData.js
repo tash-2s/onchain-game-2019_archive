@@ -40,43 +40,28 @@ const loomContractAddresses = {} // TODO: save k2-chain-contracts's commit hash 
 fs.readdirSync(LOOM_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
 
-  if (contractName !== "SpecialPlanetToken") {
-    if (contractName.slice(-10) !== "Controller") {
-      return
-    }
-
-    if (contractName.slice(-15) === "DebugController") {
-      return
-    }
-  }
-
   const file = fs.readFileSync(LOOM_JSON_PATH + fileName)
   const parsedJson = JSON.parse(file)
+  if (!parsedJson.networks[envDef.loom.networkId]) {
+    return
+  }
 
-  fs.writeFileSync(
-    `./src/chain/abi/loom/${contractName}.json`,
-    JSON.stringify(parsedJson.abi, null, 2)
-  )
+  fs.writeFileSync(`./.abi/loom/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
   loomContractAddresses[contractName] = parsedJson.networks[envDef.loom.networkId].address
 })
 
 const ETH_JSON_PATH = "../k2-chain-contracts/eth/build/contracts/"
 const ethContractAddresses = {}
-const requiredEthContractNames = ["SpecialPlanetToken", "SpecialPlanetTokenShop"]
 fs.readdirSync(ETH_JSON_PATH).forEach(fileName => {
   const contractName = fileName.replace(".json", "")
 
-  if (!requiredEthContractNames.includes(contractName)) {
+  const file = fs.readFileSync(ETH_JSON_PATH + fileName)
+  const parsedJson = JSON.parse(file)
+  if (!parsedJson.networks[envDef.eth.networkId]) {
     return
   }
 
-  const file = fs.readFileSync(ETH_JSON_PATH + fileName)
-  const parsedJson = JSON.parse(file)
-
-  fs.writeFileSync(
-    `./src/chain/abi/eth/${contractName}.json`,
-    JSON.stringify(parsedJson.abi, null, 2)
-  )
+  fs.writeFileSync(`./.abi/eth/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
   ethContractAddresses[contractName] = parsedJson.networks[envDef.eth.networkId].address
 })
 
