@@ -1,4 +1,4 @@
-import { PlanetKind, planetKindNumToKind } from "../../../constants"
+import { planetKindNumToKind } from "../../../constants"
 import { SpecialPlanetController } from "./SpecialPlanetController"
 import { UserController } from "./UserController"
 
