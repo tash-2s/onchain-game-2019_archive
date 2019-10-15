@@ -6,6 +6,7 @@ export class SpecialPlanetTokenShop {
     if (!this.chain.web3 || !this.chain.address) {
       throw new Error("not logined")
     }
+
     return new this.chain.web3.eth.Contract(
       [
         {
@@ -30,6 +31,7 @@ export class SpecialPlanetTokenShop {
     if (!this.chain.web3 || !this.chain.address) {
       throw new Error("not logined")
     }
+
     return new this.chain.web3.eth.Contract(
       [
         {

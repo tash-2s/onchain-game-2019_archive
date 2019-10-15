@@ -31,77 +31,72 @@ const envDefs = {
 
 const envDef = envDefs[envName]
 if (!envDef) {
-  console.error(`undefined envName: ${envName}`)
-  throw new Error()
+  throw new Error(`undefined envName: ${envName}`)
+}
+
+const targetContractAndFunctions = {
+  eth: {
+    SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway", "depositToGateway"],
+    SpecialPlanetTokenShop: ["price", "sell"]
+  },
+  loom: {
+    HighlightedUserController: ["getUsers"],
+    NormalPlanetController: ["setPlanet", "rankupPlanet", "removePlanet"],
+    SpecialPlanetController: [
+      "getPlanets",
+      "setPlanet",
+      "removePlanet",
+      "getPlanetFieldsFromTokenIds"
+    ],
+    SpecialPlanetToken: [
+      "approve",
+      "isApprovedForAll",
+      "setApprovalForAll",
+      "tokensOfOwnerByIndex",
+      "gateway"
+    ],
+    UserController: ["getUser"]
+  }
 }
 
 const loadContracts = () => {
   const contracts = {}
 
-  for (const chainName of ["eth", "loom"]) {
+  for (const chainName in targetContractAndFunctions) {
     contracts[chainName] = []
-
-    const path = `../k2-chain-contracts/${chainName}/build/contracts/`
-
-    for (const fileName of fs.readdirSync(path)) {
-      const parsedJson = JSON.parse(fs.readFileSync(path + fileName))
-      if (!parsedJson.networks[envDef[chainName].networkId]) {
-        continue
-      }
-      contracts[chainName].push(parsedJson)
+    for (const contractName of Object.keys(targetContractAndFunctions[chainName])) {
+      const contract = JSON.parse(
+        fs.readFileSync(`../k2-chain-contracts/${chainName}/build/contracts/${contractName}.json`)
+      )
+      contracts[chainName].push(contract)
     }
   }
 
   return contracts
 }
 
-const generateChainEnv = (contracts) => {
-  const ethContractAddresses = {}
-  contracts.eth.forEach(contract => {
-    ethContractAddresses[contract.contractName] = contract.networks[envDef.eth.networkId].address
-  })
-  const loomContractAddresses = {}
-  contracts.loom.forEach(contract => {
-    loomContractAddresses[contract.contractName] = contract.networks[envDef.loom.networkId].address
-  })
+const generateChainEnv = contracts => {
+  const chainEnv = {}
 
-  const chainEnv = {
-    eth: { ...envDef.eth, contractAddresses: ethContractAddresses },
-    loom: { ...envDef.loom, contractAddresses: loomContractAddresses }
-  }
-  fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))
-}
+  for (const chainName in contracts) {
+    const def = envDef[chainName]
+    chainEnv[chainName] = { ...def, contractAddresses: {} }
 
-const generateChainClients = (contracts) => {
-  const prettier = require("prettier")
-
-  const def = {
-    loom: {
-      HighlightedUserController: ["getUsers"],
-      NormalPlanetController: ["setPlanet", "rankupPlanet", "removePlanet"],
-      SpecialPlanetController: [
-        "getPlanets",
-        "setPlanet",
-        "removePlanet",
-        "getPlanetFieldsFromTokenIds"
-      ],
-      SpecialPlanetToken: [
-        "approve",
-        "isApprovedForAll",
-        "setApprovalForAll",
-        "tokensOfOwnerByIndex",
-        "gateway"
-      ],
-      UserController: ["getUser"]
-    },
-    eth: {
-      SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway", "depositToGateway"],
-      SpecialPlanetTokenShop: ["price", "sell"]
+    for (const contract of contracts[chainName]) {
+      chainEnv[chainName].contractAddresses[contract.contractName] =
+        contract.networks[def.networkId].address
     }
   }
 
+  fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))
+}
+
+const generateChainClients = contracts => {
+  const prettier = require("prettier")
+
   const solTypeToTsType = (solType, allowNumber) => {
     let t
+
     if (solType === "bool") {
       t = "boolean"
     } else {
@@ -121,54 +116,70 @@ const generateChainClients = (contracts) => {
 
   const upCaseFirstChar = str => str.charAt(0).toUpperCase() + str.slice(1)
 
-  Object.keys(def).forEach(chainName => {
-    Object.keys(def[chainName]).forEach(contractName => {
-      const functionNames = def[chainName][contractName]
+  for (const chainName in contracts) {
+    for (const contract of contracts[chainName]) {
+      const contractName = contract.contractName
 
-      const ABI = contracts[chainName].find(c => c.contractName === contractName).abi
+      const functionStrings = contract.abi
+        .filter(a => targetContractAndFunctions[chainName][contractName].includes(a.name))
+        .map(fnABI => {
+          const argsWithType = (() => {
+            let type = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type, true)}`)
+            if (!fnABI.constant) {
+              type.push("txOption?: {}")
+            }
+            return type.join(", ")
+          })()
 
-      const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
-        const args = fnABI.inputs.map(i => i.name).join(", ")
-        const argsWithType = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type, true)}`)
-        if (!fnABI.constant) {
-          argsWithType.push("txOption?: {}")
-        }
-        let _types = fnABI.outputs.map((o, i) => `${o.name}: ${solTypeToTsType(o.type)}`).join(", ")
-        _types = `{ ${_types} }`
-        if (fnABI.outputs.every(o => o.name === "")) {
-          _types = fnABI.outputs.map(o => solTypeToTsType(o.type)).join(", ")
-        }
-        const returnType = fnABI.constant ? `: Promise<${_types}>` : ""
+          const returnType = (() => {
+            let type
+            if (fnABI.outputs.every(o => o.name === "")) {
+              type = fnABI.outputs.map(o => solTypeToTsType(o.type)).join(", ")
+            } else {
+              type = fnABI.outputs.map((o, i) => `${o.name}: ${solTypeToTsType(o.type)}`).join(", ")
+              type = `{ ${type} }`
+            }
+            return fnABI.constant ? `: Promise<${type}>` : ""
+          })()
 
-        return `
-  ${fnABI.name} = (${argsWithType.join(", ")})${returnType} => {
-    ${
-      chainName === "loom"
-        ? ""
-        : 'if (!this.chain.web3 || !this.chain.address) { throw new Error("not logined") }'
-    }
-    return new this.chain.web3.eth.Contract(
-      [${JSON.stringify(fnABI)}],
-      this.chain.env.contractAddresses.${contractName},
-      { from: ${chainName === "loom" ? "this.chain.callerAddress()" : "this.chain.address"} }
-    ).methods
-      .${fnABI.name}(${args})
-      .${fnABI.constant ? "call()" : "send(txOption)"}
-  }`
-      })
+          const assertIfEth =
+            chainName === "loom"
+              ? ""
+              : 'if (!this.chain.web3 || !this.chain.address) { throw new Error("not logined") }'
 
-      const body = `
-  // generated by scripts/generateChainClients.js
-  export class ${contractName} {
-    constructor(private chain: import("../../${chainName}").${upCaseFirstChar(chainName)}) {}
-    ${functionStrings.join("\n\n")}
-  }`
+          const fromAddress =
+            chainName === "loom" ? "this.chain.callerAddress()" : "this.chain.address"
 
-      const options = prettier.resolveConfig.sync(".")
-      const formatted = prettier.format(body, { ...options, parser: "typescript" })
+          const args = fnABI.inputs.map(i => i.name).join(", ")
+
+          return `
+             ${fnABI.name} = (${argsWithType})${returnType} => {
+               ${assertIfEth}
+
+               return new this.chain.web3.eth.Contract(
+                 [${JSON.stringify(fnABI)}],
+                 this.chain.env.contractAddresses.${contractName},
+                 { from: ${fromAddress} }
+               ).methods
+                 .${fnABI.name}(${args})
+                 .${fnABI.constant ? "call()" : "send(txOption)"}
+             }
+          `
+        })
+
+      const classString = `
+         // generated by scripts/generateChainClients.js
+         export class ${contractName} {
+           constructor(private chain: import("../../${chainName}").${upCaseFirstChar(chainName)}) {}
+           ${functionStrings.join("\n")}
+         }
+      `
+
+      const pOptions = prettier.resolveConfig.sync(".")
+      const formatted = prettier.format(classString, { ...pOptions, parser: "typescript" })
       fs.writeFileSync(`./src/chain/clients/${chainName}/${contractName}.ts`, formatted)
-    })
-  })
+    }
+  }
 }
 
 const contracts = loadContracts()
