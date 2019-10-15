@@ -26,6 +26,27 @@ export class SpecialPlanetToken {
       .send(txOption)
   }
 
+  static gateway = (): Promise<string> => {
+    return new chains.loom.web3.eth.Contract(
+      [
+        {
+          constant: true,
+          inputs: [],
+          name: "gateway",
+          outputs: [{ internalType: "address", name: "", type: "address" }],
+          payable: false,
+          stateMutability: "view",
+          type: "function",
+          signature: "0x116191b6"
+        }
+      ],
+      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      { from: chains.loom.callerAddress() }
+    ).methods
+      .gateway()
+      .call()
+  }
+
   static tokensOfOwnerByIndex = (
     owner: string,
     index: string
@@ -80,7 +101,7 @@ export class SpecialPlanetToken {
       .send(txOption)
   }
 
-  static isApprovedForAll = (owner: string, operator: string): Promise<{ 0: string }> => {
+  static isApprovedForAll = (owner: string, operator: string): Promise<string> => {
     return new chains.loom.web3.eth.Contract(
       [
         {

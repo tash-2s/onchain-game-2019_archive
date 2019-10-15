@@ -18,8 +18,6 @@ import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanet
 import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
 import { Gateway } from "../chain/clients/eth/organized"
 
-type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
-
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
 
@@ -30,9 +28,13 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }>("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
     const address = loginedLoomAddress() // show my tokens
+    const ethAddress = chains.eth.address
+    if (!ethAddress) {
+      throw new Error("not logined")
+    }
 
     const [ethTokens, loomTokens, receipt] = await Promise.all([
-      getSpecialPlanetTokens(address, EthSPT.tokensOfOwnerByIndex),
+      getSpecialPlanetTokens(ethAddress, EthSPT.tokensOfOwnerByIndex),
       getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
@@ -71,7 +73,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
 
       const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
       const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
-      if (!isApproved[0]) {
+      if (!isApproved) {
         await LoomSPT.setApprovalForAll(controllerAddress, true.toString()) // TODO: right?
       }
 
@@ -112,7 +114,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   buyPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = (await SpecialPlanetTokenShop.price())[0]
+    const price = await SpecialPlanetTokenShop.price()
 
     SpecialPlanetTokenShop.sell({ value: price }).on("transactionHash", hash => {
       this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
@@ -146,8 +148,8 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
 
     if (tokenId) {
-      const gatewayAddress = (await EthSPT.gateway())[0]
-      await EthSPT.approve(gatewayAddress, tokenId)
+      const gatewayAddress = await LoomSPT.gateway()
+      await LoomSPT.approve(gatewayAddress, tokenId)
     }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
@@ -155,7 +157,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       tokenId
     )
 
-    const gatewayAddress = (await EthSPT.gateway())[0]
+    const gatewayAddress = await EthSPT.gateway()
     Gateway.withdrawERC721(
       gatewayAddress,
       _tokenId,

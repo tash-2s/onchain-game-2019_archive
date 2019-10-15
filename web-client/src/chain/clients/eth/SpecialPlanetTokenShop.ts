@@ -2,7 +2,7 @@ import { chains } from "../../../misc/chains"
 import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetTokenShop {
-  static price = (): Promise<{ 0: string }> => {
+  static price = (): Promise<string> => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }

@@ -29,7 +29,7 @@ export class SpecialPlanetToken {
       .send(txOption)
   }
 
-  static gateway = (): Promise<{ 0: string }> => {
+  static gateway = (): Promise<string> => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }

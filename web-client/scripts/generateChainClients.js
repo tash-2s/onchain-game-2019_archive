@@ -15,7 +15,8 @@ const def = {
       "approve",
       "isApprovedForAll",
       "setApprovalForAll",
-      "tokensOfOwnerByIndex"
+      "tokensOfOwnerByIndex",
+      "gateway"
     ],
     UserController: ["getUser"]
   },
@@ -39,15 +40,14 @@ Object.keys(def).forEach(chainName => {
       if (!fnABI.constant) {
         argsWithType.push("txOption?: {}")
       }
-      const _types = fnABI.outputs
-        .map(
-          (o, i) =>
-            `${o.name === "" ? `${i}` : o.name}: ${
-              o.type.slice(-2) === "[]" ? "Array<string>" : "string"
-            }`
-        )
+      let _types = fnABI.outputs
+        .map((o, i) => `${o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
         .join(", ")
-      const returnType = fnABI.constant ? `: Promise<{ ${_types} }>` : ""
+      _types = `{ ${_types} }`
+      if (fnABI.outputs.every(o => o.name === "")) {
+        _types = fnABI.outputs.map(_ => "string").join(", ")
+      }
+      const returnType = fnABI.constant ? `: Promise<${_types}>` : ""
 
       return `
   static ${fnABI.name} = (${argsWithType.join(", ")})${returnType} => {
