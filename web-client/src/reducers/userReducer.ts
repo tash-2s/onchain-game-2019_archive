@@ -168,8 +168,6 @@ export const createUserReducer = () =>
     })
     .build()
 
-const strToNum = (str: string) => parseInt(str, 10)
-
 const buildUser = (obj: {
   confirmedGold: string
   goldConfirmedAt: number
