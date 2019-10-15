@@ -74,7 +74,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
       const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
       if (!isApproved) {
-        await LoomSPT.setApprovalForAll(controllerAddress, true.toString()) // TODO: right?
+        await LoomSPT.setApprovalForAll(controllerAddress, true)
       }
 
       await SpecialPlanetController.setPlanet(

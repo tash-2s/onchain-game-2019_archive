@@ -77,7 +77,7 @@ export class SpecialPlanetToken {
       .call()
   }
 
-  static setApprovalForAll = (to: string, approved: string, txOption?: {}) => {
+  static setApprovalForAll = (to: string, approved: boolean, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -101,7 +101,7 @@ export class SpecialPlanetToken {
       .send(txOption)
   }
 
-  static isApprovedForAll = (owner: string, operator: string): Promise<string> => {
+  static isApprovedForAll = (owner: string, operator: string): Promise<boolean> => {
     return new chains.loom.web3.eth.Contract(
       [
         {

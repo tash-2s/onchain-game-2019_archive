@@ -26,6 +26,21 @@ const def = {
   }
 }
 
+const solTypeToTsType = solType => {
+  let t
+  if (solType === "bool") {
+    t = "boolean"
+  } else {
+    t = "string"
+  }
+
+  if (solType.slice(-2) === "[]") {
+    return `Array<${t}>`
+  } else {
+    return t
+  }
+}
+
 Object.keys(def).forEach(chainName => {
   Object.keys(def[chainName]).forEach(contractName => {
     const functionNames = def[chainName][contractName]
@@ -34,18 +49,14 @@ Object.keys(def).forEach(chainName => {
 
     const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
       const args = fnABI.inputs.map(i => i.name).join(", ")
-      const argsWithType = fnABI.inputs.map(
-        a => `${a.name}: ${a.type.slice(-2) === "[]" ? "Array<string>" : "string"}`
-      )
+      const argsWithType = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type)}`)
       if (!fnABI.constant) {
         argsWithType.push("txOption?: {}")
       }
-      let _types = fnABI.outputs
-        .map((o, i) => `${o.name}: ${o.type.slice(-2) === "[]" ? "Array<string>" : "string"}`)
-        .join(", ")
+      let _types = fnABI.outputs.map((o, i) => `${o.name}: ${solTypeToTsType(o.type)}`).join(", ")
       _types = `{ ${_types} }`
       if (fnABI.outputs.every(o => o.name === "")) {
-        _types = fnABI.outputs.map(_ => "string").join(", ")
+        _types = fnABI.outputs.map(o => solTypeToTsType(o.type)).join(", ")
       }
       const returnType = fnABI.constant ? `: Promise<${_types}>` : ""
 
