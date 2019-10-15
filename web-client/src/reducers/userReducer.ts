@@ -1,17 +1,14 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import {
-  UserActions,
-  UserResponse,
-  UserNormalPlanetsResponse,
-  UserAndUserNormalPlanetsResponse,
-  UserSpecialPlanetsResponse,
-  UserAndUserSpecialPlanetsResponse
-} from "../actions/UserActions"
+import { UserActions } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
 import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
-import { SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import {
+  SpecialPlanetToken,
+  ReturnTypeOfGetUserSpecialPlanets,
+  ReturnTypeOfGetUserNormalPlanets
+} from "../chain/clients/loom/organized"
 
 export interface UserState {
   targetUser: TargetUserState | null
@@ -53,15 +50,6 @@ export interface UserSpecialPlanet {
   artSeed: string
 }
 
-interface SpecialPlanetToken {
-  id: string // token id
-  shortId: string
-  version: number
-  kind: PlanetKind
-  paramRate: number
-  artSeed: string
-}
-
 const initialState: UserState = {
   targetUser: null
 }
@@ -71,10 +59,10 @@ export const createUserReducer = () =>
     .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
       targetUser: {
-        ...buildUser(payload.user),
+        ...buildUser(payload.normal.user),
         address: payload.address,
-        userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets),
-        userSpecialPlanets: buildUserSpecialPlanets(payload.userSpecialPlanets),
+        userNormalPlanets: payload.normal.userNormalPlanets,
+        userSpecialPlanets: payload.special.userSpecialPlanets,
         specialPlanetToken: null
       }
     }))
@@ -95,8 +83,8 @@ export const createUserReducer = () =>
         targetUser: {
           ...state.targetUser,
           specialPlanetToken: {
-            ethTokens: buildTokens(payload.ethTokenIds, payload.ethTokenFields),
-            loomTokens: buildTokens(payload.loomTokenIds, payload.loomTokenFields),
+            ethTokens: payload.ethTokens,
+            loomTokens: payload.loomTokens,
             needsTransferResume: payload.needsTransferResume,
             buyTx: state.targetUser.specialPlanetToken
               ? state.targetUser.specialPlanetToken.buyTx
@@ -182,97 +170,21 @@ export const createUserReducer = () =>
 
 const strToNum = (str: string) => parseInt(str, 10)
 
-const buildUser = (response: UserResponse): Pick<TargetUserState, "gold"> => {
+const buildUser = (obj: {
+  confirmedGold: string
+  goldConfirmedAt: number
+}): Pick<TargetUserState, "gold"> => {
   return {
     gold: {
-      confirmed: response[0],
-      confirmedAt: strToNum(response[1])
+      confirmed: obj.confirmedGold,
+      confirmedAt: obj.goldConfirmedAt
     }
   }
-}
-
-const buildUserNormalPlanets = (
-  response: UserNormalPlanetsResponse
-): TargetUserState["userNormalPlanets"] => {
-  const unpIds = response[0]
-  const unpRanks = response[1]
-  const unpTimes = response[2]
-  const unpAxialCoordinates = response[3]
-
-  const unps: Array<UserNormalPlanet> = []
-  let i = 0
-  let counter = 0
-
-  while (i < unpRanks.length) {
-    unps.push({
-      id: unpIds[counter],
-      normalPlanetId: strToNum(unpIds[counter + 1]),
-      rank: strToNum(unpRanks[i]),
-      rankupedAt: strToNum(unpTimes[counter]),
-      createdAt: strToNum(unpTimes[counter + 1]),
-      axialCoordinateQ: strToNum(unpAxialCoordinates[counter]),
-      axialCoordinateR: strToNum(unpAxialCoordinates[counter + 1])
-    })
-
-    i += 1
-    counter += 2
-  }
-
-  return unps
-}
-
-const buildUserSpecialPlanets = (
-  response: UserSpecialPlanetsResponse
-): TargetUserState["userSpecialPlanets"] => {
-  const uspIds = response[0]
-  const uspKinds = response[1]
-  const uspParams = response[2]
-  const uspTimes = response[3]
-  const uspCoordinates = response[4]
-  const uspArtSeeds = response[5]
-
-  const usps: Array<UserSpecialPlanet> = []
-  let i = 0
-  let counter = 0
-
-  while (i < uspIds.length) {
-    usps.push({
-      id: uspIds[i],
-      kind: planetKindNumToKind(strToNum(uspKinds[i])),
-      paramRate: strToNum(uspParams[i]),
-      rankupedAt: strToNum(uspTimes[counter]),
-      createdAt: strToNum(uspTimes[counter + 1]),
-      axialCoordinateQ: strToNum(uspCoordinates[counter]),
-      axialCoordinateR: strToNum(uspCoordinates[counter + 1]),
-      artSeed: uspArtSeeds[i]
-    })
-
-    i += 1
-    counter += 2
-  }
-
-  return usps
-}
-
-const buildTokens = (
-  tokenIds: Array<string>,
-  tokenFields: Array<SpecialPlanetTokenFields>
-): Array<SpecialPlanetToken> => {
-  return tokenFields.map((fields, i) => {
-    return {
-      id: tokenIds[i],
-      shortId: fields.shortId,
-      version: fields.version,
-      kind: fields.kind,
-      paramRate: fields.paramRate,
-      artSeed: fields.artSeed
-    }
-  })
 }
 
 const buildStateFromUserAndUserNormalPlanets = (
   state: UserState,
-  payload: UserAndUserNormalPlanetsResponse
+  payload: ReturnTypeOfGetUserNormalPlanets
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -283,14 +195,14 @@ const buildStateFromUserAndUserNormalPlanets = (
     targetUser: {
       ...state.targetUser,
       ...buildUser(payload.user),
-      userNormalPlanets: buildUserNormalPlanets(payload.userNormalPlanets)
+      userNormalPlanets: payload.userNormalPlanets
     }
   }
 }
 
 const buildStateFromUserAndUserSpecialPlanets = (
   state: UserState,
-  payload: UserAndUserSpecialPlanetsResponse
+  payload: ReturnTypeOfGetUserSpecialPlanets
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -300,8 +212,8 @@ const buildStateFromUserAndUserSpecialPlanets = (
     ...state,
     targetUser: {
       ...state.targetUser,
-      ...buildUser(payload.user),
-      userSpecialPlanets: buildUserSpecialPlanets(payload.userSpecialPlanets),
+      gold: { confirmed: payload.user.confirmedGold, confirmedAt: payload.user.goldConfirmedAt },
+      userSpecialPlanets: payload.userSpecialPlanets,
       specialPlanetToken: null
     }
   }

@@ -3,35 +3,6 @@ import { ethers } from "ethers"
 
 import ChainEnv from "../chain/env.json"
 
-import SpecialPlanetTokenABI from "../chain/abi/eth/SpecialPlanetToken.json"
-import SpecialPlanetTokenShopABI from "../chain/abi/eth/SpecialPlanetTokenShop.json"
-
-const GatewayABI = [
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "uid",
-        type: "uint256"
-      },
-      {
-        name: "sig",
-        type: "bytes"
-      },
-      {
-        name: "contractAddress",
-        type: "address"
-      }
-    ],
-    name: "withdrawERC721",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function",
-    signature: "0xc899a86b"
-  }
-]
-
 type Env = (typeof ChainEnv)["eth"]
 
 export class Eth {
@@ -86,40 +57,5 @@ export class Eth {
       throw new Error("not logined")
     }
     return this.ethersProvider.getSigner()
-  }
-
-  specialPlanetToken = () => {
-    if (!this.web3 || !this.address) {
-      throw new Error("not logined")
-    }
-
-    return new this.web3.eth.Contract(
-      SpecialPlanetTokenABI,
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
-      { from: this.address }
-    )
-  }
-
-  specialPlanetTokenShop = () => {
-    if (!this.web3 || !this.address) {
-      throw new Error("not logined")
-    }
-
-    return new this.web3.eth.Contract(
-      SpecialPlanetTokenShopABI,
-      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop,
-      { from: this.address }
-    )
-  }
-
-  gateway = async () => {
-    if (!this.web3 || !this.address) {
-      throw new Error("not logined")
-    }
-
-    const address = await this.specialPlanetToken()
-      .methods.gateway()
-      .call()
-    return new this.web3.eth.Contract(GatewayABI, address, { from: this.address })
   }
 }

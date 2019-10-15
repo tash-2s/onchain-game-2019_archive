@@ -4,3 +4,4 @@ node_modules
 yarn-*.log
 chainEnv/local.json
 src/chain/env.json
+.abi

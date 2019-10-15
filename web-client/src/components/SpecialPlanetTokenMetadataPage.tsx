@@ -2,29 +2,27 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { BNFormatter } from "../models/BNFormatter"
-import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import { getSpecialPlanetTokensByIds, SpecialPlanetToken } from "../chain/clients/loom/organized"
 import { PlanetArt } from "./utils/PlanetArt"
 
 export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
   const tokenId = props.params[0]
-  const [fields, setFields] = React.useState<null | { tokenId: string } & SpecialPlanetTokenFields>(
-    null
-  )
+  const [token, setToken] = React.useState<null | SpecialPlanetToken>(null)
 
   React.useEffect(() => {
-    ChainContractMethods.getSpecialPlanetTokenFields([tokenId]).then(f => {
-      setFields({ tokenId, ...f[0] })
+    getSpecialPlanetTokensByIds([tokenId]).then(tokens => {
+      setToken(tokens[0])
     })
   }, [tokenId])
 
-  if (fields && tokenId === fields.tokenId) {
-    const json = buildJSON(tokenId, fields)
+  if (token && tokenId === token.id) {
+    const json = buildJSON(tokenId, token)
 
     return (
       <div>
         <div id={"planet-json"}>{json}</div>
         <div id={"planet-art"}>
-          <PlanetArt kind={fields.kind} artSeed={new BN(fields.artSeed)} canvasSize={500} />
+          <PlanetArt kind={token.kind} artSeed={new BN(token.artSeed)} canvasSize={500} />
         </div>
       </div>
     )
@@ -33,16 +31,16 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
   }
 }
 
-const buildJSON = (tokenId: string, fields: SpecialPlanetTokenFields) => {
+const buildJSON = (tokenId: string, token: SpecialPlanetToken) => {
   const obj = {
-    name: `Fuga #${fields.shortId}`,
+    name: `Fuga #${token.shortId}`,
     description: `Full ID: ${tokenId}`,
     image: "<IMAGE_URL>",
     attributes: [
-      { trait_type: "kind", value: fields.kind },
+      { trait_type: "kind", value: token.kind },
       {
         trait_type: "parameter",
-        value: fields.paramRate
+        value: token.paramRate
       }
     ],
     background_color: "000000"

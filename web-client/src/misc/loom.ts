@@ -17,12 +17,6 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import ChainEnv from "../chain/env.json"
 
-import UserABI from "../chain/abi/loom/UserController.json"
-import NormalPlanetABI from "../chain/abi/loom/NormalPlanetController.json"
-import SpecialPlanetABI from "../chain/abi/loom/SpecialPlanetController.json"
-import HighlightedUserABI from "../chain/abi/loom/HighlightedUserController.json"
-import SpecialPlanetTokenABI from "../chain/abi/loom/SpecialPlanetToken.json"
-
 type Env = (typeof ChainEnv)["loom"]
 
 export class Loom {
@@ -73,44 +67,6 @@ export class Loom {
     return o.timestamp
   }
 
-  userController = () => {
-    return new this.web3.eth.Contract(UserABI, ChainEnv.loomContractAddresses.UserController, {
-      from: this._callerAddress()
-    })
-  }
-
-  normalPlanetController = () => {
-    return new this.web3.eth.Contract(
-      NormalPlanetABI,
-      ChainEnv.loomContractAddresses.NormalPlanetController,
-      { from: this._callerAddress() }
-    )
-  }
-
-  specialPlanetController = () => {
-    return new this.web3.eth.Contract(
-      SpecialPlanetABI,
-      ChainEnv.loomContractAddresses.SpecialPlanetController,
-      { from: this._callerAddress() }
-    )
-  }
-
-  highlightedUserController = () => {
-    return new this.web3.eth.Contract(
-      HighlightedUserABI,
-      ChainEnv.loomContractAddresses.HighlightedUserController,
-      { from: this._callerAddress() }
-    )
-  }
-
-  specialPlanetToken = () => {
-    return new this.web3.eth.Contract(
-      SpecialPlanetTokenABI,
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
-      { from: this._callerAddress() }
-    )
-  }
-
   withGateway = async <T>(
     ethSigner: ethers.Signer,
     fn: (gateway: Contracts.TransferGateway) => Promise<T>
@@ -149,11 +105,12 @@ export class Loom {
 
     const receipt = await this.withGateway(ethSigner, async gateway => {
       if (tokenId) {
-        await transferSpecialPlanetTokenToGateway(
-          gateway,
-          this.specialPlanetToken(),
-          tokenId,
-          ethAddress
+        await gateway.withdrawERC721Async(
+          new BN(tokenId),
+          Address.fromString(
+            `${ChainEnv.loom.chainId}:${ChainEnv.loomContractAddresses.SpecialPlanetToken}`
+          ),
+          Address.fromString(`eth:${ethAddress}`)
         )
         await sleep(10)
       }
@@ -188,7 +145,7 @@ export class Loom {
   }
 
   // return eth address if logined, otherwise return loom dummy address
-  private _callerAddress = () => {
+  callerAddress = () => {
     const provider = this.web3.currentProvider as LoomProvider
     const addresses = Array.from(provider.accounts.keys())
     return addresses[addresses.length - 1]
@@ -256,25 +213,7 @@ const getGateway = async (ethSigner: ethers.Signer) => {
   }
 }
 
-type _ExtractInstanceType<T> = new (...args: any) => T
-type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
-const transferSpecialPlanetTokenToGateway = async (
-  gateway: Contracts.TransferGateway,
-  token: ExtractInstanceType<import("web3")["eth"]["Contract"]>,
-  tokenId: string,
-  ethAddress: string
-) => {
-  const gatewayAddress = await token.methods.gateway().call()
-  await token.methods.approve(gatewayAddress, tokenId).send()
-  await gateway.withdrawERC721Async(
-    new BN(tokenId),
-    Address.fromString(`${ChainEnv.loom.chainId}:${token.options.address}`),
-    Address.fromString(`eth:${ethAddress}`)
-  )
-}
-
-const sleep = (sec: number) => {
-  return new Promise(resolve => {
+const sleep = (sec: number) =>
+  new Promise(resolve => {
     setTimeout(resolve, sec * 1000)
   })
-}

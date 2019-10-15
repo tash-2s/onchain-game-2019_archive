@@ -1,27 +1,41 @@
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
-import { getUserAndUserSpecialPlanets, UserAndUserSpecialPlanetsResponse } from "./UserActions"
 
 import { chains } from "../misc/chains"
 
-import { ChainContractMethods, SpecialPlanetTokenFields } from "../models/ChainContractMethods"
+import {
+  SpecialPlanetToken,
+  ReturnTypeOfGetUserSpecialPlanets,
+  getUserSpecialPlanets
+} from "../chain/clients/loom/organized"
+
+import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
+
+import ChainEnv from "../chain/env.json"
+import { getSpecialPlanetTokens } from "../chain/clients/organized"
+import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
+import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
+import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
+import { Gateway } from "../chain/clients/eth/organized"
 
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
 
-  static setTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator<
-    PlanetTokensResponse & {
-      needsTransferResume: boolean
-    }
-  >("setTargetUserPlanetTokens")
+  static setTargetUserPlanetTokens = UserActionsForSpecialPlanet.creator<{
+    ethTokens: Array<SpecialPlanetToken>
+    loomTokens: Array<SpecialPlanetToken>
+    needsTransferResume: boolean
+  }>("setTargetUserPlanetTokens")
   setTargetUserPlanetTokens = async () => {
-    const [
-      { ids: ethTokenIds, fields: ethTokenFields },
-      { ids: loomTokenIds, fields: loomTokenFields },
-      receipt
-    ] = await Promise.all([
-      getTokens(chains.eth),
-      getTokens(chains.loom),
+    const address = loginedLoomAddress() // show my tokens
+    const ethAddress = chains.eth.address
+    if (!ethAddress) {
+      throw new Error("not logined")
+    }
+
+    const [ethTokens, loomTokens, receipt] = await Promise.all([
+      getSpecialPlanetTokens(ethAddress, EthSPT.tokensOfOwnerByIndex),
+      getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
 
@@ -30,16 +44,14 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     const needsTransferResume =
       !!receipt &&
       !!receipt.tokenId &&
-      (receiptTokenId => ethTokenIds.every(ethTokenId => ethTokenId !== receiptTokenId))(
+      (receiptTokenId => ethTokens.every(ethToken => ethToken.id !== receiptTokenId))(
         receipt.tokenId.toString()
       )
 
     this.dispatch(
       UserActionsForSpecialPlanet.setTargetUserPlanetTokens({
-        ethTokenIds,
-        ethTokenFields,
-        loomTokenIds,
-        loomTokenFields,
+        ethTokens,
+        loomTokens,
         needsTransferResume
       })
     )
@@ -53,30 +65,25 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static setPlanetTokenToMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsResponse
+    ReturnTypeOfGetUserSpecialPlanets
   >("setPlanetTokenToMap")
   setPlanetTokenToMap = (tokenId: string, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
 
-      const controllerAddress = chains.loom.specialPlanetController().options.address
-      const isApproved = await chains.loom
-        .specialPlanetToken()
-        .methods.isApprovedForAll(address, controllerAddress)
-        .call()
+      const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
+      const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
       if (!isApproved) {
-        await chains.loom
-          .specialPlanetToken()
-          .methods.setApprovalForAll(controllerAddress, true)
-          .send()
+        await LoomSPT.setApprovalForAll(controllerAddress, true)
       }
 
-      await chains.loom
-        .specialPlanetController()
-        .methods.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
-        .send()
+      await SpecialPlanetController.setPlanet(
+        tokenId,
+        axialCoordinateQ.toString(),
+        axialCoordinateR.toString()
+      )
 
-      const response = await getUserAndUserSpecialPlanets(address)
+      const response = await getUserSpecialPlanets(address)
 
       this.dispatch(
         UserActionsForSpecialPlanet.setPlanetTokenToMap({
@@ -87,16 +94,13 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   }
 
   static removeUserPlanetFromMap = UserActionsForSpecialPlanet.creator<
-    UserAndUserSpecialPlanetsResponse
+    ReturnTypeOfGetUserSpecialPlanets
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
-      await chains.loom
-        .specialPlanetController()
-        .methods.removePlanet(userSpecialPlanetId)
-        .send()
+      await SpecialPlanetController.removePlanet(userSpecialPlanetId)
 
-      const response = await getUserAndUserSpecialPlanets(loginedLoomAddress())
+      const response = await getUserSpecialPlanets(loginedLoomAddress())
 
       this.dispatch(
         UserActionsForSpecialPlanet.removeUserPlanetFromMap({
@@ -110,20 +114,13 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   buyPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = await chains.eth
-      .specialPlanetTokenShop()
-      .methods.price()
-      .call()
+    const price = await SpecialPlanetTokenShop.price()
 
-    chains.eth
-      .specialPlanetTokenShop()
-      .methods.sell()
-      .send({ value: price })
-      .on("transactionHash", hash => {
-        this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
+    SpecialPlanetTokenShop.sell({ value: price }).on("transactionHash", hash => {
+      this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
 
   static transferPlanetTokenToLoom = UserActionsForSpecialPlanet.creator<string>(
@@ -132,15 +129,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   transferPlanetTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    chains.eth
-      .specialPlanetToken()
-      .methods.depositToGateway(tokenId)
-      .send()
-      .on("transactionHash", hash => {
-        this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
+    EthSPT.depositToGateway(tokenId).on("transactionHash", hash => {
+      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
 
   static transferPlanetTokenToEth = UserActionsForSpecialPlanet.creator<string>(
@@ -154,79 +147,28 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       throw new Error("not logined")
     }
 
+    if (tokenId) {
+      const gatewayAddress = await LoomSPT.gateway()
+      await LoomSPT.approve(gatewayAddress, tokenId)
+    }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
-      chains.eth.specialPlanetToken().options.address,
+      ChainEnv.ethContractAddresses.SpecialPlanetToken,
       tokenId
     )
 
-    const gateway = await chains.eth.gateway()
-    gateway.methods
-      .withdrawERC721(_tokenId, signature, chains.eth.specialPlanetToken().options.address)
-      .send({ from: ethAddress })
-      .on("transactionHash", (hash: string) => {
-        this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
+    const gatewayAddress = await EthSPT.gateway()
+    Gateway.withdrawERC721(
+      gatewayAddress,
+      _tokenId,
+      signature,
+      ChainEnv.ethContractAddresses.SpecialPlanetToken
+    ).on("transactionHash", (hash: string) => {
+      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
 
-        new AppActions(this.dispatch).stopLoading()
-      })
+      new AppActions(this.dispatch).stopLoading()
+    })
   }
-}
-
-interface PlanetTokensResponse {
-  ethTokenIds: Array<string>
-  ethTokenFields: Array<SpecialPlanetTokenFields>
-  loomTokenIds: Array<string>
-  loomTokenFields: Array<SpecialPlanetTokenFields>
-}
-
-type _ExtractInstanceType<T> = new (...args: any) => T
-type ExtractInstanceType<T> = T extends _ExtractInstanceType<infer R> ? R : never
-
-const getTokens = async (c: {
-  address: string | null
-  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
-}) => {
-  const ids = await getTokenIds(c)
-  const fields = await getTokenFields(ids)
-  return { ids, fields }
-}
-
-const getTokenIds = async (c: {
-  address: string | null
-  specialPlanetToken: () => ExtractInstanceType<import("web3")["eth"]["Contract"]>
-}) => {
-  const ids: Array<string> = []
-
-  let index = "0"
-  while (true) {
-    const r = await c
-      .specialPlanetToken()
-      .methods.tokensOfOwnerByIndex(c.address, index)
-      .call()
-
-    ids.push(...r.tokenIds)
-
-    if (r.nextIndex === "0") {
-      break
-    }
-
-    index = r.nextIndex
-  }
-
-  return ids
-}
-
-const getTokenFields = async (tokenIds: Array<string>) => {
-  const fields: Array<SpecialPlanetTokenFields> = []
-  const batchSize = 100
-
-  for (let i = 0; i < tokenIds.length; i += batchSize) {
-    const ids = tokenIds.slice(i, i + batchSize)
-    const fs = await ChainContractMethods.getSpecialPlanetTokenFields(ids)
-    fields.push(...fs)
-  }
-
-  return fields
 }
 
 const loginedLoomAddress = () => {
