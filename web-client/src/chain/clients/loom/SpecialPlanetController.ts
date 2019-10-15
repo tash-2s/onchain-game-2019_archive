@@ -43,9 +43,9 @@ export class SpecialPlanetController {
   }
 
   static setPlanet = (
-    tokenId: string,
-    axialCoordinateQ: string,
-    axialCoordinateR: string,
+    tokenId: string | number,
+    axialCoordinateQ: string | number,
+    axialCoordinateR: string | number,
     txOption?: {}
   ) => {
     return new chains.loom.web3.eth.Contract(
@@ -72,7 +72,7 @@ export class SpecialPlanetController {
       .send(txOption)
   }
 
-  static removePlanet = (shortId: string, txOption?: {}) => {
+  static removePlanet = (shortId: string | number, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -94,7 +94,7 @@ export class SpecialPlanetController {
   }
 
   static getPlanetFieldsFromTokenIds = (
-    tokenIds: Array<string>
+    tokenIds: Array<string | number>
   ): Promise<{
     shortIds: Array<string>
     versions: Array<string>

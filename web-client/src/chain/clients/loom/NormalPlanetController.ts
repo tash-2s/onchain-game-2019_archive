@@ -2,9 +2,9 @@ import { chains } from "../../../misc/chains"
 
 export class NormalPlanetController {
   static setPlanet = (
-    planetId: string,
-    axialCoordinateQ: string,
-    axialCoordinateR: string,
+    planetId: string | number,
+    axialCoordinateQ: string | number,
+    axialCoordinateR: string | number,
     txOption?: {}
   ) => {
     return new chains.loom.web3.eth.Contract(
@@ -31,7 +31,11 @@ export class NormalPlanetController {
       .send(txOption)
   }
 
-  static rankupPlanet = (userNormalPlanetId: string, targetRank: string, txOption?: {}) => {
+  static rankupPlanet = (
+    userNormalPlanetId: string | number,
+    targetRank: string | number,
+    txOption?: {}
+  ) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -55,7 +59,7 @@ export class NormalPlanetController {
       .send(txOption)
   }
 
-  static removePlanet = (userNormalPlanetId: string, txOption?: {}) => {
+  static removePlanet = (userNormalPlanetId: string | number, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {

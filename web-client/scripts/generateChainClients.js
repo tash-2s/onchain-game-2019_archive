@@ -26,12 +26,16 @@ const def = {
   }
 }
 
-const solTypeToTsType = solType => {
+const solTypeToTsType = (solType, allowNumber) => {
   let t
   if (solType === "bool") {
     t = "boolean"
   } else {
-    t = "string"
+    if (!!allowNumber && /int/.test(solType)) {
+      t = "string | number"
+    } else {
+      t = "string"
+    }
   }
 
   if (solType.slice(-2) === "[]") {
@@ -49,7 +53,7 @@ Object.keys(def).forEach(chainName => {
 
     const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
       const args = fnABI.inputs.map(i => i.name).join(", ")
-      const argsWithType = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type)}`)
+      const argsWithType = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type, true)}`)
       if (!fnABI.constant) {
         argsWithType.push("txOption?: {}")
       }

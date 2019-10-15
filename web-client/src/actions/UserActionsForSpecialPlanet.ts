@@ -76,11 +76,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
         await LoomSPT.setApprovalForAll(controllerAddress, true)
       }
 
-      await SpecialPlanetController.setPlanet(
-        tokenId,
-        axialCoordinateQ.toString(),
-        axialCoordinateR.toString()
-      )
+      await SpecialPlanetController.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
 
       const response = await getUserSpecialPlanets(address)
 

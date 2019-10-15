@@ -1,7 +1,7 @@
 import { chains } from "../../../misc/chains"
 
 export class SpecialPlanetToken {
-  static approve = (to: string, tokenId: string, txOption?: {}) => {
+  static approve = (to: string, tokenId: string | number, txOption?: {}) => {
     return new chains.loom.web3.eth.Contract(
       [
         {
@@ -48,7 +48,7 @@ export class SpecialPlanetToken {
 
   static tokensOfOwnerByIndex = (
     owner: string,
-    index: string
+    index: string | number
   ): Promise<{ tokenIds: Array<string>; nextIndex: string }> => {
     return new chains.loom.web3.eth.Contract(
       [

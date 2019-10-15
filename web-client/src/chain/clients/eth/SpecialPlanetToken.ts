@@ -1,7 +1,7 @@
 import { chains } from "../../../misc/chains"
 
 export class SpecialPlanetToken {
-  static approve = (to: string, tokenId: string, txOption?: {}) => {
+  static approve = (to: string, tokenId: string | number, txOption?: {}) => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }
@@ -54,7 +54,7 @@ export class SpecialPlanetToken {
 
   static tokensOfOwnerByIndex = (
     owner: string,
-    index: string
+    index: string | number
   ): Promise<{ tokenIds: Array<string>; nextIndex: string }> => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
@@ -85,7 +85,7 @@ export class SpecialPlanetToken {
       .call()
   }
 
-  static depositToGateway = (id: string, txOption?: {}) => {
+  static depositToGateway = (id: string | number, txOption?: {}) => {
     if (!chains.eth.web3 || !chains.eth.address) {
       throw new Error("not logined")
     }
