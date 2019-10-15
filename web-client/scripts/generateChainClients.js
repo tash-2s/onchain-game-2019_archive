@@ -83,7 +83,7 @@ Object.keys(def).forEach(chainName => {
     })
 
     const body = `
-  import { chains } from "../../../misc/chains"
+  import { chains } from "../../../chain/chains"
 
   export class ${contractName} {
   ${functionStrings.join("\n")}

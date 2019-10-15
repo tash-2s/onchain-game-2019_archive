@@ -1,7 +1,7 @@
 import { AbstractActions } from "./AbstractActions"
 import { AppActions } from "./AppActions"
 
-import { chains } from "../misc/chains"
+import { chains } from "../chain/chains"
 
 import {
   SpecialPlanetToken,

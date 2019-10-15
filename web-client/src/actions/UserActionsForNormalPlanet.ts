@@ -1,6 +1,6 @@
 import { AbstractActions } from "./AbstractActions"
 
-import { chains } from "../misc/chains"
+import { chains } from "../chain/chains"
 import { NormalPlanetController } from "../chain/clients/loom/NormalPlanetController"
 import {
   getUserNormalPlanets,

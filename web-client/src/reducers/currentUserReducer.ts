@@ -1,7 +1,7 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { CurrentUserActions } from "../actions/CurrentUserActions"
-import { chains } from "../misc/chains"
+import { chains } from "../chain/chains"
 
 const createInitialState = () => {
   return {

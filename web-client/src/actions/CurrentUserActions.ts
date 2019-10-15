@@ -1,5 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
-import { chains } from "../misc/chains"
+import { chains } from "../chain/chains"
 
 export class CurrentUserActions extends AbstractActions {
   private static creator = CurrentUserActions.getActionCreator()

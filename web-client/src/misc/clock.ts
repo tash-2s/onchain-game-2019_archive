@@ -1,6 +1,6 @@
 import { Store } from "redux"
 
-import { chains } from "./chains"
+import { chains } from "../chain/chains"
 import { Time } from "./../models/Time"
 import { TimeActions } from "./../actions/TimeActions"
 

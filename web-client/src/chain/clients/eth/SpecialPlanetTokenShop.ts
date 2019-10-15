@@ -1,4 +1,4 @@
-import { chains } from "../../../misc/chains"
+import { chains } from "../../../chain/chains"
 
 export class SpecialPlanetTokenShop {
   static price = (): Promise<string> => {

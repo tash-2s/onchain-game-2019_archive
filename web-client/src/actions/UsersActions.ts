@@ -1,5 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
-import { chains } from "../misc/chains"
+import { chains } from "../chain/chains"
 import { HighlightedUserController } from "../chain/clients/loom/HighlightedUserController"
 
 export class UsersActions extends AbstractActions {

@@ -1,4 +1,4 @@
-import { chains } from "../../../misc/chains"
+import { chains } from "../../../chain/chains"
 
 export class SpecialPlanetToken {
   static approve = (to: string, tokenId: string | number, txOption?: {}) => {
