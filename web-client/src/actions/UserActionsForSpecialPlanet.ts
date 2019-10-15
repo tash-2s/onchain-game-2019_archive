@@ -11,7 +11,6 @@ import {
 
 import { SpecialPlanetController } from "../chain/clients/loom/SpecialPlanetController"
 
-import ChainEnv from "../chain/env.json"
 import { getSpecialPlanetTokens } from "../chain/clients/organized"
 import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
 import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
@@ -71,7 +70,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
 
-      const controllerAddress = ChainEnv.loomContractAddresses.SpecialPlanetController
+      const controllerAddress = chains.loom.env.contractAddresses.SpecialPlanetController
       const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
       if (!isApproved) {
         await LoomSPT.setApprovalForAll(controllerAddress, true)
@@ -153,7 +152,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      chains.eth.env.contractAddresses.SpecialPlanetToken,
       tokenId
     )
 
@@ -162,7 +161,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       gatewayAddress,
       _tokenId,
       signature,
-      ChainEnv.ethContractAddresses.SpecialPlanetToken
+      chains.eth.env.contractAddresses.SpecialPlanetToken
     ).on("transactionHash", (hash: string) => {
       this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
 

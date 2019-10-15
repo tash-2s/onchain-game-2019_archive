@@ -1,6 +1,5 @@
 import { Eth } from "./eth"
 import { Loom } from "./loom"
-import ChainEnv from "../chain/env.json"
 
 class Chains {
   constructor(readonly eth: Eth, readonly loom: Loom) {}
@@ -28,7 +27,7 @@ class Chains {
     return this.loom.withGateway(this.eth.signer(), async gateway => {
       const receipt = await this.loom.getSpecialPlanetTokenWithdrawalReceipt(
         ethAddress,
-        ChainEnv.ethContractAddresses.SpecialPlanetToken,
+        this.eth.env.contractAddresses.SpecialPlanetToken,
         gateway
       )
 

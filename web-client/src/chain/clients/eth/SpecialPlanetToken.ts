@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetToken {
   static approve = (to: string, tokenId: string, txOption?: {}) => {
@@ -22,7 +21,7 @@ export class SpecialPlanetToken {
           signature: "0x095ea7b3"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      chains.eth.env.contractAddresses.SpecialPlanetToken,
       { from: chains.eth.address }
     ).methods
       .approve(to, tokenId)
@@ -46,7 +45,7 @@ export class SpecialPlanetToken {
           signature: "0x116191b6"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      chains.eth.env.contractAddresses.SpecialPlanetToken,
       { from: chains.eth.address }
     ).methods
       .gateway()
@@ -79,7 +78,7 @@ export class SpecialPlanetToken {
           signature: "0x4707f44f"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      chains.eth.env.contractAddresses.SpecialPlanetToken,
       { from: chains.eth.address }
     ).methods
       .tokensOfOwnerByIndex(owner, index)
@@ -103,7 +102,7 @@ export class SpecialPlanetToken {
           signature: "0x9267daba"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetToken,
+      chains.eth.env.contractAddresses.SpecialPlanetToken,
       { from: chains.eth.address }
     ).methods
       .depositToGateway(id)

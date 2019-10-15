@@ -65,5 +65,8 @@ fs.readdirSync(ETH_JSON_PATH).forEach(fileName => {
   ethContractAddresses[contractName] = parsedJson.networks[envDef.eth.networkId].address
 })
 
-const chainEnv = Object.assign(envDef, { loomContractAddresses, ethContractAddresses })
+const chainEnv = {
+  eth: { ...envDef.eth, contractAddresses: ethContractAddresses },
+  loom: { ...envDef.loom, contractAddresses: loomContractAddresses }
+}
 fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))

@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class NormalPlanetController {
   static setPlanet = (
@@ -25,7 +24,7 @@ export class NormalPlanetController {
           signature: "0x1866e1ff"
         }
       ],
-      ChainEnv.loomContractAddresses.NormalPlanetController,
+      chains.loom.env.contractAddresses.NormalPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
@@ -49,7 +48,7 @@ export class NormalPlanetController {
           signature: "0x2db45a59"
         }
       ],
-      ChainEnv.loomContractAddresses.NormalPlanetController,
+      chains.loom.env.contractAddresses.NormalPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .rankupPlanet(userNormalPlanetId, targetRank)
@@ -70,7 +69,7 @@ export class NormalPlanetController {
           signature: "0x10135315"
         }
       ],
-      ChainEnv.loomContractAddresses.NormalPlanetController,
+      chains.loom.env.contractAddresses.NormalPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .removePlanet(userNormalPlanetId)

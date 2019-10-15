@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetTokenShop {
   static price = (): Promise<string> => {
@@ -19,7 +18,7 @@ export class SpecialPlanetTokenShop {
           signature: "0xa035b1fe"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop,
+      chains.eth.env.contractAddresses.SpecialPlanetTokenShop,
       { from: chains.eth.address }
     ).methods
       .price()
@@ -43,7 +42,7 @@ export class SpecialPlanetTokenShop {
           signature: "0x45710074"
         }
       ],
-      ChainEnv.ethContractAddresses.SpecialPlanetTokenShop,
+      chains.eth.env.contractAddresses.SpecialPlanetTokenShop,
       { from: chains.eth.address }
     ).methods
       .sell()

@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetController {
   static getPlanets = (
@@ -36,7 +35,7 @@ export class SpecialPlanetController {
           signature: "0x2e49cca0"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      chains.loom.env.contractAddresses.SpecialPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .getPlanets(account)
@@ -66,7 +65,7 @@ export class SpecialPlanetController {
           signature: "0x7ecdce7e"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      chains.loom.env.contractAddresses.SpecialPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
@@ -87,7 +86,7 @@ export class SpecialPlanetController {
           signature: "0xff000261"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      chains.loom.env.contractAddresses.SpecialPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .removePlanet(shortId)
@@ -122,7 +121,7 @@ export class SpecialPlanetController {
           signature: "0xf934e1ef"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetController,
+      chains.loom.env.contractAddresses.SpecialPlanetController,
       { from: chains.loom.callerAddress() }
     ).methods
       .getPlanetFieldsFromTokenIds(tokenIds)

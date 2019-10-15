@@ -69,7 +69,7 @@ Object.keys(def).forEach(chainName => {
     }
     return new chains.${chainName}.web3.eth.Contract(
       [${JSON.stringify(fnABI)}],
-      ChainEnv.${chainName}ContractAddresses.${contractName},
+      chains.${chainName}.env.contractAddresses.${contractName},
       { from: ${chainName === "loom" ? "chains.loom.callerAddress()" : "chains.eth.address"} }
     ).methods
       .${fnABI.name}(${args})
@@ -80,7 +80,6 @@ Object.keys(def).forEach(chainName => {
 
     const body = `
   import { chains } from "../../../misc/chains"
-  import ChainEnv from "../../../chain/env.json"
 
   export class ${contractName} {
   ${functionStrings.join("\n")}

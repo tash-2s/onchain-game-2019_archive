@@ -108,7 +108,7 @@ export class Loom {
         await gateway.withdrawERC721Async(
           new BN(tokenId),
           Address.fromString(
-            `${ChainEnv.loom.chainId}:${ChainEnv.loomContractAddresses.SpecialPlanetToken}`
+            `${this.env.chainId}:${this.env.contractAddresses.SpecialPlanetToken}`
           ),
           Address.fromString(`eth:${ethAddress}`)
         )

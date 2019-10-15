@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class UserController {
   static getUser = (
@@ -32,7 +31,7 @@ export class UserController {
           signature: "0x6f77926b"
         }
       ],
-      ChainEnv.loomContractAddresses.UserController,
+      chains.loom.env.contractAddresses.UserController,
       { from: chains.loom.callerAddress() }
     ).methods
       .getUser(account)

@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class SpecialPlanetToken {
   static approve = (to: string, tokenId: string, txOption?: {}) => {
@@ -19,7 +18,7 @@ export class SpecialPlanetToken {
           signature: "0x095ea7b3"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      chains.loom.env.contractAddresses.SpecialPlanetToken,
       { from: chains.loom.callerAddress() }
     ).methods
       .approve(to, tokenId)
@@ -40,7 +39,7 @@ export class SpecialPlanetToken {
           signature: "0x116191b6"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      chains.loom.env.contractAddresses.SpecialPlanetToken,
       { from: chains.loom.callerAddress() }
     ).methods
       .gateway()
@@ -70,7 +69,7 @@ export class SpecialPlanetToken {
           signature: "0x4707f44f"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      chains.loom.env.contractAddresses.SpecialPlanetToken,
       { from: chains.loom.callerAddress() }
     ).methods
       .tokensOfOwnerByIndex(owner, index)
@@ -94,7 +93,7 @@ export class SpecialPlanetToken {
           signature: "0xa22cb465"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      chains.loom.env.contractAddresses.SpecialPlanetToken,
       { from: chains.loom.callerAddress() }
     ).methods
       .setApprovalForAll(to, approved)
@@ -118,7 +117,7 @@ export class SpecialPlanetToken {
           signature: "0xe985e9c5"
         }
       ],
-      ChainEnv.loomContractAddresses.SpecialPlanetToken,
+      chains.loom.env.contractAddresses.SpecialPlanetToken,
       { from: chains.loom.callerAddress() }
     ).methods
       .isApprovedForAll(owner, operator)

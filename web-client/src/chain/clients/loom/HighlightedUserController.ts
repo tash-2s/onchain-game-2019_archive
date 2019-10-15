@@ -1,5 +1,4 @@
 import { chains } from "../../../misc/chains"
-import ChainEnv from "../../../chain/env.json"
 
 export class HighlightedUserController {
   static getUsers = (): Promise<{ accounts: Array<string>; golds: Array<string> }> => {
@@ -19,7 +18,7 @@ export class HighlightedUserController {
           signature: "0x00ce8e3e"
         }
       ],
-      ChainEnv.loomContractAddresses.HighlightedUserController,
+      chains.loom.env.contractAddresses.HighlightedUserController,
       { from: chains.loom.callerAddress() }
     ).methods
       .getUsers()
