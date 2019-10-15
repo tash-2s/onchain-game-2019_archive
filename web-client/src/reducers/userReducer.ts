@@ -212,7 +212,7 @@ const buildStateFromUserAndUserSpecialPlanets = (
     ...state,
     targetUser: {
       ...state.targetUser,
-      gold: { confirmed: payload.user.confirmedGold, confirmedAt: payload.user.goldConfirmedAt },
+      ...buildUser(payload.user),
       userSpecialPlanets: payload.userSpecialPlanets,
       specialPlanetToken: null
     }
