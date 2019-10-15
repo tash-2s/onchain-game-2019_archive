@@ -35,38 +35,142 @@ if (!envDef) {
   throw new Error()
 }
 
-const LOOM_JSON_PATH = "../k2-chain-contracts/loom/build/contracts/"
-const loomContractAddresses = {} // TODO: save k2-chain-contracts's commit hash too
-fs.readdirSync(LOOM_JSON_PATH).forEach(fileName => {
-  const contractName = fileName.replace(".json", "")
+const loadContracts = () => {
+  const contracts = {}
 
-  const file = fs.readFileSync(LOOM_JSON_PATH + fileName)
-  const parsedJson = JSON.parse(file)
-  if (!parsedJson.networks[envDef.loom.networkId]) {
-    return
+  for (const chainName of ["eth", "loom"]) {
+    contracts[chainName] = []
+
+    const path = `../k2-chain-contracts/${chainName}/build/contracts/`
+
+    for (const fileName of fs.readdirSync(path)) {
+      const parsedJson = JSON.parse(fs.readFileSync(path + fileName))
+      if (!parsedJson.networks[envDef[chainName].networkId]) {
+        continue
+      }
+      contracts[chainName].push(parsedJson)
+    }
   }
 
-  fs.writeFileSync(`./.abi/loom/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
-  loomContractAddresses[contractName] = parsedJson.networks[envDef.loom.networkId].address
-})
-
-const ETH_JSON_PATH = "../k2-chain-contracts/eth/build/contracts/"
-const ethContractAddresses = {}
-fs.readdirSync(ETH_JSON_PATH).forEach(fileName => {
-  const contractName = fileName.replace(".json", "")
-
-  const file = fs.readFileSync(ETH_JSON_PATH + fileName)
-  const parsedJson = JSON.parse(file)
-  if (!parsedJson.networks[envDef.eth.networkId]) {
-    return
-  }
-
-  fs.writeFileSync(`./.abi/eth/${contractName}.json`, JSON.stringify(parsedJson.abi, null, 2))
-  ethContractAddresses[contractName] = parsedJson.networks[envDef.eth.networkId].address
-})
-
-const chainEnv = {
-  eth: { ...envDef.eth, contractAddresses: ethContractAddresses },
-  loom: { ...envDef.loom, contractAddresses: loomContractAddresses }
+  return contracts
 }
-fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))
+
+const generateChainEnv = (contracts) => {
+  const ethContractAddresses = {}
+  contracts.eth.forEach(contract => {
+    ethContractAddresses[contract.contractName] = contract.networks[envDef.eth.networkId].address
+  })
+  const loomContractAddresses = {}
+  contracts.loom.forEach(contract => {
+    loomContractAddresses[contract.contractName] = contract.networks[envDef.loom.networkId].address
+  })
+
+  const chainEnv = {
+    eth: { ...envDef.eth, contractAddresses: ethContractAddresses },
+    loom: { ...envDef.loom, contractAddresses: loomContractAddresses }
+  }
+  fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))
+}
+
+const generateChainClients = (contracts) => {
+  const prettier = require("prettier")
+
+  const def = {
+    loom: {
+      HighlightedUserController: ["getUsers"],
+      NormalPlanetController: ["setPlanet", "rankupPlanet", "removePlanet"],
+      SpecialPlanetController: [
+        "getPlanets",
+        "setPlanet",
+        "removePlanet",
+        "getPlanetFieldsFromTokenIds"
+      ],
+      SpecialPlanetToken: [
+        "approve",
+        "isApprovedForAll",
+        "setApprovalForAll",
+        "tokensOfOwnerByIndex",
+        "gateway"
+      ],
+      UserController: ["getUser"]
+    },
+    eth: {
+      SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway", "depositToGateway"],
+      SpecialPlanetTokenShop: ["price", "sell"]
+    }
+  }
+
+  const solTypeToTsType = (solType, allowNumber) => {
+    let t
+    if (solType === "bool") {
+      t = "boolean"
+    } else {
+      if (!!allowNumber && /int/.test(solType)) {
+        t = "string | number"
+      } else {
+        t = "string"
+      }
+    }
+
+    if (solType.slice(-2) === "[]") {
+      return `Array<${t}>`
+    } else {
+      return t
+    }
+  }
+
+  const upCaseFirstChar = str => str.charAt(0).toUpperCase() + str.slice(1)
+
+  Object.keys(def).forEach(chainName => {
+    Object.keys(def[chainName]).forEach(contractName => {
+      const functionNames = def[chainName][contractName]
+
+      const ABI = contracts[chainName].find(c => c.contractName === contractName).abi
+
+      const functionStrings = ABI.filter(a => functionNames.includes(a.name)).map(fnABI => {
+        const args = fnABI.inputs.map(i => i.name).join(", ")
+        const argsWithType = fnABI.inputs.map(a => `${a.name}: ${solTypeToTsType(a.type, true)}`)
+        if (!fnABI.constant) {
+          argsWithType.push("txOption?: {}")
+        }
+        let _types = fnABI.outputs.map((o, i) => `${o.name}: ${solTypeToTsType(o.type)}`).join(", ")
+        _types = `{ ${_types} }`
+        if (fnABI.outputs.every(o => o.name === "")) {
+          _types = fnABI.outputs.map(o => solTypeToTsType(o.type)).join(", ")
+        }
+        const returnType = fnABI.constant ? `: Promise<${_types}>` : ""
+
+        return `
+  ${fnABI.name} = (${argsWithType.join(", ")})${returnType} => {
+    ${
+      chainName === "loom"
+        ? ""
+        : 'if (!this.chain.web3 || !this.chain.address) { throw new Error("not logined") }'
+    }
+    return new this.chain.web3.eth.Contract(
+      [${JSON.stringify(fnABI)}],
+      this.chain.env.contractAddresses.${contractName},
+      { from: ${chainName === "loom" ? "this.chain.callerAddress()" : "this.chain.address"} }
+    ).methods
+      .${fnABI.name}(${args})
+      .${fnABI.constant ? "call()" : "send(txOption)"}
+  }`
+      })
+
+      const body = `
+  // generated by scripts/generateChainClients.js
+  export class ${contractName} {
+    constructor(private chain: import("../../${chainName}").${upCaseFirstChar(chainName)}) {}
+    ${functionStrings.join("\n\n")}
+  }`
+
+      const options = prettier.resolveConfig.sync(".")
+      const formatted = prettier.format(body, { ...options, parser: "typescript" })
+      fs.writeFileSync(`./src/chain/clients/${chainName}/${contractName}.ts`, formatted)
+    })
+  })
+}
+
+const contracts = loadContracts()
+generateChainEnv(contracts)
+generateChainClients(contracts)
