@@ -9,7 +9,7 @@ export class UsersActions extends AbstractActions {
     [string | null, { accounts: Array<string>; golds: Array<string> }]
   >("setUsers")
   setUsers = async () => {
-    const response = await HighlightedUserController.getUsers()
+    const response = await new HighlightedUserController(chains.loom).getUsers()
     const address = chains.loom.address
 
     this.dispatch(UsersActions.setUsers([address, response]))

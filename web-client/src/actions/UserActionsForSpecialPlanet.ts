@@ -33,8 +33,8 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
 
     const [ethTokens, loomTokens, receipt] = await Promise.all([
-      getSpecialPlanetTokens(ethAddress, EthSPT.tokensOfOwnerByIndex),
-      getSpecialPlanetTokens(address, LoomSPT.tokensOfOwnerByIndex),
+      getSpecialPlanetTokens(ethAddress, new EthSPT(chains.eth).tokensOfOwnerByIndex),
+      getSpecialPlanetTokens(address, new LoomSPT(chains.loom).tokensOfOwnerByIndex),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
 
@@ -71,12 +71,17 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       const address = loginedLoomAddress()
 
       const controllerAddress = chains.loom.env.contractAddresses.SpecialPlanetController
-      const isApproved = await LoomSPT.isApprovedForAll(address, controllerAddress)
+      const loomSPT = new LoomSPT(chains.loom)
+      const isApproved = await loomSPT.isApprovedForAll(address, controllerAddress)
       if (!isApproved) {
-        await LoomSPT.setApprovalForAll(controllerAddress, true)
+        await loomSPT.setApprovalForAll(controllerAddress, true)
       }
 
-      await SpecialPlanetController.setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
+      await new SpecialPlanetController(chains.loom).setPlanet(
+        tokenId,
+        axialCoordinateQ,
+        axialCoordinateR
+      )
 
       const response = await getUserSpecialPlanets(address)
 
@@ -93,7 +98,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
     this.withLoading(async () => {
-      await SpecialPlanetController.removePlanet(userSpecialPlanetId)
+      await new SpecialPlanetController(chains.loom).removePlanet(userSpecialPlanetId)
 
       const response = await getUserSpecialPlanets(loginedLoomAddress())
 
@@ -109,9 +114,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   buyPlanetToken = async () => {
     new AppActions(this.dispatch).startLoading()
 
-    const price = await SpecialPlanetTokenShop.price()
+    const shop = new SpecialPlanetTokenShop(chains.eth)
 
-    SpecialPlanetTokenShop.sell({ value: price }).on("transactionHash", hash => {
+    const price = await shop.price()
+
+    shop.sell({ value: price }).on("transactionHash", hash => {
       this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
 
       new AppActions(this.dispatch).stopLoading()
@@ -124,7 +131,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
   transferPlanetTokenToLoom = (tokenId: string) => {
     new AppActions(this.dispatch).startLoading()
 
-    EthSPT.depositToGateway(tokenId).on("transactionHash", hash => {
+    new EthSPT(chains.eth).depositToGateway(tokenId).on("transactionHash", hash => {
       this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToLoom(hash))
 
       new AppActions(this.dispatch).stopLoading()
@@ -143,8 +150,9 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
 
     if (tokenId) {
-      const gatewayAddress = await LoomSPT.gateway()
-      await LoomSPT.approve(gatewayAddress, tokenId)
+      const loomSPT = new LoomSPT(chains.loom)
+      const gatewayAddress = await loomSPT.gateway()
+      await loomSPT.approve(gatewayAddress, tokenId)
     }
     const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
       chains.eth.signer(),
@@ -152,7 +160,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       tokenId
     )
 
-    const gatewayAddress = await EthSPT.gateway()
+    const gatewayAddress = await new EthSPT(chains.eth).gateway()
     Gateway.withdrawERC721(
       gatewayAddress,
       _tokenId,

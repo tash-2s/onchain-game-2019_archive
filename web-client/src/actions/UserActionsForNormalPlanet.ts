@@ -15,7 +15,11 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   setPlanetToMap = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
     this.withLoading(async () => {
-      await NormalPlanetController.setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+      await new NormalPlanetController(chains.loom).setPlanet(
+        planetId,
+        axialCoordinateQ,
+        axialCoordinateR
+      )
 
       const response = await getUserNormalPlanets(loginedAddress())
 
@@ -28,7 +32,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
     this.withLoading(async () => {
-      await NormalPlanetController.rankupPlanet(userPlanetId, targetRank)
+      await new NormalPlanetController(chains.loom).rankupPlanet(userPlanetId, targetRank)
 
       const response = await getUserNormalPlanets(loginedAddress())
 
@@ -41,7 +45,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      await NormalPlanetController.removePlanet(userPlanetId)
+      await new NormalPlanetController(chains.loom).removePlanet(userPlanetId)
 
       const response = await getUserNormalPlanets(loginedAddress())
 

@@ -1,11 +1,12 @@
 import { planetKindNumToKind } from "../../../constants"
 import { SpecialPlanetController } from "./SpecialPlanetController"
 import { UserController } from "./UserController"
+import { chains } from "../../chains"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
 export const getUserNormalPlanets = async (address: string) => {
-  const r = await UserController.getUser(address)
+  const r = await new UserController(chains.loom).getUser(address)
 
   const userNormalPlanets = r.unpRanks.map((_, i) => ({
     id: r.unpIds[i * 2],
@@ -27,7 +28,7 @@ export type ReturnTypeOfGetUserNormalPlanets = ExtractFromPromise<
 >
 
 export const getUserSpecialPlanets = async (address: string) => {
-  const r = await SpecialPlanetController.getPlanets(address)
+  const r = await new SpecialPlanetController(chains.loom).getPlanets(address)
 
   const userSpecialPlanets = r.ids.map((_, i) => ({
     id: r.ids[i],
@@ -63,7 +64,7 @@ export const getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
 }
 
 const _getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
-  const r = await SpecialPlanetController.getPlanetFieldsFromTokenIds(tokenIds)
+  const r = await new SpecialPlanetController(chains.loom).getPlanetFieldsFromTokenIds(tokenIds)
 
   return tokenIds.map((id, i) => ({
     id: id,
