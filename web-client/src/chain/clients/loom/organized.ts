@@ -7,7 +7,7 @@ type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 export const getUserNormalPlanets = async (address: string) => {
   const r = await UserController.getUser(address)
 
-  const userNormalPlanets = r.unpIds.map((_, i) => ({
+  const userNormalPlanets = r.unpRanks.map((_, i) => ({
     id: r.unpIds[i * 2],
     normalPlanetId: strToNum(r.unpIds[i * 2 + 1]),
     rank: strToNum(r.unpRanks[i]),
