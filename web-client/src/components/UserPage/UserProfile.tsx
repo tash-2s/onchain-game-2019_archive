@@ -9,13 +9,13 @@ export function UserProfile(props: { user: ComputedTargetUserState; isMine: bool
   return (
     <div className={"box"}>
       <OngoingUserStatus user={props.user} />
+      Gold Per Sec: <PrettyBN bn={props.user.goldPerSec} />
+      <br />
       Residential Population: <PrettyBN bn={props.user.population} />
       <br />
       Gold Productivity: <PrettyBN bn={props.user.productivity} />
       <br />
       Technical Knowledge: {props.user.knowledge.toLocaleString()}
-      <br />
-      Gold Per Sec: <PrettyBN bn={props.user.goldPerSec} />
     </div>
   )
 }

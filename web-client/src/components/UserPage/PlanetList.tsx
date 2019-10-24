@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { PrettyBN } from "../utils/PrettyBN"
+import { PlanetParam } from "../utils/PlanetParam"
 import { UserPageUiState } from "../../reducers/userPageUiReducer"
 
 export class PlanetList extends React.Component<{
@@ -39,7 +40,7 @@ export class PlanetList extends React.Component<{
             Gold <PrettyBN bn={p.priceGold} />
           </div>
           <div>
-            Param <PrettyBN bn={p.param} />
+            Param <PlanetParam planet={p} />
           </div>
           <div>{button}</div>
         </div>

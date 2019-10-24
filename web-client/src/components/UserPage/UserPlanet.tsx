@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { PrettyBN } from "../utils/PrettyBN"
+import { PlanetParam } from "../utils/PlanetParam"
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
@@ -20,12 +21,7 @@ export function UserPlanet(props: UserPlanetProps) {
     ) : (
       <div>Rankuped: {props.now - up.rankupedAt} sec ago</div>
     )
-  const param =
-    up.planet.kind === "technology" ? (
-      up.param.toNumber().toLocaleString()
-    ) : (
-      <PrettyBN bn={up.param} />
-    )
+  const param = <PlanetParam planet={up.planet} />
 
   return (
     <>
