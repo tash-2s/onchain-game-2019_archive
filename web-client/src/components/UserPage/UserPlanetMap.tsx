@@ -80,8 +80,9 @@ export class UserPlanetMap extends React.Component<Props, State> {
           hexSize={hexSize}
           hexWidth={hexWidth}
           hexHeight={hexHeight}
-          setPlanet={settable ? this.setPlanet : null}
-          select={selectFn}
+          isSelectable={settable}
+          isSelected={false}
+          select={settable ? this.setPlanet(h.q, h.r) : selectFn}
         />
       )
     })
