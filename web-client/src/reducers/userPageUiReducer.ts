@@ -11,13 +11,14 @@ import {
 export const initialUserPageUiState = {
   selectedViewKind: "main" as UserPageViewKind,
   selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
-  selectedNormalPlanetId: null as number | null,
+  selectedNormalPlanetIdForSet: null as number | null,
   selectedUserPlanetId: null as string | null,
   selectedPlanetKind: "all" as PlanetKindWithAll,
   selectedUserPlanetSortKind: "Newest" as UserPlanetSortKind,
   planetListVisibilityForMobile: false,
   selectedSpecialPlanetTokenIdForSet: null as string | null,
-  selectedUserSpecialPlanetIdForModal: null as string | null
+  selectedUserSpecialPlanetIdForModal: null as string | null,
+  selectedPlanetHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
 }
 
 export type UserPageUiState = typeof initialUserPageUiState
@@ -32,15 +33,15 @@ export const createUserPageUiReducer = () =>
       ...state,
       selectedUserPlanetViewKind: state.selectedUserPlanetViewKind === "map" ? "list" : "map"
     }))
-    .case(UserPageUiActions.selectPlanet, (state, payload) => ({
+    .case(UserPageUiActions.selectNormalPlanetForSet, (state, payload) => ({
       ...state,
       selectedUserPlanetViewKind: "map",
-      selectedNormalPlanetId: payload,
+      selectedNormalPlanetIdForSet: payload,
       selectedSpecialPlanetTokenIdForSet: null
     }))
-    .case(UserPageUiActions.unselectPlanet, state => ({
+    .case(UserPageUiActions.unselectNormalPlanetForSet, state => ({
       ...state,
-      selectedNormalPlanetId: null
+      selectedNormalPlanetIdForSet: null
     }))
     .case(UserPageUiActions.selectUserPlanet, (state, payload) => ({
       ...state,
@@ -71,7 +72,7 @@ export const createUserPageUiReducer = () =>
       ...state,
       selectedViewKind: "main",
       selectedUserPlanetViewKind: "map",
-      selectedNormalPlanetId: null,
+      selectedNormalPlanetIdForSet: null,
       selectedSpecialPlanetTokenIdForSet: payload
     }))
     .case(UserPageUiActions.unselectSpecialPlanetTokenForSet, state => ({
@@ -86,5 +87,13 @@ export const createUserPageUiReducer = () =>
     .case(UserPageUiActions.unselectUserSpecialPlanetForModal, state => ({
       ...state,
       selectedUserSpecialPlanetIdForModal: null
+    }))
+    .case(UserPageUiActions.selectPlanetHexForSet, (state, payload) => ({
+      ...state,
+      selectedPlanetHexesForSet: [...state.selectedPlanetHexesForSet, payload]
+    }))
+    .case(UserPageUiActions.unselectPlanetHexesForSet, state => ({
+      ...state,
+      selectedPlanetHexesForSet: []
     }))
     .build()

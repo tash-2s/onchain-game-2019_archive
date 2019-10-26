@@ -13,13 +13,17 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   static setPlanetToMap = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
     "setPlanetToMap"
   )
-  setPlanetToMap = (planetId: number, axialCoordinateQ: number, axialCoordinateR: number) => {
+  setPlanetToMap = (
+    planetId: number,
+    axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
+  ) => {
     this.withLoading(async () => {
-      await new NormalPlanetController(chains.loom).setPlanet(
-        planetId,
-        axialCoordinateQ,
-        axialCoordinateR
-      )
+      // TODO: here
+      // await new NormalPlanetController(chains.loom).setPlanet(
+      //   planetId,
+      //   axialCoordinateQ,
+      //   axialCoordinateR
+      // )
 
       const response = await getUserNormalPlanets(loginedAddress())
 

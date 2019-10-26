@@ -29,7 +29,7 @@ export class PlanetList extends React.Component<{
       }
 
       let activeClass = ""
-      if (p.id === this.props.userPageUi.selectedNormalPlanetId) {
+      if (p.id === this.props.userPageUi.selectedNormalPlanetIdForSet) {
         activeClass = "is-active"
       }
 

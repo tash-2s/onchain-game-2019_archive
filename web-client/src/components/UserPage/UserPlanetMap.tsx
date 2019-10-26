@@ -56,7 +56,7 @@ export class UserPlanetMap extends React.Component<Props, State> {
       const settable =
         this.props.isMine &&
         h.settable &&
-        (!!this.props.userPageUi.selectedNormalPlanetId ||
+        (!!this.props.userPageUi.selectedNormalPlanetIdForSet ||
           !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet)
       const selectFn = () => {
         if (!h.userPlanet) {
@@ -68,6 +68,10 @@ export class UserPlanetMap extends React.Component<Props, State> {
           this.props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
         }
       }
+
+      const isSelected = !!this.props.userPageUi.selectedPlanetHexesForSet.find(
+        o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
+      )
 
       return (
         <PlanetHex
@@ -81,31 +85,41 @@ export class UserPlanetMap extends React.Component<Props, State> {
           hexWidth={hexWidth}
           hexHeight={hexHeight}
           isSelectable={settable}
-          isSelected={false}
-          select={settable ? this.setPlanet(h.q, h.r) : selectFn}
+          isSelected={isSelected}
+          select={settable ? this.selectPlanet(h.q, h.r) : selectFn}
         />
       )
     })
 
     const height = (shownRadius * 2 + 1) * hexHeight
 
+    let btn = <></>
+    const planetId = this.props.userPageUi.selectedNormalPlanetIdForSet
+    if (!!planetId && this.props.userPageUi.selectedPlanetHexesForSet.length > 0) {
+      const fn = () => {
+        this.props.userActions.normal.setPlanetToMap(
+          planetId,
+          this.props.userPageUi.selectedPlanetHexesForSet
+        )
+        this.props.userPageUiActions.unselectNormalPlanetForSet()
+        this.props.userPageUiActions.unselectPlanetHexesForSet()
+      }
+      btn = <button onClick={fn}>set to map</button>
+    }
+
     return (
       <>
         <WrappedModal {...this.props} />
+        {btn}
         <div style={{ position: "relative", height: height }}>{hexes}</div>
       </>
     )
   }
 
-  setPlanet = (q: number, r: number) => {
+  selectPlanet = (q: number, r: number) => {
     return () => {
-      if (this.props.userPageUi.selectedNormalPlanetId) {
-        this.props.userActions.normal.setPlanetToMap(
-          this.props.userPageUi.selectedNormalPlanetId,
-          q,
-          r
-        )
-        this.props.userPageUiActions.unselectPlanet()
+      if (this.props.userPageUi.selectedNormalPlanetIdForSet) {
+        this.props.userPageUiActions.selectPlanetHexForSet(q, r)
         return
       }
       if (this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) {

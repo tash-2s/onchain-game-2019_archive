@@ -93,7 +93,7 @@ function WrappedPlanetList(props: {
       <div className={props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}>
         <PlanetList
           planets={props.targetUser.normalPlanets}
-          setPlanetToGet={props.userPageUiActions.selectPlanet}
+          setPlanetToGet={props.userPageUiActions.selectNormalPlanetForSet}
           userPageUi={props.userPageUi}
         />
       </div>

@@ -14,14 +14,14 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.toggleUserPlanetViewKind())
   }
 
-  static selectPlanet = UserPageUiActions.creator<number>("selectPlanet")
-  selectPlanet = (planetId: number) => {
-    this.dispatch(UserPageUiActions.selectPlanet(planetId))
+  static selectNormalPlanetForSet = UserPageUiActions.creator<number>("selectNormalPlanetForSet")
+  selectNormalPlanetForSet = (planetId: number) => {
+    this.dispatch(UserPageUiActions.selectNormalPlanetForSet(planetId))
   }
 
-  static unselectPlanet = UserPageUiActions.creator("unselectPlanet")
-  unselectPlanet = () => {
-    this.dispatch(UserPageUiActions.unselectPlanet())
+  static unselectNormalPlanetForSet = UserPageUiActions.creator("unselectNormalPlanetForSet")
+  unselectNormalPlanetForSet = () => {
+    this.dispatch(UserPageUiActions.unselectNormalPlanetForSet())
   }
 
   static selectUserPlanet = UserPageUiActions.creator<string>("selectUserPlanet")
@@ -84,5 +84,18 @@ export class UserPageUiActions extends AbstractActions {
   )
   unselectUserSpecialPlanetForModal = () => {
     this.dispatch(UserPageUiActions.unselectUserSpecialPlanetForModal())
+  }
+
+  static selectPlanetHexForSet = UserPageUiActions.creator<{
+    axialCoordinateQ: number
+    axialCoordinateR: number
+  }>("selectPlanetHexForSet")
+  selectPlanetHexForSet = (axialCoordinateQ: number, axialCoordinateR: number) => {
+    this.dispatch(UserPageUiActions.selectPlanetHexForSet({ axialCoordinateQ, axialCoordinateR }))
+  }
+
+  static unselectPlanetHexesForSet = UserPageUiActions.creator("unselectPlanetHexesForSet")
+  unselectPlanetHexesForSet = () => {
+    this.dispatch(UserPageUiActions.unselectPlanetHexesForSet())
   }
 }
