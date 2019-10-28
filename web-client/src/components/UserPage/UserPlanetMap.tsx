@@ -6,12 +6,10 @@ import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { PlanetHex } from "./PlanetHex"
-import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
+import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
-
-import { getNormalPlanet } from "../../data/NormalPlanets"
 
 interface Props {
   user: ComputedTargetUserState
@@ -39,21 +37,27 @@ export function UserPlanetMap(props: Props) {
     return <div id={placeholderId} />
   }
 
-  const shownRadius = props.user.map.shownRadius
   // Show biggest map for this area
   // Calc hex sizes to fit mapWidth
   // mapWidth (= state.width) = (1.5 * hexSize) * (mapRadius * 2 + 1) + (0.5 * hexSize)
   // Transform this equation for hexSize...
-  const hexSize = Math.min(width / (3 * shownRadius + 2), 100) // max: 100
+  const hexSize = Math.min(width / (3 * props.user.map.shownRadius + 2), 100) // max: 100
   const hexWidth = hexSize * 2
   const hexHeight = Math.sqrt(3) * hexSize
 
-  let isSufficientGoldForNext = true
-  const planetId = props.userPageUi.selectedNormalPlanetIdForSet
-  if (!!planetId && props.userPageUi.selectedPlanetHexesForSet.length > 0) {
-    const planet = getNormalPlanet(planetId)
+  let isSufficientGoldForNextSet = true
+  if (
+    !!props.userPageUi.selectedNormalPlanetIdForSet &&
+    props.userPageUi.selectedPlanetHexesForSet.length > 0
+  ) {
+    const planet = props.user.normalPlanets.find(
+      p => p.id === props.userPageUi.selectedNormalPlanetIdForSet
+    )
+    if (!planet) {
+      throw new Error("unknown planet")
+    }
     const buyableCount = props.user.gold.div(planet.priceGold)
-    isSufficientGoldForNext = buyableCount.gtn(props.userPageUi.selectedPlanetHexesForSet.length)
+    isSufficientGoldForNextSet = buyableCount.gtn(props.userPageUi.selectedPlanetHexesForSet.length)
   }
 
   const hexes = props.user.map.hexes.map(h => {
@@ -62,53 +66,11 @@ export function UserPlanetMap(props: Props) {
       h.settable &&
       (!!props.userPageUi.selectedNormalPlanetIdForSet ||
         !!props.userPageUi.selectedSpecialPlanetTokenIdForSet) &&
-      isSufficientGoldForNext
+      isSufficientGoldForNextSet
 
-    const isSelected = !!props.userPageUi.selectedPlanetHexesForSet.find(
+    const isHighlighted = !!props.userPageUi.selectedPlanetHexesForSet.find(
       o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
     )
-
-    let selectFn: (() => void) | undefined = undefined
-    if (
-      !!props.userPageUi.selectedNormalPlanetIdForSet ||
-      !!props.userPageUi.selectedSpecialPlanetTokenIdForSet
-    ) {
-      if (settable) {
-        selectFn = () => {
-          if (props.userPageUi.selectedNormalPlanetIdForSet) {
-            props.userPageUiActions.selectPlanetHexForSet(h.q, h.r)
-            return
-          }
-          if (props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
-            props.userActions.special.setPlanetTokenToMap(
-              props.userPageUi.selectedSpecialPlanetTokenIdForSet,
-              h.q,
-              h.r
-            )
-            props.userPageUiActions.unselectSpecialPlanetTokenForSet()
-            return
-          }
-
-          throw new Error("this must be called with target")
-        }
-      }
-    } else if (!!h.userPlanet) {
-      if (h.userPlanet.isNormal) {
-        selectFn = () => {
-          if (!h.userPlanet) {
-            return
-          }
-          props.userPageUiActions.selectUserNormalPlanetForModal(h.userPlanet.id)
-        }
-      } else {
-        selectFn = () => {
-          if (!h.userPlanet) {
-            return
-          }
-          props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
-        }
-      }
-    }
 
     return (
       <PlanetHex
@@ -116,39 +78,65 @@ export function UserPlanetMap(props: Props) {
         q={h.q}
         r={h.r}
         userPlanet={h.userPlanet}
-        shiftTop={shownRadius * hexHeight}
-        shiftLeft={shownRadius * ((hexWidth / 4) * 3)}
+        shiftTop={props.user.map.shownRadius * hexHeight}
+        shiftLeft={props.user.map.shownRadius * ((hexWidth / 4) * 3)}
         hexSize={hexSize}
         hexWidth={hexWidth}
         hexHeight={hexHeight}
-        isSelected={isSelected}
-        select={selectFn}
+        isHighlighted={isHighlighted}
+        select={selectFn(props, h, settable) || undefined}
       />
     )
   })
 
-  const height = (shownRadius * 2 + 1) * hexHeight
-
-  let btn = <></>
-  if (!!planetId && props.userPageUi.selectedPlanetHexesForSet.length > 0) {
-    const fn = () => {
-      props.userActions.normal.setPlanetsToMap(planetId, props.userPageUi.selectedPlanetHexesForSet)
-      props.userPageUiActions.unselectNormalPlanetForSet()
-      props.userPageUiActions.unselectPlanetHexesForSet()
-    }
-    btn = <button onClick={fn}>set to map</button>
-  }
+  const height = (props.user.map.shownRadius * 2 + 1) * hexHeight
 
   return (
     <>
-      <WrappedModal {...props} />
-      {btn}
-      <div style={{ position: "relative", height: height }}>{hexes}</div>
+      <UserPlanetDetailModal {...props} />
+      <SetToMapButton {...props} />
+      <div style={{ position: "relative", height }}>{hexes}</div>
     </>
   )
 }
 
-function WrappedModal(props: Props) {
+const selectFn = (
+  props: Props,
+  hex: ComputedTargetUserState["map"]["hexes"][number],
+  settable: boolean
+) => {
+  if (props.userPageUi.selectedNormalPlanetIdForSet) {
+    if (!settable) {
+      return null
+    }
+    return () => props.userPageUiActions.selectPlanetHexForSet(hex.q, hex.r)
+  }
+
+  if (props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
+    if (!settable) {
+      return null
+    }
+    const id = props.userPageUi.selectedSpecialPlanetTokenIdForSet
+    return () => {
+      props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
+      props.userPageUiActions.unselectSpecialPlanetTokenForSet()
+    }
+  }
+
+  if (hex.userPlanet) {
+    const up = hex.userPlanet
+
+    if (hex.userPlanet.isNormal) {
+      return () => props.userPageUiActions.selectUserNormalPlanetForModal(up.id)
+    } else {
+      return () => props.userPageUiActions.selectUserSpecialPlanetForModal(up.id)
+    }
+  }
+
+  return null
+}
+
+function UserPlanetDetailModal(props: Props) {
   if (props.userPageUi.selectedUserNormalPlanetIdForModal) {
     const up = props.user.userNormalPlanets.find(
       up => up.id === props.userPageUi.selectedUserNormalPlanetIdForModal
@@ -192,4 +180,17 @@ function WrappedModal(props: Props) {
   }
 
   return <></>
+}
+
+function SetToMapButton(props: Props) {
+  const planetId = props.userPageUi.selectedNormalPlanetIdForSet
+  if (!planetId || props.userPageUi.selectedPlanetHexesForSet.length <= 0) {
+    return <></>
+  }
+  const fn = () => {
+    props.userActions.normal.setPlanetsToMap(planetId, props.userPageUi.selectedPlanetHexesForSet)
+    props.userPageUiActions.unselectNormalPlanetForSet()
+    props.userPageUiActions.unselectPlanetHexesForSet()
+  }
+  return <button onClick={fn}>set to map</button>
 }

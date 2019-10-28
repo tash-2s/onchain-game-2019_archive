@@ -12,7 +12,7 @@ export function PlanetHex(props: {
   hexSize: number
   hexWidth: number
   hexHeight: number
-  isSelected: boolean
+  isHighlighted: boolean
   select?: () => void
 }) {
   const x = props.hexSize * ((3 / 2) * props.q)
@@ -24,7 +24,7 @@ export function PlanetHex(props: {
     top: y + props.shiftTop,
     width: props.hexWidth,
     height: props.hexHeight,
-    backgroundColor: props.isSelected ? "yellow" : "#000000",
+    backgroundColor: props.isHighlighted ? "yellow" : "#000000",
     clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
     display: "flex",
     justifyContent: "center",
