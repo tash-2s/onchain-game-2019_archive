@@ -30,21 +30,29 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     confirm(msg.sender);
 
-    // TODO: this is not precise
-    if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm);
-    } else {
-      unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
-    }
+    _setPlanet(planetRecord, userGoldRecord, planetId, axialCoordinateQ, axialCoordinateR);
+  }
 
-    mintUserNormalPlanet(
-      msg.sender,
-      planetId,
-      planetRecord.kind,
-      planetRecord.paramCommonLogarithm,
-      axialCoordinateQ,
-      axialCoordinateR
-    );
+  // TODO: optimize
+  function setPlanets(
+    uint16 planetId,
+    int16[] calldata axialCoordinateQs,
+    int16[] calldata axialCoordinateRs
+  ) external {
+    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
+    UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
+
+    confirm(msg.sender);
+
+    for (uint256 i = 0; i < axialCoordinateQs.length; i++) {
+      _setPlanet(
+        planetRecord,
+        userGoldRecord,
+        planetId,
+        axialCoordinateQs[i],
+        axialCoordinateRs[i]
+      );
+    }
   }
 
   function rankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
@@ -79,6 +87,30 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     unmintGold(msg.sender, rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
+  }
+
+  function _setPlanet(
+    NormalPlanetRecord memory planetRecord,
+    UserGoldRecord memory userGoldRecord,
+    uint16 planetId,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) private {
+    // TODO: this is not precise
+    if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
+      mintGold(msg.sender, uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm);
+    } else {
+      unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
+    }
+
+    mintUserNormalPlanet(
+      msg.sender,
+      planetId,
+      planetRecord.kind,
+      planetRecord.paramCommonLogarithm,
+      axialCoordinateQ,
+      axialCoordinateR
+    );
   }
 
   function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
