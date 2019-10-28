@@ -10,6 +10,7 @@ import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
+
 import { getNormalPlanet } from "../../data/NormalPlanets"
 
 interface Props {
@@ -71,20 +72,35 @@ export class UserPlanetMap extends React.Component<Props, State> {
           !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) &&
         isSufficientGoldForNext
 
-      const selectFn = () => {
-        if (!h.userPlanet) {
-          return
-        }
-        if (h.userPlanet.isNormal) {
-          this.props.userPageUiActions.selectUserPlanet(h.userPlanet.id)
-        } else {
-          this.props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
-        }
-      }
-
       const isSelected = !!this.props.userPageUi.selectedPlanetHexesForSet.find(
         o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
       )
+
+      let selectFn: (() => void) | undefined = undefined
+      if (
+        !!this.props.userPageUi.selectedNormalPlanetIdForSet ||
+        !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet
+      ) {
+        if (settable) {
+          selectFn = this.selectPlanet(h.q, h.r)
+        }
+      } else if (!!h.userPlanet) {
+        if (h.userPlanet.isNormal) {
+          selectFn = () => {
+            if (!h.userPlanet) {
+              return
+            }
+            this.props.userPageUiActions.selectUserNormalPlanetForModal(h.userPlanet.id)
+          }
+        } else {
+          selectFn = () => {
+            if (!h.userPlanet) {
+              return
+            }
+            this.props.userPageUiActions.selectUserSpecialPlanetForModal(h.userPlanet.id)
+          }
+        }
+      }
 
       return (
         <PlanetHex
@@ -97,9 +113,8 @@ export class UserPlanetMap extends React.Component<Props, State> {
           hexSize={hexSize}
           hexWidth={hexWidth}
           hexHeight={hexHeight}
-          isSelectable={settable}
           isSelected={isSelected}
-          select={settable ? this.selectPlanet(h.q, h.r) : selectFn}
+          select={selectFn}
         />
       )
     })
@@ -150,14 +165,14 @@ export class UserPlanetMap extends React.Component<Props, State> {
 }
 
 function WrappedModal(props: Props) {
-  if (props.userPageUi.selectedUserPlanetId) {
+  if (props.userPageUi.selectedUserNormalPlanetIdForModal) {
     const up = props.user.userNormalPlanets.find(
-      up => up.id === props.userPageUi.selectedUserPlanetId
+      up => up.id === props.userPageUi.selectedUserNormalPlanetIdForModal
     )
     // this must be always true
     if (up) {
       return (
-        <Modal close={props.userPageUiActions.unselectUserPlanet}>
+        <Modal close={props.userPageUiActions.unselectUserNormalPlanetForModal}>
           <PlanetArt kind={up.planet.kind} artSeed={up.planet.artSeed} canvasSize={300} />
           <UserPlanet
             userPlanet={up}

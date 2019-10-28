@@ -12,7 +12,7 @@ export const initialUserPageUiState = {
   selectedViewKind: "main" as UserPageViewKind,
   selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
   selectedNormalPlanetIdForSet: null as number | null,
-  selectedUserPlanetId: null as string | null,
+  selectedUserNormalPlanetIdForModal: null as string | null,
   selectedPlanetKind: "all" as PlanetKindWithAll,
   selectedUserPlanetSortKind: "Newest" as UserPlanetSortKind,
   planetListVisibilityForMobile: false,
@@ -43,14 +43,14 @@ export const createUserPageUiReducer = () =>
       ...state,
       selectedNormalPlanetIdForSet: null
     }))
-    .case(UserPageUiActions.selectUserPlanet, (state, payload) => ({
+    .case(UserPageUiActions.selectUserNormalPlanetForModal, (state, payload) => ({
       ...state,
-      selectedUserPlanetId: payload,
+      selectedUserNormalPlanetIdForModal: payload,
       selectedUserSpecialPlanetIdForModal: null
     }))
-    .case(UserPageUiActions.unselectUserPlanet, state => ({
+    .case(UserPageUiActions.unselectUserNormalPlanetForModal, state => ({
       ...state,
-      selectedUserPlanetId: null
+      selectedUserNormalPlanetIdForModal: null
     }))
     .case(UserPageUiActions.selectPlanetKind, (state, payload) => ({
       ...state,
@@ -81,7 +81,7 @@ export const createUserPageUiReducer = () =>
     }))
     .case(UserPageUiActions.selectUserSpecialPlanetForModal, (state, payload) => ({
       ...state,
-      selectedUserPlanetId: null,
+      selectedUserNormalPlanetIdForModal: null,
       selectedUserSpecialPlanetIdForModal: payload
     }))
     .case(UserPageUiActions.unselectUserSpecialPlanetForModal, state => ({

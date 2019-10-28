@@ -12,9 +12,8 @@ export function PlanetHex(props: {
   hexSize: number
   hexWidth: number
   hexHeight: number
-  isSelectable: boolean
   isSelected: boolean
-  select: () => void
+  select?: () => void
 }) {
   const x = props.hexSize * ((3 / 2) * props.q)
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
@@ -32,7 +31,7 @@ export function PlanetHex(props: {
     alignItems: "center",
     position: "absolute"
   }
-  if (props.isSelectable || !!up) {
+  if (!!props.select) {
     hexStyle.cursor = "pointer"
   }
   const size = Math.min(props.hexWidth, props.hexHeight)

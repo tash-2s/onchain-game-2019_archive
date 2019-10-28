@@ -24,14 +24,18 @@ export class UserPageUiActions extends AbstractActions {
     this.dispatch(UserPageUiActions.unselectNormalPlanetForSet())
   }
 
-  static selectUserPlanet = UserPageUiActions.creator<string>("selectUserPlanet")
-  selectUserPlanet = (userPlanetId: string) => {
-    this.dispatch(UserPageUiActions.selectUserPlanet(userPlanetId))
+  static selectUserNormalPlanetForModal = UserPageUiActions.creator<string>(
+    "selectUserNormalPlanetForModal"
+  )
+  selectUserNormalPlanetForModal = (userPlanetId: string) => {
+    this.dispatch(UserPageUiActions.selectUserNormalPlanetForModal(userPlanetId))
   }
 
-  static unselectUserPlanet = UserPageUiActions.creator("unselectUserPlanet")
-  unselectUserPlanet = () => {
-    this.dispatch(UserPageUiActions.unselectUserPlanet())
+  static unselectUserNormalPlanetForModal = UserPageUiActions.creator(
+    "unselectUserNormalPlanetForModal"
+  )
+  unselectUserNormalPlanetForModal = () => {
+    this.dispatch(UserPageUiActions.unselectUserNormalPlanetForModal())
   }
 
   static selectPlanetKind = UserPageUiActions.creator<PlanetKindWithAll>("selectPlanetKind")
