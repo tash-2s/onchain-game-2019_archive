@@ -10,6 +10,7 @@ import { Modal } from "../utils/Modal"
 import { UserPlanet } from "./UserPlanet"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
+import { getNormalPlanet } from "../../data/NormalPlanets"
 
 interface Props {
   user: ComputedTargetUserState
@@ -52,12 +53,24 @@ export class UserPlanetMap extends React.Component<Props, State> {
     const hexWidth = hexSize * 2
     const hexHeight = Math.sqrt(3) * hexSize
 
+    let isSufficientGoldForNext = true
+    const planetId = this.props.userPageUi.selectedNormalPlanetIdForSet
+    if (!!planetId && this.props.userPageUi.selectedPlanetHexesForSet.length > 0) {
+      const planet = getNormalPlanet(planetId)
+      const buyableCount = this.props.user.gold.div(planet.priceGold)
+      isSufficientGoldForNext = buyableCount.gtn(
+        this.props.userPageUi.selectedPlanetHexesForSet.length
+      )
+    }
+
     const hexes = this.props.user.map.hexes.map(h => {
       const settable =
         this.props.isMine &&
         h.settable &&
         (!!this.props.userPageUi.selectedNormalPlanetIdForSet ||
-          !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet)
+          !!this.props.userPageUi.selectedSpecialPlanetTokenIdForSet) &&
+        isSufficientGoldForNext
+
       const selectFn = () => {
         if (!h.userPlanet) {
           return
@@ -94,7 +107,6 @@ export class UserPlanetMap extends React.Component<Props, State> {
     const height = (shownRadius * 2 + 1) * hexHeight
 
     let btn = <></>
-    const planetId = this.props.userPageUi.selectedNormalPlanetIdForSet
     if (!!planetId && this.props.userPageUi.selectedPlanetHexesForSet.length > 0) {
       const fn = () => {
         this.props.userActions.normal.setPlanetToMap(
