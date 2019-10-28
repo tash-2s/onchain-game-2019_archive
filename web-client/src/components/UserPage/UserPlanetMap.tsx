@@ -109,7 +109,7 @@ export class UserPlanetMap extends React.Component<Props, State> {
     let btn = <></>
     if (!!planetId && this.props.userPageUi.selectedPlanetHexesForSet.length > 0) {
       const fn = () => {
-        this.props.userActions.normal.setPlanetToMap(
+        this.props.userActions.normal.setPlanetsToMap(
           planetId,
           this.props.userPageUi.selectedPlanetHexesForSet
         )

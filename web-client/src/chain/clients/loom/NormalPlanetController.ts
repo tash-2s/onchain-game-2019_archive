@@ -2,10 +2,10 @@
 export class NormalPlanetController {
   constructor(private chain: import("../../loom").Loom) {}
 
-  setPlanet = (
+  setPlanets = (
     planetId: string | number,
-    axialCoordinateQ: string | number,
-    axialCoordinateR: string | number,
+    axialCoordinateQs: Array<string | number>,
+    axialCoordinateRs: Array<string | number>,
     txOption?: {}
   ) => {
     return new this.chain.web3.eth.Contract(
@@ -14,21 +14,21 @@ export class NormalPlanetController {
           constant: false,
           inputs: [
             { internalType: "uint16", name: "planetId", type: "uint16" },
-            { internalType: "int16", name: "axialCoordinateQ", type: "int16" },
-            { internalType: "int16", name: "axialCoordinateR", type: "int16" }
+            { internalType: "int16[]", name: "axialCoordinateQs", type: "int16[]" },
+            { internalType: "int16[]", name: "axialCoordinateRs", type: "int16[]" }
           ],
-          name: "setPlanet",
+          name: "setPlanets",
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
           type: "function",
-          signature: "0x1866e1ff"
+          signature: "0x9d2d2e9b"
         }
       ],
       this.chain.env.contractAddresses.NormalPlanetController,
       { from: this.chain.callerAddress() }
     ).methods
-      .setPlanet(planetId, axialCoordinateQ, axialCoordinateR)
+      .setPlanets(planetId, axialCoordinateQs, axialCoordinateRs)
       .send(txOption)
   }
 

@@ -70,7 +70,7 @@ export const createUserReducer = () =>
       ...state,
       targetUser: null
     }))
-    .case(UserActionsForNormalPlanet.setPlanetToMap, buildStateFromUserAndUserNormalPlanets)
+    .case(UserActionsForNormalPlanet.setPlanetsToMap, buildStateFromUserAndUserNormalPlanets)
     .case(UserActionsForNormalPlanet.rankupUserPlanet, buildStateFromUserAndUserNormalPlanets)
     .case(UserActionsForNormalPlanet.removeUserPlanet, buildStateFromUserAndUserNormalPlanets)
     .case(UserActionsForSpecialPlanet.setTargetUserPlanetTokens, (state, payload) => {

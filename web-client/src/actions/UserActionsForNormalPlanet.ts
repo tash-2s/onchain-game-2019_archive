@@ -10,24 +10,23 @@ import {
 export class UserActionsForNormalPlanet extends AbstractActions {
   private static creator = UserActionsForNormalPlanet.getActionCreator()
 
-  static setPlanetToMap = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
-    "setPlanetToMap"
+  static setPlanetsToMap = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
+    "setPlanetsToMap"
   )
-  setPlanetToMap = (
+  setPlanetsToMap = (
     planetId: number,
     axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
   ) => {
     this.withLoading(async () => {
-      // TODO: here
-      // await new NormalPlanetController(chains.loom).setPlanet(
-      //   planetId,
-      //   axialCoordinateQ,
-      //   axialCoordinateR
-      // )
+      await new NormalPlanetController(chains.loom).setPlanets(
+        planetId,
+        axialCoordinates.map(o => o.axialCoordinateQ),
+        axialCoordinates.map(o => o.axialCoordinateR)
+      )
 
       const response = await getUserNormalPlanets(loginedAddress())
 
-      this.dispatch(UserActionsForNormalPlanet.setPlanetToMap(response))
+      this.dispatch(UserActionsForNormalPlanet.setPlanetsToMap(response))
     })
   }
 

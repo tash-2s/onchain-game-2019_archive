@@ -41,7 +41,7 @@ const targetContractAndFunctions = {
   },
   loom: {
     HighlightedUserController: ["getUsers"],
-    NormalPlanetController: ["setPlanet", "rankupPlanet", "removePlanet"],
+    NormalPlanetController: ["setPlanets", "rankupPlanet", "removePlanet"],
     SpecialPlanetController: [
       "getPlanets",
       "setPlanet",
