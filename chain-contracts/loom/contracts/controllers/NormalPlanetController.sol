@@ -56,11 +56,25 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   }
 
   function rankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
+    uint256 knowledge = confirm(msg.sender);
+    uint256 rankupGold = _rankupPlanet(knowledge, userNormalPlanetId, targetRank);
+    unmintGold(msg.sender, rankupGold);
+  }
+
+  function rankupPlanets(uint64[] calldata userNormalPlanetIds, uint8[] calldata targetRanks) external {
+    uint256 knowledge = confirm(msg.sender);
+    uint256 rankupGold = 0;
+    for (uint256 i = 0; i < userNormalPlanetIds.length; i++) {
+      rankupGold += _rankupPlanet(knowledge, userNormalPlanetIds[i], targetRanks[i]);
+    }
+    unmintGold(msg.sender, rankupGold);
+  }
+
+  function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank) private returns (uint256) {
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
     );
-    uint256 knowledge = confirm(msg.sender);
 
     if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
       revert("invalid targetRank");
@@ -84,9 +98,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     uint256 planetPriceGold = uint256(10) **
       normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
     uint256 rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
-    unmintGold(msg.sender, rankupGold);
 
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
+
+    return rankupGold;
   }
 
   function _setPlanet(
