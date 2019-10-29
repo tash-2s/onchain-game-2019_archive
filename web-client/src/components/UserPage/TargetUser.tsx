@@ -2,8 +2,8 @@ import * as React from "react"
 
 import { CurrentUserState } from "../../reducers/currentUserReducer"
 import { ComputedTimeState } from "../../computers/timeComputer"
-import { UserPageUiState } from "../../reducers/userPageUiReducer"
 import { ComputedTargetUserState } from "../../computers/userComputer"
+import { ComputedUserPageUiState } from "../../computers/userPageUiComputer"
 import { UserPageUiActions } from "../../actions/UserPageUiActions"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
@@ -17,7 +17,7 @@ export function TargetUser(props: {
   time: ComputedTimeState
   targetUser: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: UserPageUiState
+  userPageUi: ComputedUserPageUiState
   userPageUiActions: UserPageUiActions
 }) {
   const isMine = (() => {
@@ -68,7 +68,7 @@ export function TargetUser(props: {
 
 function WrappedPlanetList(props: {
   targetUser: ComputedTargetUserState
-  userPageUi: UserPageUiState
+  userPageUi: ComputedUserPageUiState
   userPageUiActions: UserPageUiActions
   isMine: boolean
 }) {
@@ -104,7 +104,7 @@ function WrappedPlanetList(props: {
 function ViewKindRouter(props: {
   targetUser: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: UserPageUiState
+  userPageUi: ComputedUserPageUiState
   userPageUiActions: UserPageUiActions
   now: number
   isMine: boolean

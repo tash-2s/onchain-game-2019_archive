@@ -10,7 +10,7 @@ import { computeUserSpecialPlanets } from "./userSpecialPlanetComputer"
 import { computeGold } from "./goldComputer"
 import { computeMap } from "./mapComputer"
 
-type ComputedUserState = ReturnType<typeof computeUserState>
+export type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
 
 export const computeUserState = (state: UserState, now: number) => {

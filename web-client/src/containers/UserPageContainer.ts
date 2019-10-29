@@ -2,9 +2,13 @@ import { connect } from "react-redux"
 import { Dispatch, AnyAction } from "redux"
 
 import { RootState } from "../reducers/rootReducer"
+
 import { computeUserState } from "../computers/userComputer"
 import { computeTimeState } from "../computers/timeComputer"
+import { computeUserPageUiState } from "../computers/userPageUiComputer"
+
 import { UserPage } from "../components/UserPage"
+
 import { UserActions } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
@@ -12,13 +16,14 @@ import { UserPageUiActions } from "../actions/UserPageUiActions"
 
 const mapStateToProps = (state: RootState) => {
   const time = computeTimeState(state.time)
+  const user = computeUserState(state.user, time.now)
 
   return {
     route: state.app.route,
     currentUser: state.currentUser,
     time: time,
-    user: computeUserState(state.user, time.now),
-    userPageUi: state.userPageUi
+    user: user,
+    userPageUi: computeUserPageUiState(state.userPageUi, user.targetUser)
   }
 }
 

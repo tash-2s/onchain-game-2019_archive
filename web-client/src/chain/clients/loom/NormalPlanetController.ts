@@ -60,6 +60,34 @@ export class NormalPlanetController {
       .send(txOption)
   }
 
+  rankupPlanets = (
+    userNormalPlanetIds: Array<string | number>,
+    targetRanks: Array<string | number>,
+    txOption?: {}
+  ) => {
+    return new this.chain.web3.eth.Contract(
+      [
+        {
+          constant: false,
+          inputs: [
+            { internalType: "uint64[]", name: "userNormalPlanetIds", type: "uint64[]" },
+            { internalType: "uint8[]", name: "targetRanks", type: "uint8[]" }
+          ],
+          name: "rankupPlanets",
+          outputs: [],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function",
+          signature: "0x210716fe"
+        }
+      ],
+      this.chain.env.contractAddresses.NormalPlanetController,
+      { from: this.chain.callerAddress() }
+    ).methods
+      .rankupPlanets(userNormalPlanetIds, targetRanks)
+      .send(txOption)
+  }
+
   removePlanet = (userNormalPlanetId: string | number, txOption?: {}) => {
     return new this.chain.web3.eth.Contract(
       [
