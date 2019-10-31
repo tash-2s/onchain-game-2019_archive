@@ -29,7 +29,7 @@ export function TargetUser(props: {
     }
   })()
 
-  const goTokensView = () => props.userPageUIActions.selectViewKind("tokens")
+  const goTokensView = () => props.userPageUIActions.selectPageViewKind("tokens")
 
   return (
     <>
@@ -109,7 +109,7 @@ function ViewKindRouter(props: {
   now: number
   isMine: boolean
 }) {
-  switch (props.userPageUI.selectedUserPlanetViewKind) {
+  switch (props.userPageUI.selectedUserPlanetsViewKind) {
     case "map":
       return (
         <UserPlanetMap
@@ -140,7 +140,7 @@ function Buttons(props: { actions: UserPageUIActions }) {
     <nav className={"level"}>
       <div className={"level-left"}>
         <div className={"level-item"}>
-          <button className={"button is-small"} onClick={props.actions.toggleUserPlanetViewKind}>
+          <button className={"button is-small"} onClick={props.actions.toggleUserPlanetsViewKind}>
             Toggle View
           </button>
         </div>

@@ -1,17 +1,17 @@
 import { AbstractActions } from "./AbstractActions"
-import { UserPageViewKind, UserPlanetSortKind, PlanetKindWithAll } from "../constants"
+import { UserPageViewKind, UserPlanetsSortKind, PlanetKindWithAll } from "../constants"
 
 export class UserPageUIActions extends AbstractActions {
   private static creator = UserPageUIActions.getActionCreator()
 
-  static selectViewKind = UserPageUIActions.creator<UserPageViewKind>("selectViewKind")
-  selectViewKind = (kind: UserPageViewKind) => {
-    this.dispatch(UserPageUIActions.selectViewKind(kind))
+  static selectPageViewKind = UserPageUIActions.creator<UserPageViewKind>("selectPageViewKind")
+  selectPageViewKind = (kind: UserPageViewKind) => {
+    this.dispatch(UserPageUIActions.selectPageViewKind(kind))
   }
 
-  static toggleUserPlanetViewKind = UserPageUIActions.creator("toggleUserPlanetViewKind")
-  toggleUserPlanetViewKind = () => {
-    this.dispatch(UserPageUIActions.toggleUserPlanetViewKind())
+  static toggleUserPlanetsViewKind = UserPageUIActions.creator("toggleUserPlanetsViewKind")
+  toggleUserPlanetsViewKind = () => {
+    this.dispatch(UserPageUIActions.toggleUserPlanetsViewKind())
   }
 
   static selectNormalPlanetForSet = UserPageUIActions.creator<number>("selectNormalPlanetForSet")
@@ -38,16 +38,18 @@ export class UserPageUIActions extends AbstractActions {
     this.dispatch(UserPageUIActions.unselectUserNormalPlanetForModal())
   }
 
-  static selectPlanetKind = UserPageUIActions.creator<PlanetKindWithAll>("selectPlanetKind")
-  selectPlanetKind = (kind: PlanetKindWithAll) => {
-    this.dispatch(UserPageUIActions.selectPlanetKind(kind))
+  static selectPlanetKindForUserPlanetList = UserPageUIActions.creator<PlanetKindWithAll>(
+    "selectPlanetKindForUserPlanetList"
+  )
+  selectPlanetKindForUserPlanetList = (kind: PlanetKindWithAll) => {
+    this.dispatch(UserPageUIActions.selectPlanetKindForUserPlanetList(kind))
   }
 
-  static selectUserPlanetSortKind = UserPageUIActions.creator<UserPlanetSortKind>(
-    "selectUserPlanetSortKind"
+  static selectSortKindForUserPlanetList = UserPageUIActions.creator<UserPlanetsSortKind>(
+    "selectSortKindForUserPlanetList"
   )
-  selectUserPlanetSortKind = (kind: UserPlanetSortKind) => {
-    this.dispatch(UserPageUIActions.selectUserPlanetSortKind(kind))
+  selectSortKindForUserPlanetList = (kind: UserPlanetsSortKind) => {
+    this.dispatch(UserPageUIActions.selectSortKindForUserPlanetList(kind))
   }
 
   static togglePlanetListVisibilityForMobile = UserPageUIActions.creator(

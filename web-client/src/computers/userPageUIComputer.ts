@@ -7,19 +7,19 @@ export const computeUserPageUIState = (
   state: UserPageUIState,
   targetUser: ComputedUserState["targetUser"]
 ) => {
-  if (!targetUser || state.selectedUserPlanetViewKind === "map") {
+  if (!targetUser || state.selectedUserPlanetsViewKind === "map") {
     return { ...state, listedUserNormalPlanets: [], batchRankupable: [] }
   }
 
   const listedUserNormalPlanets = targetUser.userNormalPlanets
     .filter(up => {
-      if (state.selectedPlanetKind === "all") {
+      if (state.selectedPlanetKindForUserPlanetList === "all") {
         return true
       }
-      return up.planet.kind === state.selectedPlanetKind
+      return up.planet.kind === state.selectedPlanetKindForUserPlanetList
     })
     .sort((a, b) => {
-      switch (state.selectedUserPlanetSortKind) {
+      switch (state.selectedSortKindForUserPlanetList) {
         case "Newest":
           return b.createdAt - a.createdAt
         case "Oldest":

@@ -26,8 +26,8 @@ export interface RouteState {
 export const userPageViewKinds = ["main", "tokens"] as const
 export type UserPageViewKind = (typeof userPageViewKinds)[number]
 
-export const userPlanetViewKinds = ["map", "list"] as const
-export type UserPlanetViewKind = (typeof userPlanetViewKinds)[number]
+export const userPlanetsViewKinds = ["map", "list"] as const
+export type UserPlanetsViewKind = (typeof userPlanetsViewKinds)[number]
 
-export const userPlanetSortKinds = ["Newest", "Oldest"] as const
-export type UserPlanetSortKind = (typeof userPlanetSortKinds)[number]
+export const userPlanetsSortKinds = ["Newest", "Oldest"] as const
+export type UserPlanetsSortKind = (typeof userPlanetsSortKinds)[number]

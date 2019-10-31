@@ -3,18 +3,18 @@ import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { UserPageUIActions } from "../actions/UserPageUIActions"
 import {
   UserPageViewKind,
-  UserPlanetViewKind,
+  UserPlanetsViewKind,
   PlanetKindWithAll,
-  UserPlanetSortKind
+  UserPlanetsSortKind
 } from "../constants"
 
 export const initialUserPageUIState = {
-  selectedViewKind: "main" as UserPageViewKind,
-  selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
+  selectedPageViewKind: "main" as UserPageViewKind,
+  selectedUserPlanetsViewKind: "map" as UserPlanetsViewKind,
   selectedNormalPlanetIdForSet: null as number | null,
   selectedUserNormalPlanetIdForModal: null as string | null,
-  selectedPlanetKind: "all" as PlanetKindWithAll,
-  selectedUserPlanetSortKind: "Newest" as UserPlanetSortKind,
+  selectedPlanetKindForUserPlanetList: "all" as PlanetKindWithAll,
+  selectedSortKindForUserPlanetList: "Newest" as UserPlanetsSortKind,
   planetListVisibilityForMobile: false,
   selectedSpecialPlanetTokenIdForSet: null as string | null,
   selectedUserSpecialPlanetIdForModal: null as string | null,
@@ -25,17 +25,17 @@ export type UserPageUIState = typeof initialUserPageUIState
 
 export const createUserPageUIReducer = () =>
   reducerWithInitialState(initialUserPageUIState)
-    .case(UserPageUIActions.selectViewKind, (state, payload) => ({
+    .case(UserPageUIActions.selectPageViewKind, (state, payload) => ({
       ...state,
-      selectedViewKind: payload
+      selectedPageViewKind: payload
     }))
-    .case(UserPageUIActions.toggleUserPlanetViewKind, state => ({
+    .case(UserPageUIActions.toggleUserPlanetsViewKind, state => ({
       ...state,
-      selectedUserPlanetViewKind: state.selectedUserPlanetViewKind === "map" ? "list" : "map"
+      selectedUserPlanetsViewKind: state.selectedUserPlanetsViewKind === "map" ? "list" : "map"
     }))
     .case(UserPageUIActions.selectNormalPlanetForSet, (state, payload) => ({
       ...state,
-      selectedUserPlanetViewKind: "map",
+      selectedUserPlanetsViewKind: "map",
       selectedNormalPlanetIdForSet: payload,
       selectedSpecialPlanetTokenIdForSet: null
     }))
@@ -52,13 +52,13 @@ export const createUserPageUIReducer = () =>
       ...state,
       selectedUserNormalPlanetIdForModal: null
     }))
-    .case(UserPageUIActions.selectPlanetKind, (state, payload) => ({
+    .case(UserPageUIActions.selectPlanetKindForUserPlanetList, (state, payload) => ({
       ...state,
-      selectedPlanetKind: payload
+      selectedPlanetKindForUserPlanetList: payload
     }))
-    .case(UserPageUIActions.selectUserPlanetSortKind, (state, payload) => ({
+    .case(UserPageUIActions.selectSortKindForUserPlanetList, (state, payload) => ({
       ...state,
-      selectedUserPlanetSortKind: payload
+      selectedSortKindForUserPlanetList: payload
     }))
     .case(UserPageUIActions.togglePlanetListVisibilityForMobile, state => ({
       ...state,
@@ -70,8 +70,8 @@ export const createUserPageUIReducer = () =>
     }))
     .case(UserPageUIActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
       ...state,
-      selectedViewKind: "main",
-      selectedUserPlanetViewKind: "map",
+      selectedPageViewKind: "main",
+      selectedUserPlanetsViewKind: "map",
       selectedNormalPlanetIdForSet: null,
       selectedSpecialPlanetTokenIdForSet: payload
     }))

@@ -11,7 +11,7 @@ export class UserPage extends React.Component<UserPageProps> {
       this.props.user.targetUser &&
       this.props.user.targetUser.address === this.props.route.params[0]
     ) {
-      switch (this.props.userPageUI.selectedViewKind) {
+      switch (this.props.userPageUI.selectedPageViewKind) {
         case "main":
           return (
             <TargetUser

@@ -60,7 +60,7 @@ export function Tokens(props: {
   ) : (
     <></>
   )
-  const goToMainView = () => props.userPageUIActions.selectViewKind("main")
+  const goToMainView = () => props.userPageUIActions.selectPageViewKind("main")
   return (
     <div className={"box"}>
       <button onClick={goToMainView}>go main view</button>
