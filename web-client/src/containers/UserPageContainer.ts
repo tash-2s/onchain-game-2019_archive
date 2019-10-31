@@ -5,14 +5,14 @@ import { RootState } from "../reducers/rootReducer"
 
 import { computeUserState } from "../computers/userComputer"
 import { computeTimeState } from "../computers/timeComputer"
-import { computeUserPageUiState } from "../computers/userPageUiComputer"
+import { computeUserPageUIState } from "../computers/userPageUIComputer"
 
 import { UserPage } from "../components/UserPage"
 
 import { UserActions } from "../actions/UserActions"
 import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
 import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
-import { UserPageUiActions } from "../actions/UserPageUiActions"
+import { UserPageUIActions } from "../actions/UserPageUIActions"
 
 const mapStateToProps = (state: RootState) => {
   const time = computeTimeState(state.time)
@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState) => {
     currentUser: state.currentUser,
     time: time,
     user: user,
-    userPageUi: computeUserPageUiState(state.userPageUi, user.targetUser)
+    userPageUI: computeUserPageUIState(state.userPageUI, user.targetUser)
   }
 }
 
@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
       normal: new UserActionsForNormalPlanet(dispatch),
       special: new UserActionsForSpecialPlanet(dispatch)
     },
-    userPageUiActions: new UserPageUiActions(dispatch)
+    userPageUIActions: new UserPageUIActions(dispatch)
   }
 }
 

@@ -1,16 +1,16 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { TemplateUiActions } from "../actions/TemplateUiActions"
+import { TemplateUIActions } from "../actions/TemplateUIActions"
 
 const initialState = {
   activatedNavbarMenuForMobile: false
 }
 
-export type TemplateUiState = typeof initialState
+export type TemplateUIState = typeof initialState
 
-export const createTemplateUiReducer = () =>
+export const createTemplateUIReducer = () =>
   reducerWithInitialState(initialState)
-    .case(TemplateUiActions.toggleNavbarMenuForMobile, state => ({
+    .case(TemplateUIActions.toggleNavbarMenuForMobile, state => ({
       ...state,
       activatedNavbarMenuForMobile: !state.activatedNavbarMenuForMobile
     }))

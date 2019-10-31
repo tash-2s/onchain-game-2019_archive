@@ -2,14 +2,14 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { UserActionsForSpecialPlanet } from "../../actions/UserActionsForSpecialPlanet"
-import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { UserPageUIActions } from "../../actions/UserPageUIActions"
 
 import { PlanetArt } from "../utils/PlanetArt"
 
 export function Tokens(props: {
   user: ComputedTargetUserState
   userActionsForSpecialPlanet: UserActionsForSpecialPlanet
-  userPageUiActions: UserPageUiActions
+  userPageUIActions: UserPageUIActions
 }) {
   React.useEffect(() => {
     props.userActionsForSpecialPlanet.setTargetUserPlanetTokens()
@@ -40,7 +40,7 @@ export function Tokens(props: {
     : ""
   const loomTokens = props.user.specialPlanetToken.loomTokens.map(token => {
     const transferFn = () => props.userActionsForSpecialPlanet.transferPlanetTokenToEth(token.id)
-    const selectForSetFn = () => props.userPageUiActions.selectSpecialPlanetTokenForSet(token.id)
+    const selectForSetFn = () => props.userPageUIActions.selectSpecialPlanetTokenForSet(token.id)
     return (
       <li key={token.id}>
         {token.id}:{token.shortId}:{token.version}:{token.kind}:{token.paramRate}:
@@ -60,7 +60,7 @@ export function Tokens(props: {
   ) : (
     <></>
   )
-  const goToMainView = () => props.userPageUiActions.selectViewKind("main")
+  const goToMainView = () => props.userPageUIActions.selectViewKind("main")
   return (
     <div className={"box"}>
       <button onClick={goToMainView}>go main view</button>

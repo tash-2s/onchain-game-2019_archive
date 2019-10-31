@@ -3,8 +3,8 @@ import * as React from "react"
 import { CurrentUserState } from "../../reducers/currentUserReducer"
 import { ComputedTimeState } from "../../computers/timeComputer"
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { ComputedUserPageUiState } from "../../computers/userPageUiComputer"
-import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { ComputedUserPageUIState } from "../../computers/userPageUIComputer"
+import { UserPageUIActions } from "../../actions/UserPageUIActions"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { UserProfile } from "./UserProfile"
@@ -17,8 +17,8 @@ export function TargetUser(props: {
   time: ComputedTimeState
   targetUser: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: ComputedUserPageUiState
-  userPageUiActions: UserPageUiActions
+  userPageUI: ComputedUserPageUIState
+  userPageUIActions: UserPageUIActions
 }) {
   const isMine = (() => {
     const address = props.currentUser.loomAddress
@@ -29,7 +29,7 @@ export function TargetUser(props: {
     }
   })()
 
-  const goTokensView = () => props.userPageUiActions.selectViewKind("tokens")
+  const goTokensView = () => props.userPageUIActions.selectViewKind("tokens")
 
   return (
     <>
@@ -44,19 +44,19 @@ export function TargetUser(props: {
           <UserProfile user={props.targetUser} isMine={isMine} />
           <WrappedPlanetList
             targetUser={props.targetUser}
-            userPageUi={props.userPageUi}
-            userPageUiActions={props.userPageUiActions}
+            userPageUI={props.userPageUI}
+            userPageUIActions={props.userPageUIActions}
             isMine={isMine}
           />
         </div>
 
         <div className={`column is-three-quarters`}>
-          <Buttons actions={props.userPageUiActions} />
+          <Buttons actions={props.userPageUIActions} />
           <ViewKindRouter
             targetUser={props.targetUser}
             userActions={props.userActions}
-            userPageUi={props.userPageUi}
-            userPageUiActions={props.userPageUiActions}
+            userPageUI={props.userPageUI}
+            userPageUIActions={props.userPageUIActions}
             now={props.time.now}
             isMine={isMine}
           />
@@ -68,8 +68,8 @@ export function TargetUser(props: {
 
 function WrappedPlanetList(props: {
   targetUser: ComputedTargetUserState
-  userPageUi: ComputedUserPageUiState
-  userPageUiActions: UserPageUiActions
+  userPageUI: ComputedUserPageUIState
+  userPageUIActions: UserPageUIActions
   isMine: boolean
 }) {
   if (!props.isMine) {
@@ -84,17 +84,17 @@ function WrappedPlanetList(props: {
       >
         <button
           className={"button is-small is-primary"}
-          onClick={props.userPageUiActions.togglePlanetListVisibilityForMobile}
+          onClick={props.userPageUIActions.togglePlanetListVisibilityForMobile}
         >
-          {props.userPageUi.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
+          {props.userPageUI.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
         </button>
       </div>
 
-      <div className={props.userPageUi.planetListVisibilityForMobile ? "" : "is-hidden-touch"}>
+      <div className={props.userPageUI.planetListVisibilityForMobile ? "" : "is-hidden-touch"}>
         <PlanetList
           planets={props.targetUser.normalPlanets}
-          setPlanetToGet={props.userPageUiActions.selectNormalPlanetForSet}
-          userPageUi={props.userPageUi}
+          setPlanetToGet={props.userPageUIActions.selectNormalPlanetForSet}
+          userPageUI={props.userPageUI}
         />
       </div>
     </>
@@ -104,19 +104,19 @@ function WrappedPlanetList(props: {
 function ViewKindRouter(props: {
   targetUser: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: ComputedUserPageUiState
-  userPageUiActions: UserPageUiActions
+  userPageUI: ComputedUserPageUIState
+  userPageUIActions: UserPageUIActions
   now: number
   isMine: boolean
 }) {
-  switch (props.userPageUi.selectedUserPlanetViewKind) {
+  switch (props.userPageUI.selectedUserPlanetViewKind) {
     case "map":
       return (
         <UserPlanetMap
           user={props.targetUser}
           userActions={props.userActions}
-          userPageUi={props.userPageUi}
-          userPageUiActions={props.userPageUiActions}
+          userPageUI={props.userPageUI}
+          userPageUIActions={props.userPageUIActions}
           now={props.now}
           isMine={props.isMine}
         />
@@ -126,8 +126,8 @@ function ViewKindRouter(props: {
         <UserPlanetList
           user={props.targetUser}
           userActions={props.userActions}
-          userPageUi={props.userPageUi}
-          userPageUiActions={props.userPageUiActions}
+          userPageUI={props.userPageUI}
+          userPageUIActions={props.userPageUIActions}
           now={props.now}
           isMine={props.isMine}
         />
@@ -135,7 +135,7 @@ function ViewKindRouter(props: {
   }
 }
 
-function Buttons(props: { actions: UserPageUiActions }) {
+function Buttons(props: { actions: UserPageUIActions }) {
   return (
     <nav className={"level"}>
       <div className={"level-left"}>

@@ -1,22 +1,22 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { ComputedUserPageUiState } from "../../computers/userPageUiComputer"
+import { ComputedUserPageUIState } from "../../computers/userPageUIComputer"
 import { UserPlanet } from "./UserPlanet"
 import { userPlanetSortKinds, planetKindsWithAll } from "../../constants"
-import { UserPageUiActions } from "../../actions/UserPageUiActions"
+import { UserPageUIActions } from "../../actions/UserPageUIActions"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 export function UserPlanetList(props: {
   user: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: ComputedUserPageUiState
-  userPageUiActions: UserPageUiActions
+  userPageUI: ComputedUserPageUIState
+  userPageUIActions: UserPageUIActions
   now: number
   isMine: boolean
 }) {
-  const selectedKind = props.userPageUi.selectedPlanetKind
-  const userPlanets = props.userPageUi.listedUserNormalPlanets.map(up => (
+  const selectedKind = props.userPageUI.selectedPlanetKind
+  const userPlanets = props.userPageUI.listedUserNormalPlanets.map(up => (
     <tr key={up.id}>
       <td>
         <UserPlanet
@@ -31,14 +31,14 @@ export function UserPlanetList(props: {
   ))
 
   let batchRankupButton = <></>
-  if (props.userPageUi.batchRankupable.length > 0) {
-    const fn = () => props.userActions.normal.rankupUserPlanets(props.userPageUi.batchRankupable)
+  if (props.userPageUI.batchRankupable.length > 0) {
+    const fn = () => props.userActions.normal.rankupUserPlanets(props.userPageUI.batchRankupable)
     batchRankupButton = <button onClick={fn}>batch rankup</button>
   }
 
   return (
     <>
-      <Controller state={props.userPageUi} actions={props.userPageUiActions} />
+      <Controller state={props.userPageUI} actions={props.userPageUIActions} />
       <div>{batchRankupButton}</div>
       <table className={"table is-bordered is-fullwidth"}>
         <tbody>{userPlanets}</tbody>
@@ -47,7 +47,7 @@ export function UserPlanetList(props: {
   )
 }
 
-function Controller(props: { state: ComputedUserPageUiState; actions: UserPageUiActions }) {
+function Controller(props: { state: ComputedUserPageUIState; actions: UserPageUIActions }) {
   const planetKind = props.state.selectedPlanetKind
   const sortKind = props.state.selectedUserPlanetSortKind
   const selectKind = (_kind: typeof planetKind) => () => props.actions.selectPlanetKind(_kind)

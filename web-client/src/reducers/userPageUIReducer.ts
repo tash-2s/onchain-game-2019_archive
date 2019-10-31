@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
-import { UserPageUiActions } from "../actions/UserPageUiActions"
+import { UserPageUIActions } from "../actions/UserPageUIActions"
 import {
   UserPageViewKind,
   UserPlanetViewKind,
@@ -8,7 +8,7 @@ import {
   UserPlanetSortKind
 } from "../constants"
 
-export const initialUserPageUiState = {
+export const initialUserPageUIState = {
   selectedViewKind: "main" as UserPageViewKind,
   selectedUserPlanetViewKind: "map" as UserPlanetViewKind,
   selectedNormalPlanetIdForSet: null as number | null,
@@ -21,78 +21,78 @@ export const initialUserPageUiState = {
   selectedPlanetHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
 }
 
-export type UserPageUiState = typeof initialUserPageUiState
+export type UserPageUIState = typeof initialUserPageUIState
 
-export const createUserPageUiReducer = () =>
-  reducerWithInitialState(initialUserPageUiState)
-    .case(UserPageUiActions.selectViewKind, (state, payload) => ({
+export const createUserPageUIReducer = () =>
+  reducerWithInitialState(initialUserPageUIState)
+    .case(UserPageUIActions.selectViewKind, (state, payload) => ({
       ...state,
       selectedViewKind: payload
     }))
-    .case(UserPageUiActions.toggleUserPlanetViewKind, state => ({
+    .case(UserPageUIActions.toggleUserPlanetViewKind, state => ({
       ...state,
       selectedUserPlanetViewKind: state.selectedUserPlanetViewKind === "map" ? "list" : "map"
     }))
-    .case(UserPageUiActions.selectNormalPlanetForSet, (state, payload) => ({
+    .case(UserPageUIActions.selectNormalPlanetForSet, (state, payload) => ({
       ...state,
       selectedUserPlanetViewKind: "map",
       selectedNormalPlanetIdForSet: payload,
       selectedSpecialPlanetTokenIdForSet: null
     }))
-    .case(UserPageUiActions.unselectNormalPlanetForSet, state => ({
+    .case(UserPageUIActions.unselectNormalPlanetForSet, state => ({
       ...state,
       selectedNormalPlanetIdForSet: null
     }))
-    .case(UserPageUiActions.selectUserNormalPlanetForModal, (state, payload) => ({
+    .case(UserPageUIActions.selectUserNormalPlanetForModal, (state, payload) => ({
       ...state,
       selectedUserNormalPlanetIdForModal: payload,
       selectedUserSpecialPlanetIdForModal: null
     }))
-    .case(UserPageUiActions.unselectUserNormalPlanetForModal, state => ({
+    .case(UserPageUIActions.unselectUserNormalPlanetForModal, state => ({
       ...state,
       selectedUserNormalPlanetIdForModal: null
     }))
-    .case(UserPageUiActions.selectPlanetKind, (state, payload) => ({
+    .case(UserPageUIActions.selectPlanetKind, (state, payload) => ({
       ...state,
       selectedPlanetKind: payload
     }))
-    .case(UserPageUiActions.selectUserPlanetSortKind, (state, payload) => ({
+    .case(UserPageUIActions.selectUserPlanetSortKind, (state, payload) => ({
       ...state,
       selectedUserPlanetSortKind: payload
     }))
-    .case(UserPageUiActions.togglePlanetListVisibilityForMobile, state => ({
+    .case(UserPageUIActions.togglePlanetListVisibilityForMobile, state => ({
       ...state,
       planetListVisibilityForMobile: !state.planetListVisibilityForMobile
     }))
-    .case(UserPageUiActions.clear, state => ({
+    .case(UserPageUIActions.clear, state => ({
       ...state,
-      ...initialUserPageUiState
+      ...initialUserPageUIState
     }))
-    .case(UserPageUiActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
+    .case(UserPageUIActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
       ...state,
       selectedViewKind: "main",
       selectedUserPlanetViewKind: "map",
       selectedNormalPlanetIdForSet: null,
       selectedSpecialPlanetTokenIdForSet: payload
     }))
-    .case(UserPageUiActions.unselectSpecialPlanetTokenForSet, state => ({
+    .case(UserPageUIActions.unselectSpecialPlanetTokenForSet, state => ({
       ...state,
       selectedSpecialPlanetTokenIdForSet: null
     }))
-    .case(UserPageUiActions.selectUserSpecialPlanetForModal, (state, payload) => ({
+    .case(UserPageUIActions.selectUserSpecialPlanetForModal, (state, payload) => ({
       ...state,
       selectedUserNormalPlanetIdForModal: null,
       selectedUserSpecialPlanetIdForModal: payload
     }))
-    .case(UserPageUiActions.unselectUserSpecialPlanetForModal, state => ({
+    .case(UserPageUIActions.unselectUserSpecialPlanetForModal, state => ({
       ...state,
       selectedUserSpecialPlanetIdForModal: null
     }))
-    .case(UserPageUiActions.selectPlanetHexForSet, (state, payload) => ({
+    .case(UserPageUIActions.selectPlanetHexForSet, (state, payload) => ({
       ...state,
       selectedPlanetHexesForSet: [...state.selectedPlanetHexesForSet, payload]
     }))
-    .case(UserPageUiActions.unselectPlanetHexesForSet, state => ({
+    .case(UserPageUIActions.unselectPlanetHexesForSet, state => ({
       ...state,
       selectedPlanetHexesForSet: []
     }))

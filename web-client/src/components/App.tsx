@@ -12,8 +12,8 @@ export function App(props: AppProps) {
       appActions={props.appActions}
       currentUser={props.currentUser}
       currentUserActions={props.currentUserActions}
-      templateUi={props.templateUi}
-      templateUiActions={props.templateUiActions}
+      templateUI={props.templateUI}
+      templateUIActions={props.templateUIActions}
     >
       <Router route={props.app.route} />
     </Template>

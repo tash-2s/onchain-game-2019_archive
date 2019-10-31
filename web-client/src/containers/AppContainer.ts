@@ -6,20 +6,20 @@ import { App } from "../components/App"
 
 import { AppActions } from "../actions/AppActions"
 import { CurrentUserActions } from "../actions/CurrentUserActions"
-import { TemplateUiActions } from "../actions/TemplateUiActions"
+import { TemplateUIActions } from "../actions/TemplateUIActions"
 
 const mapStateToProps = (state: RootState) => {
   return {
     app: state.app,
     currentUser: state.currentUser,
-    templateUi: state.templateUi
+    templateUI: state.templateUI
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
     appActions: new AppActions(dispatch),
     currentUserActions: new CurrentUserActions(dispatch),
-    templateUiActions: new TemplateUiActions(dispatch)
+    templateUIActions: new TemplateUIActions(dispatch)
   }
 }
 

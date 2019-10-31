@@ -1,10 +1,10 @@
-import { UserPageUiState } from "../reducers/userPageUiReducer"
+import { UserPageUIState } from "../reducers/userPageUIReducer"
 import { ComputedUserState } from "./userComputer"
 
-export type ComputedUserPageUiState = ReturnType<typeof computeUserPageUiState>
+export type ComputedUserPageUIState = ReturnType<typeof computeUserPageUIState>
 
-export const computeUserPageUiState = (
-  state: UserPageUiState,
+export const computeUserPageUIState = (
+  state: UserPageUIState,
   targetUser: ComputedUserState["targetUser"]
 ) => {
   if (!targetUser || state.selectedUserPlanetViewKind === "map") {

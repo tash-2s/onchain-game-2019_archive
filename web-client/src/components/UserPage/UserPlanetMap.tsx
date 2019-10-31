@@ -1,8 +1,8 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { UserPageUiActions } from "../../actions/UserPageUiActions"
-import { UserPageUiState } from "../../reducers/userPageUiReducer"
+import { UserPageUIActions } from "../../actions/UserPageUIActions"
+import { UserPageUIState } from "../../reducers/userPageUIReducer"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { PlanetHex } from "./PlanetHex"
@@ -14,8 +14,8 @@ import { PrettyBN } from "../utils/PrettyBN"
 interface Props {
   user: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
-  userPageUi: UserPageUiState
-  userPageUiActions: UserPageUiActions
+  userPageUI: UserPageUIState
+  userPageUIActions: UserPageUIActions
   now: number
   isMine: boolean
 }
@@ -47,28 +47,28 @@ export function UserPlanetMap(props: Props) {
 
   let isSufficientGoldForNextSet = true
   if (
-    !!props.userPageUi.selectedNormalPlanetIdForSet &&
-    props.userPageUi.selectedPlanetHexesForSet.length > 0
+    !!props.userPageUI.selectedNormalPlanetIdForSet &&
+    props.userPageUI.selectedPlanetHexesForSet.length > 0
   ) {
     const planet = props.user.normalPlanets.find(
-      p => p.id === props.userPageUi.selectedNormalPlanetIdForSet
+      p => p.id === props.userPageUI.selectedNormalPlanetIdForSet
     )
     if (!planet) {
       throw new Error("unknown planet")
     }
     const buyableCount = props.user.gold.div(planet.priceGold)
-    isSufficientGoldForNextSet = buyableCount.gtn(props.userPageUi.selectedPlanetHexesForSet.length)
+    isSufficientGoldForNextSet = buyableCount.gtn(props.userPageUI.selectedPlanetHexesForSet.length)
   }
 
   const hexes = props.user.map.hexes.map(h => {
     const settable =
       props.isMine &&
       h.settable &&
-      (!!props.userPageUi.selectedNormalPlanetIdForSet ||
-        !!props.userPageUi.selectedSpecialPlanetTokenIdForSet) &&
+      (!!props.userPageUI.selectedNormalPlanetIdForSet ||
+        !!props.userPageUI.selectedSpecialPlanetTokenIdForSet) &&
       isSufficientGoldForNextSet
 
-    const isHighlighted = !!props.userPageUi.selectedPlanetHexesForSet.find(
+    const isHighlighted = !!props.userPageUI.selectedPlanetHexesForSet.find(
       o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
     )
 
@@ -105,21 +105,21 @@ const selectFn = (
   hex: ComputedTargetUserState["map"]["hexes"][number],
   settable: boolean
 ) => {
-  if (props.userPageUi.selectedNormalPlanetIdForSet) {
+  if (props.userPageUI.selectedNormalPlanetIdForSet) {
     if (!settable) {
       return null
     }
-    return () => props.userPageUiActions.selectPlanetHexForSet(hex.q, hex.r)
+    return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
   }
 
-  if (props.userPageUi.selectedSpecialPlanetTokenIdForSet) {
+  if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
     if (!settable) {
       return null
     }
-    const id = props.userPageUi.selectedSpecialPlanetTokenIdForSet
+    const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
     return () => {
       props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
-      props.userPageUiActions.unselectSpecialPlanetTokenForSet()
+      props.userPageUIActions.unselectSpecialPlanetTokenForSet()
     }
   }
 
@@ -127,9 +127,9 @@ const selectFn = (
     const up = hex.userPlanet
 
     if (hex.userPlanet.isNormal) {
-      return () => props.userPageUiActions.selectUserNormalPlanetForModal(up.id)
+      return () => props.userPageUIActions.selectUserNormalPlanetForModal(up.id)
     } else {
-      return () => props.userPageUiActions.selectUserSpecialPlanetForModal(up.id)
+      return () => props.userPageUIActions.selectUserSpecialPlanetForModal(up.id)
     }
   }
 
@@ -137,14 +137,14 @@ const selectFn = (
 }
 
 function UserPlanetDetailModal(props: Props) {
-  if (props.userPageUi.selectedUserNormalPlanetIdForModal) {
+  if (props.userPageUI.selectedUserNormalPlanetIdForModal) {
     const up = props.user.userNormalPlanets.find(
-      up => up.id === props.userPageUi.selectedUserNormalPlanetIdForModal
+      up => up.id === props.userPageUI.selectedUserNormalPlanetIdForModal
     )
     // this must be always true
     if (up) {
       return (
-        <Modal close={props.userPageUiActions.unselectUserNormalPlanetForModal}>
+        <Modal close={props.userPageUIActions.unselectUserNormalPlanetForModal}>
           <PlanetArt kind={up.planet.kind} artSeed={up.planet.artSeed} canvasSize={300} />
           <UserPlanet
             userPlanet={up}
@@ -158,16 +158,16 @@ function UserPlanetDetailModal(props: Props) {
     }
   }
 
-  if (props.userPageUi.selectedUserSpecialPlanetIdForModal) {
+  if (props.userPageUI.selectedUserSpecialPlanetIdForModal) {
     const up = props.user.userSpecialPlanets.find(
-      up => up.id === props.userPageUi.selectedUserSpecialPlanetIdForModal
+      up => up.id === props.userPageUI.selectedUserSpecialPlanetIdForModal
     )
     // this must be always true
     if (up) {
       const buttonFn = () => props.userActions.special.removeUserPlanetFromMap(up.id)
       const button = props.isMine ? <button onClick={buttonFn}>Remove</button> : <></>
       return (
-        <Modal close={props.userPageUiActions.unselectUserSpecialPlanetForModal}>
+        <Modal close={props.userPageUIActions.unselectUserSpecialPlanetForModal}>
           <PlanetArt kind={up.kind} artSeed={up.artSeed} canvasSize={300} />
           <div>
             Kind: {up.kind}
@@ -183,14 +183,14 @@ function UserPlanetDetailModal(props: Props) {
 }
 
 function SetToMapButton(props: Props) {
-  const planetId = props.userPageUi.selectedNormalPlanetIdForSet
-  if (!planetId || props.userPageUi.selectedPlanetHexesForSet.length <= 0) {
+  const planetId = props.userPageUI.selectedNormalPlanetIdForSet
+  if (!planetId || props.userPageUI.selectedPlanetHexesForSet.length <= 0) {
     return <></>
   }
   const fn = () => {
-    props.userActions.normal.setPlanetsToMap(planetId, props.userPageUi.selectedPlanetHexesForSet)
-    props.userPageUiActions.unselectNormalPlanetForSet()
-    props.userPageUiActions.unselectPlanetHexesForSet()
+    props.userActions.normal.setPlanetsToMap(planetId, props.userPageUI.selectedPlanetHexesForSet)
+    props.userPageUIActions.unselectNormalPlanetForSet()
+    props.userPageUIActions.unselectPlanetHexesForSet()
   }
   return <button onClick={fn}>set to map</button>
 }

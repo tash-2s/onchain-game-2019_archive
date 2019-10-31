@@ -3,7 +3,7 @@ import * as React from "react"
 import { UserPageProps } from "../containers/UserPageContainer"
 import { TargetUser } from "./UserPage/TargetUser"
 import { Tokens } from "./UserPage/Tokens"
-import { initialUserPageUiState } from "../reducers/userPageUiReducer"
+import { initialUserPageUIState } from "../reducers/userPageUIReducer"
 
 export class UserPage extends React.Component<UserPageProps> {
   render = () => {
@@ -11,15 +11,15 @@ export class UserPage extends React.Component<UserPageProps> {
       this.props.user.targetUser &&
       this.props.user.targetUser.address === this.props.route.params[0]
     ) {
-      switch (this.props.userPageUi.selectedViewKind) {
+      switch (this.props.userPageUI.selectedViewKind) {
         case "main":
           return (
             <TargetUser
               currentUser={this.props.currentUser}
               time={this.props.time}
-              userPageUi={this.props.userPageUi}
+              userPageUI={this.props.userPageUI}
               targetUser={this.props.user.targetUser}
-              userPageUiActions={this.props.userPageUiActions}
+              userPageUIActions={this.props.userPageUIActions}
               userActions={this.props.userActions}
             />
           )
@@ -28,7 +28,7 @@ export class UserPage extends React.Component<UserPageProps> {
             <Tokens
               user={this.props.user.targetUser}
               userActionsForSpecialPlanet={this.props.userActions.special}
-              userPageUiActions={this.props.userPageUiActions}
+              userPageUIActions={this.props.userPageUIActions}
             />
           )
         default:
@@ -48,8 +48,8 @@ export class UserPage extends React.Component<UserPageProps> {
       this.props.user.targetUser &&
       this.props.user.targetUser.address !== this.props.route.params[0]
     ) {
-      if (stringify(this.props.userPageUi) !== stringify(initialUserPageUiState)) {
-        this.props.userPageUiActions.clear()
+      if (stringify(this.props.userPageUI) !== stringify(initialUserPageUIState)) {
+        this.props.userPageUIActions.clear()
         return
       }
       this.props.userActions.main.setTargetUser(this.props.route.params[0])
@@ -58,7 +58,7 @@ export class UserPage extends React.Component<UserPageProps> {
 
   componentWillUnmount = () => {
     this.props.userActions.main.clearTargetUser()
-    this.props.userPageUiActions.clear()
+    this.props.userPageUIActions.clear()
   }
 }
 

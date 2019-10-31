@@ -3,12 +3,12 @@ import * as React from "react"
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { PrettyBN } from "../utils/PrettyBN"
 import { PlanetParam } from "../utils/PlanetParam"
-import { UserPageUiState } from "../../reducers/userPageUiReducer"
+import { UserPageUIState } from "../../reducers/userPageUIReducer"
 
 export class PlanetList extends React.Component<{
   planets: ComputedTargetUserState["normalPlanets"]
   setPlanetToGet: (planetId: number) => void
-  userPageUi: UserPageUiState
+  userPageUI: UserPageUIState
 }> {
   render = () => {
     const buttonText = "Get"
@@ -29,7 +29,7 @@ export class PlanetList extends React.Component<{
       }
 
       let activeClass = ""
-      if (p.id === this.props.userPageUi.selectedNormalPlanetIdForSet) {
+      if (p.id === this.props.userPageUI.selectedNormalPlanetIdForSet) {
         activeClass = "is-active"
       }
 
