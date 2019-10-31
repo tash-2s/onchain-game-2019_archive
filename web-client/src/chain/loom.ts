@@ -198,7 +198,7 @@ const getEthAddressInstanceFromSigner = async (signer: ethers.Signer) => {
 const setupLoginedProvider = (
   signer: ethers.Signer,
   client: Client,
-  privateKey: UInt8Array,
+  privateKey: Uint8Array,
   ethAddressInstance: Address
 ) => {
   const provider = new LoomProvider(client, privateKey)
