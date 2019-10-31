@@ -31,9 +31,8 @@ export class Loom {
   }
 
   login = async (signer: ethers.Signer) => {
-    const ethAddress = await signer.getAddress()
+    const ethAddressInstance = await getEthAddressInstanceFromSigner(signer)
 
-    const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
     const client = LoomUtil.createClient()
     const dummyAccount = LoomUtil.generateAccount()
 
@@ -46,20 +45,31 @@ export class Loom {
     }
     const mapping = await addressMapper.getMappingAsync(ethAddressInstance)
 
-    const loomProvider = new LoomProvider(client, dummyAccount.privateKey)
-    loomProvider.callerChainId = "eth"
-    loomProvider.setMiddlewaresForAddress(ethAddressInstance.local.toString(), [
-      new NonceTxMiddleware(ethAddressInstance, client),
-      new SignedEthTxMiddleware(signer)
-    ])
+    const newProvider = setupLoginedProvider(
+      signer,
+      client,
+      dummyAccount.privateKey,
+      ethAddressInstance
+    )
 
-    const oldProvider = this.web3.currentProvider as LoomProvider
-    oldProvider.disconnect()
-
-    this.web3 = new Web3(loomProvider)
+    this._changeWeb3(newProvider)
     this.address = mapping.to.local.toChecksumString()
 
-    return { ethAddress, loomAddress: this.address }
+    return { ethAddress: ethAddressInstance.local.toString(), loomAddress: this.address }
+  }
+
+  // for loggined
+  reconnect = async (signer: ethers.Signer) => {
+    const ethAddressInstance = await getEthAddressInstanceFromSigner(signer)
+
+    const newProvider = setupLoginedProvider(
+      signer,
+      LoomUtil.createClient(),
+      LoomUtil.generateAccount().privateKey, // dummy
+      ethAddressInstance
+    )
+
+    this._changeWeb3(newProvider)
   }
 
   getLoomTime = async () => {
@@ -146,9 +156,17 @@ export class Loom {
 
   // return eth address if logined, otherwise return loom dummy address
   callerAddress = () => {
-    const provider = this.web3.currentProvider as LoomProvider
-    const addresses = Array.from(provider.accounts.keys())
+    const addresses = Array.from(this._web3CurrentProvider().accounts.keys())
     return addresses[addresses.length - 1]
+  }
+
+  private _web3CurrentProvider = () => {
+    return this.web3.currentProvider as LoomProvider
+  }
+
+  private _changeWeb3 = (newProvider: LoomProvider) => {
+    this._web3CurrentProvider().disconnect() // disconnect old provider
+    this.web3 = new Web3(newProvider)
   }
 }
 
@@ -169,6 +187,28 @@ class LoomUtil {
     const { privateKey } = LoomUtil.generateAccount()
     return new LoomProvider(LoomUtil.createClient(), privateKey)
   }
+}
+
+const getEthAddressInstanceFromSigner = async (signer: ethers.Signer) => {
+  const ethAddress = await signer.getAddress()
+  const ethAddressInstance = new Address("eth", LocalAddress.fromHexString(ethAddress))
+  return ethAddressInstance
+}
+
+const setupLoginedProvider = (
+  signer: ethers.Signer,
+  client: Client,
+  privateKey: Uint8Array,
+  ethAddressInstance: Address
+) => {
+  const provider = new LoomProvider(client, privateKey)
+  provider.callerChainId = "eth"
+  provider.setMiddlewaresForAddress(ethAddressInstance.local.toString(), [
+    new NonceTxMiddleware(ethAddressInstance, client),
+    new SignedEthTxMiddleware(signer)
+  ])
+
+  return provider
 }
 
 const addMappingWithNewLoomAccount = async (signer: ethers.Signer) => {

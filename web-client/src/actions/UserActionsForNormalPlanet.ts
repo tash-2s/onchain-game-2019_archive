@@ -53,6 +53,11 @@ export class UserActionsForNormalPlanet extends AbstractActions {
         arr.map(o => o.targetRank)
       )
 
+      // TODO: When I send a heavy tx, this is needed for some reason.
+      // FIXME: This doen't work...
+      await sleep(1)
+      await chains.loom.reconnect(chains.eth.signer())
+
       const response = await getUserNormalPlanets(loginedAddress())
 
       this.dispatch(UserActionsForNormalPlanet.rankupUserPlanets(response))
@@ -80,3 +85,8 @@ const loginedAddress = () => {
   }
   return address
 }
+
+const sleep = (sec: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, sec * 1000)
+  })
