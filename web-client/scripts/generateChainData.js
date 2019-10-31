@@ -88,7 +88,7 @@ const generateChainEnv = contracts => {
     }
   }
 
-  fs.writeFileSync(`./chainEnv/${envName}.json`, JSON.stringify(chainEnv, null, 2))
+  fs.writeFileSync(`./chainEnv/${envName}.json`, `${JSON.stringify(chainEnv, null, 2)}\n`)
 }
 
 const generateChainClients = contracts => {
