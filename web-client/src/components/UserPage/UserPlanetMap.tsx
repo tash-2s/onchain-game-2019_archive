@@ -45,7 +45,7 @@ export function UserPlanetMap(props: Props) {
   const hexWidth = hexSize * 2
   const hexHeight = Math.sqrt(3) * hexSize
 
-  let isSufficientGoldForNextSet = true
+  let isSufficientGoldForNextNormalPlanetSet = true
   if (
     !!props.userPageUI.selectedNormalPlanetIdForSet &&
     props.userPageUI.selectedPlanetHexesForSet.length > 0
@@ -57,7 +57,9 @@ export function UserPlanetMap(props: Props) {
       throw new Error("unknown planet")
     }
     const buyableCount = props.user.gold.div(planet.priceGold)
-    isSufficientGoldForNextSet = buyableCount.gtn(props.userPageUI.selectedPlanetHexesForSet.length)
+    isSufficientGoldForNextNormalPlanetSet = buyableCount.gtn(
+      props.userPageUI.selectedPlanetHexesForSet.length
+    )
   }
 
   const hexes = props.user.map.hexes.map(h => {
@@ -65,8 +67,7 @@ export function UserPlanetMap(props: Props) {
       props.isMine &&
       h.settable &&
       (!!props.userPageUI.selectedNormalPlanetIdForSet ||
-        !!props.userPageUI.selectedSpecialPlanetTokenIdForSet) &&
-      isSufficientGoldForNextSet
+        !!props.userPageUI.selectedSpecialPlanetTokenIdForSet)
 
     const isHighlighted = !!props.userPageUI.selectedPlanetHexesForSet.find(
       o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
@@ -84,7 +85,7 @@ export function UserPlanetMap(props: Props) {
         hexWidth={hexWidth}
         hexHeight={hexHeight}
         isHighlighted={isHighlighted}
-        select={selectFn(props, h, settable) || undefined}
+        select={selectFn(props, h, settable, isSufficientGoldForNextNormalPlanetSet) || undefined}
       />
     )
   })
@@ -103,10 +104,17 @@ export function UserPlanetMap(props: Props) {
 const selectFn = (
   props: Props,
   hex: ComputedTargetUserState["map"]["hexes"][number],
-  settable: boolean
+  settable: boolean,
+  isSufficientGoldForNextNormalPlanetSet: boolean
 ) => {
   if (props.userPageUI.selectedNormalPlanetIdForSet) {
     if (!settable) {
+      return null
+    }
+    const same = props.userPageUI.selectedPlanetHexesForSet.find(
+      o => o.axialCoordinateQ === hex.q && o.axialCoordinateR === hex.r
+    )
+    if (!same && !isSufficientGoldForNextNormalPlanetSet) {
       return null
     }
     return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)

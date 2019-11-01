@@ -89,14 +89,16 @@ export const createUserPageUIReducer = () =>
       selectedUserSpecialPlanetIdForModal: null
     }))
     .case(UserPageUIActions.selectPlanetHexForSet, (state, payload) => {
-      const same = state.selectedPlanetHexesForSet.find(
+      // unselect if the hex is already selected
+      const removedSame = state.selectedPlanetHexesForSet.filter(
         o =>
-          o.axialCoordinateQ === payload.axialCoordinateQ &&
-          o.axialCoordinateR === payload.axialCoordinateR
+          o.axialCoordinateQ !== payload.axialCoordinateQ ||
+          o.axialCoordinateR !== payload.axialCoordinateR
       )
-      if (same) {
-        return state
+      if (removedSame.length !== state.selectedPlanetHexesForSet.length) {
+        return { ...state, selectedPlanetHexesForSet: removedSame }
       }
+
       return {
         ...state,
         selectedPlanetHexesForSet: [...state.selectedPlanetHexesForSet, payload]
