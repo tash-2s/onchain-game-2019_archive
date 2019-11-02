@@ -31,7 +31,7 @@ export function UserPlanetList(props: {
   ))
 
   let batchRankupButton = <></>
-  if (props.userPageUI.batchRankupable.length > 0) {
+  if (props.isMine && props.userPageUI.batchRankupable.length > 0) {
     const fn = () => props.userActions.normal.rankupUserPlanets(props.userPageUI.batchRankupable)
     batchRankupButton = <button onClick={fn}>batch rankup</button>
   }
