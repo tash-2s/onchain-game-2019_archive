@@ -21,7 +21,7 @@ export function UserPlanet(props: UserPlanetProps) {
     ) : (
       <div>Rankuped: {props.now - up.rankupedAt} sec ago</div>
     )
-  const param = <PlanetParam planet={up.planet} />
+  const param = <PlanetParam kind={up.planet.kind} param={up.param} />
 
   return (
     <>

@@ -40,7 +40,7 @@ export class PlanetList extends React.Component<{
             Gold <PrettyBN bn={p.priceGold} />
           </div>
           <div>
-            Param <PlanetParam planet={p} />
+            Param <PlanetParam kind={p.kind} param={p.param} />
           </div>
           <div>{button}</div>
         </div>
