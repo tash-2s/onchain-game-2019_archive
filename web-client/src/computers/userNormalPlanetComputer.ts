@@ -114,7 +114,7 @@ const remainingSecForRankup = (
 }
 
 const requiredSecForRankup = (currentRank: number) => {
-  return (300 * 14 ** (currentRank - 1)) / 10 ** (currentRank - 1)
+  return Math.floor((300 * 14 ** (currentRank - 1)) / 10 ** (currentRank - 1))
 }
 
 const rankupableCount = (
