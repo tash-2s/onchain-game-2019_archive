@@ -63,16 +63,28 @@
     "id": 11,
     "kind": "residence",
     "paramCommonLogarithm": 11,
-    "priceGoldCommonLogarithm": 34
+    "priceGoldCommonLogarithm": 33
   },
   {
     "id": 12,
     "kind": "goldmine",
     "paramCommonLogarithm": 12,
-    "priceGoldCommonLogarithm": 35
+    "priceGoldCommonLogarithm": 34
   },
   {
     "id": 13,
+    "kind": "residence",
+    "paramCommonLogarithm": 13,
+    "priceGoldCommonLogarithm": 40
+  },
+  {
+    "id": 14,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 14,
+    "priceGoldCommonLogarithm": 41
+  },
+  {
+    "id": 15,
     "kind": "technology",
     "paramCommonLogarithm": 1,
     "priceGoldCommonLogarithm": 8
