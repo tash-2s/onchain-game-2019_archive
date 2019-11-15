@@ -134,6 +134,25 @@ contract SpecialPlanetControllable is TimeGettable {
     _userSpecialPlanetPermanence.deleteElement(account, index);
   }
 
+  function removeUserSpecialPlanetFromMapIfExist(
+    address account,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal returns (uint24) {
+    (bytes32 target, uint16 index) = _findRecordBytes32(
+      account,
+      axialCoordinateQ,
+      axialCoordinateR
+    );
+
+    if (target == bytes32(0)) {
+      return 0;
+    }
+
+    _userSpecialPlanetPermanence.deleteElement(account, index);
+    return buildUserSpecialPlanetRecordFromBytes32(target).id;
+  }
+
   function buildUserSpecialPlanetRecordFromBytes32(bytes32 b)
     internal
     pure
@@ -197,5 +216,28 @@ contract SpecialPlanetControllable is TimeGettable {
     }
 
     return (buildUserSpecialPlanetRecordFromBytes32(target), index);
+  }
+
+  function _findRecordBytes32(address account, int16 axialCoordinateQ, int16 axialCoordinateR)
+    private
+    view
+    returns (bytes32, uint16)
+  {
+    bytes32[] memory us = _userSpecialPlanetPermanence.read(account);
+    bytes32 target = bytes32(0);
+    uint16 index;
+
+    for (uint16 i = 0; i < us.length; i++) {
+      if (
+        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT)) == axialCoordinateQ &&
+        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT)) == axialCoordinateR
+      ) {
+        target = us[i];
+        index = i;
+        break;
+      }
+    }
+
+    return (target, index);
   }
 }

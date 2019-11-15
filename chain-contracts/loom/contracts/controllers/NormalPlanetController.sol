@@ -12,14 +12,16 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
-    address normalPlanetPermanenceAddress
+    address normalPlanetPermanenceAddress,
+    address specialPlanetTokenLockerAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
-      userGoldPermanenceAddress
+      userGoldPermanenceAddress,
+      specialPlanetTokenLockerAddress
     );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
   }
@@ -61,7 +63,9 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     unmintGold(msg.sender, rankupGold);
   }
 
-  function rankupPlanets(uint64[] calldata userNormalPlanetIds, uint8[] calldata targetRanks) external {
+  function rankupPlanets(uint64[] calldata userNormalPlanetIds, uint8[] calldata targetRanks)
+    external
+  {
     uint256 knowledge = confirm(msg.sender);
     uint256 rankupGold = 0;
     for (uint256 i = 0; i < userNormalPlanetIds.length; i++) {
@@ -70,7 +74,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     unmintGold(msg.sender, rankupGold);
   }
 
-  function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank) private returns (uint256) {
+  function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank)
+    private
+    returns (uint256)
+  {
     UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
       msg.sender,
       userNormalPlanetId
@@ -117,6 +124,8 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     } else {
       unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
     }
+
+    removeSpecialPlanetFromMapIfExist(msg.sender, axialCoordinateQ, axialCoordinateR);
 
     mintUserNormalPlanet(
       msg.sender,

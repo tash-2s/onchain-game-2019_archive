@@ -4,23 +4,29 @@ import "./UserNormalPlanetControllable.sol";
 import "./SpecialPlanetControllable.sol";
 import "./UserGoldControllable.sol";
 
+import "../../misc/SpecialPlanetTokenLocker.sol";
+
 contract UserPlanetControllable is
   UserNormalPlanetControllable,
   SpecialPlanetControllable,
   UserGoldControllable
 {
+  SpecialPlanetTokenLocker public specialPlanetTokenLocker;
+
   function setupUserPlanetControllable(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdGeneratorPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
-    address userGoldPermanenceAddress
+    address userGoldPermanenceAddress,
+    address specialPlanetTokenLockerAddress
   ) internal {
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
     setUserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
     setSpecialPlanetIdToDataPermanence(specialPlanetIdToDataPermanenceAddress);
     setUserGoldPermanence(userGoldPermanenceAddress);
+    specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
   function confirm(address account) internal returns (uint256) {
@@ -124,5 +130,25 @@ contract UserPlanetControllable is
     }
 
     return (population, productivity);
+  }
+
+  function removeSpecialPlanetFromMap(address account, uint24 shortId) internal {
+    removeUserSpecialPlanetFromMap(account, shortId);
+    specialPlanetTokenLocker.withdraw(shortId);
+  }
+
+  function removeSpecialPlanetFromMapIfExist(
+    address account,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal {
+    uint24 shortId = removeUserSpecialPlanetFromMapIfExist(
+      account,
+      axialCoordinateQ,
+      axialCoordinateR
+    );
+    if (shortId != 0) {
+      specialPlanetTokenLocker.withdraw(shortId);
+    }
   }
 }
