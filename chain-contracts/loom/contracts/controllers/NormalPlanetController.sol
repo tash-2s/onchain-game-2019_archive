@@ -12,14 +12,16 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
-    address normalPlanetPermanenceAddress
+    address normalPlanetPermanenceAddress,
+    address specialPlanetTokenLockerAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
       userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
-      userGoldPermanenceAddress
+      userGoldPermanenceAddress,
+      specialPlanetTokenLockerAddress
     );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
   }

@@ -1,17 +1,12 @@
 pragma solidity 0.5.11;
 
 import "./modules/UserPlanetControllable.sol";
+import "../../../SpecialPlanetTokenIdInterpretable.sol";
 
 import "./HighlightedUserController.sol";
-import "../tokens/SpecialPlanetToken.sol";
-import "../misc/SpecialPlanetTokenLocker.sol";
-
-import "../../../SpecialPlanetTokenIdInterpretable.sol";
 
 contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenIdInterpretable {
   HighlightedUserController private _highlightedUserController;
-  SpecialPlanetToken private _specialPlanetToken;
-  SpecialPlanetTokenLocker public specialPlanetTokenLocker;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
@@ -20,7 +15,6 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
     address highlightedUsersContractAddress,
-    address specialPlanetTokenAddress,
     address specialPlanetTokenLockerAddress
   ) public {
     setupUserPlanetControllable(
@@ -28,19 +22,14 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
-      userGoldPermanenceAddress
+      userGoldPermanenceAddress,
+      specialPlanetTokenLockerAddress
     );
     _highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
-    _specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
-    specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
   function highlightedUserController() external view returns (HighlightedUserController) {
     return _highlightedUserController;
-  }
-
-  function specialPlanetToken() external view returns (SpecialPlanetToken) {
-    return _specialPlanetToken;
   }
 
   function getPlanets(address account)
@@ -109,8 +98,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
 
   function removePlanet(uint24 shortId) external {
     confirm(msg.sender);
-    removeUserSpecialPlanetFromMap(msg.sender, shortId);
-    specialPlanetTokenLocker.withdraw(shortId);
+    removeSpecialPlanetFromMap(msg.sender, shortId);
   }
 
   function getPlanetFieldsFromTokenIds(uint256[] calldata tokenIds)
@@ -146,7 +134,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   }
 
   function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {
-    _specialPlanetToken.safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
+    specialPlanetTokenLocker.specialPlanetToken().safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
     specialPlanetTokenLocker.setup(msg.sender, tokenId, shortId);
   }
 }
