@@ -120,6 +120,8 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
       unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
     }
 
+    removeSpecialPlanetFromMapIfExist(msg.sender, axialCoordinateQ, axialCoordinateR);
+
     mintUserNormalPlanet(
       msg.sender,
       planetId,
