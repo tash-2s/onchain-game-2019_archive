@@ -24,7 +24,7 @@ const RADIUS_GOLD_THRESHOLD = [
   "1000000000000000000000000000000000000000000000"
 ].map(s => new BN(s))
 
-export class UserPlanetsMapUtil {
+export class MapUtil {
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
     const z = r
@@ -34,11 +34,8 @@ export class UserPlanetsMapUtil {
 
   static hexesFromMapRadius = (radius: number) => {
     const arr: Array<Array<number>> = []
-    UserPlanetsMapUtil.range(-radius, radius).forEach(q => {
-      UserPlanetsMapUtil.range(
-        Math.max(-radius, -q - radius),
-        Math.min(radius, -q + radius)
-      ).forEach(r => {
+    MapUtil.range(-radius, radius).forEach(q => {
+      MapUtil.range(Math.max(-radius, -q - radius), Math.min(radius, -q + radius)).forEach(r => {
         arr.push([q, r])
       })
     })
@@ -82,27 +79,26 @@ export class UserPlanetsMapUtil {
     let userPlanetsBiggestRadius = 0
 
     const tackleBiggestRadius = (up: T1 | T2) => {
-      const distance = UserPlanetsMapUtil.distanceFromCenter(
-        up.axialCoordinateQ,
-        up.axialCoordinateR
-      )
+      const distance = MapUtil.distanceFromCenter(up.axialCoordinateQ, up.axialCoordinateR)
       if (userPlanetsBiggestRadius < distance) {
         userPlanetsBiggestRadius = distance
       }
     }
 
     userNormalPlanets.forEach(up => {
-      userPlanetsByCoordinates[
-        UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
-      ] = { ...up, isNormal: true }
+      userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
+        ...up,
+        isNormal: true
+      }
 
       tackleBiggestRadius(up)
     })
 
     userSpecialPlanets.forEach(up => {
-      userPlanetsByCoordinates[
-        UserPlanetsMapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)
-      ] = { ...up, isNormal: false }
+      userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
+        ...up,
+        isNormal: false
+      }
 
       tackleBiggestRadius(up)
     })

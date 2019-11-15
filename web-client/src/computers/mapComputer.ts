@@ -1,6 +1,6 @@
 import BN from "bn.js"
 
-import { UserPlanetsMapUtil } from "../models/UserPlanetsMapUtil"
+import { MapUtil } from "../models/MapUtil"
 
 interface Coordinates {
   axialCoordinateQ: number
@@ -12,19 +12,19 @@ export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
   userNormalPlanets: Array<T1>,
   userSpecialPlanets: Array<T2>
 ) => {
-  const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(gold)
+  const usableRadius = MapUtil.mapRadiusFromGold(gold)
   const {
     userPlanetsByCoordinates,
     userPlanetsBiggestRadius
-  } = UserPlanetsMapUtil.userPlanetsAndThierBiggestRadius(userNormalPlanets, userSpecialPlanets)
+  } = MapUtil.userPlanetsAndThierBiggestRadius(userNormalPlanets, userSpecialPlanets)
   const shownRadius = Math.max(userPlanetsBiggestRadius, usableRadius)
-  const hexes = UserPlanetsMapUtil.hexesFromMapRadius(shownRadius).map(h => {
+  const hexes = MapUtil.hexesFromMapRadius(shownRadius).map(h => {
     const q = h[0]
     const r = h[1]
-    const userPlanet = userPlanetsByCoordinates[UserPlanetsMapUtil.coordinatesKey(q, r)]
+    const userPlanet = userPlanetsByCoordinates[MapUtil.coordinatesKey(q, r)]
     return { q, r, userPlanet }
   })
-  const requiredGoldForNextRadius = UserPlanetsMapUtil.requiredGoldFromMapRadius(usableRadius + 1)
+  const requiredGoldForNextRadius = MapUtil.requiredGoldFromMapRadius(usableRadius + 1)
 
   return {
     usableRadius,

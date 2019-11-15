@@ -10,7 +10,7 @@ import { UserPlanet } from "./UserPlanet"
 import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
-import { UserPlanetsMapUtil } from "../../models/UserPlanetsMapUtil"
+import { MapUtil } from "../../models/MapUtil"
 
 interface Props {
   user: ComputedTargetUserState
@@ -67,12 +67,12 @@ export function UserPlanetMap(props: Props) {
     )
   }
 
-  const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(remainingGold)
+  const usableRadius = MapUtil.mapRadiusFromGold(remainingGold)
 
   const hexes = props.user.map.hexes.map(h => {
     const settable =
       props.isMine &&
-      UserPlanetsMapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
+      MapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
       (!!props.userPageUI.selectedNormalPlanetIdForSet ||
         !!props.userPageUI.selectedSpecialPlanetTokenIdForSet)
 
