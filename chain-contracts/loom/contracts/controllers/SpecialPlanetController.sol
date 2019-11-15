@@ -6,7 +6,7 @@ import "../../../SpecialPlanetTokenIdInterpretable.sol";
 import "./HighlightedUserController.sol";
 
 contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenIdInterpretable {
-  HighlightedUserController private _highlightedUserController;
+  HighlightedUserController public highlightedUserController;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
@@ -25,11 +25,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       userGoldPermanenceAddress,
       specialPlanetTokenLockerAddress
     );
-    _highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
-  }
-
-  function highlightedUserController() external view returns (HighlightedUserController) {
-    return _highlightedUserController;
+    highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
   }
 
   function getPlanets(address account)
@@ -93,7 +89,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       axialCoordinateQ,
       axialCoordinateR
     );
-    _highlightedUserController.tackle(msg.sender);
+    highlightedUserController.tackle(msg.sender);
   }
 
   function removePlanet(uint24 shortId) external {
