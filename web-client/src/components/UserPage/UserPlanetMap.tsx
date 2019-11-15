@@ -10,6 +10,7 @@ import { UserPlanet } from "./UserPlanet"
 import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
+import { UserPlanetsMapUtil } from "../../models/UserPlanetsMapUtil"
 
 interface Props {
   user: ComputedTargetUserState
@@ -46,6 +47,7 @@ export function UserPlanetMap(props: Props) {
   const hexHeight = Math.sqrt(3) * hexSize
 
   let isSufficientGoldForNextNormalPlanetSet = true
+  let remainingGold = props.user.gold
   if (
     !!props.userPageUI.selectedNormalPlanetIdForSet &&
     props.userPageUI.selectedPlanetHexesForSet.length > 0
@@ -60,12 +62,17 @@ export function UserPlanetMap(props: Props) {
     isSufficientGoldForNextNormalPlanetSet = buyableCount.gtn(
       props.userPageUI.selectedPlanetHexesForSet.length
     )
+    remainingGold = props.user.gold.sub(
+      planet.priceGold.muln(props.userPageUI.selectedPlanetHexesForSet.length)
+    )
   }
+
+  const usableRadius = UserPlanetsMapUtil.mapRadiusFromGold(remainingGold)
 
   const hexes = props.user.map.hexes.map(h => {
     const settable =
       props.isMine &&
-      h.settable &&
+      UserPlanetsMapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
       (!!props.userPageUI.selectedNormalPlanetIdForSet ||
         !!props.userPageUI.selectedSpecialPlanetTokenIdForSet)
 
