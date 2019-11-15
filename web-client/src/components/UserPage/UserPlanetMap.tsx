@@ -10,7 +10,7 @@ import { UserPlanet } from "./UserPlanet"
 import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
-import { MapUtil } from "../../models/MapUtil"
+import { UserPlanetMapUtil } from "../../models/UserPlanetMapUtil"
 
 interface Props {
   user: ComputedTargetUserState
@@ -40,7 +40,7 @@ export function UserPlanetMap(props: Props) {
 
   const { hexSize, hexWidth, hexHeight, mapHeight } = calcHexSizes(
     width,
-    props.user.map.shownRadius
+    props.user.userPlanetMap.shownRadius
   )
 
   const { isSufficientGoldForNextNormalPlanetSet, remainingGold } = processForMultiPlanetSet(
@@ -48,12 +48,12 @@ export function UserPlanetMap(props: Props) {
     props.userPageUI
   )
 
-  const usableRadius = MapUtil.mapRadiusFromGold(remainingGold)
+  const usableRadius = UserPlanetMapUtil.mapRadiusFromGold(remainingGold)
 
-  const hexes = props.user.map.hexes.map(h => {
+  const hexes = props.user.userPlanetMap.hexes.map(h => {
     const settable =
       props.isMine &&
-      MapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
+      UserPlanetMapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
       (!!props.userPageUI.selectedNormalPlanetIdForSet ||
         !!props.userPageUI.selectedSpecialPlanetTokenIdForSet)
 
@@ -67,8 +67,8 @@ export function UserPlanetMap(props: Props) {
         q={h.q}
         r={h.r}
         userPlanet={h.userPlanet}
-        shiftTop={props.user.map.shownRadius * hexHeight}
-        shiftLeft={props.user.map.shownRadius * ((hexWidth / 4) * 3)}
+        shiftTop={props.user.userPlanetMap.shownRadius * hexHeight}
+        shiftLeft={props.user.userPlanetMap.shownRadius * ((hexWidth / 4) * 3)}
         hexSize={hexSize}
         hexWidth={hexWidth}
         hexHeight={hexHeight}
@@ -127,7 +127,7 @@ const processForMultiPlanetSet = (user: ComputedTargetUserState, userPageUI: Use
 
 const selectFn = (
   props: Props,
-  hex: ComputedTargetUserState["map"]["hexes"][number],
+  hex: ComputedTargetUserState["userPlanetMap"]["hexes"][number],
   settable: boolean,
   isSufficientGoldForNextNormalPlanetSet: boolean
 ) => {

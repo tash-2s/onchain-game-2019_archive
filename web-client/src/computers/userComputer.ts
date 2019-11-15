@@ -8,7 +8,7 @@ import {
 } from "./userNormalPlanetComputer"
 import { computeUserSpecialPlanets } from "./userSpecialPlanetComputer"
 import { computeGold } from "./goldComputer"
-import { computeMap } from "./mapComputer"
+import { computeUserPlanetMap } from "./userPlanetMapComputer"
 
 export type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
@@ -62,7 +62,7 @@ export const computeUserState = (state: UserState, now: number) => {
       productivity: productivity,
       knowledge: knowledge,
       goldPerSec: goldPerSec,
-      map: computeMap(ongoingGold, computedUserPlanets, userSpecialPlanets),
+      userPlanetMap: computeUserPlanetMap(ongoingGold, computedUserPlanets, userSpecialPlanets),
       normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length),
       specialPlanetToken: computeSpecialPlanetToken(state.targetUser.specialPlanetToken)
     }

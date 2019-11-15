@@ -19,7 +19,7 @@ const RADIUS_GOLD_THRESHOLD = [
   "1000000000000000000000000000000000000000000000"
 ].map(s => new BN(s))
 
-export class MapUtil {
+export class UserPlanetMapUtil {
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
     const z = r

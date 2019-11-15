@@ -6,7 +6,7 @@ import { PlanetArt } from "../utils/PlanetArt"
 export function PlanetHex(props: {
   q: number
   r: number
-  userPlanet: ComputedTargetUserState["map"]["hexes"][number]["userPlanet"]
+  userPlanet: ComputedTargetUserState["userPlanetMap"]["hexes"][number]["userPlanet"]
   shiftTop: number
   shiftLeft: number
   hexSize: number

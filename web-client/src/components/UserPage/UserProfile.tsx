@@ -21,10 +21,10 @@ export function UserProfile(props: { user: ComputedTargetUserState; isMine: bool
 }
 
 function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
-  const radius = props.user.map.usableRadius
+  const radius = props.user.userPlanetMap.usableRadius
   let requiredGoldText: JSX.Element
-  if (props.user.map.requiredGoldForNextRadius) {
-    requiredGoldText = <PrettyBN bn={props.user.map.requiredGoldForNextRadius} />
+  if (props.user.userPlanetMap.requiredGoldForNextRadius) {
+    requiredGoldText = <PrettyBN bn={props.user.userPlanetMap.requiredGoldForNextRadius} />
   } else {
     requiredGoldText = <span>already maximum</span>
   }
