@@ -1,10 +1,5 @@
 import BN from "bn.js"
 
-interface Coordinates {
-  axialCoordinateQ: number
-  axialCoordinateR: number
-}
-
 const RADIUS_GOLD_THRESHOLD = [
   "100001", // to avoid radius up by initial planet
   "10000000",
@@ -34,8 +29,8 @@ export class MapUtil {
 
   static hexesFromMapRadius = (radius: number) => {
     const arr: Array<Array<number>> = []
-    MapUtil.range(-radius, radius).forEach(q => {
-      MapUtil.range(Math.max(-radius, -q - radius), Math.min(radius, -q + radius)).forEach(r => {
+    range(-radius, radius).forEach(q => {
+      range(Math.max(-radius, -q - radius), Math.min(radius, -q + radius)).forEach(r => {
         arr.push([q, r])
       })
     })
@@ -68,52 +63,15 @@ export class MapUtil {
     }
     return null
   }
+}
 
-  static userPlanetsAndThierBiggestRadius = <T1 extends Coordinates, T2 extends Coordinates>(
-    userNormalPlanets: Array<T1>,
-    userSpecialPlanets: Array<T2>
-  ) => {
-    const userPlanetsByCoordinates: {
-      [key: string]: (T1 & { isNormal: true }) | (T2 & { isNormal: false }) | null
-    } = {}
-    let userPlanetsBiggestRadius = 0
-
-    const tackleBiggestRadius = (up: T1 | T2) => {
-      const distance = MapUtil.distanceFromCenter(up.axialCoordinateQ, up.axialCoordinateR)
-      if (userPlanetsBiggestRadius < distance) {
-        userPlanetsBiggestRadius = distance
-      }
-    }
-
-    userNormalPlanets.forEach(up => {
-      userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
-        ...up,
-        isNormal: true
-      }
-
-      tackleBiggestRadius(up)
-    })
-
-    userSpecialPlanets.forEach(up => {
-      userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
-        ...up,
-        isNormal: false
-      }
-
-      tackleBiggestRadius(up)
-    })
-
-    return { userPlanetsByCoordinates, userPlanetsBiggestRadius }
+const range = (from: number, to: number) => {
+  if (from > to) {
+    throw new Error("'to' must be bigger than 'from'")
   }
-
-  private static range = (from: number, to: number) => {
-    if (from > to) {
-      throw new Error("'to' must be bigger than 'from'")
-    }
-    const arr: Array<number> = []
-    for (let i = from; i <= to; i++) {
-      arr.push(i)
-    }
-    return arr
+  const arr: Array<number> = []
+  for (let i = from; i <= to; i++) {
+    arr.push(i)
   }
+  return arr
 }

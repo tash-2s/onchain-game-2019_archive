@@ -38,34 +38,15 @@ export function UserPlanetMap(props: Props) {
     return <div id={placeholderId} />
   }
 
-  // Show biggest map for this area
-  // Calc hex sizes to fit mapWidth
-  // mapWidth (= state.width) = (1.5 * hexSize) * (mapRadius * 2 + 1) + (0.5 * hexSize)
-  // Transform this equation for hexSize...
-  const hexSize = Math.min(width / (3 * props.user.map.shownRadius + 2), 100) // max: 100
-  const hexWidth = hexSize * 2
-  const hexHeight = Math.sqrt(3) * hexSize
+  const { hexSize, hexWidth, hexHeight, mapHeight } = calcHexSizes(
+    width,
+    props.user.map.shownRadius
+  )
 
-  let isSufficientGoldForNextNormalPlanetSet = true
-  let remainingGold = props.user.gold
-  if (
-    !!props.userPageUI.selectedNormalPlanetIdForSet &&
-    props.userPageUI.selectedPlanetHexesForSet.length > 0
-  ) {
-    const planet = props.user.normalPlanets.find(
-      p => p.id === props.userPageUI.selectedNormalPlanetIdForSet
-    )
-    if (!planet) {
-      throw new Error("unknown planet")
-    }
-    const buyableCount = props.user.gold.div(planet.priceGold)
-    isSufficientGoldForNextNormalPlanetSet = buyableCount.gtn(
-      props.userPageUI.selectedPlanetHexesForSet.length
-    )
-    remainingGold = props.user.gold.sub(
-      planet.priceGold.muln(props.userPageUI.selectedPlanetHexesForSet.length)
-    )
-  }
+  const { isSufficientGoldForNextNormalPlanetSet, remainingGold } = processForMultiPlanetSet(
+    props.user,
+    props.userPageUI
+  )
 
   const usableRadius = MapUtil.mapRadiusFromGold(remainingGold)
 
@@ -97,15 +78,51 @@ export function UserPlanetMap(props: Props) {
     )
   })
 
-  const height = (props.user.map.shownRadius * 2 + 1) * hexHeight
-
   return (
     <>
       <UserPlanetDetailModal {...props} />
       <SetToMapButton {...props} />
-      <div style={{ position: "relative", height }}>{hexes}</div>
+      <div style={{ position: "relative", height: mapHeight }}>{hexes}</div>
     </>
   )
+}
+
+const calcHexSizes = (width: number, radius: number) => {
+  // Show biggest map for this area
+  // Calc hex sizes to fit mapWidth
+  // mapWidth (= state.width) = (1.5 * hexSize) * (mapRadius * 2 + 1) + (0.5 * hexSize)
+  // Transform this equation for hexSize...
+  const hexSize = Math.min(width / (3 * radius + 2), 100) // max: 100
+  const hexWidth = hexSize * 2
+  const hexHeight = Math.sqrt(3) * hexSize
+
+  const mapHeight = (radius * 2 + 1) * hexHeight
+
+  return { hexSize, hexWidth, hexHeight, mapHeight }
+}
+
+const processForMultiPlanetSet = (user: ComputedTargetUserState, userPageUI: UserPageUIState) => {
+  let isSufficientGoldForNextNormalPlanetSet = true
+  let remainingGold = user.gold
+
+  if (
+    !!userPageUI.selectedNormalPlanetIdForSet &&
+    userPageUI.selectedPlanetHexesForSet.length > 0
+  ) {
+    const planet = user.normalPlanets.find(p => p.id === userPageUI.selectedNormalPlanetIdForSet)
+    if (!planet) {
+      throw new Error("unknown planet")
+    }
+    const buyableCount = user.gold.div(planet.priceGold)
+    isSufficientGoldForNextNormalPlanetSet = buyableCount.gtn(
+      userPageUI.selectedPlanetHexesForSet.length
+    )
+    remainingGold = user.gold.sub(
+      planet.priceGold.muln(userPageUI.selectedPlanetHexesForSet.length)
+    )
+  }
+
+  return { isSufficientGoldForNextNormalPlanetSet, remainingGold }
 }
 
 const selectFn = (

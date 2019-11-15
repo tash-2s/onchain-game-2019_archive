@@ -13,10 +13,10 @@ export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
   userSpecialPlanets: Array<T2>
 ) => {
   const usableRadius = MapUtil.mapRadiusFromGold(gold)
-  const {
-    userPlanetsByCoordinates,
-    userPlanetsBiggestRadius
-  } = MapUtil.userPlanetsAndThierBiggestRadius(userNormalPlanets, userSpecialPlanets)
+  const { userPlanetsByCoordinates, userPlanetsBiggestRadius } = userPlanetsAndThierBiggestRadius(
+    userNormalPlanets,
+    userSpecialPlanets
+  )
   const shownRadius = Math.max(userPlanetsBiggestRadius, usableRadius)
   const hexes = MapUtil.hexesFromMapRadius(shownRadius).map(h => {
     const q = h[0]
@@ -32,4 +32,41 @@ export const computeMap = <T1 extends Coordinates, T2 extends Coordinates>(
     hexes,
     requiredGoldForNextRadius
   }
+}
+
+const userPlanetsAndThierBiggestRadius = <T1 extends Coordinates, T2 extends Coordinates>(
+  userNormalPlanets: Array<T1>,
+  userSpecialPlanets: Array<T2>
+) => {
+  const userPlanetsByCoordinates: {
+    [key: string]: (T1 & { isNormal: true }) | (T2 & { isNormal: false }) | null
+  } = {}
+  let userPlanetsBiggestRadius = 0
+
+  const tackleBiggestRadius = (up: T1 | T2) => {
+    const distance = MapUtil.distanceFromCenter(up.axialCoordinateQ, up.axialCoordinateR)
+    if (userPlanetsBiggestRadius < distance) {
+      userPlanetsBiggestRadius = distance
+    }
+  }
+
+  userNormalPlanets.forEach(up => {
+    userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
+      ...up,
+      isNormal: true
+    }
+
+    tackleBiggestRadius(up)
+  })
+
+  userSpecialPlanets.forEach(up => {
+    userPlanetsByCoordinates[MapUtil.coordinatesKey(up.axialCoordinateQ, up.axialCoordinateR)] = {
+      ...up,
+      isNormal: false
+    }
+
+    tackleBiggestRadius(up)
+  })
+
+  return { userPlanetsByCoordinates, userPlanetsBiggestRadius }
 }
