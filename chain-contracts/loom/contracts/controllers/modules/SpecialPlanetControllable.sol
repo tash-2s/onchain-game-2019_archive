@@ -134,8 +134,16 @@ contract SpecialPlanetControllable is TimeGettable {
     _userSpecialPlanetPermanence.deleteElement(account, index);
   }
 
-  function removeUserSpecialPlanetFromMapIfExist(address account, int16 axialCoordinateQ, int16 axialCoordinateR) internal returns (uint24) {
-    (bytes32 target, uint16 index) = _findRecordBytes32(account, axialCoordinateQ, axialCoordinateR);
+  function removeUserSpecialPlanetFromMapIfExist(
+    address account,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal returns (uint24) {
+    (bytes32 target, uint16 index) = _findRecordBytes32(
+      account,
+      axialCoordinateQ,
+      axialCoordinateR
+    );
 
     if (target == bytes32(0)) {
       return 0;
@@ -223,7 +231,7 @@ contract SpecialPlanetControllable is TimeGettable {
       if (
         int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT)) == axialCoordinateQ &&
         int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT)) == axialCoordinateR
-         ) {
+      ) {
         target = us[i];
         index = i;
         break;

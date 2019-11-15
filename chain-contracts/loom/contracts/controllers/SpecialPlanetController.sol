@@ -130,7 +130,11 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   }
 
   function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {
-    specialPlanetTokenLocker.specialPlanetToken().safeTransferFrom(msg.sender, address(specialPlanetTokenLocker), tokenId);
+    specialPlanetTokenLocker.specialPlanetToken().safeTransferFrom(
+      msg.sender,
+      address(specialPlanetTokenLocker),
+      tokenId
+    );
     specialPlanetTokenLocker.setup(msg.sender, tokenId, shortId);
   }
 }
