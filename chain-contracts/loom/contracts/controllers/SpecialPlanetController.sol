@@ -38,7 +38,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       uint8[] memory kinds,
       uint8[] memory paramRates,
       uint32[] memory times, // [rankupedAt, createdAt, ...]
-      int16[] memory axialCoordinates, // [q, r, ...]
+      int16[] memory coordinates, // [q, r, ...]
       uint64[] memory artSeeds
     )
   {
@@ -53,7 +53,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
     kinds = new uint8[](userPlanetsCount);
     paramRates = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
-    axialCoordinates = new int16[](userPlanetsCount * 2);
+    coordinates = new int16[](userPlanetsCount * 2);
     artSeeds = new uint64[](userPlanetsCount);
 
     uint16 counter = 0;
@@ -64,8 +64,8 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       paramRates[i] = userPlanetRecords[i].paramRate;
       times[counter] = userPlanetRecords[i].rankupedAt;
       times[counter + 1] = userPlanetRecords[i].createdAt;
-      axialCoordinates[counter] = userPlanetRecords[i].axialCoordinateQ;
-      axialCoordinates[counter + 1] = userPlanetRecords[i].axialCoordinateR;
+      coordinates[counter] = userPlanetRecords[i].coordinateQ;
+      coordinates[counter + 1] = userPlanetRecords[i].coordinateR;
       artSeeds[i] = userPlanetRecords[i].artSeed;
 
       counter += 2;
@@ -73,10 +73,10 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   }
 
   // sender needs to approve the transfer of this token before call this function
-  function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
+  function setPlanet(uint256 tokenId, int16 coordinateQ, int16 coordinateR) external {
     confirm(msg.sender);
-    removeSpecialPlanetFromMapIfExist(msg.sender, axialCoordinateQ, axialCoordinateR);
-    removeUserNormalPlanetFromMapIfExist(msg.sender, axialCoordinateQ, axialCoordinateR);
+    removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
+    removeUserNormalPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
     );
@@ -88,8 +88,8 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
       kind,
       paramRate,
       artSeed,
-      axialCoordinateQ,
-      axialCoordinateR
+      coordinateQ,
+      coordinateR
     );
     highlightedUserController.tackle(msg.sender);
   }

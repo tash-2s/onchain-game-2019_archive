@@ -241,8 +241,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
             r1.rank,
             r1.rankupedAt,
             r1.createdAt,
-            r1.axialCoordinateQ,
-            r1.axialCoordinateR
+            r1.coordinateQ,
+            r1.coordinateR
           )
         ) ==
         keccak256(
@@ -254,8 +254,8 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
             r2.rank,
             r2.rankupedAt,
             r2.createdAt,
-            r2.axialCoordinateQ,
-            r2.axialCoordinateR
+            r2.coordinateQ,
+            r2.coordinateR
           )
         ),
       message
@@ -276,16 +276,16 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
     uint16 normalPlanetId,
     uint8 kind,
     uint8 paramCommonLogarithm,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) public {
     mintUserNormalPlanet(
       account,
       normalPlanetId,
       kind,
       paramCommonLogarithm,
-      axialCoordinateQ,
-      axialCoordinateR
+      coordinateQ,
+      coordinateR
     );
   }
 

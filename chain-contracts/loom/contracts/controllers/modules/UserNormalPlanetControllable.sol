@@ -14,8 +14,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint8 rank;
     uint32 rankupedAt;
     uint32 createdAt;
-    int16 axialCoordinateQ;
-    int16 axialCoordinateR;
+    int16 coordinateQ;
+    int16 coordinateR;
   }
 
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_ID_START_DIGIT = 1;
@@ -32,10 +32,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_RANKUPED_AT_END_DIGIT = 44;
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_START_DIGIT = 45;
   uint8 constant USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT = 54;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT = 55;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT = 59;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT = 60;
-  uint8 constant USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT = 64;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_START_DIGIT = 55;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_END_DIGIT = 59;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_START_DIGIT = 60;
+  uint8 constant USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_END_DIGIT = 64;
 
   uint256 constant USER_NORMAL_PLANET_PERMANENCE_ELEMENT_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000; // solium-disable-line max-len
 
@@ -101,10 +101,10 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint16 normalPlanetId,
     uint8 kind,
     uint8 paramCommonLogarithm,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) internal {
-    removeUserNormalPlanetFromMapIfExist(account, axialCoordinateQ, axialCoordinateR);
+    removeUserNormalPlanetFromMapIfExist(account, coordinateQ, coordinateR);
 
     uint64 id = _userNormalPlanetIdGeneratorPermanence.generate(account);
     _userNormalPlanetPermanence.createElement(
@@ -118,8 +118,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
           1,
           uint32now(),
           uint32now(),
-          axialCoordinateQ,
-          axialCoordinateR
+          coordinateQ,
+          coordinateR
         )
       )
     );
@@ -148,8 +148,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
           targetRank,
           uint32now(),
           record.createdAt,
-          record.axialCoordinateQ,
-          record.axialCoordinateR
+          record.coordinateQ,
+          record.coordinateR
         )
       )
     );
@@ -164,16 +164,16 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
   function removeUserNormalPlanetFromMapIfExist(
     address account,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) internal {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
 
     for (uint16 i = 0; i < records.length; i++) {
       // TODO: for big planets
       if (
-        (records[i].axialCoordinateQ == axialCoordinateQ) &&
-        (records[i].axialCoordinateR == axialCoordinateR)
+        (records[i].coordinateQ == coordinateQ) &&
+        (records[i].coordinateR == coordinateR)
       ) {
         _userNormalPlanetPermanence.deleteElement(account, i);
       }
@@ -234,18 +234,18 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         USER_NORMAL_PLANET_PERMANENCE_CREATED_AT_END_DIGIT
       )
     );
-    int16 axialCoordinateQ = int16(
+    int16 coordinateQ = int16(
       interpretPermanenceUint256(
         source,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_START_DIGIT,
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_END_DIGIT
       )
     );
-    int16 axialCoordinateR = int16(
+    int16 coordinateR = int16(
       interpretPermanenceUint256(
         source,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_START_DIGIT,
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_END_DIGIT
       )
     );
 
@@ -262,8 +262,8 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
         rank,
         rankupedAt,
         createdAt,
-        axialCoordinateQ,
-        axialCoordinateR
+        coordinateQ,
+        coordinateR
       );
   }
 
@@ -316,16 +316,16 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
     n = reinterpretPermanenceUint256(
       n,
-      USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_START_DIGIT,
-      USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_Q_END_DIGIT,
-      uint16(record.axialCoordinateQ)
+      USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_START_DIGIT,
+      USER_NORMAL_PLANET_PERMANENCE_COORDINATE_Q_END_DIGIT,
+      uint16(record.coordinateQ)
     );
     return
       reinterpretPermanenceUint256(
         n,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_START_DIGIT,
-        USER_NORMAL_PLANET_PERMANENCE_AXIAL_COORDINATE_R_END_DIGIT,
-        uint16(record.axialCoordinateR)
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_START_DIGIT,
+        USER_NORMAL_PLANET_PERMANENCE_COORDINATE_R_END_DIGIT,
+        uint16(record.coordinateR)
       );
   }
 

@@ -10,7 +10,7 @@ contract SpecialPlanetControllable is TimeGettable {
   SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 
   int16 constant INT16_MAX = int16(~(uint16(1) << 15));
-  int16 constant AXIAL_COORDINATE_NONE = INT16_MAX;
+  int16 constant COORDINATE_NONE = INT16_MAX;
 
   struct UserSpecialPlanetRecord {
     uint24 id;
@@ -20,8 +20,8 @@ contract SpecialPlanetControllable is TimeGettable {
     uint8 rank;
     uint32 rankupedAt;
     uint32 createdAt;
-    int16 axialCoordinateQ;
-    int16 axialCoordinateR;
+    int16 coordinateQ;
+    int16 coordinateR;
     uint64 artSeed;
   }
 
@@ -84,8 +84,8 @@ contract SpecialPlanetControllable is TimeGettable {
     uint8 kind,
     uint8 paramCommonLogarithm,
     uint64 artSeed,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) internal {
     bytes32 userPlanetData = specialPlanetIdToDataPermanence.read(userPlanetId);
     bytes32 newUserPlanetData;
@@ -99,8 +99,8 @@ contract SpecialPlanetControllable is TimeGettable {
           1,
           uint32now(),
           uint32now(),
-          axialCoordinateQ,
-          axialCoordinateR,
+          coordinateQ,
+          coordinateR,
           artSeed
         )
       );
@@ -116,8 +116,8 @@ contract SpecialPlanetControllable is TimeGettable {
           r.rank,
           uint32now(), // rankupedAt
           r.createdAt,
-          axialCoordinateQ,
-          axialCoordinateR,
+          coordinateQ,
+          coordinateR,
           r.artSeed
         )
       );
@@ -136,13 +136,13 @@ contract SpecialPlanetControllable is TimeGettable {
 
   function removeUserSpecialPlanetFromMapIfExist(
     address account,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) internal returns (uint24) {
     (bytes32 target, uint16 index) = _findRecordBytes32(
       account,
-      axialCoordinateQ,
-      axialCoordinateR
+      coordinateQ,
+      coordinateR
     );
 
     if (target == bytes32(0)) {
@@ -188,8 +188,8 @@ contract SpecialPlanetControllable is TimeGettable {
           (uint256(r.rank) << SPECIAL_PLANET_DATA_RANK_START_BIT) |
           (uint256(r.rankupedAt) << SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT) |
           (uint256(r.createdAt) << SPECIAL_PLANET_DATA_CREATED_AT_START_BIT) |
-          (uint256(uint16(r.axialCoordinateQ)) << SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT) |
-          (uint256(uint16(r.axialCoordinateR)) << SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT) |
+          (uint256(uint16(r.coordinateQ)) << SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT) |
+          (uint256(uint16(r.coordinateR)) << SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT) |
           (uint256(r.artSeed) << SPECIAL_PLANET_DATA_ART_SEED_START_BIT)
       );
   }
@@ -218,7 +218,7 @@ contract SpecialPlanetControllable is TimeGettable {
     return (buildUserSpecialPlanetRecordFromBytes32(target), index);
   }
 
-  function _findRecordBytes32(address account, int16 axialCoordinateQ, int16 axialCoordinateR)
+  function _findRecordBytes32(address account, int16 coordinateQ, int16 coordinateR)
     private
     view
     returns (bytes32, uint16)
@@ -229,8 +229,8 @@ contract SpecialPlanetControllable is TimeGettable {
 
     for (uint16 i = 0; i < us.length; i++) {
       if (
-        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT)) == axialCoordinateQ &&
-        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT)) == axialCoordinateR
+        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT)) == coordinateQ &&
+        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT)) == coordinateR
       ) {
         target = us[i];
         index = i;

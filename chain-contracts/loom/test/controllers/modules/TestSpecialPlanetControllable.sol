@@ -61,8 +61,8 @@ contract TestSpecialPlanetControllable is SpecialPlanetControllable {
           r1.rank,
           r1.rankupedAt,
           r1.createdAt,
-          r1.axialCoordinateQ,
-          r1.axialCoordinateR
+          r1.coordinateQ,
+          r1.coordinateR
         )
       ),
       keccak256(
@@ -73,8 +73,8 @@ contract TestSpecialPlanetControllable is SpecialPlanetControllable {
           r2.rank,
           r2.rankupedAt,
           r2.createdAt,
-          r2.axialCoordinateQ,
-          r2.axialCoordinateR
+          r2.coordinateQ,
+          r2.coordinateR
         )
       ),
       message

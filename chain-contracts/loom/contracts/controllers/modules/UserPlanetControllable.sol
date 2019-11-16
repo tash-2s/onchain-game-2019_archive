@@ -139,13 +139,13 @@ contract UserPlanetControllable is
 
   function removeSpecialPlanetFromMapIfExist(
     address account,
-    int16 axialCoordinateQ,
-    int16 axialCoordinateR
+    int16 coordinateQ,
+    int16 coordinateR
   ) internal {
     uint24 shortId = removeUserSpecialPlanetFromMapIfExist(
       account,
-      axialCoordinateQ,
-      axialCoordinateR
+      coordinateQ,
+      coordinateR
     );
     if (shortId != 0) {
       specialPlanetTokenLocker.withdraw(shortId);
