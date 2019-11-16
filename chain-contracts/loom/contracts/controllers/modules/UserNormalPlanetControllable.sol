@@ -104,17 +104,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     int16 axialCoordinateQ,
     int16 axialCoordinateR
   ) internal {
-    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
-
-    for (uint16 i = 0; i < records.length; i++) {
-      // TODO: for big planets
-      if (
-        (records[i].axialCoordinateQ == axialCoordinateQ) &&
-        (records[i].axialCoordinateR == axialCoordinateR)
-      ) {
-        _userNormalPlanetPermanence.deleteElement(account, i);
-      }
-    }
+    removeUserNormalPlanetFromMapIfExist(account, axialCoordinateQ, axialCoordinateR);
 
     uint64 id = _userNormalPlanetIdGeneratorPermanence.generate(account);
     _userNormalPlanetPermanence.createElement(
@@ -170,6 +160,24 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
     _userNormalPlanetPermanence.deleteElement(account, index);
+  }
+
+  function removeUserNormalPlanetFromMapIfExist(
+    address account,
+    int16 axialCoordinateQ,
+    int16 axialCoordinateR
+  ) internal {
+    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
+
+    for (uint16 i = 0; i < records.length; i++) {
+      // TODO: for big planets
+      if (
+        (records[i].axialCoordinateQ == axialCoordinateQ) &&
+        (records[i].axialCoordinateR == axialCoordinateR)
+      ) {
+        _userNormalPlanetPermanence.deleteElement(account, i);
+      }
+    }
   }
 
   function buildUserNormalPlanetRecordFromUint256(uint256 source)
