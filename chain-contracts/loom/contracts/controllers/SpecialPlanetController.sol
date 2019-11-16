@@ -75,6 +75,7 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 axialCoordinateQ, int16 axialCoordinateR) external {
     confirm(msg.sender);
+    removeSpecialPlanetFromMapIfExist(msg.sender, axialCoordinateQ, axialCoordinateR);
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
     );
