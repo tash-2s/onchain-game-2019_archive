@@ -36,24 +36,16 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   }
 
   // TODO: optimize
-  function setPlanets(
-    uint16 planetId,
-    int16[] calldata coordinateQs,
-    int16[] calldata coordinateRs
-  ) external {
+  function setPlanets(uint16 planetId, int16[] calldata coordinateQs, int16[] calldata coordinateRs)
+    external
+  {
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
     UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
 
     confirm(msg.sender);
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      _setPlanet(
-        planetRecord,
-        userGoldRecord,
-        planetId,
-        coordinateQs[i],
-        coordinateRs[i]
-      );
+      _setPlanet(planetRecord, userGoldRecord, planetId, coordinateQs[i], coordinateRs[i]);
     }
   }
 

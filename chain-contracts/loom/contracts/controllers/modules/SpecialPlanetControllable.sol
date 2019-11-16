@@ -139,11 +139,7 @@ contract SpecialPlanetControllable is TimeGettable {
     int16 coordinateQ,
     int16 coordinateR
   ) internal returns (uint24) {
-    (bytes32 target, uint16 index) = _findRecordBytes32(
-      account,
-      coordinateQ,
-      coordinateR
-    );
+    (bytes32 target, uint16 index) = _findRecordBytes32(account, coordinateQ, coordinateR);
 
     if (target == bytes32(0)) {
       return 0;
