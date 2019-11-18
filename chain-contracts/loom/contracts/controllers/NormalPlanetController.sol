@@ -62,6 +62,19 @@ contract NormalPlanetController is
     unmintGold(msg.sender, rankupGold);
   }
 
+  function claimInitialGold() external {
+    require(
+      userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecordOf(msg.sender).balance == 0,
+      "false condition for initial gold"
+    );
+
+    mintGold(
+      msg.sender,
+      uint256(10)**normalPlanetRecordOf(1).priceGoldCommonLogarithm +
+        uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm
+    );
+  }
+
   function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank)
     private
     returns (uint256)
@@ -111,12 +124,7 @@ contract NormalPlanetController is
       "not allowed coordinate"
     );
 
-    // TODO: this is not precise
-    if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
-      mintGold(msg.sender, uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm);
-    } else {
-      unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
-    }
+    unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
 
     removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
 
