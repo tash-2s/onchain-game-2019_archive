@@ -37,10 +37,10 @@ contract NormalPlanetController is
     returns (
       uint200 confirmedGold,
       uint32 goldConfirmedAt,
-      uint64[] memory unpIds, // [id, normalPlanetId, ...]
-      uint8[] memory unpRanks,
-      uint32[] memory unpTimes, // [rankupedAt, createdAt, ...]
-      int16[] memory unpCoordinates // [q, r, ...]
+      uint64[] memory ids, // [id, normalPlanetId, ...]
+      uint8[] memory ranks,
+      uint32[] memory times, // [rankupedAt, createdAt, ...]
+      int16[] memory coordinates // [q, r, ...]
     )
   {
     UserGoldRecord memory goldRecord = userGoldRecordOf(account);
@@ -50,20 +50,20 @@ contract NormalPlanetController is
     UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
     uint16 userPlanetsCount = uint16(userPlanetRecords.length);
 
-    unpIds = new uint64[](userPlanetsCount * 2);
-    unpRanks = new uint8[](userPlanetsCount);
-    unpTimes = new uint32[](userPlanetsCount * 2);
-    unpCoordinates = new int16[](userPlanetsCount * 2);
+    ids = new uint64[](userPlanetsCount * 2);
+    ranks = new uint8[](userPlanetsCount);
+    times = new uint32[](userPlanetsCount * 2);
+    coordinates = new int16[](userPlanetsCount * 2);
     uint24 counter = 0;
 
     for (uint16 i = 0; i < userPlanetsCount; i++) {
-      unpIds[counter] = userPlanetRecords[i].id;
-      unpIds[counter + 1] = userPlanetRecords[i].normalPlanetId;
-      unpRanks[i] = userPlanetRecords[i].rank;
-      unpTimes[counter] = userPlanetRecords[i].rankupedAt;
-      unpTimes[counter + 1] = userPlanetRecords[i].createdAt;
-      unpCoordinates[counter] = userPlanetRecords[i].coordinateQ;
-      unpCoordinates[counter + 1] = userPlanetRecords[i].coordinateR;
+      ids[counter] = userPlanetRecords[i].id;
+      ids[counter + 1] = userPlanetRecords[i].normalPlanetId;
+      ranks[i] = userPlanetRecords[i].rank;
+      times[counter] = userPlanetRecords[i].rankupedAt;
+      times[counter + 1] = userPlanetRecords[i].createdAt;
+      coordinates[counter] = userPlanetRecords[i].coordinateQ;
+      coordinates[counter + 1] = userPlanetRecords[i].coordinateR;
 
       counter += 2;
     }
