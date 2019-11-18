@@ -31,6 +31,44 @@ contract NormalPlanetController is
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
   }
 
+  function getPlanets(address account)
+    external
+    view
+    returns (
+      uint200 confirmedGold,
+      uint32 goldConfirmedAt,
+      uint64[] memory unpIds, // [id, normalPlanetId, ...]
+      uint8[] memory unpRanks,
+      uint32[] memory unpTimes, // [rankupedAt, createdAt, ...]
+      int16[] memory unpCoordinates // [q, r, ...]
+    )
+  {
+    UserGoldRecord memory goldRecord = userGoldRecordOf(account);
+    confirmedGold = goldRecord.balance;
+    goldConfirmedAt = goldRecord.confirmedAt;
+
+    UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
+    uint16 userPlanetsCount = uint16(userPlanetRecords.length);
+
+    unpIds = new uint64[](userPlanetsCount * 2);
+    unpRanks = new uint8[](userPlanetsCount);
+    unpTimes = new uint32[](userPlanetsCount * 2);
+    unpCoordinates = new int16[](userPlanetsCount * 2);
+    uint24 counter = 0;
+
+    for (uint16 i = 0; i < userPlanetsCount; i++) {
+      unpIds[counter] = userPlanetRecords[i].id;
+      unpIds[counter + 1] = userPlanetRecords[i].normalPlanetId;
+      unpRanks[i] = userPlanetRecords[i].rank;
+      unpTimes[counter] = userPlanetRecords[i].rankupedAt;
+      unpTimes[counter + 1] = userPlanetRecords[i].createdAt;
+      unpCoordinates[counter] = userPlanetRecords[i].coordinateQ;
+      unpCoordinates[counter + 1] = userPlanetRecords[i].coordinateR;
+
+      counter += 2;
+    }
+  }
+
   // TODO: optimize
   function setPlanets(uint16 planetId, int16[] calldata coordinateQs, int16[] calldata coordinateRs)
     external
