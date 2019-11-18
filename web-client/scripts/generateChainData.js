@@ -41,7 +41,14 @@ const targetContractAndFunctions = {
   },
   loom: {
     HighlightedUserController: ["getUsers"],
-    NormalPlanetController: ["setPlanets", "rankupPlanet", "rankupPlanets", "removePlanet"],
+    NormalPlanetController: [
+      "getPlanets",
+      "setPlanets",
+      "rankupPlanet",
+      "rankupPlanets",
+      "removePlanet",
+      "claimInitialGold"
+    ],
     SpecialPlanetController: [
       "getPlanets",
       "setPlanet",
@@ -54,8 +61,7 @@ const targetContractAndFunctions = {
       "setApprovalForAll",
       "tokensOfOwnerByIndex",
       "gateway"
-    ],
-    UserController: ["getUser"]
+    ]
   }
 }
 

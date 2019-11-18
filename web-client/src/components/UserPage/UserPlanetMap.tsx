@@ -220,7 +220,11 @@ function SetToMapButton(props: Props) {
     return <></>
   }
   const fn = () => {
-    props.userActions.normal.setPlanetsToMap(planetId, props.userPageUI.selectedPlanetHexesForSet)
+    props.userActions.normal.setPlanetsToMap(
+      planetId,
+      props.userPageUI.selectedPlanetHexesForSet,
+      props.user.userNormalPlanets.length === 0 && props.user.gold.eqn(0)
+    )
     props.userPageUIActions.unselectNormalPlanetForSet()
     props.userPageUIActions.unselectPlanetHexesForSet()
   }

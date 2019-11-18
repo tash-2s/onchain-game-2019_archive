@@ -1,21 +1,21 @@
 import { planetKindNumToKind } from "../../../constants"
 import { SpecialPlanetController } from "./SpecialPlanetController"
-import { UserController } from "./UserController"
+import { NormalPlanetController } from "./NormalPlanetController"
 import { chains } from "../../chains"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
 export const getUserNormalPlanets = async (address: string) => {
-  const r = await new UserController(chains.loom).getUser(address)
+  const r = await new NormalPlanetController(chains.loom).getPlanets(address)
 
-  const userNormalPlanets = r.unpRanks.map((_, i) => ({
-    id: r.unpIds[i * 2],
-    normalPlanetId: strToNum(r.unpIds[i * 2 + 1]),
-    rank: strToNum(r.unpRanks[i]),
-    rankupedAt: strToNum(r.unpTimes[i * 2]),
-    createdAt: strToNum(r.unpTimes[i * 2 + 1]),
-    axialCoordinateQ: strToNum(r.unpAxialCoordinates[i * 2]),
-    axialCoordinateR: strToNum(r.unpAxialCoordinates[i * 2 + 1])
+  const userNormalPlanets = r.ranks.map((_, i) => ({
+    id: r.ids[i * 2],
+    normalPlanetId: strToNum(r.ids[i * 2 + 1]),
+    rank: strToNum(r.ranks[i]),
+    rankupedAt: strToNum(r.times[i * 2]),
+    createdAt: strToNum(r.times[i * 2 + 1]),
+    axialCoordinateQ: strToNum(r.coordinates[i * 2]),
+    axialCoordinateR: strToNum(r.coordinates[i * 2 + 1])
   }))
 
   return {
@@ -36,8 +36,8 @@ export const getUserSpecialPlanets = async (address: string) => {
     paramRate: strToNum(r.paramRates[i]),
     rankupedAt: strToNum(r.times[i * 2]),
     createdAt: strToNum(r.times[i * 2 + 1]),
-    axialCoordinateQ: strToNum(r.axialCoordinates[i * 2]),
-    axialCoordinateR: strToNum(r.axialCoordinates[i * 2 + 1]),
+    axialCoordinateQ: strToNum(r.coordinates[i * 2]),
+    axialCoordinateR: strToNum(r.coordinates[i * 2 + 1]),
     artSeed: r.artSeeds[i]
   }))
 

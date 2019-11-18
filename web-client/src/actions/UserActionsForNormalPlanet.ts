@@ -15,10 +15,15 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   setPlanetsToMap = (
     planetId: number,
-    axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
+    axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
+    isInitial: boolean
   ) => {
     this.withLoading(async () => {
-      await new NormalPlanetController(chains.loom).setPlanets(
+      const controller = new NormalPlanetController(chains.loom)
+      if (isInitial) {
+        await controller.claimInitialGold()
+      }
+      await controller.setPlanets(
         planetId,
         axialCoordinates.map(o => o.axialCoordinateQ),
         axialCoordinates.map(o => o.axialCoordinateR)

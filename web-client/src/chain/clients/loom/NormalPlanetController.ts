@@ -2,10 +2,47 @@
 export class NormalPlanetController {
   constructor(private chain: import("../../loom").Loom) {}
 
+  getPlanets = (
+    account: string
+  ): Promise<{
+    confirmedGold: string
+    goldConfirmedAt: string
+    ids: Array<string>
+    ranks: Array<string>
+    times: Array<string>
+    coordinates: Array<string>
+  }> => {
+    return new this.chain.web3.eth.Contract(
+      [
+        {
+          constant: true,
+          inputs: [{ internalType: "address", name: "account", type: "address" }],
+          name: "getPlanets",
+          outputs: [
+            { internalType: "uint200", name: "confirmedGold", type: "uint200" },
+            { internalType: "uint32", name: "goldConfirmedAt", type: "uint32" },
+            { internalType: "uint64[]", name: "ids", type: "uint64[]" },
+            { internalType: "uint8[]", name: "ranks", type: "uint8[]" },
+            { internalType: "uint32[]", name: "times", type: "uint32[]" },
+            { internalType: "int16[]", name: "coordinates", type: "int16[]" }
+          ],
+          payable: false,
+          stateMutability: "view",
+          type: "function",
+          signature: "0x2e49cca0"
+        }
+      ],
+      this.chain.env.contractAddresses.NormalPlanetController,
+      { from: this.chain.callerAddress() }
+    ).methods
+      .getPlanets(account)
+      .call()
+  }
+
   setPlanets = (
     planetId: string | number,
-    axialCoordinateQs: Array<string | number>,
-    axialCoordinateRs: Array<string | number>,
+    coordinateQs: Array<string | number>,
+    coordinateRs: Array<string | number>,
     txOption?: {}
   ) => {
     return new this.chain.web3.eth.Contract(
@@ -14,8 +51,8 @@ export class NormalPlanetController {
           constant: false,
           inputs: [
             { internalType: "uint16", name: "planetId", type: "uint16" },
-            { internalType: "int16[]", name: "axialCoordinateQs", type: "int16[]" },
-            { internalType: "int16[]", name: "axialCoordinateRs", type: "int16[]" }
+            { internalType: "int16[]", name: "coordinateQs", type: "int16[]" },
+            { internalType: "int16[]", name: "coordinateRs", type: "int16[]" }
           ],
           name: "setPlanets",
           outputs: [],
@@ -28,7 +65,7 @@ export class NormalPlanetController {
       this.chain.env.contractAddresses.NormalPlanetController,
       { from: this.chain.callerAddress() }
     ).methods
-      .setPlanets(planetId, axialCoordinateQs, axialCoordinateRs)
+      .setPlanets(planetId, coordinateQs, coordinateRs)
       .send(txOption)
   }
 
@@ -85,6 +122,27 @@ export class NormalPlanetController {
       { from: this.chain.callerAddress() }
     ).methods
       .rankupPlanets(userNormalPlanetIds, targetRanks)
+      .send(txOption)
+  }
+
+  claimInitialGold = (txOption?: {}) => {
+    return new this.chain.web3.eth.Contract(
+      [
+        {
+          constant: false,
+          inputs: [],
+          name: "claimInitialGold",
+          outputs: [],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function",
+          signature: "0x0349432c"
+        }
+      ],
+      this.chain.env.contractAddresses.NormalPlanetController,
+      { from: this.chain.callerAddress() }
+    ).methods
+      .claimInitialGold()
       .send(txOption)
   }
 

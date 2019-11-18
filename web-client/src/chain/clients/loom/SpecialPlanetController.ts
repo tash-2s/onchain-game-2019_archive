@@ -11,7 +11,7 @@ export class SpecialPlanetController {
     kinds: Array<string>
     paramRates: Array<string>
     times: Array<string>
-    axialCoordinates: Array<string>
+    coordinates: Array<string>
     artSeeds: Array<string>
   }> => {
     return new this.chain.web3.eth.Contract(
@@ -27,7 +27,7 @@ export class SpecialPlanetController {
             { internalType: "uint8[]", name: "kinds", type: "uint8[]" },
             { internalType: "uint8[]", name: "paramRates", type: "uint8[]" },
             { internalType: "uint32[]", name: "times", type: "uint32[]" },
-            { internalType: "int16[]", name: "axialCoordinates", type: "int16[]" },
+            { internalType: "int16[]", name: "coordinates", type: "int16[]" },
             { internalType: "uint64[]", name: "artSeeds", type: "uint64[]" }
           ],
           payable: false,
@@ -45,8 +45,8 @@ export class SpecialPlanetController {
 
   setPlanet = (
     tokenId: string | number,
-    axialCoordinateQ: string | number,
-    axialCoordinateR: string | number,
+    coordinateQ: string | number,
+    coordinateR: string | number,
     txOption?: {}
   ) => {
     return new this.chain.web3.eth.Contract(
@@ -55,8 +55,8 @@ export class SpecialPlanetController {
           constant: false,
           inputs: [
             { internalType: "uint256", name: "tokenId", type: "uint256" },
-            { internalType: "int16", name: "axialCoordinateQ", type: "int16" },
-            { internalType: "int16", name: "axialCoordinateR", type: "int16" }
+            { internalType: "int16", name: "coordinateQ", type: "int16" },
+            { internalType: "int16", name: "coordinateR", type: "int16" }
           ],
           name: "setPlanet",
           outputs: [],
@@ -69,7 +69,7 @@ export class SpecialPlanetController {
       this.chain.env.contractAddresses.SpecialPlanetController,
       { from: this.chain.callerAddress() }
     ).methods
-      .setPlanet(tokenId, axialCoordinateQ, axialCoordinateR)
+      .setPlanet(tokenId, coordinateQ, coordinateR)
       .send(txOption)
   }
 
