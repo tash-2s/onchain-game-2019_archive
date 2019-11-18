@@ -76,7 +76,6 @@ contract SpecialPlanetControllable is TimeGettable {
       buildUserSpecialPlanetRecordFromBytes32(specialPlanetIdToDataPermanence.read(userPlanetId));
   }
 
-  // TODO: I should check the coordinates
   function setUserSpecialPlanetToMap(
     address account,
     uint24 userPlanetId,

@@ -30,7 +30,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     int16 coordinateQ,
     int16 coordinateR
   ) external {
-    mintUserNormalPlanet(account, normalPlanetId, kind, param, coordinateQ, coordinateR);
+    setNormalPlanetToMap(account, normalPlanetId, kind, param, coordinateQ, coordinateR);
   }
 
   function debugMintMaxUserNormalPlanets(address account) external {

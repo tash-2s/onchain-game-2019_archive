@@ -95,8 +95,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return record;
   }
 
-  // TODO: check the coordinate size limit (based on the user gold)
-  function mintUserNormalPlanet(
+  function setNormalPlanetToMap(
     address account,
     uint16 normalPlanetId,
     uint8 kind,
@@ -155,7 +154,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  function unmintUserNormalPlanet(address account, uint64 userPlanetId) internal {
+  function removeNormalPlanetFromMap(address account, uint64 userPlanetId) internal {
     uint16 index;
     (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 

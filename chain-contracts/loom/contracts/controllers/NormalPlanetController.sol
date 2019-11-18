@@ -4,8 +4,13 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserPlanetControllable.sol";
+import "./modules/UserPlanetMapUtil.sol";
 
-contract NormalPlanetController is NormalPlanetControllable, UserPlanetControllable {
+contract NormalPlanetController is
+  NormalPlanetControllable,
+  UserPlanetControllable,
+  UserPlanetMapUtil
+{
   constructor(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdGeneratorPermanenceAddress,
@@ -24,15 +29,6 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
       specialPlanetTokenLockerAddress
     );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
-  }
-
-  function setPlanet(uint16 planetId, int16 coordinateQ, int16 coordinateR) external {
-    NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
-    UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
-
-    confirm(msg.sender);
-
-    _setPlanet(planetRecord, userGoldRecord, planetId, coordinateQ, coordinateR);
   }
 
   // TODO: optimize
@@ -110,6 +106,11 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     int16 coordinateQ,
     int16 coordinateR
   ) private {
+    require(
+      isInRadius(coordinateQ, coordinateR, usableRadiusFromGold(userGoldRecord.balance)),
+      "not allowed coordinate"
+    );
+
     // TODO: this is not precise
     if (userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecord.balance == 0) {
       mintGold(msg.sender, uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm);
@@ -119,7 +120,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
 
-    mintUserNormalPlanet(
+    setNormalPlanetToMap(
       msg.sender,
       planetId,
       planetRecord.kind,
@@ -153,6 +154,6 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
   function removePlanet(uint64 userNormalPlanetId) external {
     confirm(msg.sender);
-    unmintUserNormalPlanet(msg.sender, userNormalPlanetId);
+    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
   }
 }

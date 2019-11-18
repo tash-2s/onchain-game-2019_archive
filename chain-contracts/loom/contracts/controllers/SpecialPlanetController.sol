@@ -1,11 +1,16 @@
 pragma solidity 0.5.11;
 
 import "./modules/UserPlanetControllable.sol";
+import "./modules/UserPlanetMapUtil.sol";
 import "../../../SpecialPlanetTokenIdInterpretable.sol";
 
 import "./HighlightedUserController.sol";
 
-contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenIdInterpretable {
+contract SpecialPlanetController is
+  UserPlanetControllable,
+  SpecialPlanetTokenIdInterpretable,
+  UserPlanetMapUtil
+{
   HighlightedUserController public highlightedUserController;
 
   constructor(
@@ -75,6 +80,14 @@ contract SpecialPlanetController is UserPlanetControllable, SpecialPlanetTokenId
   // sender needs to approve the transfer of this token before call this function
   function setPlanet(uint256 tokenId, int16 coordinateQ, int16 coordinateR) external {
     confirm(msg.sender);
+    require(
+      isInRadius(
+        coordinateQ,
+        coordinateR,
+        usableRadiusFromGold(userGoldRecordOf(msg.sender).balance)
+      ),
+      "not allowed coordinate"
+    );
     removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
     removeUserNormalPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
