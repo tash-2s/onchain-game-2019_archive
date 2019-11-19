@@ -135,17 +135,38 @@ contract SpecialPlanetControllable is TimeGettable {
 
   function removeUserSpecialPlanetFromMapIfExist(
     address account,
-    int16 coordinateQ,
-    int16 coordinateR
-  ) internal returns (uint24) {
-    (bytes32 target, uint16 index) = _findRecordBytes32(account, coordinateQ, coordinateR);
+    int16[] memory coordinateQs,
+    int16[] memory coordinateRs
+  ) internal returns (uint24[] memory) {
+    UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
 
-    if (target == bytes32(0)) {
-      return 0;
+    uint24[] memory _ids = new uint24[](coordinateQs.length);
+    uint256 targetCount = 0;
+
+    for (uint256 i = 0; i < coordinateQs.length; i++) {
+      for (uint16 j = 0; j < userPlanets.length; j++) {
+        if (
+          userPlanets[j].coordinateQ == coordinateQs[i] &&
+          userPlanets[j].coordinateR == coordinateRs[i]
+        ) {
+          _ids[i] = userPlanets[j].id;
+          _userSpecialPlanetPermanence.deleteElement(account, j);
+          targetCount++;
+          break;
+        }
+      }
     }
 
-    _userSpecialPlanetPermanence.deleteElement(account, index);
-    return buildUserSpecialPlanetRecordFromBytes32(target).id;
+    uint24[] memory ids = new uint24[](targetCount);
+    uint256 idsIndex = 0;
+
+    for (uint256 i = 0; i < targetCount; i++) {
+      if (_ids[i] != 0) {
+        ids[idsIndex++] = _ids[i];
+      }
+    }
+
+    return ids;
   }
 
   function buildUserSpecialPlanetRecordFromBytes32(bytes32 b)
@@ -211,28 +232,5 @@ contract SpecialPlanetControllable is TimeGettable {
     }
 
     return (buildUserSpecialPlanetRecordFromBytes32(target), index);
-  }
-
-  function _findRecordBytes32(address account, int16 coordinateQ, int16 coordinateR)
-    private
-    view
-    returns (bytes32, uint16)
-  {
-    bytes32[] memory us = _userSpecialPlanetPermanence.read(account);
-    bytes32 target = bytes32(0);
-    uint16 index;
-
-    for (uint16 i = 0; i < us.length; i++) {
-      if (
-        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT)) == coordinateQ &&
-        int16(uint256(us[i] >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT)) == coordinateR
-      ) {
-        target = us[i];
-        index = i;
-        break;
-      }
-    }
-
-    return (target, index);
   }
 }

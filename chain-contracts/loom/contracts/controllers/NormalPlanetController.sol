@@ -82,13 +82,13 @@ contract NormalPlanetController is
 
     unmintGold(msg.sender, planetPrice * coordinateQs.length); // type?
 
+    removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
+
     for (uint256 i = 0; i < coordinateQs.length; i++) {
       require(
         isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
         "not allowed coordinate"
       );
-
-      removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQs[i], coordinateRs[i]);
 
       setNormalPlanetToMap(
         msg.sender,

@@ -88,7 +88,11 @@ contract SpecialPlanetController is
       ),
       "not allowed coordinate"
     );
-    removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
+    removeSpecialPlanetFromMapIfExist(
+      msg.sender,
+      _wrapWithArray(coordinateQ),
+      _wrapWithArray(coordinateR)
+    );
     removeUserNormalPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
@@ -151,5 +155,11 @@ contract SpecialPlanetController is
       tokenId
     );
     specialPlanetTokenLocker.setup(msg.sender, tokenId, shortId);
+  }
+
+  function _wrapWithArray(int16 value) private pure returns (int16[] memory) {
+    int16[] memory arr = new int16[](1);
+    arr[0] = value;
+    return arr;
   }
 }
