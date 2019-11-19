@@ -29,10 +29,6 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "UserNormalPlanetPermanence"
     )
-    const userNormalPlanetIdGeneratorPermanenceAddress = await helper.getRegistryContractAddress(
-      deployer.network_id,
-      "UserNormalPlanetIdGeneratorPermanence"
-    )
     const userSpecialPlanetPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
       "UserSpecialPlanetPermanence"
@@ -54,7 +50,6 @@ module.exports = function(deployer, network, accounts) {
 
     const controller = await helper.deployAndRegister(deployer, network, SpecialPlanetController, [
       userNormalPlanetPermanenceAddress,
-      userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress,
@@ -67,12 +62,6 @@ module.exports = function(deployer, network, accounts) {
       .send({from: accounts[0]})
 
     await new web3.eth.Contract(minterAdditionAbi, userNormalPlanetPermanenceAddress).methods
-      .addMinter(controller.address)
-      .send({from: accounts[0]})
-    await new web3.eth.Contract(
-      minterAdditionAbi,
-      userNormalPlanetIdGeneratorPermanenceAddress
-    ).methods
       .addMinter(controller.address)
       .send({from: accounts[0]})
 

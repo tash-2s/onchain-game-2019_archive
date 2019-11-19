@@ -3,7 +3,11 @@ pragma solidity 0.5.11;
 import "./modules/UserGoldControllable.sol";
 import "./modules/UserNormalPlanetControllable.sol";
 
+import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
+
 contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
+  UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;
+
   constructor(
     address userGoldPermanenceAddress,
     address userNormalPlanetPermanenceAddress,
@@ -11,7 +15,9 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   ) public {
     setUserGoldPermanence(userGoldPermanenceAddress);
     setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserNormalPlanetIdGeneratorPermanence(userNormalPlanetIdGeneratorPermanenceAddress);
+    userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
+      userNormalPlanetIdGeneratorPermanenceAddress
+    );
   }
 
   function debugMintGold(address account, uint256 quantity) external {
@@ -30,11 +36,12 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     int16 coordinateQ,
     int16 coordinateR
   ) external {
-    setNormalPlanetToMap(account, normalPlanetId, kind, param, coordinateQ, coordinateR);
+    uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(msg.sender, 1);
+    setNormalPlanetToMap(account, ids[0], normalPlanetId, kind, param, coordinateQ, coordinateR);
   }
 
   function debugMintMaxUserNormalPlanets(address account) external {
-    uint64 counter = userNormalPlanetIdGeneratorPermanence().read(account);
+    uint64 counter = userNormalPlanetIdGeneratorPermanence.read(account);
     require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
 
     uint256[] memory arr = new uint256[](919);
@@ -77,7 +84,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
 
         arr[i++] = buildUint256FromUserNormalPlanetRecord(
           UserNormalPlanetRecord(
-            counter++,
+            ++counter,
             normalPlanetId,
             kind,
             param,
@@ -92,6 +99,6 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     }
 
     userNormalPlanetPermanence().update(account, arr);
-    userNormalPlanetIdGeneratorPermanence().update(account, counter);
+    userNormalPlanetIdGeneratorPermanence.update(account, counter + 1);
   }
 }

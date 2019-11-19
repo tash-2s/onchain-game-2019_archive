@@ -6,11 +6,15 @@ import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserPlanetControllable.sol";
 import "./modules/UserPlanetMapUtil.sol";
 
+import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
+
 contract NormalPlanetController is
   NormalPlanetControllable,
   UserPlanetControllable,
   UserPlanetMapUtil
 {
+  UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;
+
   constructor(
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdGeneratorPermanenceAddress,
@@ -22,13 +26,15 @@ contract NormalPlanetController is
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
-      userNormalPlanetIdGeneratorPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress,
       specialPlanetTokenLockerAddress
     );
     setNormalPlanetPermanence(normalPlanetPermanenceAddress);
+    userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
+      userNormalPlanetIdGeneratorPermanenceAddress
+    );
   }
 
   function getPlanets(address account)
@@ -84,6 +90,11 @@ contract NormalPlanetController is
 
     removePlanetsFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
 
+    uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(
+      msg.sender,
+      uint64(coordinateQs.length)
+    );
+
     for (uint256 i = 0; i < coordinateQs.length; i++) {
       require(
         isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
@@ -92,6 +103,7 @@ contract NormalPlanetController is
 
       setNormalPlanetToMap(
         msg.sender,
+        ids[i],
         planetId,
         planetRecord.kind,
         planetRecord.paramCommonLogarithm,

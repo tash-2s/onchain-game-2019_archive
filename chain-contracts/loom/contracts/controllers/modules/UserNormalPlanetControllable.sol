@@ -3,7 +3,6 @@ pragma solidity 0.5.11;
 import "./PermanenceInterpretable.sol";
 import "./TimeGettable.sol";
 import "../../permanences/UserNormalPlanetPermanence.sol";
-import "../../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
 contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   struct UserNormalPlanetRecord {
@@ -42,7 +41,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
   uint8 constant MAX_USER_NORMAL_PLANET_RANK = 30;
 
   UserNormalPlanetPermanence private _userNormalPlanetPermanence;
-  UserNormalPlanetIdGeneratorPermanence private _userNormalPlanetIdGeneratorPermanence;
 
   function userNormalPlanetPermanence() public view returns (UserNormalPlanetPermanence) {
     return _userNormalPlanetPermanence;
@@ -50,20 +48,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
   function setUserNormalPlanetPermanence(address permanenceAddress) internal {
     _userNormalPlanetPermanence = UserNormalPlanetPermanence(permanenceAddress);
-  }
-
-  function userNormalPlanetIdGeneratorPermanence()
-    public
-    view
-    returns (UserNormalPlanetIdGeneratorPermanence)
-  {
-    return _userNormalPlanetIdGeneratorPermanence;
-  }
-
-  function setUserNormalPlanetIdGeneratorPermanence(address permanenceAddress) internal {
-    _userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
-      permanenceAddress
-    );
   }
 
   function userNormalPlanetRecordsOf(address account)
@@ -97,13 +81,13 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
   function setNormalPlanetToMap(
     address account,
+    uint64 id,
     uint16 normalPlanetId,
     uint8 kind,
     uint8 paramCommonLogarithm,
     int16 coordinateQ,
     int16 coordinateR
   ) internal {
-    uint64 id = _userNormalPlanetIdGeneratorPermanence.generate(account);
     _userNormalPlanetPermanence.createElement(
       account,
       buildUint256FromUserNormalPlanetRecord(
