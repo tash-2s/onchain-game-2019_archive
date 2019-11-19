@@ -88,12 +88,11 @@ contract SpecialPlanetController is
       ),
       "not allowed coordinate"
     );
-    removeSpecialPlanetFromMapIfExist(
+    removePlanetsFromMapIfExist(
       msg.sender,
       _wrapWithArray(coordinateQ),
       _wrapWithArray(coordinateR)
     );
-    removeUserNormalPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
       tokenId
     );

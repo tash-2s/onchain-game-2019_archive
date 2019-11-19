@@ -82,7 +82,7 @@ contract NormalPlanetController is
 
     unmintGold(msg.sender, planetPrice * coordinateQs.length); // type?
 
-    removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
+    removePlanetsFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
       require(

@@ -103,8 +103,6 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     int16 coordinateQ,
     int16 coordinateR
   ) internal {
-    removeUserNormalPlanetFromMapIfExist(account, coordinateQ, coordinateR);
-
     uint64 id = _userNormalPlanetIdGeneratorPermanence.generate(account);
     _userNormalPlanetPermanence.createElement(
       account,
@@ -163,15 +161,19 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
 
   function removeUserNormalPlanetFromMapIfExist(
     address account,
-    int16 coordinateQ,
-    int16 coordinateR
+    int16[] memory coordinateQs,
+    int16[] memory coordinateRs
   ) internal {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
 
-    for (uint16 i = 0; i < records.length; i++) {
-      // TODO: for big planets
-      if ((records[i].coordinateQ == coordinateQ) && (records[i].coordinateR == coordinateR)) {
-        _userNormalPlanetPermanence.deleteElement(account, i);
+    for (uint256 i = 0; i < coordinateQs.length; i++) {
+      for (uint16 j = 0; j < records.length; j++) {
+        if (
+          (records[j].coordinateQ == coordinateQs[i]) && (records[j].coordinateR == coordinateRs[i])
+        ) {
+          _userNormalPlanetPermanence.deleteElement(account, j);
+          break;
+        }
       }
     }
   }
