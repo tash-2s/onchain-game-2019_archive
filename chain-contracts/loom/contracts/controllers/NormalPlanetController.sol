@@ -69,17 +69,37 @@ contract NormalPlanetController is
     }
   }
 
-  // TODO: optimize
   function setPlanets(uint16 planetId, int16[] calldata coordinateQs, int16[] calldata coordinateRs)
     external
   {
+    require(coordinateQs.length == coordinateRs.length, "invalid coordinate arg");
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
-    UserGoldRecord memory userGoldRecord = userGoldRecordOf(msg.sender);
 
     confirm(msg.sender);
 
+    uint200 balance = userGoldRecordOf(msg.sender).balance;
+    uint200 planetPrice = uint200(uint256(10)**planetRecord.priceGoldCommonLogarithm);
+
+    unmintGold(msg.sender, planetPrice * coordinateQs.length); // type?
+
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      _setPlanet(planetRecord, userGoldRecord, planetId, coordinateQs[i], coordinateRs[i]);
+      require(
+        isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
+        "not allowed coordinate"
+      );
+
+      removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQs[i], coordinateRs[i]);
+
+      setNormalPlanetToMap(
+        msg.sender,
+        planetId,
+        planetRecord.kind,
+        planetRecord.paramCommonLogarithm,
+        coordinateQs[i],
+        coordinateRs[i]
+      );
+
+      balance -= planetPrice;
     }
   }
 
@@ -148,32 +168,6 @@ contract NormalPlanetController is
     rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
 
     return rankupGold;
-  }
-
-  function _setPlanet(
-    NormalPlanetRecord memory planetRecord,
-    UserGoldRecord memory userGoldRecord,
-    uint16 planetId,
-    int16 coordinateQ,
-    int16 coordinateR
-  ) private {
-    require(
-      isInRadius(coordinateQ, coordinateR, usableRadiusFromGold(userGoldRecord.balance)),
-      "not allowed coordinate"
-    );
-
-    unmintGold(msg.sender, uint256(10)**planetRecord.priceGoldCommonLogarithm);
-
-    removeSpecialPlanetFromMapIfExist(msg.sender, coordinateQ, coordinateR);
-
-    setNormalPlanetToMap(
-      msg.sender,
-      planetId,
-      planetRecord.kind,
-      planetRecord.paramCommonLogarithm,
-      coordinateQ,
-      coordinateR
-    );
   }
 
   function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
