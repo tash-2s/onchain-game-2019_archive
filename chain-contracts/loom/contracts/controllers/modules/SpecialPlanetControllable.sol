@@ -138,18 +138,17 @@ contract SpecialPlanetControllable is TimeGettable {
     int16[] memory coordinateQs,
     int16[] memory coordinateRs
   ) internal returns (uint24[] memory) {
-    UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
+    UserSpecialPlanetRecord[] memory records = userSpecialPlanetRecordsOf(account);
 
     uint24[] memory _ids = new uint24[](coordinateQs.length);
     uint256 targetCount = 0;
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      for (uint16 j = 0; j < userPlanets.length; j++) {
+      for (uint16 j = 0; j < records.length; j++) {
         if (
-          userPlanets[j].coordinateQ == coordinateQs[i] &&
-          userPlanets[j].coordinateR == coordinateRs[i]
+          coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
         ) {
-          _ids[i] = userPlanets[j].id;
+          _ids[i] = records[j].id;
           _userSpecialPlanetPermanence.deleteElement(account, j);
           targetCount++;
           break;

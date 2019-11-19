@@ -169,7 +169,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     for (uint256 i = 0; i < coordinateQs.length; i++) {
       for (uint16 j = 0; j < records.length; j++) {
         if (
-          (records[j].coordinateQ == coordinateQs[i]) && (records[j].coordinateR == coordinateRs[i])
+          coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
         ) {
           _userNormalPlanetPermanence.deleteElement(account, j);
           break;
