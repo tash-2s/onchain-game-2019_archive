@@ -5,6 +5,7 @@ import "../../permanences/NormalPlanetPermanence.sol";
 
 contract NormalPlanetControllable is PermanenceInterpretable {
   struct NormalPlanetRecord {
+    uint16 id;
     uint8 kind;
     uint8 paramCommonLogarithm;
     uint8 priceGoldCommonLogarithm;
@@ -17,21 +18,17 @@ contract NormalPlanetControllable is PermanenceInterpretable {
   uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT = 7;
   uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT = 9;
 
-  NormalPlanetPermanence private _normalPlanetPermanence;
-
-  function normalPlanetPermanence() public view returns (NormalPlanetPermanence) {
-    return _normalPlanetPermanence;
-  }
+  NormalPlanetPermanence public normalPlanetPermanence;
 
   function setNormalPlanetPermanence(address permanenceAddress) internal {
-    _normalPlanetPermanence = NormalPlanetPermanence(permanenceAddress);
+    normalPlanetPermanence = NormalPlanetPermanence(permanenceAddress);
   }
 
   function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord memory) {
-    return buildNormalPlanetRecordFromUint256(_normalPlanetPermanence.read(id));
+    return buildNormalPlanetRecord(id, normalPlanetPermanence.read(id));
   }
 
-  function buildNormalPlanetRecordFromUint256(uint256 source)
+  function buildNormalPlanetRecord(uint16 id, uint256 source)
     internal
     pure
     returns (NormalPlanetRecord memory)
@@ -62,6 +59,6 @@ contract NormalPlanetControllable is PermanenceInterpretable {
       revert("faild to build a planet record, the source is wrong");
     }
 
-    return NormalPlanetRecord(kind, paramCommonLogarithm, priceGoldCommonLogarithm);
+    return NormalPlanetRecord(id, kind, paramCommonLogarithm, priceGoldCommonLogarithm);
   }
 }

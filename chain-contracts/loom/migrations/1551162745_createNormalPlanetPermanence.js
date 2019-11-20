@@ -22,13 +22,21 @@ module.exports = function(deployer, network) {
       }
       await planet.update(
         r.id,
-        `1${("0".repeat(65) + r.priceGoldCommonLogarithm).slice(-66)}${(
-          "00" + r.paramCommonLogarithm
-        ).slice(-3)}00${kind}`
+        `1${zeroPadding(r.priceGoldCommonLogarithm, 66)}${zeroPadding(
+          r.paramCommonLogarithm,
+          3
+        )}${zeroPadding(kind, 3)}`
       )
       if (!helper.isDevNetwork(network)) {
         await helper.sleep(300) // to prevent timeout error...
       }
     }
   })
+}
+
+const zeroPadding = (num, len) => {
+  if (`${num}`.length > len) {
+    throw new Error(`wrong range (zeroPadding): ${num}`)
+  }
+  return ("0".repeat(len - 1) + num).slice(-len)
 }

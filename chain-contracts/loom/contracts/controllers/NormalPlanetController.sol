@@ -104,7 +104,7 @@ contract NormalPlanetController is
       setNormalPlanetToMap(
         msg.sender,
         ids[i],
-        planetId,
+        planetRecord.id,
         planetRecord.kind,
         planetRecord.paramCommonLogarithm,
         coordinateQs[i],
