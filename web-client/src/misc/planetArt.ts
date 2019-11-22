@@ -2,6 +2,8 @@ import BN from "bn.js"
 
 import { PlanetKind } from "../constants"
 
+const canvasCache: { [key: string]: HTMLCanvasElement } = {}
+
 export const draw = (
   canvas: HTMLCanvasElement,
   sideLength: number,
@@ -10,34 +12,35 @@ export const draw = (
   artRarity: number,
   artSeed: BN
 ) => {
-  if (artVersion === 0) {
-    drawV0(
-      canvas,
-      sideLength,
+  const cacheKey = `${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
+
+  if (!canvasCache[cacheKey]) {
+    if (artVersion !== 0) {
+      throw new Error(`unimplemented version: ${artVersion}`)
+    }
+    canvasCache[cacheKey] = drawV0(
       planetKind,
       artRarity,
       new SeededRandomish(artSeed)
       // ArtStringController.generate(planetKind, artVersion, artRarity, artSeed)
     )
-  } else {
-    throw new Error(`unimplemented version: ${artVersion}`)
   }
+
+  const drawnCanvas = canvasCache[cacheKey]
+
+  canvas.width = drawnCanvas.width
+  canvas.height = drawnCanvas.height
+  canvas.style.width = `${sideLength}px`
+  canvas.style.height = `${sideLength}px`
+  getCanvasContext(canvas).drawImage(drawnCanvas, 0, 0)
 }
 
-const drawV0 = (
-  canvas: HTMLCanvasElement,
-  sideLength: number,
-  kind: PlanetKind,
-  rarity: number,
-  r: SeededRandomish,
-  debugStr?: string
-) => {
-  const ctx = canvas.getContext("2d")
-  if (!ctx) {
-    throw new Error("couldn't get a context from the canvas")
-  }
+const drawV0 = (kind: PlanetKind, rarity: number, r: SeededRandomish, debugStr?: string) => {
+  const canvas = document.createElement("canvas")
+  const ctx = getCanvasContext(canvas)
 
-  setCanvasSize(canvas, sideLength)
+  canvas.width = canvasSideLength
+  canvas.height = canvasSideLength
 
   const { hue, saturation, lightness, opacity } = getColorAttributes(r)
   const { hueTheory, hueTheoryBase } = getHueTheory(hue, r)
@@ -110,6 +113,8 @@ const drawV0 = (
   // } else {
   //   document.body.appendChild(canvas)
   // }
+
+  return canvas
 }
 
 const FULL_DEG = 360
@@ -121,6 +126,14 @@ const degToRad = (deg: number) => (deg * Math.PI) / 180
 const canvasSideLength = 1000
 const centerX = canvasSideLength / 2,
   centerY = canvasSideLength / 2
+
+const getCanvasContext = (canvas: HTMLCanvasElement) => {
+  const ctx = canvas.getContext("2d", { alpha: false })
+  if (!ctx) {
+    throw new Error("couldn't get a context from the canvas")
+  }
+  return ctx
+}
 
 class SeededRandomish {
   static seedBit = 64
@@ -251,13 +264,6 @@ const drawCircle = (
 ) => {
   const radius = Math.ceil(sizeBase * 450)
   c.arc(centerX, centerY, radius, startRad, endRad)
-}
-
-const setCanvasSize = (canvas: HTMLCanvasElement, sideLength: number) => {
-  canvas.width = canvasSideLength
-  canvas.height = canvasSideLength
-  canvas.style.width = `${sideLength}px`
-  canvas.style.height = `${sideLength}px`
 }
 
 const getColorAttributes = (r: SeededRandomish) => {
