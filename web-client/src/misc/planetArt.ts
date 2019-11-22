@@ -33,6 +33,7 @@ export const draw = (
   canvas.style.width = `${sideLength}px`
   canvas.style.height = `${sideLength}px`
   getCanvasContext(canvas).drawImage(drawnCanvas, 0, 0)
+  canvas.dataset.drawn = "1"
 }
 
 const drawV0 = (kind: PlanetKind, rarity: number, r: SeededRandomish, debugStr?: string) => {
@@ -93,7 +94,6 @@ const drawV0 = (kind: PlanetKind, rarity: number, r: SeededRandomish, debugStr?:
   }
 
   ctx.restore()
-  canvas.dataset.drawn = "1"
 
   // if (debugStr) {
   //   const parentDiv = document.createElement("div"),
