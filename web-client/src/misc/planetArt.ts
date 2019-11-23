@@ -6,19 +6,21 @@ const canvasCache: { [key: string]: HTMLCanvasElement } = {}
 
 export const draw = (
   canvas: HTMLCanvasElement,
-  sideLength: number,
+  cssSize: number,
   planetKind: PlanetKind,
   artVersion: number,
   artRarity: number,
   artSeed: BN
 ) => {
-  const cacheKey = `${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
+  const physicalSize = cssSize * window.devicePixelRatio
+  const cacheKey = `${physicalSize}-${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
 
   if (!canvasCache[cacheKey]) {
     if (artVersion !== 0) {
       throw new Error(`unimplemented version: ${artVersion}`)
     }
     canvasCache[cacheKey] = drawV0(
+      physicalSize,
       planetKind,
       artRarity,
       new SeededRandomish(artSeed)
@@ -30,18 +32,26 @@ export const draw = (
 
   canvas.width = drawnOffscreenCanvas.width
   canvas.height = drawnOffscreenCanvas.height
-  canvas.style.width = `${sideLength}px`
-  canvas.style.height = `${sideLength}px`
+  canvas.style.width = `${cssSize}px`
+  canvas.style.height = `${cssSize}px`
   getCanvasContext(canvas).drawImage(drawnOffscreenCanvas, 0, 0)
   canvas.dataset.drawn = "1"
 }
 
-const drawV0 = (kind: PlanetKind, rarity: number, r: SeededRandomish, debugStr?: string) => {
+const drawV0 = (
+  physicalSize: number,
+  kind: PlanetKind,
+  rarity: number,
+  r: SeededRandomish,
+  debugStr?: string
+) => {
   const canvas = document.createElement("canvas")
   const ctx = getCanvasContext(canvas)
 
-  canvas.width = canvasSideLength
-  canvas.height = canvasSideLength
+  canvas.width = physicalSize
+  canvas.height = physicalSize
+  const scale = physicalSize / canvasBaseSize
+  ctx.scale(scale, scale)
 
   const { hue, saturation, lightness, opacity } = getColorAttributes(r)
   const { hueTheory, hueTheoryBase } = getHueTheory(hue, r)
@@ -50,7 +60,7 @@ const drawV0 = (kind: PlanetKind, rarity: number, r: SeededRandomish, debugStr?:
   ctx.save()
 
   ctx.fillStyle = "#000000"
-  ctx.fillRect(0, 0, canvasSideLength, canvasSideLength)
+  ctx.fillRect(0, 0, canvasBaseSize, canvasBaseSize)
 
   ctx.globalCompositeOperation = r.random() < 0.2 ? "lighter" : "source-over"
 
@@ -123,9 +133,9 @@ const ONE_THIRD = 1 / 3
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180
 
-const canvasSideLength = 1000
-const centerX = canvasSideLength / 2,
-  centerY = canvasSideLength / 2
+const canvasBaseSize = 200
+const centerX = canvasBaseSize / 2,
+  centerY = canvasBaseSize / 2
 
 const getCanvasContext = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext("2d", { alpha: false })
