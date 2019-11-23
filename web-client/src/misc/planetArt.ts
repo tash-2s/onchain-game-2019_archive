@@ -84,10 +84,10 @@ const drawV0 = (
 
     switch (kind) {
       case "residence":
-        drawSquare(ctx, sizeBase, rotationDeg)
+        drawSquare(ctx, sizeBase, rotationDeg, scale)
         break
       case "goldmine":
-        drawTriangle(ctx, sizeBase, rotationDeg)
+        drawTriangle(ctx, sizeBase, rotationDeg, scale)
         break
       case "technology":
         const startRad = rotationOrCutout ? r.random() * FULL_RAD : 0
@@ -224,13 +224,19 @@ const rotate = (c: CanvasRenderingContext2D, deg: number) => {
   }
 }
 
-const resetRotation = (c: CanvasRenderingContext2D, deg: number) => {
+const resetRotation = (c: CanvasRenderingContext2D, deg: number, scale: number) => {
   if (deg !== 0) {
     resetTransform(c)
+    c.scale(scale, scale)
   }
 }
 
-const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
+const drawSquare = (
+  c: CanvasRenderingContext2D,
+  sizeBase: number,
+  rotationDeg: number,
+  scale: number
+) => {
   const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.6)),
     halfSideLength = sideLength / 2
 
@@ -242,10 +248,15 @@ const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: 
   c.lineTo(centerX - halfSideLength, centerY + halfSideLength)
   c.closePath()
 
-  resetRotation(c, rotationDeg)
+  resetRotation(c, rotationDeg, scale)
 }
 
-const drawTriangle = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
+const drawTriangle = (
+  c: CanvasRenderingContext2D,
+  sizeBase: number,
+  rotationDeg: number,
+  scale: number
+) => {
   const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.7)),
     halfSideLength = sideLength / 2
   const centerFromTopLength = sideLength / Math.sqrt(3)
@@ -259,7 +270,7 @@ const drawTriangle = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg
   c.lineTo(centerX - halfSideLength, topY + height)
   c.closePath()
 
-  resetRotation(c, rotationDeg)
+  resetRotation(c, rotationDeg, scale)
 }
 
 const drawCircle = (
