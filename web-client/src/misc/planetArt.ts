@@ -57,8 +57,6 @@ const drawV0 = (
   const { hueTheory, hueTheoryBase } = getHueTheory(hue, r)
   const colorRands = getColorRands(r)
 
-  ctx.save()
-
   ctx.fillStyle = "#000000"
   ctx.fillRect(0, 0, canvasBaseSize, canvasBaseSize)
 
@@ -67,7 +65,7 @@ const drawV0 = (
   const shapeCount = Math.ceil(r.midpointWeightedRandom() * 16)
   for (let n = 0; n < shapeCount; n++) {
     ctx.beginPath()
-    ctx.lineWidth = Math.ceil(r.midpointWeightedRandom() * 75)
+    ctx.lineWidth = Math.ceil(r.midpointWeightedRandom() * (canvasBaseSize * 0.075))
 
     ctx.strokeStyle = getColor(
       r.sampleArrayElement(colorRands),
@@ -102,8 +100,6 @@ const drawV0 = (
 
     ctx.stroke()
   }
-
-  ctx.restore()
 
   // if (debugStr) {
   //   const parentDiv = document.createElement("div"),
@@ -235,7 +231,7 @@ const resetRotation = (c: CanvasRenderingContext2D, deg: number) => {
 }
 
 const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
-  const sideLength = Math.ceil(sizeBase * 600),
+  const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.6)),
     halfSideLength = sideLength / 2
 
   rotate(c, rotationDeg)
@@ -250,7 +246,7 @@ const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: 
 }
 
 const drawTriangle = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
-  const sideLength = Math.ceil(sizeBase * 700),
+  const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.7)),
     halfSideLength = sideLength / 2
   const centerFromTopLength = sideLength / Math.sqrt(3)
   const topY = centerY - centerFromTopLength
@@ -272,7 +268,7 @@ const drawCircle = (
   startRad: number,
   endRad: number
 ) => {
-  const radius = Math.ceil(sizeBase * 450)
+  const radius = Math.ceil(sizeBase * (canvasBaseSize * 0.45))
   c.arc(centerX, centerY, radius, startRad, endRad)
 }
 
