@@ -2,58 +2,70 @@ import BN from "bn.js"
 
 import { PlanetKind } from "../constants"
 
+const canvasCache: { [key: string]: HTMLCanvasElement } = {}
+
 export const draw = (
   canvas: HTMLCanvasElement,
-  sideLength: number,
+  size: number,
   planetKind: PlanetKind,
   artVersion: number,
   artRarity: number,
   artSeed: BN
 ) => {
-  if (artVersion === 0) {
-    drawV0(
-      canvas,
-      sideLength,
+  const cssSize = Math.floor(size)
+  const physicalSize = cssSize * window.devicePixelRatio
+  const cacheKey = `${physicalSize}-${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
+
+  if (!canvasCache[cacheKey]) {
+    if (artVersion !== 0) {
+      throw new Error(`unimplemented version: ${artVersion}`)
+    }
+    canvasCache[cacheKey] = drawV0(
+      physicalSize,
       planetKind,
       artRarity,
       new SeededRandomish(artSeed)
-      // ArtStringController.generate(planetKind, artVersion, artRarity, artSeed)
     )
-  } else {
-    throw new Error(`unimplemented version: ${artVersion}`)
   }
+
+  const drawnOffscreenCanvas = canvasCache[cacheKey]
+
+  canvas.width = drawnOffscreenCanvas.width
+  canvas.height = drawnOffscreenCanvas.height
+  canvas.style.width = `${cssSize}px`
+  canvas.style.height = `${cssSize}px`
+  getCanvasContext(canvas).drawImage(drawnOffscreenCanvas, 0, 0)
+  canvas.dataset.drawn = "1"
 }
 
 const drawV0 = (
-  canvas: HTMLCanvasElement,
-  sideLength: number,
+  physicalSize: number,
   kind: PlanetKind,
   rarity: number,
   r: SeededRandomish,
   debugStr?: string
 ) => {
-  const ctx = canvas.getContext("2d")
-  if (!ctx) {
-    throw new Error("couldn't get a context from the canvas")
-  }
+  const canvas = document.createElement("canvas")
+  const ctx = getCanvasContext(canvas)
 
-  setCanvasSize(canvas, sideLength)
+  canvas.width = physicalSize
+  canvas.height = physicalSize
+  const scale = physicalSize / canvasBaseSize
+  ctx.scale(scale, scale)
 
   const { hue, saturation, lightness, opacity } = getColorAttributes(r)
   const { hueTheory, hueTheoryBase } = getHueTheory(hue, r)
   const colorRands = getColorRands(r)
 
-  ctx.save()
-
   ctx.fillStyle = "#000000"
-  ctx.fillRect(0, 0, canvasSideLength, canvasSideLength)
+  ctx.fillRect(0, 0, canvasBaseSize, canvasBaseSize)
 
   ctx.globalCompositeOperation = r.random() < 0.2 ? "lighter" : "source-over"
 
   const shapeCount = Math.ceil(r.midpointWeightedRandom() * 16)
   for (let n = 0; n < shapeCount; n++) {
     ctx.beginPath()
-    ctx.lineWidth = Math.ceil(r.midpointWeightedRandom() * 75)
+    ctx.lineWidth = Math.ceil(r.midpointWeightedRandom() * (canvasBaseSize * 0.075))
 
     ctx.strokeStyle = getColor(
       r.sampleArrayElement(colorRands),
@@ -72,10 +84,10 @@ const drawV0 = (
 
     switch (kind) {
       case "residence":
-        drawSquare(ctx, sizeBase, rotationDeg)
+        drawSquare(ctx, sizeBase, rotationDeg, scale)
         break
       case "goldmine":
-        drawTriangle(ctx, sizeBase, rotationDeg)
+        drawTriangle(ctx, sizeBase, rotationDeg, scale)
         break
       case "technology":
         const startRad = rotationOrCutout ? r.random() * FULL_RAD : 0
@@ -88,9 +100,6 @@ const drawV0 = (
 
     ctx.stroke()
   }
-
-  ctx.restore()
-  canvas.dataset.drawn = "1"
 
   // if (debugStr) {
   //   const parentDiv = document.createElement("div"),
@@ -110,6 +119,8 @@ const drawV0 = (
   // } else {
   //   document.body.appendChild(canvas)
   // }
+
+  return canvas
 }
 
 const FULL_DEG = 360
@@ -118,9 +129,17 @@ const ONE_THIRD = 1 / 3
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180
 
-const canvasSideLength = 1000
-const centerX = canvasSideLength / 2,
-  centerY = canvasSideLength / 2
+const canvasBaseSize = 200
+const centerX = canvasBaseSize / 2,
+  centerY = canvasBaseSize / 2
+
+const getCanvasContext = (canvas: HTMLCanvasElement) => {
+  const ctx = canvas.getContext("2d", { alpha: false })
+  if (!ctx) {
+    throw new Error("couldn't get a context from the canvas")
+  }
+  return ctx
+}
 
 class SeededRandomish {
   static seedBit = 64
@@ -195,7 +214,7 @@ const getRandomOpacity = (randomNumber: number) => {
   return getRandomFromInclusiveRange(randomNumber, 50, 100)
 }
 
-const resetTransform = (c: CanvasRenderingContext2D) => c.setTransform(1, 0, 0, 1, 0, 0)
+// const resetTransform = (c: CanvasRenderingContext2D) => c.setTransform(1, 0, 0, 1, 0, 0)
 
 const rotate = (c: CanvasRenderingContext2D, deg: number) => {
   if (deg !== 0) {
@@ -205,14 +224,19 @@ const rotate = (c: CanvasRenderingContext2D, deg: number) => {
   }
 }
 
-const resetRotation = (c: CanvasRenderingContext2D, deg: number) => {
+const resetRotation = (c: CanvasRenderingContext2D, deg: number, scale: number) => {
   if (deg !== 0) {
-    resetTransform(c)
+    c.setTransform(scale, 0, 0, scale, 0, 0)
   }
 }
 
-const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
-  const sideLength = Math.ceil(sizeBase * 600),
+const drawSquare = (
+  c: CanvasRenderingContext2D,
+  sizeBase: number,
+  rotationDeg: number,
+  scale: number
+) => {
+  const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.6)),
     halfSideLength = sideLength / 2
 
   rotate(c, rotationDeg)
@@ -223,11 +247,16 @@ const drawSquare = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: 
   c.lineTo(centerX - halfSideLength, centerY + halfSideLength)
   c.closePath()
 
-  resetRotation(c, rotationDeg)
+  resetRotation(c, rotationDeg, scale)
 }
 
-const drawTriangle = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg: number) => {
-  const sideLength = Math.ceil(sizeBase * 700),
+const drawTriangle = (
+  c: CanvasRenderingContext2D,
+  sizeBase: number,
+  rotationDeg: number,
+  scale: number
+) => {
+  const sideLength = Math.ceil(sizeBase * (canvasBaseSize * 0.7)),
     halfSideLength = sideLength / 2
   const centerFromTopLength = sideLength / Math.sqrt(3)
   const topY = centerY - centerFromTopLength
@@ -240,7 +269,7 @@ const drawTriangle = (c: CanvasRenderingContext2D, sizeBase: number, rotationDeg
   c.lineTo(centerX - halfSideLength, topY + height)
   c.closePath()
 
-  resetRotation(c, rotationDeg)
+  resetRotation(c, rotationDeg, scale)
 }
 
 const drawCircle = (
@@ -249,15 +278,8 @@ const drawCircle = (
   startRad: number,
   endRad: number
 ) => {
-  const radius = Math.ceil(sizeBase * 450)
+  const radius = Math.ceil(sizeBase * (canvasBaseSize * 0.45))
   c.arc(centerX, centerY, radius, startRad, endRad)
-}
-
-const setCanvasSize = (canvas: HTMLCanvasElement, sideLength: number) => {
-  canvas.width = canvasSideLength
-  canvas.height = canvasSideLength
-  canvas.style.width = `${sideLength}px`
-  canvas.style.height = `${sideLength}px`
 }
 
 const getColorAttributes = (r: SeededRandomish) => {
