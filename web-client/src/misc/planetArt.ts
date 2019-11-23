@@ -25,7 +25,6 @@ export const draw = (
       planetKind,
       artRarity,
       new SeededRandomish(artSeed)
-      // ArtStringController.generate(planetKind, artVersion, artRarity, artSeed)
     )
   }
 
