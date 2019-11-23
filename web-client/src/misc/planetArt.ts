@@ -214,7 +214,7 @@ const getRandomOpacity = (randomNumber: number) => {
   return getRandomFromInclusiveRange(randomNumber, 50, 100)
 }
 
-const resetTransform = (c: CanvasRenderingContext2D) => c.setTransform(1, 0, 0, 1, 0, 0)
+// const resetTransform = (c: CanvasRenderingContext2D) => c.setTransform(1, 0, 0, 1, 0, 0)
 
 const rotate = (c: CanvasRenderingContext2D, deg: number) => {
   if (deg !== 0) {
@@ -226,8 +226,7 @@ const rotate = (c: CanvasRenderingContext2D, deg: number) => {
 
 const resetRotation = (c: CanvasRenderingContext2D, deg: number, scale: number) => {
   if (deg !== 0) {
-    resetTransform(c)
-    c.scale(scale, scale)
+    c.setTransform(scale, 0, 0, scale, 0, 0)
   }
 }
 
