@@ -6,12 +6,13 @@ const canvasCache: { [key: string]: HTMLCanvasElement } = {}
 
 export const draw = (
   canvas: HTMLCanvasElement,
-  cssSize: number,
+  size: number,
   planetKind: PlanetKind,
   artVersion: number,
   artRarity: number,
   artSeed: BN
 ) => {
+  const cssSize = Math.floor(size)
   const physicalSize = cssSize * window.devicePixelRatio
   const cacheKey = `${physicalSize}-${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
 
