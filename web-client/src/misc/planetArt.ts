@@ -26,13 +26,13 @@ export const draw = (
     )
   }
 
-  const drawnCanvas = canvasCache[cacheKey]
+  const drawnOffscreenCanvas = canvasCache[cacheKey]
 
-  canvas.width = drawnCanvas.width
-  canvas.height = drawnCanvas.height
+  canvas.width = drawnOffscreenCanvas.width
+  canvas.height = drawnOffscreenCanvas.height
   canvas.style.width = `${sideLength}px`
   canvas.style.height = `${sideLength}px`
-  getCanvasContext(canvas).drawImage(drawnCanvas, 0, 0)
+  getCanvasContext(canvas).drawImage(drawnOffscreenCanvas, 0, 0)
   canvas.dataset.drawn = "1"
 }
 
