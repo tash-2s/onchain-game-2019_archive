@@ -37,7 +37,8 @@ export const createUserPageUIReducer = () =>
       ...state,
       selectedUserPlanetsViewKind: "map",
       selectedNormalPlanetIdForSet: payload,
-      selectedSpecialPlanetTokenIdForSet: null
+      selectedSpecialPlanetTokenIdForSet: null,
+      selectedPlanetHexesForSet: []
     }))
     .case(UserPageUIActions.unselectNormalPlanetForSet, state => ({
       ...state,
