@@ -65,6 +65,29 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     return records;
   }
 
+  function userNormalPlanetRecordsWithIndexesOf(address account, uint64[] memory userPlanetIds)
+    internal
+    view
+    returns (UserNormalPlanetRecord[] memory, uint256[] memory)
+  {
+    UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](userPlanetIds.length);
+    uint256[] memory indexes = new uint256[](userPlanetIds.length);
+
+    UserNormalPlanetRecord[] memory allRecords = userNormalPlanetRecordsOf(account);
+
+    for (uint256 i = 0; i < userPlanetIds.length; i++) {
+      for (uint256 j = 0; j < allRecords.length; j++) {
+        if (userPlanetIds[i] == allRecords[j].id) {
+          records[i] = allRecords[j];
+          indexes[i] = j;
+          break;
+        }
+      }
+    }
+
+    return (records, indexes);
+  }
+
   function userNormalPlanetRecordsCountOf(address account) public view returns (uint16) {
     return uint16(_userNormalPlanetPermanence.count(account));
   }
@@ -106,13 +129,12 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     );
   }
 
-  // this should require userPlanetRecord for performance reason
-  //   => a record and its index are needed, so it's not simple than I think...
-  function rankupUserNormalPlanet(address account, uint64 userPlanetId, uint8 targetRank) internal {
-    UserNormalPlanetRecord memory record;
-    uint16 index;
-    (record, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
-
+  function rankupUserNormalPlanet(
+    address account,
+    UserNormalPlanetRecord memory record,
+    uint256 index,
+    uint8 targetRank
+  ) internal {
     require(
       targetRank > record.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
       "invalid rank for rankup"
