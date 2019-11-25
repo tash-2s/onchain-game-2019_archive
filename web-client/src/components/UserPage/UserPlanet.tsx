@@ -93,17 +93,18 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   }
 
   rankupButtonHandler = () => {
-    this.props.userActions.normal.rankupUserPlanet(
-      this.props.userPlanet.id,
-      this.props.userPlanet.rank + 1
-    )
+    this.props.userActions.normal.rankupUserPlanets([
+      { userNormalPlanetId: this.props.userPlanet.id, targetRank: this.props.userPlanet.rank + 1 }
+    ])
   }
 
   bulkRankupButtonHandler = () => {
-    this.props.userActions.normal.rankupUserPlanet(
-      this.props.userPlanet.id,
-      this.props.userPlanet.rank + this.props.userPlanet.rankupableCount
-    )
+    this.props.userActions.normal.rankupUserPlanets([
+      {
+        userNormalPlanetId: this.props.userPlanet.id,
+        targetRank: this.props.userPlanet.rank + this.props.userPlanet.rankupableCount
+      }
+    ])
   }
 
   removeButtonHandler = () => {

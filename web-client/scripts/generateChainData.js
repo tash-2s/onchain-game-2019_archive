@@ -44,7 +44,6 @@ const targetContractAndFunctions = {
     NormalPlanetController: [
       "getPlanets",
       "setPlanets",
-      "rankupPlanet",
       "rankupPlanets",
       "removePlanet",
       "claimInitialGold"

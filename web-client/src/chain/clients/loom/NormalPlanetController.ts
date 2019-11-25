@@ -69,34 +69,6 @@ export class NormalPlanetController {
       .send(txOption)
   }
 
-  rankupPlanet = (
-    userNormalPlanetId: string | number,
-    targetRank: string | number,
-    txOption?: {}
-  ) => {
-    return new this.chain.web3.eth.Contract(
-      [
-        {
-          constant: false,
-          inputs: [
-            { internalType: "uint64", name: "userNormalPlanetId", type: "uint64" },
-            { internalType: "uint8", name: "targetRank", type: "uint8" }
-          ],
-          name: "rankupPlanet",
-          outputs: [],
-          payable: false,
-          stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x2db45a59"
-        }
-      ],
-      this.chain.env.contractAddresses.NormalPlanetController,
-      { from: this.chain.callerAddress() }
-    ).methods
-      .rankupPlanet(userNormalPlanetId, targetRank)
-      .send(txOption)
-  }
-
   rankupPlanets = (
     userNormalPlanetIds: Array<string | number>,
     targetRanks: Array<string | number>,

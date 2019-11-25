@@ -35,19 +35,6 @@ export class UserActionsForNormalPlanet extends AbstractActions {
     })
   }
 
-  static rankupUserPlanet = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
-    "rankupUserPlanet"
-  )
-  rankupUserPlanet = (userPlanetId: string, targetRank: number) => {
-    this.withLoading(async () => {
-      await new NormalPlanetController(chains.loom).rankupPlanet(userPlanetId, targetRank)
-
-      const response = await getUserNormalPlanets(loginedAddress())
-
-      this.dispatch(UserActionsForNormalPlanet.rankupUserPlanet(response))
-    })
-  }
-
   static rankupUserPlanets = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
     "rankupUserPlanets"
   )
