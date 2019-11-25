@@ -115,19 +115,44 @@ contract NormalPlanetController is
     }
   }
 
-  function rankupPlanet(uint64 userNormalPlanetId, uint8 targetRank) external {
-    uint256 knowledge = confirm(msg.sender);
-    uint256 rankupGold = _rankupPlanet(knowledge, userNormalPlanetId, targetRank);
-    unmintGold(msg.sender, rankupGold);
-  }
-
   function rankupPlanets(uint64[] calldata userNormalPlanetIds, uint8[] calldata targetRanks)
     external
   {
     uint256 knowledge = confirm(msg.sender);
     uint256 rankupGold = 0;
     for (uint256 i = 0; i < userNormalPlanetIds.length; i++) {
-      rankupGold += _rankupPlanet(knowledge, userNormalPlanetIds[i], targetRanks[i]);
+      uint8 targetRank = targetRanks[i];
+      UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
+        msg.sender,
+        userNormalPlanetIds[i]
+      );
+
+      if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
+        revert("invalid targetRank");
+      }
+
+      // ckeck time
+      if (targetRank == (userPlanet.rank + 1)) {
+        uint256 diffSec = uint32now() - userPlanet.rankupedAt;
+        int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank)) -
+          int256(diffSec) -
+          int256(knowledge); // TODO: type
+        require(remainingSec <= 0, "need more time to rankup");
+      } else {
+        require(
+          _requiredSecForRankup(targetRank - 1) <= knowledge,
+          "more knowledge is needed to bulk rankup"
+        );
+      }
+
+      // decrease required gold
+      uint256 planetPriceGold = uint256(10) **
+        normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
+      uint256 _rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
+
+      rankupUserNormalPlanet(msg.sender, userNormalPlanetIds[i], targetRank);
+
+      rankupGold += _rankupGold;
     }
     unmintGold(msg.sender, rankupGold);
   }
@@ -145,42 +170,11 @@ contract NormalPlanetController is
     );
   }
 
-  function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank)
-    private
-    returns (uint256)
-  {
-    UserNormalPlanetRecord memory userPlanet = userNormalPlanetRecordOf(
-      msg.sender,
-      userNormalPlanetId
-    );
-
-    if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
-      revert("invalid targetRank");
-    }
-
-    // ckeck time
-    if (targetRank == (userPlanet.rank + 1)) {
-      uint256 diffSec = uint32now() - userPlanet.rankupedAt;
-      int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank)) -
-        int256(diffSec) -
-        int256(knowledge); // TODO: type
-      require(remainingSec <= 0, "need more time to rankup");
-    } else {
-      require(
-        _requiredSecForRankup(targetRank - 1) <= knowledge,
-        "more knowledge is needed to bulk rankup"
-      );
-    }
-
-    // decrease required gold
-    uint256 planetPriceGold = uint256(10) **
-      normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
-    uint256 rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
-
-    rankupUserNormalPlanet(msg.sender, userNormalPlanetId, targetRank);
-
-    return rankupGold;
-  }
+  // function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank)
+  //   private
+  //   returns (uint256)
+  // {
+  // }
 
   function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
     private
