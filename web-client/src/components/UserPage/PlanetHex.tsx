@@ -20,10 +20,10 @@ export function PlanetHex(props: {
   const up = props.userPlanet
 
   const hexStyle: React.CSSProperties = {
-    left: x + props.shiftLeft,
-    top: y + props.shiftTop,
-    width: props.hexWidth,
-    height: props.hexHeight,
+    left: Math.floor(x + props.shiftLeft),
+    top: Math.floor(y + props.shiftTop),
+    width: Math.floor(props.hexWidth),
+    height: Math.floor(props.hexHeight),
     backgroundColor: props.isHighlighted ? "yellow" : "#000000",
     clipPath: "polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0)",
     display: "flex",
