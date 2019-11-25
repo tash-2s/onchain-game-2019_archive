@@ -58,20 +58,6 @@ export class Loom {
     return { ethAddress: ethAddressInstance.local.toString(), loomAddress: this.address }
   }
 
-  // for loggined
-  reconnect = async (signer: ethers.Signer) => {
-    const ethAddressInstance = await getEthAddressInstanceFromSigner(signer)
-
-    const newProvider = setupLoginedProvider(
-      signer,
-      LoomUtil.createClient(),
-      LoomUtil.generateAccount().privateKey, // dummy
-      ethAddressInstance
-    )
-
-    this._changeWeb3(newProvider)
-  }
-
   getLoomTime = async () => {
     const o = await this.web3.eth.getBlock("latest")
     return o.timestamp
