@@ -78,7 +78,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     for (uint256 i = 0; i < userPlanetIds.length; i++) {
       for (uint256 j = 0; j < allRecords.length; j++) {
         if (userPlanetIds[i] == allRecords[j].id) {
-          records[i] = allRecords[i];
+          records[i] = allRecords[j];
           indexes[i] = j;
           break;
         }
