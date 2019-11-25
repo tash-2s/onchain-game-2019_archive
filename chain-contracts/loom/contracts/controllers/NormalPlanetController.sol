@@ -119,16 +119,15 @@ contract NormalPlanetController is
     external
   {
     uint256 knowledge = confirm(msg.sender);
-    uint256 rankupGold = 0;
     (UserNormalPlanetRecord[] memory userPlanets, uint256[] memory userPlanetIndexes) = userNormalPlanetRecordsWithIndexesOf(
       msg.sender,
       userNormalPlanetIds
     );
+    uint256 rankupGold = 0;
 
     for (uint256 i = 0; i < userPlanets.length; i++) {
       uint8 targetRank = targetRanks[i];
       UserNormalPlanetRecord memory userPlanet = userPlanets[i];
-      uint256 userPlanetIndex = userPlanetIndexes[i];
 
       if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
         revert("invalid targetRank");
@@ -151,12 +150,11 @@ contract NormalPlanetController is
       // decrease required gold
       uint256 planetPriceGold = uint256(10) **
         normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
-      uint256 _rankupGold = _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
+      rankupGold += _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
 
-      rankupUserNormalPlanet(msg.sender, userPlanet, userPlanetIndex, targetRank);
-
-      rankupGold += _rankupGold;
+      rankupUserNormalPlanet(msg.sender, userPlanet, userPlanetIndexes[i], targetRank);
     }
+
     unmintGold(msg.sender, rankupGold);
   }
 
@@ -172,12 +170,6 @@ contract NormalPlanetController is
         uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm
     );
   }
-
-  // function _rankupPlanet(uint256 knowledge, uint64 userNormalPlanetId, uint8 targetRank)
-  //   private
-  //   returns (uint256)
-  // {
-  // }
 
   function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
     private

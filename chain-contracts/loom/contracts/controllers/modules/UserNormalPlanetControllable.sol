@@ -74,6 +74,7 @@ contract UserNormalPlanetControllable is PermanenceInterpretable, TimeGettable {
     uint256[] memory indexes = new uint256[](userPlanetIds.length);
 
     UserNormalPlanetRecord[] memory allRecords = userNormalPlanetRecordsOf(account);
+
     for (uint256 i = 0; i < userPlanetIds.length; i++) {
       for (uint256 j = 0; j < allRecords.length; j++) {
         if (userPlanetIds[i] == allRecords[j].id) {
