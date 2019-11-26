@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "./abstracts/AddressToUint256NonOrderedArrayPermanence.sol";
+import "./abstracts/AddressToBytes32NonOrderedArrayPermanence.sol";
 
 /* solium-disable no-empty-blocks */
-contract UserNormalPlanetPermanence is AddressToUint256NonOrderedArrayPermanence {}
+contract UserNormalPlanetPermanence is AddressToBytes32NonOrderedArrayPermanence {}
