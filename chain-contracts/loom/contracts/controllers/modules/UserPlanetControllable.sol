@@ -40,7 +40,6 @@ contract UserPlanetControllable is
     uint256 population = normalPopulation + specialPopulation;
     uint256 productivity = normalProductivity + specialProductivity;
 
-    // TODO: type
     uint256 goldPerSec = population * productivity;
     uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
     uint256 diffGold = goldPerSec * diffSec;

@@ -138,7 +138,7 @@ contract NormalPlanetController is
         uint256 diffSec = uint32now() - userPlanet.rankupedAt;
         int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank)) -
           int256(diffSec) -
-          int256(knowledge); // TODO: type
+          int256(knowledge);
         require(remainingSec <= 0, "need more time to rankup");
       } else {
         require(
