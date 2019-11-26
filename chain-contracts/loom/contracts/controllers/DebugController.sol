@@ -44,7 +44,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     uint64 counter = userNormalPlanetIdGeneratorPermanence.read(account);
     require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
 
-    uint256[] memory arr = new uint256[](919);
+    bytes32[] memory arr = new bytes32[](919);
 
     int256 q;
     int256 r;
@@ -82,7 +82,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
           param = 4;
         }
 
-        arr[i++] = buildUint256FromUserNormalPlanetRecord(
+        arr[i++] = buildBytes32FromUserNormalPlanetRecord(
           UserNormalPlanetRecord(
             ++counter,
             normalPlanetId,

@@ -1,9 +1,8 @@
 pragma solidity 0.5.11;
 
-import "./PermanenceInterpretable.sol";
 import "../../permanences/NormalPlanetPermanence.sol";
 
-contract NormalPlanetControllable is PermanenceInterpretable {
+contract NormalPlanetControllable {
   struct NormalPlanetRecord {
     uint16 id;
     uint8 kind;
@@ -11,12 +10,10 @@ contract NormalPlanetControllable is PermanenceInterpretable {
     uint8 priceGoldCommonLogarithm;
   }
 
-  uint8 constant NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT = 1;
-  uint8 constant NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT = 3;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT = 4;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT = 6;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT = 7;
-  uint8 constant NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT = 9;
+  // id is the key of permanence data
+  uint8 private constant _P_KIND_SHIFT_COUNT = 0;
+  uint8 private constant _P_PARAM_SHIFT_COUNT = _P_KIND_SHIFT_COUNT + 8;
+  uint8 private constant _P_PRICE_SHIFT_COUNT = _P_PARAM_SHIFT_COUNT + 8;
 
   NormalPlanetPermanence public normalPlanetPermanence;
 
@@ -28,37 +25,26 @@ contract NormalPlanetControllable is PermanenceInterpretable {
     return buildNormalPlanetRecord(id, normalPlanetPermanence.read(id));
   }
 
-  function buildNormalPlanetRecord(uint16 id, uint256 source)
+  function buildNormalPlanetRecord(uint16 id, bytes32 b)
     internal
     pure
     returns (NormalPlanetRecord memory)
   {
-    uint8 kind = uint8(
-      interpretPermanenceUint256(
-        source,
-        NORMAL_PLANET_PERMANENCE_KIND_START_DIGIT,
-        NORMAL_PLANET_PERMANENCE_KIND_END_DIGIT
-      )
-    );
-    uint8 paramCommonLogarithm = uint8(
-      interpretPermanenceUint256(
-        source,
-        NORMAL_PLANET_PERMANENCE_PARAM_START_DIGIT,
-        NORMAL_PLANET_PERMANENCE_PARAM_END_DIGIT
-      )
-    );
-    uint8 priceGoldCommonLogarithm = uint8(
-      interpretPermanenceUint256(
-        source,
-        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_START_DIGIT,
-        NORMAL_PLANET_PERMANENCE_PRICE_GOLD_COMMON_LOGARITHM_END_DIGIT
-      )
+    uint256 ui = uint256(b);
+
+    NormalPlanetRecord memory record = NormalPlanetRecord(
+      id,
+      uint8(ui >> _P_KIND_SHIFT_COUNT),
+      uint8(ui >> _P_PARAM_SHIFT_COUNT),
+      uint8(ui >> _P_PRICE_SHIFT_COUNT)
     );
 
-    if (kind == 0 && paramCommonLogarithm == 0 && priceGoldCommonLogarithm == 0) {
+    if (
+      record.kind == 0 && record.paramCommonLogarithm == 0 && record.priceGoldCommonLogarithm == 0
+    ) {
       revert("faild to build a planet record, the source is wrong");
     }
 
-    return NormalPlanetRecord(id, kind, paramCommonLogarithm, priceGoldCommonLogarithm);
+    return record;
   }
 }

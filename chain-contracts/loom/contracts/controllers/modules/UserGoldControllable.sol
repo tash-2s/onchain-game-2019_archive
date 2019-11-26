@@ -1,10 +1,9 @@
 pragma solidity 0.5.11;
 
-import "./PermanenceInterpretable.sol";
 import "./TimeGettable.sol";
 import "../../permanences/UserGoldPermanence.sol";
 
-contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
+contract UserGoldControllable is TimeGettable {
   uint200 constant UINT200_MAX = ~uint200(0);
 
   struct UserGoldRecord {
@@ -12,12 +11,8 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
     uint32 confirmedAt;
   }
 
-  uint8 constant USER_GOLD_PERMANENCE_BALANCE_START_DIGIT = 1;
-  uint8 constant USER_GOLD_PERMANENCE_BALANCE_END_DIGIT = 61;
-  uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT = 62;
-  uint8 constant USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT = 71;
-
-  uint256 constant USER_GOLD_PERMANENCE_PLACEHOLDER = 10000000000000000000000000000000000000000000000000000000000000000000000000000;
+  uint8 private constant _PERMANENCE_BALANCE_SHIFT_COUNT = 0;
+  uint8 private constant _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT = 200;
 
   UserGoldPermanence private _userGoldPermanence;
 
@@ -30,7 +25,7 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function userGoldRecordOf(address account) internal view returns (UserGoldRecord memory) {
-    return buildUserGoldRecordFromUint256(_userGoldPermanence.read(account));
+    return buildUserGoldRecordFromBytes32(_userGoldPermanence.read(account));
   }
 
   function mintGold(address account, uint256 quantity) internal {
@@ -60,49 +55,23 @@ contract UserGoldControllable is PermanenceInterpretable, TimeGettable {
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {
-    _userGoldPermanence.update(account, buildUint256FromUserGoldRecord(record));
+    _userGoldPermanence.update(account, buildBytes32FromUserGoldRecord(record));
   }
 
-  function buildUint256FromUserGoldRecord(UserGoldRecord memory record)
-    internal
-    pure
-    returns (uint256)
-  {
-    uint256 n = reinterpretPermanenceUint256(
-      USER_GOLD_PERMANENCE_PLACEHOLDER,
-      USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
-      USER_GOLD_PERMANENCE_BALANCE_END_DIGIT,
-      record.balance
-    );
+  function buildBytes32FromUserGoldRecord(UserGoldRecord memory r) internal pure returns (bytes32) {
     return
-      reinterpretPermanenceUint256(
-        n,
-        USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT,
-        USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT,
-        record.confirmedAt
+      bytes32(
+        (uint256(r.balance) << _PERMANENCE_BALANCE_SHIFT_COUNT) |
+          (uint256(r.confirmedAt) << _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT)
       );
   }
 
-  function buildUserGoldRecordFromUint256(uint256 source)
-    internal
-    pure
-    returns (UserGoldRecord memory)
-  {
-    uint200 balance = uint200(
-      interpretPermanenceUint256(
-        source,
-        USER_GOLD_PERMANENCE_BALANCE_START_DIGIT,
-        USER_GOLD_PERMANENCE_BALANCE_END_DIGIT
-      )
-    );
-    uint32 confirmedAt = uint32(
-      interpretPermanenceUint256(
-        source,
-        USER_GOLD_PERMANENCE_CONFIRMED_AT_START_DIGIT,
-        USER_GOLD_PERMANENCE_CONFIRMED_AT_END_DIGIT
-      )
-    );
-
-    return UserGoldRecord(balance, confirmedAt);
+  function buildUserGoldRecordFromBytes32(bytes32 b) internal pure returns (UserGoldRecord memory) {
+    uint256 ui = uint256(b);
+    return
+      UserGoldRecord(
+        uint200(ui >> _PERMANENCE_BALANCE_SHIFT_COUNT),
+        uint32(ui >> _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT)
+      );
   }
 }

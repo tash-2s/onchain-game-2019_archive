@@ -20,13 +20,8 @@ module.exports = function(deployer, network) {
       } else if (r.kind == "technology") {
         kind = 3
       }
-      await planet.update(
-        r.id,
-        `1${zeroPadding(r.priceGoldCommonLogarithm, 66)}${zeroPadding(
-          r.paramCommonLogarithm,
-          3
-        )}${zeroPadding(kind, 3)}`
-      )
+      const d = buildData(kind, r.paramCommonLogarithm, r.priceGoldCommonLogarithm)
+      await planet.update(r.id, d)
       if (!helper.isDevNetwork(network)) {
         await helper.sleep(300) // to prevent timeout error...
       }
@@ -34,9 +29,15 @@ module.exports = function(deployer, network) {
   })
 }
 
-const zeroPadding = (num, len) => {
-  if (`${num}`.length > len) {
-    throw new Error(`wrong range (zeroPadding): ${num}`)
+// see NormalPlanetControllable.sol
+const buildData = (kind, param, price) => {
+  const d = (kind | (param << 8) | (price << 16)).toString(16)
+  return "0x" + zeroPadding(d, 64)
+}
+
+const zeroPadding = (n, len) => {
+  if (`${n}`.length > len) {
+    throw new Error(`wrong range (zeroPadding): ${n}`)
   }
-  return ("0".repeat(len - 1) + num).slice(-len)
+  return ("0".repeat(len - 1) + n).slice(-len)
 }

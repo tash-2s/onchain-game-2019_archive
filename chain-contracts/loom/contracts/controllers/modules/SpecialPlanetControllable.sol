@@ -25,16 +25,16 @@ contract SpecialPlanetControllable is TimeGettable {
     uint64 artSeed;
   }
 
-  uint8 constant SPECIAL_PLANET_DATA_ID_START_BIT = 0;
-  uint8 constant SPECIAL_PLANET_DATA_VERSION_START_BIT = 24;
-  uint8 constant SPECIAL_PLANET_DATA_KIND_START_BIT = 24 + 8;
-  uint8 constant SPECIAL_PLANET_DATA_PARAM_RATE_START_BIT = 24 + 8 + 8;
-  uint8 constant SPECIAL_PLANET_DATA_RANK_START_BIT = 24 + 8 + 8 + 8;
-  uint8 constant SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT = 24 + 8 + 8 + 8 + 8;
-  uint8 constant SPECIAL_PLANET_DATA_CREATED_AT_START_BIT = 24 + 8 + 8 + 8 + 8 + 32;
-  uint8 constant SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32;
-  uint8 constant SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32 + 16;
-  uint8 constant SPECIAL_PLANET_DATA_ART_SEED_START_BIT = 24 + 8 + 8 + 8 + 8 + 32 + 32 + 16 + 16;
+  uint8 private constant _P_ID_SHIFT_COUNT = 0;
+  uint8 private constant _P_VERSION_SHIFT_COUNT = _P_ID_SHIFT_COUNT + 24;
+  uint8 private constant _P_KIND_SHIFT_COUNT = _P_VERSION_SHIFT_COUNT + 8;
+  uint8 private constant _P_PARAM_RATE_SHIFT_COUNT = _P_KIND_SHIFT_COUNT + 8;
+  uint8 private constant _P_RANK_SHIFT_COUNT = _P_PARAM_RATE_SHIFT_COUNT + 8;
+  uint8 private constant _P_RANKUPED_AT_SHIFT_COUNT = _P_RANK_SHIFT_COUNT + 8;
+  uint8 private constant _P_CREATED_AT_SHIFT_COUNT = _P_RANKUPED_AT_SHIFT_COUNT + 32;
+  uint8 private constant _P_COORDINATE_Q_SHIFT_COUNT = _P_CREATED_AT_SHIFT_COUNT + 32;
+  uint8 private constant _P_COORDINATE_R_SHIFT_COUNT = _P_COORDINATE_Q_SHIFT_COUNT + 16;
+  uint8 private constant _P_ART_SEED_SHIFT_COUNT = _P_COORDINATE_R_SHIFT_COUNT + 16;
 
   function userSpecialPlanetPermanence() public view returns (UserSpecialPlanetPermanence) {
     return _userSpecialPlanetPermanence;
@@ -176,16 +176,16 @@ contract SpecialPlanetControllable is TimeGettable {
     uint256 ui = uint256(b);
     return
       UserSpecialPlanetRecord(
-        uint24(ui >> SPECIAL_PLANET_DATA_ID_START_BIT),
-        uint8(ui >> SPECIAL_PLANET_DATA_VERSION_START_BIT),
-        uint8(ui >> SPECIAL_PLANET_DATA_KIND_START_BIT),
-        uint8(ui >> SPECIAL_PLANET_DATA_PARAM_RATE_START_BIT),
-        uint8(ui >> SPECIAL_PLANET_DATA_RANK_START_BIT),
-        uint32(ui >> SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT),
-        uint32(ui >> SPECIAL_PLANET_DATA_CREATED_AT_START_BIT),
-        int16(ui >> SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT),
-        int16(ui >> SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT),
-        uint64(ui >> SPECIAL_PLANET_DATA_ART_SEED_START_BIT)
+        uint24(ui >> _P_ID_SHIFT_COUNT),
+        uint8(ui >> _P_VERSION_SHIFT_COUNT),
+        uint8(ui >> _P_KIND_SHIFT_COUNT),
+        uint8(ui >> _P_PARAM_RATE_SHIFT_COUNT),
+        uint8(ui >> _P_RANK_SHIFT_COUNT),
+        uint32(ui >> _P_RANKUPED_AT_SHIFT_COUNT),
+        uint32(ui >> _P_CREATED_AT_SHIFT_COUNT),
+        int16(ui >> _P_COORDINATE_Q_SHIFT_COUNT),
+        int16(ui >> _P_COORDINATE_R_SHIFT_COUNT),
+        uint64(ui >> _P_ART_SEED_SHIFT_COUNT)
       );
   }
 
@@ -196,16 +196,16 @@ contract SpecialPlanetControllable is TimeGettable {
   {
     return
       bytes32(
-        (uint256(r.id) << SPECIAL_PLANET_DATA_ID_START_BIT) |
-          (uint256(r.version) << SPECIAL_PLANET_DATA_VERSION_START_BIT) |
-          (uint256(r.kind) << SPECIAL_PLANET_DATA_KIND_START_BIT) |
-          (uint256(r.paramRate) << SPECIAL_PLANET_DATA_PARAM_RATE_START_BIT) |
-          (uint256(r.rank) << SPECIAL_PLANET_DATA_RANK_START_BIT) |
-          (uint256(r.rankupedAt) << SPECIAL_PLANET_DATA_RANKUPED_AT_START_BIT) |
-          (uint256(r.createdAt) << SPECIAL_PLANET_DATA_CREATED_AT_START_BIT) |
-          (uint256(uint16(r.coordinateQ)) << SPECIAL_PLANET_DATA_COORDINATE_Q_START_BIT) |
-          (uint256(uint16(r.coordinateR)) << SPECIAL_PLANET_DATA_COORDINATE_R_START_BIT) |
-          (uint256(r.artSeed) << SPECIAL_PLANET_DATA_ART_SEED_START_BIT)
+        (uint256(r.id) << _P_ID_SHIFT_COUNT) |
+          (uint256(r.version) << _P_VERSION_SHIFT_COUNT) |
+          (uint256(r.kind) << _P_KIND_SHIFT_COUNT) |
+          (uint256(r.paramRate) << _P_PARAM_RATE_SHIFT_COUNT) |
+          (uint256(r.rank) << _P_RANK_SHIFT_COUNT) |
+          (uint256(r.rankupedAt) << _P_RANKUPED_AT_SHIFT_COUNT) |
+          (uint256(r.createdAt) << _P_CREATED_AT_SHIFT_COUNT) |
+          (uint256(uint16(r.coordinateQ)) << _P_COORDINATE_Q_SHIFT_COUNT) |
+          (uint256(uint16(r.coordinateR)) << _P_COORDINATE_R_SHIFT_COUNT) |
+          (uint256(r.artSeed) << _P_ART_SEED_SHIFT_COUNT)
       );
   }
 
@@ -219,7 +219,7 @@ contract SpecialPlanetControllable is TimeGettable {
     uint16 index;
 
     for (uint16 i = 0; i < us.length; i++) {
-      if (uint24(uint256(us[i] >> SPECIAL_PLANET_DATA_ID_START_BIT)) == userPlanetId) {
+      if (uint24(uint256(us[i] >> _P_ID_SHIFT_COUNT)) == userPlanetId) {
         target = us[i];
         index = i;
         break;
