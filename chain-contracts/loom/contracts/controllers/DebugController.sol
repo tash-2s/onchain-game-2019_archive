@@ -13,8 +13,8 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     address userNormalPlanetPermanenceAddress,
     address userNormalPlanetIdGeneratorPermanenceAddress
   ) public {
-    setUserGoldPermanence(userGoldPermanenceAddress);
-    setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
+    userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
+    userNormalPlanetPermanence = UserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
       userNormalPlanetIdGeneratorPermanenceAddress
     );
@@ -98,7 +98,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
       }
     }
 
-    userNormalPlanetPermanence().update(account, arr);
+    userNormalPlanetPermanence.update(account, arr);
     userNormalPlanetIdGeneratorPermanence.update(account, counter + 1);
   }
 }

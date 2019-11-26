@@ -14,18 +14,10 @@ contract UserGoldControllable is TimeGettable {
   uint8 private constant _PERMANENCE_BALANCE_SHIFT_COUNT = 0;
   uint8 private constant _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT = 200;
 
-  UserGoldPermanence private _userGoldPermanence;
-
-  function userGoldPermanence() public view returns (UserGoldPermanence) {
-    return _userGoldPermanence;
-  }
-
-  function setUserGoldPermanence(address permanenceAddress) internal {
-    _userGoldPermanence = UserGoldPermanence(permanenceAddress);
-  }
+  UserGoldPermanence public userGoldPermanence;
 
   function userGoldRecordOf(address account) internal view returns (UserGoldRecord memory) {
-    return buildUserGoldRecordFromBytes32(_userGoldPermanence.read(account));
+    return buildUserGoldRecordFromBytes32(userGoldPermanence.read(account));
   }
 
   function mintGold(address account, uint256 quantity) internal {
@@ -55,7 +47,7 @@ contract UserGoldControllable is TimeGettable {
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {
-    _userGoldPermanence.update(account, buildBytes32FromUserGoldRecord(record));
+    userGoldPermanence.update(account, buildBytes32FromUserGoldRecord(record));
   }
 
   function buildBytes32FromUserGoldRecord(UserGoldRecord memory r) internal pure returns (bytes32) {

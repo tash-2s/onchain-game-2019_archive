@@ -28,22 +28,14 @@ contract UserNormalPlanetControllable is TimeGettable {
 
   uint8 constant MAX_USER_NORMAL_PLANET_RANK = 30;
 
-  UserNormalPlanetPermanence private _userNormalPlanetPermanence;
-
-  function userNormalPlanetPermanence() public view returns (UserNormalPlanetPermanence) {
-    return _userNormalPlanetPermanence;
-  }
-
-  function setUserNormalPlanetPermanence(address permanenceAddress) internal {
-    _userNormalPlanetPermanence = UserNormalPlanetPermanence(permanenceAddress);
-  }
+  UserNormalPlanetPermanence public userNormalPlanetPermanence;
 
   function userNormalPlanetRecordsOf(address account)
     internal
     view
     returns (UserNormalPlanetRecord[] memory)
   {
-    bytes32[] memory bArr = _userNormalPlanetPermanence.read(account);
+    bytes32[] memory bArr = userNormalPlanetPermanence.read(account);
     UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](bArr.length);
 
     for (uint16 i = 0; i < bArr.length; i++) {
@@ -77,7 +69,7 @@ contract UserNormalPlanetControllable is TimeGettable {
   }
 
   function userNormalPlanetRecordsCountOf(address account) public view returns (uint16) {
-    return uint16(_userNormalPlanetPermanence.count(account));
+    return uint16(userNormalPlanetPermanence.count(account));
   }
 
   function userNormalPlanetRecordOf(address account, uint64 userPlanetId)
@@ -99,7 +91,7 @@ contract UserNormalPlanetControllable is TimeGettable {
     int16 coordinateQ,
     int16 coordinateR
   ) internal {
-    _userNormalPlanetPermanence.createElement(
+    userNormalPlanetPermanence.createElement(
       account,
       buildBytes32FromUserNormalPlanetRecord(
         UserNormalPlanetRecord(
@@ -127,7 +119,7 @@ contract UserNormalPlanetControllable is TimeGettable {
       targetRank > record.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
       "invalid rank for rankup"
     );
-    _userNormalPlanetPermanence.updateElement(
+    userNormalPlanetPermanence.updateElement(
       account,
       index,
       buildBytes32FromUserNormalPlanetRecord(
@@ -150,7 +142,7 @@ contract UserNormalPlanetControllable is TimeGettable {
     uint16 index;
     (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
-    _userNormalPlanetPermanence.deleteElement(account, index);
+    userNormalPlanetPermanence.deleteElement(account, index);
   }
 
   function removeUserNormalPlanetFromMapIfExist(
@@ -165,7 +157,7 @@ contract UserNormalPlanetControllable is TimeGettable {
         if (
           coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
         ) {
-          _userNormalPlanetPermanence.deleteElement(account, j);
+          userNormalPlanetPermanence.deleteElement(account, j);
           break;
         }
       }

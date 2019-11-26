@@ -20,10 +20,12 @@ contract UserPlanetControllable is
     address userGoldPermanenceAddress,
     address specialPlanetTokenLockerAddress
   ) internal {
-    setUserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    setUserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
-    setSpecialPlanetIdToDataPermanence(specialPlanetIdToDataPermanenceAddress);
-    setUserGoldPermanence(userGoldPermanenceAddress);
+    userNormalPlanetPermanence = UserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
+    userSpecialPlanetPermanence = UserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
+    specialPlanetIdToDataPermanence = SpecialPlanetIdToDataPermanence(
+      specialPlanetIdToDataPermanenceAddress
+    );
+    userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
     specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 

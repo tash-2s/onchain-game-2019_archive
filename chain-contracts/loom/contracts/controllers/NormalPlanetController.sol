@@ -31,7 +31,7 @@ contract NormalPlanetController is
       userGoldPermanenceAddress,
       specialPlanetTokenLockerAddress
     );
-    setNormalPlanetPermanence(normalPlanetPermanenceAddress);
+    normalPlanetPermanence = NormalPlanetPermanence(normalPlanetPermanenceAddress);
     userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
       userNormalPlanetIdGeneratorPermanenceAddress
     );

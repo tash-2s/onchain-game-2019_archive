@@ -17,10 +17,6 @@ contract NormalPlanetControllable {
 
   NormalPlanetPermanence public normalPlanetPermanence;
 
-  function setNormalPlanetPermanence(address permanenceAddress) internal {
-    normalPlanetPermanence = NormalPlanetPermanence(permanenceAddress);
-  }
-
   function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord memory) {
     return buildNormalPlanetRecord(id, normalPlanetPermanence.read(id));
   }

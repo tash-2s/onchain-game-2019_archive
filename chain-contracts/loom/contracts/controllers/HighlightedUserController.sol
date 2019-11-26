@@ -11,7 +11,7 @@ contract HighlightedUserController is UserGoldControllable {
   uint200[] private _users = new uint200[](USERS_COUNT * 2);
 
   constructor(address userGoldPermanenceAddress) public {
-    setUserGoldPermanence(userGoldPermanenceAddress);
+    userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
   }
 
   function getUsers() external view returns (address[] memory accounts, uint200[] memory golds) {

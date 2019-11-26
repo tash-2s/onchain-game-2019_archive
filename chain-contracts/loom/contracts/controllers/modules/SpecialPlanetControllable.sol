@@ -6,7 +6,7 @@ import "../../permanences/UserSpecialPlanetPermanence.sol";
 import "../../permanences/SpecialPlanetIdToDataPermanence.sol";
 
 contract SpecialPlanetControllable is TimeGettable {
-  UserSpecialPlanetPermanence private _userSpecialPlanetPermanence;
+  UserSpecialPlanetPermanence public userSpecialPlanetPermanence;
   SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 
   int16 constant INT16_MAX = int16(~(uint16(1) << 15));
@@ -36,24 +36,12 @@ contract SpecialPlanetControllable is TimeGettable {
   uint8 private constant _P_COORDINATE_R_SHIFT_COUNT = _P_COORDINATE_Q_SHIFT_COUNT + 16;
   uint8 private constant _P_ART_SEED_SHIFT_COUNT = _P_COORDINATE_R_SHIFT_COUNT + 16;
 
-  function userSpecialPlanetPermanence() public view returns (UserSpecialPlanetPermanence) {
-    return _userSpecialPlanetPermanence;
-  }
-
-  function setUserSpecialPlanetPermanence(address addr) internal {
-    _userSpecialPlanetPermanence = UserSpecialPlanetPermanence(addr);
-  }
-
-  function setSpecialPlanetIdToDataPermanence(address addr) internal {
-    specialPlanetIdToDataPermanence = SpecialPlanetIdToDataPermanence(addr);
-  }
-
   function userSpecialPlanetRecordsOf(address account)
     internal
     view
     returns (UserSpecialPlanetRecord[] memory)
   {
-    bytes32[] memory us = _userSpecialPlanetPermanence.read(account);
+    bytes32[] memory us = userSpecialPlanetPermanence.read(account);
     UserSpecialPlanetRecord[] memory records = new UserSpecialPlanetRecord[](us.length);
 
     for (uint16 i = 0; i < us.length; i++) {
@@ -64,7 +52,7 @@ contract SpecialPlanetControllable is TimeGettable {
   }
 
   function userSpecialPlanetRecordsCountOf(address account) public view returns (uint16) {
-    return uint16(_userSpecialPlanetPermanence.count(account));
+    return uint16(userSpecialPlanetPermanence.count(account));
   }
 
   function userSpecialPlanetRecordOf(uint24 userPlanetId)
@@ -123,14 +111,14 @@ contract SpecialPlanetControllable is TimeGettable {
       specialPlanetIdToDataPermanence.update(userPlanetId, newUserPlanetData);
     }
 
-    _userSpecialPlanetPermanence.createElement(account, newUserPlanetData);
+    userSpecialPlanetPermanence.createElement(account, newUserPlanetData);
   }
 
   function removeUserSpecialPlanetFromMap(address account, uint24 userPlanetId) internal {
     uint16 index;
     (, index) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
 
-    _userSpecialPlanetPermanence.deleteElement(account, index);
+    userSpecialPlanetPermanence.deleteElement(account, index);
   }
 
   function removeUserSpecialPlanetFromMapIfExist(
@@ -149,7 +137,7 @@ contract SpecialPlanetControllable is TimeGettable {
           coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
         ) {
           _ids[i] = records[j].id;
-          _userSpecialPlanetPermanence.deleteElement(account, j);
+          userSpecialPlanetPermanence.deleteElement(account, j);
           targetCount++;
           break;
         }
@@ -214,7 +202,7 @@ contract SpecialPlanetControllable is TimeGettable {
     view
     returns (UserSpecialPlanetRecord memory, uint16)
   {
-    bytes32[] memory us = _userSpecialPlanetPermanence.read(account);
+    bytes32[] memory us = userSpecialPlanetPermanence.read(account);
     bytes32 target = bytes32(0);
     uint16 index;
 
