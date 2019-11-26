@@ -2,10 +2,10 @@ pragma solidity 0.5.11;
 
 contract SpecialPlanetTokenIdInterpretable {
   uint8 private constant _SHORT_ID_SHIFT_COUNT = 0;
-  uint8 private constant _VERSION_SHIFT_COUNT = 24;
-  uint8 private constant _KIND_SHIFT_COUNT = 24 + 8;
-  uint8 private constant _PARAM_RATE_SHIFT_COUNT = 24 + 8 + 8;
-  uint8 private constant _ART_SEED_SHIFT_COUNT = 24 + 8 + 8 + 8;
+  uint8 private constant _VERSION_SHIFT_COUNT = _SHORT_ID_SHIFT_COUNT + 24;
+  uint8 private constant _KIND_SHIFT_COUNT = _VERSION_SHIFT_COUNT + 8;
+  uint8 private constant _PARAM_RATE_SHIFT_COUNT = _KIND_SHIFT_COUNT + 8;
+  uint8 private constant _ART_SEED_SHIFT_COUNT = _PARAM_RATE_SHIFT_COUNT + 8;
 
   function interpretSpecialPlanetTokenIdToFields(uint256 tokenId)
     internal
