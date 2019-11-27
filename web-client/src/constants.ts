@@ -31,3 +31,5 @@ export type UserPlanetsViewKind = (typeof userPlanetsViewKinds)[number]
 
 export const userPlanetsSortKinds = ["Newest", "Oldest"] as const
 export type UserPlanetsSortKind = (typeof userPlanetsSortKinds)[number]
+
+export const maxSelectableHexCountForNormalPlanetSet = 50

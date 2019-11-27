@@ -11,6 +11,7 @@ import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
 import { UserPlanetMapUtil } from "../../models/UserPlanetMapUtil"
+import { maxSelectableHexCountForNormalPlanetSet } from "../../constants"
 
 interface Props {
   user: ComputedTargetUserState
@@ -141,6 +142,11 @@ const selectFn = (
     if (!same && !isSufficientGoldForNextNormalPlanetSet) {
       return null
     }
+    if (
+      props.userPageUI.selectedPlanetHexesForSet.length >= maxSelectableHexCountForNormalPlanetSet
+    ) {
+      return null
+    }
     return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
   }
 
@@ -228,5 +234,13 @@ function SetToMapButton(props: Props) {
     props.userPageUIActions.unselectNormalPlanetForSet()
     props.userPageUIActions.unselectPlanetHexesForSet()
   }
-  return <button onClick={fn}>set to map</button>
+  return (
+    <div>
+      <button onClick={fn}>set to map</button>
+      <span>
+        {props.userPageUI.selectedPlanetHexesForSet.length}/
+        {maxSelectableHexCountForNormalPlanetSet}
+      </span>
+    </div>
+  )
 }
