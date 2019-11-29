@@ -44,23 +44,17 @@ export function UserPlanetMap(props: Props) {
     props.user.userPlanetMap.shownRadius
   )
 
-  const { isSufficientGoldForNextNormalPlanetSet, remainingGold } = processForMultiPlanetSet(
+  const { isSufficientGoldForNextNormalPlanetSet, usableRadius } = processForMultiPlanetSet(
     props.user,
     props.userPageUI
   )
 
-  const usableRadius = UserPlanetMapUtil.mapRadiusFromGold(remainingGold)
-
   const hexes = props.user.userPlanetMap.hexes.map(h => {
-    const settable =
-      props.isMine &&
-      UserPlanetMapUtil.distanceFromCenter(h.q, h.r) <= usableRadius &&
-      (!!props.userPageUI.selectedNormalPlanetIdForSet ||
-        !!props.userPageUI.selectedSpecialPlanetTokenIdForSet)
-
     const isHighlighted = !!props.userPageUI.selectedPlanetHexesForSet.find(
       o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
     )
+    const select =
+      selectFn(props, h, usableRadius, isSufficientGoldForNextNormalPlanetSet) || undefined
 
     return (
       <PlanetHex
@@ -74,7 +68,7 @@ export function UserPlanetMap(props: Props) {
         hexWidth={hexWidth}
         hexHeight={hexHeight}
         isHighlighted={isHighlighted}
-        select={selectFn(props, h, settable, isSufficientGoldForNextNormalPlanetSet) || undefined}
+        select={select}
       />
     )
   })
@@ -123,48 +117,50 @@ const processForMultiPlanetSet = (user: ComputedTargetUserState, userPageUI: Use
     )
   }
 
-  return { isSufficientGoldForNextNormalPlanetSet, remainingGold }
+  const usableRadius = UserPlanetMapUtil.mapRadiusFromGold(remainingGold)
+
+  return { isSufficientGoldForNextNormalPlanetSet, usableRadius }
 }
 
 const selectFn = (
   props: Props,
   hex: ComputedTargetUserState["userPlanetMap"]["hexes"][number],
-  settable: boolean,
+  usableRadius: number,
   isSufficientGoldForNextNormalPlanetSet: boolean
 ) => {
-  if (props.userPageUI.selectedNormalPlanetIdForSet) {
-    if (!settable) {
-      return null
-    }
-    const same = props.userPageUI.selectedPlanetHexesForSet.find(
-      o => o.axialCoordinateQ === hex.q && o.axialCoordinateR === hex.r
-    )
-    if (!same && !isSufficientGoldForNextNormalPlanetSet) {
-      return null
-    }
-    if (
-      props.userPageUI.selectedPlanetHexesForSet.length >= maxSelectableHexCountForNormalPlanetSet
-    ) {
-      return null
-    }
-    return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
-  }
+  if (props.isMine) {
+    if (props.userPageUI.selectedNormalPlanetIdForSet) {
+      const isAlreadySet = !!props.userPageUI.selectedPlanetHexesForSet.find(
+        o => o.axialCoordinateQ === hex.q && o.axialCoordinateR === hex.r
+      )
+      if (
+        isAlreadySet || // for unselect
+        (isSufficientGoldForNextNormalPlanetSet &&
+          UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) <= usableRadius &&
+          props.userPageUI.selectedPlanetHexesForSet.length <
+            maxSelectableHexCountForNormalPlanetSet)
+      ) {
+        return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
+      }
 
-  if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
-    if (!settable) {
       return null
     }
-    const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
-    return () => {
-      props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
-      props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+
+    if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
+      if (UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) > usableRadius) {
+        return null
+      }
+      const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
+      return () => {
+        props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
+        props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+      }
     }
   }
 
   if (hex.userPlanet) {
     const up = hex.userPlanet
-
-    if (hex.userPlanet.isNormal) {
+    if (up.isNormal) {
       return () => props.userPageUIActions.selectUserNormalPlanetForModal(up.id)
     } else {
       return () => props.userPageUIActions.selectUserSpecialPlanetForModal(up.id)
