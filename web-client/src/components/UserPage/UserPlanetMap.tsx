@@ -225,18 +225,22 @@ function SetToMapButton(props: Props) {
   if (!planetId || props.userPageUI.selectedPlanetHexesForSet.length <= 0) {
     return <></>
   }
+  const unselectFn = () => {
+    props.userPageUIActions.unselectNormalPlanetForSet()
+    props.userPageUIActions.unselectPlanetHexesForSet()
+  }
   const fn = () => {
     props.userActions.normal.setPlanetsToMap(
       planetId,
       props.userPageUI.selectedPlanetHexesForSet,
       props.user.userNormalPlanets.length === 0 && props.user.gold.eqn(0)
     )
-    props.userPageUIActions.unselectNormalPlanetForSet()
-    props.userPageUIActions.unselectPlanetHexesForSet()
+    unselectFn()
   }
   return (
     <div>
       <button onClick={fn}>set to map</button>
+      <button onClick={unselectFn}>cancel</button>
       <span>
         {props.userPageUI.selectedPlanetHexesForSet.length}/
         {maxSelectableHexCountForNormalPlanetSet}
