@@ -1,13 +1,15 @@
 pragma solidity 0.5.11;
 
-import "./abstracts/AddressToUint64Permanence.sol";
+import "./abstracts/AddressToUint256Permanence.sol";
 
-contract UserNormalPlanetIdGeneratorPermanence is AddressToUint64Permanence {
-  uint64 constant UINT64_MAX = ~uint64(0);
+contract UserNormalPlanetIdGeneratorPermanence is AddressToUint256Permanence {
+  uint64 private constant _UINT64_MAX = ~uint64(0);
 
   function generate(address addr, uint64 num) public onlyMinter returns (uint64[] memory) {
-    uint64 value = read(addr);
-    require(value <= UINT64_MAX - num, "maximum id");
+    uint256 _value = read(addr);
+    require(_value <= _UINT64_MAX - num, "maximum id or invalid value");
+    uint64 value = uint64(_value);
+
     update(addr, value + num);
 
     uint64[] memory arr = new uint64[](num);

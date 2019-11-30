@@ -1,5 +1,9 @@
 pragma solidity 0.5.11;
 
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
+import "../../libraries/MyMath.sol";
+
 import "./UserNormalPlanetControllable.sol";
 import "./SpecialPlanetControllable.sol";
 import "./UserGoldControllable.sol";
@@ -11,6 +15,9 @@ contract UserPlanetControllable is
   SpecialPlanetControllable,
   UserGoldControllable
 {
+  using SafeMath for uint256;
+  using MyMath for uint256;
+
   SpecialPlanetTokenLocker public specialPlanetTokenLocker;
 
   function setupUserPlanetControllable(
@@ -39,15 +46,15 @@ contract UserPlanetControllable is
       biggestUserNormalPlanetProductivity
     );
 
-    uint256 population = normalPopulation + specialPopulation;
-    uint256 productivity = normalProductivity + specialProductivity;
+    uint256 population = normalPopulation.add(specialPopulation);
+    uint256 productivity = normalProductivity.add(specialProductivity);
 
-    uint256 goldPerSec = population * productivity;
-    uint32 diffSec = uint32now() - userGoldRecordOf(account).confirmedAt;
-    uint256 diffGold = goldPerSec * diffSec;
+    uint256 goldPerSec = population.mul(productivity);
+    uint256 diffSec = uint256(uint32now()).sub(userGoldRecordOf(account).confirmedAt);
+    uint256 diffGold = goldPerSec.mul(diffSec);
 
     if (diffGold > 0) {
-      mintGold(account, uint200(diffGold));
+      mintGold(account, diffGold);
     } else {
       touchGold(account);
     }
@@ -68,29 +75,27 @@ contract UserPlanetControllable is
     uint256 biggestUserNormalPlanetProductivity = 0;
 
     UserNormalPlanetRecord[] memory userPlanets = userNormalPlanetRecordsOf(account);
-    UserNormalPlanetRecord memory userPlanet;
-    uint256 rated;
 
-    for (uint16 i = 0; i < userPlanets.length; i++) {
-      userPlanet = userPlanets[i];
-
-      rated =
-        ((uint256(10)**userPlanet.originalParamCommonLogarithm) *
-          (uint256(13)**(userPlanet.rank - 1))) /
-        (uint256(10)**(userPlanet.rank - 1));
+    for (uint256 i = 0; i < userPlanets.length; i++) {
+      UserNormalPlanetRecord memory userPlanet = userPlanets[i];
+      uint256 prevRank = uint256(userPlanet.rank).sub(1);
+      uint256 rated = uint256(10)
+        .pow(userPlanet.originalParamCommonLogarithm)
+        .mul(uint256(13).pow(prevRank))
+        .div(uint256(10).pow(prevRank));
 
       if (userPlanet.kind == 1) {
-        population += rated;
+        population = population.add(rated);
         if (rated > biggestUserNormalPlanetPopulation) {
           biggestUserNormalPlanetPopulation = rated;
         }
       } else if (userPlanet.kind == 2) {
-        productivity += rated;
+        productivity = productivity.add(rated);
         if (rated > biggestUserNormalPlanetProductivity) {
           biggestUserNormalPlanetProductivity = rated;
         }
       } else if (userPlanet.kind == 3) {
-        knowledge += rated;
+        knowledge = knowledge.add(rated);
       } else {
         revert("undefined normal planet kind");
       }
@@ -114,15 +119,16 @@ contract UserPlanetControllable is
     uint256 productivity = 0;
 
     UserSpecialPlanetRecord[] memory userPlanets = userSpecialPlanetRecordsOf(account);
-    UserSpecialPlanetRecord memory userPlanet;
 
     for (uint16 i = 0; i < userPlanets.length; i++) {
-      userPlanet = userPlanets[i];
+      UserSpecialPlanetRecord memory userPlanet = userPlanets[i];
 
       if (userPlanet.kind == 1) {
-        population += biggestUserNormalPlanetPopulation * userPlanet.paramRate;
+        population = population.add(biggestUserNormalPlanetPopulation.mul(userPlanet.paramRate));
       } else if (userPlanet.kind == 2) {
-        productivity += biggestUserNormalPlanetProductivity * userPlanet.paramRate;
+        productivity = productivity.add(
+          biggestUserNormalPlanetProductivity.mul(userPlanet.paramRate)
+        );
       } else {
         revert("undefined or unsupported special planet kind");
       }

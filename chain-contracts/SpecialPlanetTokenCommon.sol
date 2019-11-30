@@ -77,6 +77,8 @@ contract SpecialPlanetTokenCommon is
   ERC721Burnable,
   Ownable
 {
+  uint8 private constant _MAX_TOKEN_BATCH_SIZE = 100;
+
   function tokensOfOwnerByIndex(address owner, uint256 index)
     external
     view
@@ -90,9 +92,9 @@ contract SpecialPlanetTokenCommon is
     require(balance > index, "too big index");
 
     uint256 size = balance - index;
-    if (size > 100) {
-      size = 100;
-      nextIndex = index + 100;
+    if (size > _MAX_TOKEN_BATCH_SIZE) {
+      size = _MAX_TOKEN_BATCH_SIZE;
+      nextIndex = index + _MAX_TOKEN_BATCH_SIZE;
     }
 
     tokenIds = new uint256[](size);

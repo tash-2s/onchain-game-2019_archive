@@ -5,8 +5,8 @@ import "../../../SpecialPlanetTokenCommon.sol";
 contract SpecialPlanetToken is SpecialPlanetTokenCommon {
   address public gateway;
 
-  constructor(address gatewayAddress) public {
-    gateway = gatewayAddress;
+  constructor(address _gateway) public {
+    gateway = _gateway;
   }
 
   // Used by the DAppChain Gateway to mint tokens that have been deposited to the Ethereum Gateway

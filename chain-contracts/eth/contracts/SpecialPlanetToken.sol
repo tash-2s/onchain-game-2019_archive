@@ -7,8 +7,8 @@ import "../../SpecialPlanetTokenCommon.sol";
 contract SpecialPlanetToken is SpecialPlanetTokenCommon, ERC721Mintable {
   address public gateway;
 
-  constructor(address gatewayAddress) public {
-    gateway = gatewayAddress;
+  constructor(address _gateway) public {
+    gateway = _gateway;
   }
 
   function depositToGateway(uint256 id) public {

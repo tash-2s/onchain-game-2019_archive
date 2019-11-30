@@ -50,7 +50,7 @@ contract SpecialPlanetController is
     goldConfirmedAt = goldRecord.confirmedAt;
 
     UserSpecialPlanetRecord[] memory userPlanetRecords = userSpecialPlanetRecordsOf(account);
-    uint16 userPlanetsCount = uint16(userPlanetRecords.length);
+    uint256 userPlanetsCount = userPlanetRecords.length;
 
     ids = new uint24[](userPlanetsCount);
     kinds = new uint8[](userPlanetsCount);
@@ -59,19 +59,15 @@ contract SpecialPlanetController is
     coordinates = new int16[](userPlanetsCount * 2);
     artSeeds = new uint64[](userPlanetsCount);
 
-    uint16 counter = 0;
-
-    for (uint16 i = 0; i < userPlanetsCount; i++) {
+    for (uint256 i = 0; i < userPlanetsCount; i++) {
       ids[i] = userPlanetRecords[i].id;
       kinds[i] = userPlanetRecords[i].kind;
       paramRates[i] = userPlanetRecords[i].paramRate;
-      times[counter] = userPlanetRecords[i].rankupedAt;
-      times[counter + 1] = userPlanetRecords[i].createdAt;
-      coordinates[counter] = userPlanetRecords[i].coordinateQ;
-      coordinates[counter + 1] = userPlanetRecords[i].coordinateR;
+      times[i * 2] = userPlanetRecords[i].rankupedAt;
+      times[i * 2 + 1] = userPlanetRecords[i].createdAt;
+      coordinates[i * 2] = userPlanetRecords[i].coordinateQ;
+      coordinates[i * 2 + 1] = userPlanetRecords[i].coordinateR;
       artSeeds[i] = userPlanetRecords[i].artSeed;
-
-      counter += 2;
     }
   }
 

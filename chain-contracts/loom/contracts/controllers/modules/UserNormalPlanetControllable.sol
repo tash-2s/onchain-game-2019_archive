@@ -35,11 +35,11 @@ contract UserNormalPlanetControllable is TimeGettable {
     view
     returns (UserNormalPlanetRecord[] memory)
   {
-    bytes32[] memory bArr = userNormalPlanetPermanence.read(account);
-    UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](bArr.length);
+    bytes32[] memory rawRecords = userNormalPlanetPermanence.read(account);
+    UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](rawRecords.length);
 
-    for (uint16 i = 0; i < bArr.length; i++) {
-      records[i] = buildUserNormalPlanetRecordFromBytes32(bArr[i]);
+    for (uint256 i = 0; i < rawRecords.length; i++) {
+      records[i] = buildUserNormalPlanetRecordFromBytes32(rawRecords[i]);
     }
 
     return records;
@@ -68,8 +68,8 @@ contract UserNormalPlanetControllable is TimeGettable {
     return (records, indexes);
   }
 
-  function userNormalPlanetRecordsCountOf(address account) public view returns (uint16) {
-    return uint16(userNormalPlanetPermanence.count(account));
+  function userNormalPlanetRecordsCountOf(address account) public view returns (uint256) {
+    return userNormalPlanetPermanence.count(account);
   }
 
   function userNormalPlanetRecordOf(address account, uint64 userPlanetId)
@@ -139,7 +139,7 @@ contract UserNormalPlanetControllable is TimeGettable {
   }
 
   function removeNormalPlanetFromMap(address account, uint64 userPlanetId) internal {
-    uint16 index;
+    uint256 index;
     (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
 
     userNormalPlanetPermanence.deleteElement(account, index);
@@ -153,7 +153,7 @@ contract UserNormalPlanetControllable is TimeGettable {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      for (uint16 j = 0; j < records.length; j++) {
+      for (uint256 j = 0; j < records.length; j++) {
         if (
           coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
         ) {
@@ -212,11 +212,11 @@ contract UserNormalPlanetControllable is TimeGettable {
   function _userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
     private
     view
-    returns (UserNormalPlanetRecord memory, uint16)
+    returns (UserNormalPlanetRecord memory, uint256)
   {
     UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
 
-    for (uint16 i = 0; i < records.length; i++) {
+    for (uint256 i = 0; i < records.length; i++) {
       if (records[i].id == userPlanetId) {
         return (records[i], i);
       }

@@ -9,9 +9,6 @@ contract SpecialPlanetControllable is TimeGettable {
   UserSpecialPlanetPermanence public userSpecialPlanetPermanence;
   SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 
-  int16 constant INT16_MAX = int16(~(uint16(1) << 15));
-  int16 constant COORDINATE_NONE = INT16_MAX;
-
   struct UserSpecialPlanetRecord {
     uint24 id;
     uint8 version;
@@ -41,18 +38,14 @@ contract SpecialPlanetControllable is TimeGettable {
     view
     returns (UserSpecialPlanetRecord[] memory)
   {
-    bytes32[] memory us = userSpecialPlanetPermanence.read(account);
-    UserSpecialPlanetRecord[] memory records = new UserSpecialPlanetRecord[](us.length);
+    bytes32[] memory rawRecords = userSpecialPlanetPermanence.read(account);
+    UserSpecialPlanetRecord[] memory records = new UserSpecialPlanetRecord[](rawRecords.length);
 
-    for (uint16 i = 0; i < us.length; i++) {
-      records[i] = buildUserSpecialPlanetRecordFromBytes32(us[i]);
+    for (uint256 i = 0; i < rawRecords.length; i++) {
+      records[i] = buildUserSpecialPlanetRecordFromBytes32(rawRecords[i]);
     }
 
     return records;
-  }
-
-  function userSpecialPlanetRecordsCountOf(address account) public view returns (uint16) {
-    return uint16(userSpecialPlanetPermanence.count(account));
   }
 
   function userSpecialPlanetRecordOf(uint24 userPlanetId)
@@ -115,7 +108,7 @@ contract SpecialPlanetControllable is TimeGettable {
   }
 
   function removeUserSpecialPlanetFromMap(address account, uint24 userPlanetId) internal {
-    uint16 index;
+    uint256 index;
     (, index) = _userSpecialPlanetRecordWithIndexOf(account, userPlanetId);
 
     userSpecialPlanetPermanence.deleteElement(account, index);
@@ -200,24 +193,24 @@ contract SpecialPlanetControllable is TimeGettable {
   function _userSpecialPlanetRecordWithIndexOf(address account, uint24 userPlanetId)
     private
     view
-    returns (UserSpecialPlanetRecord memory, uint16)
+    returns (UserSpecialPlanetRecord memory, uint256)
   {
-    bytes32[] memory us = userSpecialPlanetPermanence.read(account);
-    bytes32 target = bytes32(0);
-    uint16 index;
+    bytes32[] memory rawUserPlanets = userSpecialPlanetPermanence.read(account);
+    bytes32 rawUserPlanet = bytes32(0);
+    uint256 index;
 
-    for (uint16 i = 0; i < us.length; i++) {
-      if (uint24(uint256(us[i] >> _P_ID_SHIFT_COUNT)) == userPlanetId) {
-        target = us[i];
+    for (uint256 i = 0; i < rawUserPlanets.length; i++) {
+      if (uint24(uint256(rawUserPlanets[i] >> _P_ID_SHIFT_COUNT)) == userPlanetId) {
+        rawUserPlanet = rawUserPlanets[i];
         index = i;
         break;
       }
     }
 
-    if (target == bytes32(0)) {
+    if (rawUserPlanet == bytes32(0)) {
       revert("the user special planet is not found");
     }
 
-    return (buildUserSpecialPlanetRecordFromBytes32(target), index);
+    return (buildUserSpecialPlanetRecordFromBytes32(rawUserPlanet), index);
   }
 }

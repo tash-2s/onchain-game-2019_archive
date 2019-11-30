@@ -4,15 +4,15 @@ import "./TimeGettable.sol";
 import "../../permanences/UserGoldPermanence.sol";
 
 contract UserGoldControllable is TimeGettable {
-  uint200 constant UINT200_MAX = ~uint200(0);
+  uint200 private constant _UINT200_MAX = ~uint200(0);
 
   struct UserGoldRecord {
     uint200 balance;
     uint32 confirmedAt;
   }
 
-  uint8 private constant _PERMANENCE_BALANCE_SHIFT_COUNT = 0;
-  uint8 private constant _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT = 200;
+  uint8 private constant _P_BALANCE_SHIFT_COUNT = 0;
+  uint8 private constant _P_CONFIRMED_AT_SHIFT_COUNT = 200;
 
   UserGoldPermanence public userGoldPermanence;
 
@@ -23,8 +23,8 @@ contract UserGoldControllable is TimeGettable {
   function mintGold(address account, uint256 quantity) internal {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
-    if ((quantity >= UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
-      updateUserGoldRecord(account, UserGoldRecord(UINT200_MAX, uint32now()));
+    if ((quantity >= _UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
+      updateUserGoldRecord(account, UserGoldRecord(_UINT200_MAX, uint32now()));
     } else {
       updateUserGoldRecord(
         account,
@@ -53,8 +53,8 @@ contract UserGoldControllable is TimeGettable {
   function buildBytes32FromUserGoldRecord(UserGoldRecord memory r) internal pure returns (bytes32) {
     return
       bytes32(
-        (uint256(r.balance) << _PERMANENCE_BALANCE_SHIFT_COUNT) |
-          (uint256(r.confirmedAt) << _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT)
+        (uint256(r.balance) << _P_BALANCE_SHIFT_COUNT) |
+          (uint256(r.confirmedAt) << _P_CONFIRMED_AT_SHIFT_COUNT)
       );
   }
 
@@ -62,8 +62,8 @@ contract UserGoldControllable is TimeGettable {
     uint256 ui = uint256(b);
     return
       UserGoldRecord(
-        uint200(ui >> _PERMANENCE_BALANCE_SHIFT_COUNT),
-        uint32(ui >> _PERMANENCE_CONFIRMED_AT_SHIFT_COUNT)
+        uint200(ui >> _P_BALANCE_SHIFT_COUNT),
+        uint32(ui >> _P_CONFIRMED_AT_SHIFT_COUNT)
       );
   }
 }

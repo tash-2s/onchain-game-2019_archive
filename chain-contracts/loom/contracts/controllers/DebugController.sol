@@ -47,7 +47,7 @@ contract DebugController is
   }
 
   function debugMintMaxUserNormalPlanets(address account) external {
-    uint64 counter = userNormalPlanetIdGeneratorPermanence.read(account);
+    uint64 counter = uint64(userNormalPlanetIdGeneratorPermanence.read(account));
     require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
 
     bytes32[] memory arr = new bytes32[](919);

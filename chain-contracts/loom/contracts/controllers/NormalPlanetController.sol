@@ -1,6 +1,9 @@
 pragma solidity 0.5.11;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/drafts/SignedSafeMath.sol";
+
+import "../libraries/MyMath.sol";
 
 import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserPlanetControllable.sol";
@@ -13,6 +16,10 @@ contract NormalPlanetController is
   UserPlanetControllable,
   UserPlanetMapUtil
 {
+  using SafeMath for uint256;
+  using MyMath for uint256;
+  using SignedSafeMath for int256;
+
   UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;
 
   constructor(
@@ -60,42 +67,40 @@ contract NormalPlanetController is
     ranks = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
     coordinates = new int16[](userPlanetsCount * 2);
-    uint24 counter = 0;
 
     for (uint16 i = 0; i < userPlanetsCount; i++) {
-      ids[counter] = userPlanetRecords[i].id;
-      ids[counter + 1] = userPlanetRecords[i].normalPlanetId;
+      ids[i * 2] = userPlanetRecords[i].id;
+      ids[i * 2 + 1] = userPlanetRecords[i].normalPlanetId;
       ranks[i] = userPlanetRecords[i].rank;
-      times[counter] = userPlanetRecords[i].rankupedAt;
-      times[counter + 1] = userPlanetRecords[i].createdAt;
-      coordinates[counter] = userPlanetRecords[i].coordinateQ;
-      coordinates[counter + 1] = userPlanetRecords[i].coordinateR;
-
-      counter += 2;
+      times[i * 2] = userPlanetRecords[i].rankupedAt;
+      times[i * 2 + 1] = userPlanetRecords[i].createdAt;
+      coordinates[i * 2] = userPlanetRecords[i].coordinateQ;
+      coordinates[i * 2 + 1] = userPlanetRecords[i].coordinateR;
     }
   }
 
   function setPlanets(uint16 planetId, int16[] calldata coordinateQs, int16[] calldata coordinateRs)
     external
   {
-    require(coordinateQs.length == coordinateRs.length, "invalid coordinate arg");
+    require(
+      coordinateQs.length == coordinateRs.length && coordinateQs.length <= 1000,
+      "invalid coordinate arg"
+    );
+    uint16 batchSize = uint16(coordinateQs.length);
     NormalPlanetRecord memory planetRecord = normalPlanetRecordOf(planetId);
 
     confirm(msg.sender);
 
-    uint200 balance = userGoldRecordOf(msg.sender).balance;
-    uint200 planetPrice = uint200(uint256(10)**planetRecord.priceGoldCommonLogarithm);
+    uint256 balance = userGoldRecordOf(msg.sender).balance;
+    uint256 planetPrice = uint256(10).pow(planetRecord.priceGoldCommonLogarithm);
 
-    unmintGold(msg.sender, planetPrice * coordinateQs.length); // type?
+    unmintGold(msg.sender, planetPrice.mul(batchSize));
 
     removePlanetsFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
 
-    uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(
-      msg.sender,
-      uint64(coordinateQs.length)
-    );
+    uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(msg.sender, batchSize);
 
-    for (uint256 i = 0; i < coordinateQs.length; i++) {
+    for (uint16 i = 0; i < batchSize; i++) {
       require(
         isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
         "not allowed coordinate"
@@ -111,7 +116,7 @@ contract NormalPlanetController is
         coordinateRs[i]
       );
 
-      balance -= planetPrice;
+      balance = balance.sub(planetPrice);
     }
   }
 
@@ -134,23 +139,26 @@ contract NormalPlanetController is
       }
 
       // ckeck time
-      if (targetRank == (userPlanet.rank + 1)) {
-        uint256 diffSec = uint32now() - userPlanet.rankupedAt;
-        int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank)) -
-          int256(diffSec) -
-          int256(knowledge);
+      if (targetRank == uint256(userPlanet.rank).add(1)) {
+        uint256 diffSec = uint256(uint32now()).sub(userPlanet.rankupedAt);
+        int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank))
+          .sub(int256(diffSec))
+          .sub(int256(knowledge));
         require(remainingSec <= 0, "need more time to rankup");
       } else {
         require(
-          _requiredSecForRankup(targetRank - 1) <= knowledge,
+          _requiredSecForRankup(uint256(targetRank).sub(1)) <= knowledge,
           "more knowledge is needed to bulk rankup"
         );
       }
 
       // decrease required gold
-      uint256 planetPriceGold = uint256(10) **
-        normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm;
-      rankupGold += _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank);
+      uint256 planetPriceGold = uint256(10).pow(
+        normalPlanetRecordOf(userPlanet.normalPlanetId).priceGoldCommonLogarithm
+      );
+      rankupGold = rankupGold.add(
+        _requiredGoldForRankup(planetPriceGold, userPlanet.rank, targetRank)
+      );
 
       rankupUserNormalPlanet(msg.sender, userPlanet, userPlanetIndexes[i], targetRank);
     }
@@ -166,31 +174,34 @@ contract NormalPlanetController is
 
     mintGold(
       msg.sender,
-      uint256(10)**normalPlanetRecordOf(1).priceGoldCommonLogarithm +
-        uint256(10)**normalPlanetRecordOf(2).priceGoldCommonLogarithm
+      uint256(10).pow(normalPlanetRecordOf(1).priceGoldCommonLogarithm).add(
+        uint256(10).pow(normalPlanetRecordOf(2).priceGoldCommonLogarithm)
+      )
     );
   }
 
-  function _requiredGoldForRankup(uint256 planetPriceGold, uint8 currentRank, uint8 targetRank)
+  function _requiredGoldForRankup(uint256 planetPriceGold, uint256 currentRank, uint256 targetRank)
     private
     pure
     returns (uint256)
   {
     uint256 requiredGold = 0;
-    uint8 tmpRank = currentRank;
+    uint256 tmpRank = currentRank;
 
     while (tmpRank < targetRank) {
-      requiredGold +=
-        (planetPriceGold * (uint256(14)**(tmpRank - 1))) /
-        (uint256(10)**(tmpRank - 1));
-      tmpRank++;
+      uint256 prevTmpRank = tmpRank.sub(1);
+      requiredGold = requiredGold.add(
+        (planetPriceGold.mul(uint256(14).pow(prevTmpRank))).div(uint256(10).pow(prevTmpRank))
+      );
+      tmpRank = tmpRank.add(1);
     }
 
     return requiredGold;
   }
 
   function _requiredSecForRankup(uint256 rank) private pure returns (uint256) {
-    return (uint256(300) * uint256(14)**(rank - 1)) / uint256(10)**(rank - 1);
+    uint256 prevRank = rank.sub(1);
+    return uint256(300).mul(uint256(14).pow(prevRank)).div(uint256(10).pow(prevRank));
   }
 
   function removePlanet(uint64 userNormalPlanetId) external {

@@ -1,7 +1,7 @@
 pragma solidity 0.5.11;
 
 contract UserPlanetMapUtil {
-  function usableRadiusFromGold(uint200 gold) public pure returns (uint8) {
+  function usableRadiusFromGold(uint256 gold) public pure returns (uint8) {
     uint152[16] memory RADIUS_GOLD_THRESHOLD = [
       100001,
       10000000,

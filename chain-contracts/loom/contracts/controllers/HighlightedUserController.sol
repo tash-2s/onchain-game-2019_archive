@@ -3,22 +3,22 @@ pragma solidity 0.5.11;
 import "./modules/UserGoldControllable.sol";
 
 contract HighlightedUserController is UserGoldControllable {
-  uint8 constant USERS_COUNT = 100;
+  uint8 private constant _USERS_COUNT = 100;
   uint200 public thresholdGold = 0;
 
   // address <=> uint160
   // [user1.account, user1,gold, user2.account, user2.gold, ...]
-  uint200[] private _users = new uint200[](USERS_COUNT * 2);
+  uint200[] private _users = new uint200[](_USERS_COUNT * 2);
 
   constructor(address userGoldPermanenceAddress) public {
     userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
   }
 
   function getUsers() external view returns (address[] memory accounts, uint200[] memory golds) {
-    accounts = new address[](USERS_COUNT);
-    golds = new uint200[](USERS_COUNT);
+    accounts = new address[](_USERS_COUNT);
+    golds = new uint200[](_USERS_COUNT);
 
-    for (uint8 i = 0; i < USERS_COUNT; i++) {
+    for (uint256 i = 0; i < _USERS_COUNT; i++) {
       accounts[i] = address(_users[i * 2]);
       golds[i] = _users[i * 2 + 1];
     }
@@ -31,7 +31,7 @@ contract HighlightedUserController is UserGoldControllable {
       return;
     }
 
-    uint8 rand = uint8(block.number % USERS_COUNT);
+    uint256 rand = block.number % _USERS_COUNT;
 
     uint200 oldGold = _users[rand * 2 + 1];
 
