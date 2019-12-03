@@ -176,6 +176,11 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     );
   }
 
+  function removePlanet(uint64 userNormalPlanetId) external {
+    confirm(msg.sender);
+    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
+  }
+
   function _requiredGoldForRankup(uint256 planetPriceGold, uint256 currentRank, uint256 targetRank)
     private
     pure
@@ -198,10 +203,5 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   function _requiredSecForRankup(uint256 rank) private pure returns (uint256) {
     uint256 prevRank = rank.sub(1);
     return uint256(300).mul(uint256(14).pow(prevRank)).div(uint256(10).pow(prevRank));
-  }
-
-  function removePlanet(uint64 userNormalPlanetId) external {
-    confirm(msg.sender);
-    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
   }
 }
