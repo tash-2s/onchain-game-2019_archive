@@ -4,7 +4,6 @@ const LoomTruffleProvider = require("loom-truffle-provider")
 const PrivateKeyUtil = require("./PrivateKeyUtil.js")
 
 module.exports = {
-
   plugins: ["truffle-security"],
 
   compilers: {

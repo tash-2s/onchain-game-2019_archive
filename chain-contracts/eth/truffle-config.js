@@ -31,7 +31,6 @@ const InfuraUtil = require("./InfuraUtil.js")
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
-
   plugins: ["truffle-security"],
 
   /**
