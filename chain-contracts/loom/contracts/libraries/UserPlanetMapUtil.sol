@@ -1,7 +1,15 @@
 pragma solidity 0.5.11;
 
-contract UserPlanetMapUtil {
-  function usableRadiusFromGold(uint256 gold) public pure returns (uint8) {
+library UserPlanetMapUtil {
+  function isInUsableRadius(int16 coordinateQ, int16 coordinateR, uint256 gold)
+    internal
+    pure
+    returns (bool)
+  {
+    return _isInRadius(coordinateQ, coordinateR, _usableRadiusFromGold(gold));
+  }
+
+  function _usableRadiusFromGold(uint256 gold) private pure returns (uint8) {
     uint152[16] memory RADIUS_GOLD_THRESHOLD = [
       100001,
       10000000,
@@ -29,8 +37,8 @@ contract UserPlanetMapUtil {
     return 1;
   }
 
-  function isInRadius(int16 coordinateQ, int16 coordinateR, uint8 radius)
-    public
+  function _isInRadius(int16 coordinateQ, int16 coordinateR, uint8 radius)
+    private
     pure
     returns (bool)
   {

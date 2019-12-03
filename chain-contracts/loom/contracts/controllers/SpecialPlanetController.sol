@@ -1,16 +1,13 @@
 pragma solidity 0.5.11;
 
 import "./modules/UserPlanetControllable.sol";
-import "./modules/UserPlanetMapUtil.sol";
-import "../../../SpecialPlanetTokenIdInterpretable.sol";
+
+import "../libraries/UserPlanetMapUtil.sol";
+import "../../../SpecialPlanetTokenIdInterpreter.sol";
 
 import "./HighlightedUserController.sol";
 
-contract SpecialPlanetController is
-  UserPlanetControllable,
-  SpecialPlanetTokenIdInterpretable,
-  UserPlanetMapUtil
-{
+contract SpecialPlanetController is UserPlanetControllable {
   HighlightedUserController public highlightedUserController;
 
   constructor(
@@ -75,10 +72,10 @@ contract SpecialPlanetController is
   function setPlanet(uint256 tokenId, int16 coordinateQ, int16 coordinateR) external {
     confirm(msg.sender);
     require(
-      isInRadius(
+      UserPlanetMapUtil.isInUsableRadius(
         coordinateQ,
         coordinateR,
-        usableRadiusFromGold(userGoldRecordOf(msg.sender).balance)
+        userGoldRecordOf(msg.sender).balance
       ),
       "not allowed coordinate"
     );
@@ -87,9 +84,8 @@ contract SpecialPlanetController is
       _wrapWithArray(coordinateQ),
       _wrapWithArray(coordinateR)
     );
-    (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
-      tokenId
-    );
+    (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = SpecialPlanetTokenIdInterpreter
+      .idToFields(tokenId);
     _transferTokenToLocker(tokenId, shortId);
     setUserSpecialPlanetToMap(
       msg.sender,
@@ -129,9 +125,8 @@ contract SpecialPlanetController is
     artSeeds = new uint64[](size);
 
     for (uint256 i = 0; i < size; i++) {
-      (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = interpretSpecialPlanetTokenIdToFields(
-        tokenIds[i]
-      );
+      (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = SpecialPlanetTokenIdInterpreter
+        .idToFields(tokenIds[i]);
 
       shortIds[i] = shortId;
       versions[i] = version;

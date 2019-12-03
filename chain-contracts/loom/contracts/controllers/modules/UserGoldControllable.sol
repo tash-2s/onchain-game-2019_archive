@@ -1,9 +1,10 @@
 pragma solidity 0.5.11;
 
-import "./TimeGettable.sol";
+import "../../libraries/TimeGetter.sol";
+
 import "../../permanences/UserGoldPermanence.sol";
 
-contract UserGoldControllable is TimeGettable {
+contract UserGoldControllable {
   uint200 private constant _UINT200_MAX = ~uint200(0);
 
   struct UserGoldRecord {
@@ -24,11 +25,11 @@ contract UserGoldControllable is TimeGettable {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
     if ((quantity >= _UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
-      updateUserGoldRecord(account, UserGoldRecord(_UINT200_MAX, uint32now()));
+      updateUserGoldRecord(account, UserGoldRecord(_UINT200_MAX, TimeGetter.uint32now()));
     } else {
       updateUserGoldRecord(
         account,
-        UserGoldRecord(record.balance + uint200(quantity), uint32now())
+        UserGoldRecord(record.balance + uint200(quantity), TimeGetter.uint32now())
       );
     }
   }
@@ -38,12 +39,15 @@ contract UserGoldControllable is TimeGettable {
 
     require(record.balance >= quantity, "not enough gold balance");
 
-    updateUserGoldRecord(account, UserGoldRecord(record.balance - uint200(quantity), uint32now()));
+    updateUserGoldRecord(
+      account,
+      UserGoldRecord(record.balance - uint200(quantity), TimeGetter.uint32now())
+    );
   }
 
   function touchGold(address account) internal {
     UserGoldRecord memory record = userGoldRecordOf(account);
-    updateUserGoldRecord(account, UserGoldRecord(record.balance, uint32now()));
+    updateUserGoldRecord(account, UserGoldRecord(record.balance, TimeGetter.uint32now()));
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {

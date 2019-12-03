@@ -4,18 +4,14 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/drafts/SignedSafeMath.sol";
 
 import "../libraries/MyMath.sol";
+import "../libraries/UserPlanetMapUtil.sol";
 
 import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserPlanetControllable.sol";
-import "./modules/UserPlanetMapUtil.sol";
 
 import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
-contract NormalPlanetController is
-  NormalPlanetControllable,
-  UserPlanetControllable,
-  UserPlanetMapUtil
-{
+contract NormalPlanetController is NormalPlanetControllable, UserPlanetControllable {
   using SafeMath for uint256;
   using MyMath for uint256;
   using SignedSafeMath for int256;
@@ -102,7 +98,7 @@ contract NormalPlanetController is
 
     for (uint16 i = 0; i < batchSize; i++) {
       require(
-        isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
+        UserPlanetMapUtil.isInUsableRadius(coordinateQs[i], coordinateRs[i], balance),
         "not allowed coordinate"
       );
 
@@ -140,7 +136,7 @@ contract NormalPlanetController is
 
       // ckeck time
       if (targetRank == uint256(userPlanet.rank).add(1)) {
-        uint256 diffSec = uint256(uint32now()).sub(userPlanet.rankupedAt);
+        uint256 diffSec = uint256(TimeGetter.uint32now()).sub(userPlanet.rankupedAt);
         int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank))
           .sub(int256(diffSec))
           .sub(int256(knowledge));
