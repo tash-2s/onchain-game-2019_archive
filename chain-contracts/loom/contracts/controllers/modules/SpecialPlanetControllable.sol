@@ -207,9 +207,7 @@ contract SpecialPlanetControllable is TimeGettable {
       }
     }
 
-    if (rawUserPlanet == bytes32(0)) {
-      revert("the user special planet is not found");
-    }
+    require(rawUserPlanet != bytes32(0), "the user special planet is not found");
 
     return (buildUserSpecialPlanetRecordFromBytes32(rawUserPlanet), index);
   }

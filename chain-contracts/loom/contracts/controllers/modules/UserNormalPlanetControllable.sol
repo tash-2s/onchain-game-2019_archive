@@ -183,9 +183,7 @@ contract UserNormalPlanetControllable is TimeGettable {
       int16(ui >> _P_COORDINATE_R_SHIFT_COUNT)
     );
 
-    if (record.kind == 0) {
-      revert("faild to build user normal planet, it's not created");
-    }
+    require(record.kind != 0, "faild to build user normal planet, it's not created");
 
     return record;
   }

@@ -18,7 +18,7 @@ contract AddressArrayPermanence is MinterRole {
   }
 
   function deleteAll() public onlyMinter {
-    _addressArray.length = 0;
+    delete _addressArray;
   }
 
   function readRange(uint256 start, uint256 end) public view returns (address[] memory) {

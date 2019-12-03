@@ -61,14 +61,14 @@ contract NormalPlanetController is
     goldConfirmedAt = goldRecord.confirmedAt;
 
     UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
-    uint16 userPlanetsCount = uint16(userPlanetRecords.length);
+    uint256 userPlanetsCount = userPlanetRecords.length;
 
     ids = new uint64[](userPlanetsCount * 2);
     ranks = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
     coordinates = new int16[](userPlanetsCount * 2);
 
-    for (uint16 i = 0; i < userPlanetsCount; i++) {
+    for (uint256 i = 0; i < userPlanetsCount; i++) {
       ids[i * 2] = userPlanetRecords[i].id;
       ids[i * 2 + 1] = userPlanetRecords[i].normalPlanetId;
       ranks[i] = userPlanetRecords[i].rank;

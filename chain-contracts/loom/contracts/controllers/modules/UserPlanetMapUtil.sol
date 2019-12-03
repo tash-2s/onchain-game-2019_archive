@@ -38,8 +38,7 @@ contract UserPlanetMapUtil {
   }
 
   function _distanceFromCenter(int16 coordinateQ, int16 coordinateR) private pure returns (uint16) {
-    return
-      uint16(_max(_abs(coordinateQ), _abs(coordinateR), _abs(-coordinateQ - coordinateR)));
+    return uint16(_max(_abs(coordinateQ), _abs(coordinateR), _abs(-coordinateQ - coordinateR)));
   }
 
   function _max(uint256 a, uint256 b, uint256 c) private pure returns (uint256) {
