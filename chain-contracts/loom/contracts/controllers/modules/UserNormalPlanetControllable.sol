@@ -69,7 +69,7 @@ contract UserNormalPlanetControllable {
     return (records, indexes);
   }
 
-  function userNormalPlanetRecordsCountOf(address account) public view returns (uint256) {
+  function userNormalPlanetRecordsCountOf(address account) internal view returns (uint256) {
     return userNormalPlanetPermanence.count(account);
   }
 
