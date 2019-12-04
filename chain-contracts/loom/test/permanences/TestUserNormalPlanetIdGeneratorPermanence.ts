@@ -2,9 +2,9 @@ contract("UserNormalPlanetIdGeneratorPermanence", async accounts => {
   const UserNormalPlanetIdGeneratorPermanence = artifacts.require(
     "UserNormalPlanetIdGeneratorPermanence"
   )
-  let instance: PromiseGenericsType<
-    ReturnType<typeof UserNormalPlanetIdGeneratorPermanence.deployed>
-  >
+  let instance: PromiseGenericsType<ReturnType<
+    typeof UserNormalPlanetIdGeneratorPermanence.deployed
+  >>
   let ownerAccount: string
   let strangerAccount: string
 

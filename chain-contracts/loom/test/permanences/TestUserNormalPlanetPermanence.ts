@@ -36,24 +36,35 @@ contract("UserNormalPlanetPermanence", async accounts => {
       it("should return a not empty array", async () => {
         await instance.createElement(ownerAccount, "123")
         const result = await instance.read(ownerAccount)
-        assert.deepEqual(result.map(e => e.toString()), ["123"])
+        assert.deepEqual(
+          result.map(e => e.toString()),
+          ["123"]
+        )
       })
     })
   })
 
   describe("#update()", async () => {
     it("should update data", async () => {
-      assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), [])
+      assert.deepEqual(
+        (await instance.read(ownerAccount)).map(e => e.toString()),
+        []
+      )
       await instance.update(ownerAccount, ["123", "456"])
-      assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["123", "456"])
+      assert.deepEqual(
+        (await instance.read(ownerAccount)).map(e => e.toString()),
+        ["123", "456"]
+      )
       await instance.update(ownerAccount, ["123"])
-      assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["123"])
+      assert.deepEqual(
+        (await instance.read(ownerAccount)).map(e => e.toString()),
+        ["123"]
+      )
       await instance.update(ownerAccount, ["123", "456", "789"])
-      assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), [
-        "123",
-        "456",
-        "789"
-      ])
+      assert.deepEqual(
+        (await instance.read(ownerAccount)).map(e => e.toString()),
+        ["123", "456", "789"]
+      )
     })
 
     it("should not allow strangers to update data", async () => {
@@ -88,7 +99,10 @@ contract("UserNormalPlanetPermanence", async accounts => {
 
     it("should push an element", async () => {
       await instance.createElement(strangerAccount, "123")
-      assert.deepEqual((await instance.read(strangerAccount)).map(e => e.toString()), ["123"])
+      assert.deepEqual(
+        (await instance.read(strangerAccount)).map(e => e.toString()),
+        ["123"]
+      )
     })
 
     it("should handle big int", async () => {
@@ -102,11 +116,14 @@ contract("UserNormalPlanetPermanence", async accounts => {
       ) // max + 1
       await instance.createElement(strangerAccount, "-1")
 
-      assert.deepEqual((await instance.read(strangerAccount)).map(e => e.toString()), [
-        "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-        "0",
-        "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-      ])
+      assert.deepEqual(
+        (await instance.read(strangerAccount)).map(e => e.toString()),
+        [
+          "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+          "0",
+          "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+        ]
+      )
     })
   })
 
@@ -135,7 +152,10 @@ contract("UserNormalPlanetPermanence", async accounts => {
 
     it("should update an element based on the index", async () => {
       await instance.updateElement(ownerAccount, 0, "9")
-      assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["9", "2"])
+      assert.deepEqual(
+        (await instance.read(ownerAccount)).map(e => e.toString()),
+        ["9", "2"]
+      )
     })
   })
 
@@ -145,13 +165,22 @@ contract("UserNormalPlanetPermanence", async accounts => {
         it("should delete element", async () => {
           await instance.createElement(ownerAccount, 5)
           await instance.createElement(ownerAccount, 6)
-          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
+          assert.deepEqual(
+            (await instance.read(ownerAccount)).map(e => e.toString()),
+            ["5", "6"]
+          )
 
           await instance.deleteElement(ownerAccount, 1)
-          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5"])
+          assert.deepEqual(
+            (await instance.read(ownerAccount)).map(e => e.toString()),
+            ["5"]
+          )
 
           await instance.deleteElement(ownerAccount, 0)
-          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), [])
+          assert.deepEqual(
+            (await instance.read(ownerAccount)).map(e => e.toString()),
+            []
+          )
         })
       })
 
@@ -173,7 +202,10 @@ contract("UserNormalPlanetPermanence", async accounts => {
         it("should fail", async () => {
           await instance.createElement(ownerAccount, 5)
           await instance.createElement(ownerAccount, 6)
-          assert.deepEqual((await instance.read(ownerAccount)).map(e => e.toString()), ["5", "6"])
+          assert.deepEqual(
+            (await instance.read(ownerAccount)).map(e => e.toString()),
+            ["5", "6"]
+          )
 
           let failed = false
           try {
