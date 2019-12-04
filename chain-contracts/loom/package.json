@@ -11,17 +11,10 @@
   },
   "devDependencies": {
     "@openzeppelin/contracts": "*",
-    "ethlint": "*",
     "loom-truffle-provider": "*",
     "prettier": "*",
     "prettier-plugin-solidity": "1.0.0-alpha.34",
     "truffle": "*",
-    "truffle-contract": "*",
-    "truffle-deploy-registry": "*",
-    "truffle-security": "*",
-    "truffle-typings": "*",
-    "ts-node": "*",
-    "typechain": "*",
-    "typescript": "*"
+    "truffle-deploy-registry": "*"
   }
 }

@@ -14,7 +14,6 @@
     "prettier": "*",
     "prettier-plugin-solidity": "1.0.0-alpha.34",
     "truffle": "*",
-    "truffle-hdwallet-provider": "*",
-    "truffle-security": "*"
+    "truffle-hdwallet-provider": "*"
   }
 }
