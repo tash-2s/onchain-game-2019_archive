@@ -1,5 +1,3 @@
-require("ts-node/register")
-
 const LoomTruffleProvider = require("loom-truffle-provider")
 const PrivateKeyUtil = require("./PrivateKeyUtil.js")
 
