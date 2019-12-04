@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "../../libraries/TimeGetter.sol";
+import "../../libraries/Time.sol";
 
 import "../../permanences/UserNormalPlanetPermanence.sol";
 
@@ -101,8 +101,8 @@ contract UserNormalPlanetControllable {
           kind,
           paramCommonLogarithm,
           1,
-          TimeGetter.uint32now(),
-          TimeGetter.uint32now(),
+          Time.uint32now(),
+          Time.uint32now(),
           coordinateQ,
           coordinateR
         )
@@ -130,7 +130,7 @@ contract UserNormalPlanetControllable {
           record.kind,
           record.originalParamCommonLogarithm,
           targetRank,
-          TimeGetter.uint32now(),
+          Time.uint32now(),
           record.createdAt,
           record.coordinateQ,
           record.coordinateR

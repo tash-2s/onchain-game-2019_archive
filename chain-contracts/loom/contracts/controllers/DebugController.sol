@@ -91,8 +91,8 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
             kind,
             param,
             30,
-            TimeGetter.uint32now(),
-            TimeGetter.uint32now(),
+            Time.uint32now(),
+            Time.uint32now(),
             int16(q),
             int16(r)
           )

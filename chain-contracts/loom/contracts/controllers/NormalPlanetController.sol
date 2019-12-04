@@ -136,7 +136,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
       // ckeck time
       if (targetRank == uint256(userPlanet.rank).add(1)) {
-        uint256 diffSec = uint256(TimeGetter.uint32now()).sub(userPlanet.rankupedAt);
+        uint256 diffSec = uint256(Time.uint32now()).sub(userPlanet.rankupedAt);
         int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank))
           .sub(int256(diffSec))
           .sub(int256(knowledge));

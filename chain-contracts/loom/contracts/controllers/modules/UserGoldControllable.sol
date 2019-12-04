@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "../../libraries/TimeGetter.sol";
+import "../../libraries/Time.sol";
 
 import "../../permanences/UserGoldPermanence.sol";
 
@@ -25,11 +25,11 @@ contract UserGoldControllable {
     UserGoldRecord memory record = userGoldRecordOf(account);
 
     if ((quantity >= _UINT200_MAX) || ((record.balance + uint200(quantity)) < record.balance)) {
-      updateUserGoldRecord(account, UserGoldRecord(_UINT200_MAX, TimeGetter.uint32now()));
+      updateUserGoldRecord(account, UserGoldRecord(_UINT200_MAX, Time.uint32now()));
     } else {
       updateUserGoldRecord(
         account,
-        UserGoldRecord(record.balance + uint200(quantity), TimeGetter.uint32now())
+        UserGoldRecord(record.balance + uint200(quantity), Time.uint32now())
       );
     }
   }
@@ -41,13 +41,13 @@ contract UserGoldControllable {
 
     updateUserGoldRecord(
       account,
-      UserGoldRecord(record.balance - uint200(quantity), TimeGetter.uint32now())
+      UserGoldRecord(record.balance - uint200(quantity), Time.uint32now())
     );
   }
 
   function touchGold(address account) internal {
     UserGoldRecord memory record = userGoldRecordOf(account);
-    updateUserGoldRecord(account, UserGoldRecord(record.balance, TimeGetter.uint32now()));
+    updateUserGoldRecord(account, UserGoldRecord(record.balance, Time.uint32now()));
   }
 
   function updateUserGoldRecord(address account, UserGoldRecord memory record) internal {

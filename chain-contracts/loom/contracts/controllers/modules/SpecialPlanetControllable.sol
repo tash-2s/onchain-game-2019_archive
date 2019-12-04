@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "../../libraries/TimeGetter.sol";
+import "../../libraries/Time.sol";
 
 import "../../permanences/UserSpecialPlanetPermanence.sol";
 import "../../permanences/SpecialPlanetIdToDataPermanence.sol";
@@ -77,8 +77,8 @@ contract SpecialPlanetControllable {
           kind,
           paramCommonLogarithm,
           1,
-          TimeGetter.uint32now(),
-          TimeGetter.uint32now(),
+          Time.uint32now(),
+          Time.uint32now(),
           coordinateQ,
           coordinateR,
           artSeed
@@ -94,7 +94,7 @@ contract SpecialPlanetControllable {
           r.kind,
           r.paramRate,
           r.rank,
-          TimeGetter.uint32now(), // rankupedAt
+          Time.uint32now(), // rankupedAt
           r.createdAt,
           coordinateQ,
           coordinateR,
