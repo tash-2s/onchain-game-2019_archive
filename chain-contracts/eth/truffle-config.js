@@ -20,7 +20,7 @@
 
 const path = require("path")
 const fs = require("fs")
-const HDWalletProvider = require("truffle-hdwallet-provider")
+const HDWalletProvider = require("@truffle/hdwallet-provider")
 const MnemonicUtil = require("./MnemonicUtil.js")
 const InfuraUtil = require("./InfuraUtil.js")
 
