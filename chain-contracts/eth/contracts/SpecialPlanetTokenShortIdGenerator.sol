@@ -7,7 +7,7 @@ contract SpecialPlanetTokenShortIdGenerator is MinterRole {
 
   uint24 public current;
 
-  function next() public onlyMinter returns (uint24) {
+  function next() external onlyMinter returns (uint24) {
     require(current < _UINT24_MAX, "run out id");
     current++;
     return current;

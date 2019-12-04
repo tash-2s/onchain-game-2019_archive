@@ -4,18 +4,14 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/drafts/SignedSafeMath.sol";
 
 import "../libraries/MyMath.sol";
+import "../libraries/UserPlanetMapUtil.sol";
 
 import "./modules/NormalPlanetControllable.sol";
 import "./modules/UserPlanetControllable.sol";
-import "./modules/UserPlanetMapUtil.sol";
 
 import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
-contract NormalPlanetController is
-  NormalPlanetControllable,
-  UserPlanetControllable,
-  UserPlanetMapUtil
-{
+contract NormalPlanetController is NormalPlanetControllable, UserPlanetControllable {
   using SafeMath for uint256;
   using MyMath for uint256;
   using SignedSafeMath for int256;
@@ -61,14 +57,14 @@ contract NormalPlanetController is
     goldConfirmedAt = goldRecord.confirmedAt;
 
     UserNormalPlanetRecord[] memory userPlanetRecords = userNormalPlanetRecordsOf(account);
-    uint16 userPlanetsCount = uint16(userPlanetRecords.length);
+    uint256 userPlanetsCount = userPlanetRecords.length;
 
     ids = new uint64[](userPlanetsCount * 2);
     ranks = new uint8[](userPlanetsCount);
     times = new uint32[](userPlanetsCount * 2);
     coordinates = new int16[](userPlanetsCount * 2);
 
-    for (uint16 i = 0; i < userPlanetsCount; i++) {
+    for (uint256 i = 0; i < userPlanetsCount; i++) {
       ids[i * 2] = userPlanetRecords[i].id;
       ids[i * 2 + 1] = userPlanetRecords[i].normalPlanetId;
       ranks[i] = userPlanetRecords[i].rank;
@@ -102,7 +98,7 @@ contract NormalPlanetController is
 
     for (uint16 i = 0; i < batchSize; i++) {
       require(
-        isInRadius(coordinateQs[i], coordinateRs[i], usableRadiusFromGold(balance)),
+        UserPlanetMapUtil.isInUsableRadius(coordinateQs[i], coordinateRs[i], balance),
         "not allowed coordinate"
       );
 
@@ -140,7 +136,7 @@ contract NormalPlanetController is
 
       // ckeck time
       if (targetRank == uint256(userPlanet.rank).add(1)) {
-        uint256 diffSec = uint256(uint32now()).sub(userPlanet.rankupedAt);
+        uint256 diffSec = uint256(TimeGetter.uint32now()).sub(userPlanet.rankupedAt);
         int256 remainingSec = int256(_requiredSecForRankup(userPlanet.rank))
           .sub(int256(diffSec))
           .sub(int256(knowledge));
@@ -180,6 +176,11 @@ contract NormalPlanetController is
     );
   }
 
+  function removePlanet(uint64 userNormalPlanetId) external {
+    confirm(msg.sender);
+    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
+  }
+
   function _requiredGoldForRankup(uint256 planetPriceGold, uint256 currentRank, uint256 targetRank)
     private
     pure
@@ -202,10 +203,5 @@ contract NormalPlanetController is
   function _requiredSecForRankup(uint256 rank) private pure returns (uint256) {
     uint256 prevRank = rank.sub(1);
     return uint256(300).mul(uint256(14).pow(prevRank)).div(uint256(10).pow(prevRank));
-  }
-
-  function removePlanet(uint64 userNormalPlanetId) external {
-    confirm(msg.sender);
-    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
   }
 }

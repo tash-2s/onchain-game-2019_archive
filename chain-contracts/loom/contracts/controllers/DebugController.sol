@@ -5,13 +5,9 @@ import "./modules/UserNormalPlanetControllable.sol";
 
 import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
-import "../../../SpecialPlanetTokenIdInterpretable.sol";
+import "../../../SpecialPlanetTokenIdInterpreter.sol";
 
-contract DebugController is
-  UserGoldControllable,
-  UserNormalPlanetControllable,
-  SpecialPlanetTokenIdInterpretable
-{
+contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;
 
   constructor(
@@ -95,8 +91,8 @@ contract DebugController is
             kind,
             param,
             30,
-            uint32now(),
-            uint32now(),
+            TimeGetter.uint32now(),
+            TimeGetter.uint32now(),
             int16(q),
             int16(r)
           )
@@ -112,7 +108,13 @@ contract DebugController is
     uint256[] memory ids = new uint256[](count);
     uint24 shortId = 1000; // to avoid collision
     for (uint256 i = 0; i < count; i++) {
-      ids[i] = interpretSpecialPlanetTokenFieldsToId(shortId, 1, uint8((i % 2) + 1), 1, shortId);
+      ids[i] = SpecialPlanetTokenIdInterpreter.fieldsToId(
+        shortId,
+        1,
+        uint8((i % 2) + 1),
+        1,
+        shortId
+      );
       shortId++;
     }
     return ids;

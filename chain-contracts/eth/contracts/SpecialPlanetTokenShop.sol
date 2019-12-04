@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./SpecialPlanetToken.sol";
 import "./SpecialPlanetTokenShortIdGenerator.sol";
 
-import "../../SpecialPlanetTokenIdInterpretable.sol";
+import "../../SpecialPlanetTokenIdInterpreter.sol";
 
-contract SpecialPlanetTokenShop is SpecialPlanetTokenIdInterpretable, MinterRole {
+contract SpecialPlanetTokenShop is MinterRole {
   using SafeMath for uint256;
 
   SpecialPlanetToken public specialPlanetToken;
@@ -38,19 +38,25 @@ contract SpecialPlanetTokenShop is SpecialPlanetTokenIdInterpretable, MinterRole
     uint8 paramRate = 15;
     uint64 artSeed = uint64(seed >> 8);
 
-    uint256 id = interpretSpecialPlanetTokenFieldsToId(shortId, version, kind, paramRate, artSeed);
+    uint256 id = SpecialPlanetTokenIdInterpreter.fieldsToId(
+      shortId,
+      version,
+      kind,
+      paramRate,
+      artSeed
+    );
 
     specialPlanetToken.mint(msg.sender, id);
     return id;
+  }
+
+  function withdrawSales() external onlyMinter {
+    msg.sender.transfer(address(this).balance);
   }
 
   // this is not secure, but enough for my use case, for now.
   function _nextUnsafeSeed() private returns (bytes32) {
     _s = keccak256(abi.encodePacked(blockhash(block.number - 1), block.coinbase, _s));
     return _s;
-  }
-
-  function withdrawSales() public onlyMinter {
-    msg.sender.transfer(address(this).balance);
   }
 }

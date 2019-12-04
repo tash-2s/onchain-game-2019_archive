@@ -1,11 +1,11 @@
 pragma solidity 0.5.11;
 
-import "./TimeGettable.sol";
+import "../../libraries/TimeGetter.sol";
 
 import "../../permanences/UserSpecialPlanetPermanence.sol";
 import "../../permanences/SpecialPlanetIdToDataPermanence.sol";
 
-contract SpecialPlanetControllable is TimeGettable {
+contract SpecialPlanetControllable {
   UserSpecialPlanetPermanence public userSpecialPlanetPermanence;
   SpecialPlanetIdToDataPermanence public specialPlanetIdToDataPermanence;
 
@@ -77,8 +77,8 @@ contract SpecialPlanetControllable is TimeGettable {
           kind,
           paramCommonLogarithm,
           1,
-          uint32now(),
-          uint32now(),
+          TimeGetter.uint32now(),
+          TimeGetter.uint32now(),
           coordinateQ,
           coordinateR,
           artSeed
@@ -94,7 +94,7 @@ contract SpecialPlanetControllable is TimeGettable {
           r.kind,
           r.paramRate,
           r.rank,
-          uint32now(), // rankupedAt
+          TimeGetter.uint32now(), // rankupedAt
           r.createdAt,
           coordinateQ,
           coordinateR,
@@ -207,9 +207,7 @@ contract SpecialPlanetControllable is TimeGettable {
       }
     }
 
-    if (rawUserPlanet == bytes32(0)) {
-      revert("the user special planet is not found");
-    }
+    require(rawUserPlanet != bytes32(0), "the user special planet is not found");
 
     return (buildUserSpecialPlanetRecordFromBytes32(rawUserPlanet), index);
   }

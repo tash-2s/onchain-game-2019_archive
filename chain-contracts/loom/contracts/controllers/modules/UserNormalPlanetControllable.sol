@@ -1,9 +1,10 @@
 pragma solidity 0.5.11;
 
-import "./TimeGettable.sol";
+import "../../libraries/TimeGetter.sol";
+
 import "../../permanences/UserNormalPlanetPermanence.sol";
 
-contract UserNormalPlanetControllable is TimeGettable {
+contract UserNormalPlanetControllable {
   struct UserNormalPlanetRecord {
     uint64 id;
     uint16 normalPlanetId;
@@ -68,7 +69,7 @@ contract UserNormalPlanetControllable is TimeGettable {
     return (records, indexes);
   }
 
-  function userNormalPlanetRecordsCountOf(address account) public view returns (uint256) {
+  function userNormalPlanetRecordsCountOf(address account) internal view returns (uint256) {
     return userNormalPlanetPermanence.count(account);
   }
 
@@ -100,8 +101,8 @@ contract UserNormalPlanetControllable is TimeGettable {
           kind,
           paramCommonLogarithm,
           1,
-          uint32now(),
-          uint32now(),
+          TimeGetter.uint32now(),
+          TimeGetter.uint32now(),
           coordinateQ,
           coordinateR
         )
@@ -129,7 +130,7 @@ contract UserNormalPlanetControllable is TimeGettable {
           record.kind,
           record.originalParamCommonLogarithm,
           targetRank,
-          uint32now(),
+          TimeGetter.uint32now(),
           record.createdAt,
           record.coordinateQ,
           record.coordinateR
@@ -183,9 +184,7 @@ contract UserNormalPlanetControllable is TimeGettable {
       int16(ui >> _P_COORDINATE_R_SHIFT_COUNT)
     );
 
-    if (record.kind == 0) {
-      revert("faild to build user normal planet, it's not created");
-    }
+    require(record.kind != 0, "faild to build user normal planet, it's not created");
 
     return record;
   }

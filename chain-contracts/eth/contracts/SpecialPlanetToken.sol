@@ -11,7 +11,7 @@ contract SpecialPlanetToken is SpecialPlanetTokenCommon, ERC721Mintable {
     gateway = _gateway;
   }
 
-  function depositToGateway(uint256 id) public {
+  function depositToGateway(uint256 id) external {
     safeTransferFrom(msg.sender, gateway, id);
   }
 }

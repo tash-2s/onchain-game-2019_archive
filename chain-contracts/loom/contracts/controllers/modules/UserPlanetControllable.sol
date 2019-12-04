@@ -50,7 +50,7 @@ contract UserPlanetControllable is
     uint256 productivity = normalProductivity.add(specialProductivity);
 
     uint256 goldPerSec = population.mul(productivity);
-    uint256 diffSec = uint256(uint32now()).sub(userGoldRecordOf(account).confirmedAt);
+    uint256 diffSec = uint256(TimeGetter.uint32now()).sub(userGoldRecordOf(account).confirmedAt);
     uint256 diffGold = goldPerSec.mul(diffSec);
 
     if (diffGold > 0) {

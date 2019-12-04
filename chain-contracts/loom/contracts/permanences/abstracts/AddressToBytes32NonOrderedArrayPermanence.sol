@@ -19,7 +19,7 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
 
   // TODO: test
   function deleteAll(address addr) public onlyMinter {
-    _addressToBytes32Array[addr].length = 0;
+    delete _addressToBytes32Array[addr];
   }
 
   function readElement(address addr, uint256 index) public view returns (bytes32) {
@@ -36,9 +36,9 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
 
   // This function change the order of the array.
   function deleteElement(address addr, uint256 index) public onlyMinter {
-    _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][_addressToBytes32Array[addr]
-        .length -
-      1];
-    _addressToBytes32Array[addr].length--;
+    uint256 length = _addressToBytes32Array[addr].length;
+    require(length > 0, "AddressToBytes32NonOrderedArrayPermanence: illegal delete");
+    _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][length - 1];
+    _addressToBytes32Array[addr].pop();
   }
 }
