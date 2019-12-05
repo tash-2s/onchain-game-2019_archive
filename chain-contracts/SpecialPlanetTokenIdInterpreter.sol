@@ -26,9 +26,9 @@ library SpecialPlanetTokenIdInterpreter {
   {
     return
       (uint256(shortId) << _SHORT_ID_SHIFT_COUNT) |
-        (uint256(version) << _VERSION_SHIFT_COUNT) |
-        (uint256(kind) << _KIND_SHIFT_COUNT) |
-        (uint256(paramRate) << _PARAM_RATE_SHIFT_COUNT) |
-        (uint256(artSeed) << _ART_SEED_SHIFT_COUNT);
+      (uint256(version) << _VERSION_SHIFT_COUNT) |
+      (uint256(kind) << _KIND_SHIFT_COUNT) |
+      (uint256(paramRate) << _PARAM_RATE_SHIFT_COUNT) |
+      (uint256(artSeed) << _ART_SEED_SHIFT_COUNT);
   }
 }

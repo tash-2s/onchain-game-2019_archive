@@ -1,11 +1,10 @@
 {
   "private": true,
   "license": "UNLICENSED",
-  "workspaces": ["eth", "loom"],
-  "scripts": {
-    "lint": "prettier '*.js' --write"
-  },
-  "devDependencies": {
-    "prettier": "*"
-  }
+  "workspaces": [
+    "eth",
+    "loom"
+  ],
+  "scripts": {},
+  "devDependencies": {}
 }
