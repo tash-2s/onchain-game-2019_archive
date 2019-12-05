@@ -71,7 +71,7 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
   }
 }
 
-contract SpecialPlanetTokenCommon is
+contract SpecialPlanetTokenBase is
   SpecialPlanetTokenMetadata,
   ERC721Enumerable,
   ERC721Burnable,

@@ -1,8 +1,8 @@
 pragma solidity 0.5.11;
 
-import "./SpecialPlanetTokenCommon.sol";
+import "./SpecialPlanetTokenBase.sol";
 
-contract SpecialPlanetToken is SpecialPlanetTokenCommon {
+contract SpecialPlanetToken is SpecialPlanetTokenBase {
   address public gateway;
 
   constructor(address _gateway) public {
