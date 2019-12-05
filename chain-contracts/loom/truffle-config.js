@@ -4,7 +4,7 @@ const PrivateKeyUtil = require("./PrivateKeyUtil.js")
 module.exports = {
   compilers: {
     solc: {
-      version: "0.5.11",
+      version: "0.5.13",
       settings: {
         optimizer: {
           enabled: true,

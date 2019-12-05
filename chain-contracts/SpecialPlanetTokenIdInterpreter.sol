@@ -1,4 +1,4 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 library SpecialPlanetTokenIdInterpreter {
   uint8 private constant _SHORT_ID_SHIFT_COUNT = 0;
