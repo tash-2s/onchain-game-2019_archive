@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./SpecialPlanetToken.sol";
 import "./SpecialPlanetTokenShortIdGenerator.sol";
 
-import "../../SpecialPlanetTokenIdInterpreter.sol";
+import "./SpecialPlanetTokenIdInterpreter.sol";
 
 contract SpecialPlanetTokenShop is MinterRole {
   using SafeMath for uint256;

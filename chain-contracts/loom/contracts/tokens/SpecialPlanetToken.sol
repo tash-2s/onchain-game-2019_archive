@@ -1,6 +1,6 @@
 pragma solidity 0.5.11;
 
-import "../../../SpecialPlanetTokenCommon.sol";
+import "./SpecialPlanetTokenCommon.sol";
 
 contract SpecialPlanetToken is SpecialPlanetTokenCommon {
   address public gateway;
