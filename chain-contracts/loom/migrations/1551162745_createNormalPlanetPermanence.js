@@ -4,9 +4,10 @@ const helper = require("../migrationHelper")
 
 const NormalPlanetPermanence = artifacts.require("./permanences/NormalPlanetPermanence") // TODO: fix
 
-module.exports = function(deployer, network) {
+module.exports = function(deployer, network, accounts) {
   deployer.then(async function() {
     const planet = await helper.deployAndRegister(deployer, network, NormalPlanetPermanence)
+    await planet.addWhitelisted(accounts[0])
 
     const data = JSON.parse(fs.readFileSync(`${__dirname}/NormalPlanets.json`))
 

@@ -2,11 +2,11 @@ pragma solidity 0.5.13;
 
 import "@openzeppelin/contracts/introspection/ERC165.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/WhitelistedRole.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol";
 import "@openzeppelin/contracts/drafts/Strings.sol";
 
-contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metadata {
+contract SpecialPlanetTokenMetadata is ERC165, ERC721, WhitelistedRole, IERC721Metadata {
   /*
    *     bytes4(keccak256('name()')) == 0x06fdde03
    *     bytes4(keccak256('symbol()')) == 0x95d89b41
@@ -41,7 +41,7 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
 
   function updateTokenURIAffixes(string calldata prefix, string calldata suffix)
     external
-    onlyMinter
+    onlyWhitelisted
   {
     tokenURIPrefix = prefix;
     tokenURISuffix = suffix;

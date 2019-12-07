@@ -1,6 +1,6 @@
 pragma solidity 0.5.13;
 
-import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/WhitelistedRole.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
@@ -9,7 +9,7 @@ import "./SpecialPlanetTokenShortIdGenerator.sol";
 
 import "./SpecialPlanetTokenIdInterpreter.sol";
 
-contract SpecialPlanetTokenShop is MinterRole {
+contract SpecialPlanetTokenShop is WhitelistedRole {
   using SafeMath for uint256;
   using Address for address payable;
 
@@ -52,7 +52,7 @@ contract SpecialPlanetTokenShop is MinterRole {
     return id;
   }
 
-  function withdrawSales() external onlyMinter {
+  function withdrawSales() external onlyWhitelisted {
     msg.sender.sendValue(address(this).balance);
   }
 

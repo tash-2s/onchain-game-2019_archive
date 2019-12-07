@@ -2,7 +2,7 @@ const helper = require("../migrationHelper")
 
 const DebugController = artifacts.require("./controllers/DebugController")
 
-const minterAdditionAbi = [
+const whitelistedABI = [
   {
     constant: false,
     inputs: [
@@ -11,7 +11,7 @@ const minterAdditionAbi = [
         type: "address"
       }
     ],
-    name: "addMinter",
+    name: "addWhitelisted",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
@@ -47,21 +47,21 @@ module.exports = function(deployer, network, accounts) {
       userNormalPlanetIdGeneratorPermanenceAddress
     )
 
-    const UserGoldPermanence = new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress)
-    await UserGoldPermanence.methods.addMinter(controller.address).send({from: accounts[0]})
+    const UserGoldPermanence = new web3.eth.Contract(whitelistedABI, userGoldPermanenceAddress)
+    await UserGoldPermanence.methods.addWhitelisted(controller.address).send({from: accounts[0]})
 
     const UserNormalPlanet = new web3.eth.Contract(
-      minterAdditionAbi,
+      whitelistedABI,
       userNormalPlanetPermanenceAddress
     )
-    await UserNormalPlanet.methods.addMinter(controller.address).send({from: accounts[0]})
+    await UserNormalPlanet.methods.addWhitelisted(controller.address).send({from: accounts[0]})
 
     const UserNormalPlanetIdGenerator = new web3.eth.Contract(
-      minterAdditionAbi,
+      whitelistedABI,
       userNormalPlanetIdGeneratorPermanenceAddress
     )
     await UserNormalPlanetIdGenerator.methods
-      .addMinter(controller.address)
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
   })
 }
