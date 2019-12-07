@@ -2,6 +2,7 @@ pragma solidity 0.5.13;
 
 import "@openzeppelin/contracts/access/roles/MinterRole.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 import "./SpecialPlanetToken.sol";
 import "./SpecialPlanetTokenShortIdGenerator.sol";
@@ -10,6 +11,7 @@ import "./SpecialPlanetTokenIdInterpreter.sol";
 
 contract SpecialPlanetTokenShop is MinterRole {
   using SafeMath for uint256;
+  using Address for address payable;
 
   SpecialPlanetToken public specialPlanetToken;
   SpecialPlanetTokenShortIdGenerator public specialPlanetTokenShortIdGenerator;
@@ -46,12 +48,12 @@ contract SpecialPlanetTokenShop is MinterRole {
       artSeed
     );
 
-    specialPlanetToken.mint(msg.sender, id);
+    specialPlanetToken.safeMint(msg.sender, id);
     return id;
   }
 
   function withdrawSales() external onlyMinter {
-    msg.sender.transfer(address(this).balance);
+    msg.sender.sendValue(address(this).balance);
   }
 
   // this is not secure, but enough for my use case, for now.
