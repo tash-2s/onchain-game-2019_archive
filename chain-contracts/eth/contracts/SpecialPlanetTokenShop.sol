@@ -11,7 +11,6 @@ import "./SpecialPlanetTokenIdInterpreter.sol";
 
 contract SpecialPlanetTokenShop is WhitelistedRole {
   using SafeMath for uint256;
-  using Address for address payable;
 
   SpecialPlanetToken public specialPlanetToken;
   SpecialPlanetTokenShortIdGenerator public specialPlanetTokenShortIdGenerator;
@@ -28,12 +27,13 @@ contract SpecialPlanetTokenShop is WhitelistedRole {
   }
 
   function sell() external payable returns (uint256) {
+    require(!Address.isContract(msg.sender), "shop: not EOA"); // unsafe but enough for this use case
     require(msg.value >= price, "shop: insufficient eth");
     price = price.add(price / 100);
 
     uint24 shortId = specialPlanetTokenShortIdGenerator.next();
 
-    uint256 seed = uint256(_nextUnsafeSeed());
+    uint256 seed = uint256(_nextUnsafeSeed()); // enough for this use case
 
     uint8 version = 1;
     uint8 kind = (uint8(seed) % 2) + 1; // 1 or 2
@@ -48,15 +48,14 @@ contract SpecialPlanetTokenShop is WhitelistedRole {
       artSeed
     );
 
-    specialPlanetToken.safeMint(msg.sender, id);
+    specialPlanetToken.mint(msg.sender, id);
     return id;
   }
 
   function withdrawSales() external onlyWhitelisted {
-    msg.sender.sendValue(address(this).balance);
+    Address.sendValue(msg.sender, address(this).balance);
   }
 
-  // this is not secure, but enough for my use case, for now.
   function _nextUnsafeSeed() private returns (bytes32) {
     _s = keccak256(abi.encodePacked(blockhash(block.number - 1), block.coinbase, _s));
     return _s;
