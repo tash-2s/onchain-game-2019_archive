@@ -1,9 +1,9 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 import "./modules/UserPlanetControllable.sol";
 
 import "../libraries/UserPlanetMapUtil.sol";
-import "../../../SpecialPlanetTokenIdInterpreter.sol";
+import "../libraries/SpecialPlanetTokenIdInterpreter.sol";
 
 import "./HighlightedUserController.sol";
 

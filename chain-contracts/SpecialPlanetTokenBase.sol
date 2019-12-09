@@ -1,15 +1,12 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 import "@openzeppelin/contracts/introspection/ERC165.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/WhitelistedRole.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol";
+import "@openzeppelin/contracts/drafts/Strings.sol";
 
-import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
-import "@openzeppelin/contracts/ownership/Ownable.sol";
-
-contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metadata {
+contract SpecialPlanetTokenMetadata is ERC165, ERC721, WhitelistedRole, IERC721Metadata {
   /*
    *     bytes4(keccak256('name()')) == 0x06fdde03
    *     bytes4(keccak256('symbol()')) == 0x95d89b41
@@ -19,7 +16,7 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
    */
   bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
 
-  // TODO: change this address
+  // TODO: change this address or make empty
   string public tokenURIPrefix = "https://d3fivknrylrhff.cloudfront.net/special-planet-token-jsons/";
   string public tokenURISuffix = ".json";
 
@@ -39,39 +36,23 @@ contract SpecialPlanetTokenMetadata is ERC165, ERC721, MinterRole, IERC721Metada
   function tokenURI(uint256 tokenId) external view returns (string memory) {
     require(_exists(tokenId), "URI query for nonexistent token");
 
-    return string(abi.encodePacked(tokenURIPrefix, _uintToString(tokenId), tokenURISuffix));
+    return string(abi.encodePacked(tokenURIPrefix, Strings.fromUint256(tokenId), tokenURISuffix));
   }
 
   function updateTokenURIAffixes(string calldata prefix, string calldata suffix)
     external
-    onlyMinter
+    onlyWhitelisted
   {
     tokenURIPrefix = prefix;
     tokenURISuffix = suffix;
   }
-
-  function _uintToString(uint256 value) private pure returns (string memory) {
-    if (value == 0) {
-      return "0";
-    }
-    uint256 temp = value;
-    uint256 digits;
-    while (temp != 0) {
-      digits++;
-      temp /= 10;
-    }
-    bytes memory buffer = new bytes(digits);
-    uint256 index = digits - 1;
-    temp = value;
-    while (temp != 0) {
-      buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-      temp /= 10;
-    }
-    return string(buffer);
-  }
 }
 
-contract SpecialPlanetTokenCommon is
+import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
+import "@openzeppelin/contracts/ownership/Ownable.sol";
+
+contract SpecialPlanetTokenBase is
   SpecialPlanetTokenMetadata,
   ERC721Enumerable,
   ERC721Burnable,

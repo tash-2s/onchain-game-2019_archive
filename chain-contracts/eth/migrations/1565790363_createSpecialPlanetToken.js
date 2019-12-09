@@ -12,8 +12,8 @@ module.exports = function(deployer, network, accounts) {
       SpecialPlanetTokenShortIdGenerator.address
     )
 
-    await (await SpecialPlanetToken.deployed()).addMinter(SpecialPlanetTokenShop.address)
-    await (await SpecialPlanetTokenShortIdGenerator.deployed()).addMinter(
+    await (await SpecialPlanetToken.deployed()).addWhitelisted(SpecialPlanetTokenShop.address)
+    await (await SpecialPlanetTokenShortIdGenerator.deployed()).addWhitelisted(
       SpecialPlanetTokenShop.address
     )
   })

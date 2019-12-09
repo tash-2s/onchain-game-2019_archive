@@ -1,11 +1,11 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 import "./modules/UserGoldControllable.sol";
 import "./modules/UserNormalPlanetControllable.sol";
 
 import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
 
-import "../../../SpecialPlanetTokenIdInterpreter.sol";
+import "../libraries/SpecialPlanetTokenIdInterpreter.sol";
 
 contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
   UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;

@@ -1,14 +1,10 @@
-require("ts-node/register")
-
 const LoomTruffleProvider = require("loom-truffle-provider")
 const PrivateKeyUtil = require("./PrivateKeyUtil.js")
 
 module.exports = {
-  plugins: ["truffle-security"],
-
   compilers: {
     solc: {
-      version: "0.5.11",
+      version: "0.5.13",
       settings: {
         optimizer: {
           enabled: true,

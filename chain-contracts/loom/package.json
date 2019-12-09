@@ -5,23 +5,16 @@
   "version": "0.0.0",
   "scripts": {
     "loom": "./loom",
-    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write && solium -d contracts/ --fix",
-    "generate-ts-types": "truffle compile && typechain --target truffle './build/**/*.json'",
-    "test": "yarn generate-ts-types && tsc --noEmit && TS_NODE_FILES=true truffle test"
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write",
+    "test": "truffle test"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^2.3.0",
-    "ethlint": "*",
-    "loom-truffle-provider": "0.12.0",
+    "@openzeppelin/contracts": "*",
+    "@truffle/contract": "*",
+    "loom-truffle-provider": "*",
     "prettier": "*",
-    "prettier-plugin-solidity": "1.0.0-alpha.31",
-    "truffle": "5.0.10",
-    "truffle-contract": "^4.0.6",
-    "truffle-deploy-registry": "^0.5.1",
-    "truffle-security": "^1.6.1",
-    "truffle-typings": "^1.0.6",
-    "ts-node": "^8.0.3",
-    "typechain": "^0.3.14",
-    "typescript": "^3.3.4000"
+    "prettier-plugin-solidity": "1.0.0-alpha.34",
+    "truffle": "*",
+    "truffle-deploy-registry": "*"
   }
 }

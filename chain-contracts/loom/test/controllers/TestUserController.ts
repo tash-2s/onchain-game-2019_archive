@@ -37,10 +37,19 @@ contract("UserController", async accounts => {
         assert.equal(result[0].toString(), "1000")
         assert.isAbove(result[1].toNumber(), unixtimeNow - 10)
         assert.isBelow(result[1].toNumber(), unixtimeNow + 10)
-        assert.deepEqual(result[2].map(e => e.toString()), ["0", "1"])
-        assert.deepEqual(result[3].map(e => e.toString()), ["1"])
+        assert.deepEqual(
+          result[2].map(e => e.toString()),
+          ["0", "1"]
+        )
+        assert.deepEqual(
+          result[3].map(e => e.toString()),
+          ["1"]
+        )
         assert.isAbove(result[4][0].toNumber(), unixtimeNow - 10)
-        assert.deepEqual(result[5].map(e => e.toString()), ["2", "-3"])
+        assert.deepEqual(
+          result[5].map(e => e.toString()),
+          ["2", "-3"]
+        )
       })
 
       it("should return more data", async () => {
@@ -53,10 +62,19 @@ contract("UserController", async accounts => {
         assert.equal(result[0].toString(), "0")
         assert.isAbove(result[1].toNumber(), unixtimeNow - 10)
         assert.isBelow(result[1].toNumber(), unixtimeNow + 10)
-        assert.deepEqual(result[2].map(e => e.toString()), ["0", "1", "1", "2"])
-        assert.deepEqual(result[3].map(e => e.toString()), ["1", "1"])
+        assert.deepEqual(
+          result[2].map(e => e.toString()),
+          ["0", "1", "1", "2"]
+        )
+        assert.deepEqual(
+          result[3].map(e => e.toString()),
+          ["1", "1"]
+        )
         assert.isAbove(result[4][3].toNumber(), unixtimeNow - 10)
-        assert.deepEqual(result[5].map(e => e.toString()), ["2", "-3", "-123", "456"])
+        assert.deepEqual(
+          result[5].map(e => e.toString()),
+          ["2", "-3", "-123", "456"]
+        )
       })
     })
   })

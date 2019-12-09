@@ -1,4 +1,4 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 import "truffle/Assert.sol";
 
@@ -233,18 +233,18 @@ contract TestUserNormalPlanetControllable is UserNormalPlanetControllable {
   ) private {
     _reporter.report(
       keccak256(
-          abi.encodePacked(
-            r1.id,
-            r1.normalPlanetId,
-            r1.kind,
-            r1.originalParamCommonLogarithm,
-            r1.rank,
-            r1.rankupedAt,
-            r1.createdAt,
-            r1.coordinateQ,
-            r1.coordinateR
-          )
-        ) ==
+        abi.encodePacked(
+          r1.id,
+          r1.normalPlanetId,
+          r1.kind,
+          r1.originalParamCommonLogarithm,
+          r1.rank,
+          r1.rankupedAt,
+          r1.createdAt,
+          r1.coordinateQ,
+          r1.coordinateR
+        )
+      ) ==
         keccak256(
           abi.encodePacked(
             r2.id,

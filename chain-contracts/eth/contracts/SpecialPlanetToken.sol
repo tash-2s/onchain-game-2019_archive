@@ -1,10 +1,10 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721Mintable.sol";
 
-import "../../SpecialPlanetTokenCommon.sol";
+import "./SpecialPlanetTokenBase.sol";
 
-contract SpecialPlanetToken is SpecialPlanetTokenCommon, ERC721Mintable {
+contract SpecialPlanetToken is SpecialPlanetTokenBase, ERC721Mintable {
   address public gateway;
 
   constructor(address _gateway) public {

@@ -2,7 +2,7 @@ const helper = require("../migrationHelper")
 
 const SpecialPlanetController = artifacts.require("./controllers/SpecialPlanetController") // TODO: fix
 
-const minterAdditionAbi = [
+const whitelistedABI = [
   {
     constant: false,
     inputs: [
@@ -11,7 +11,7 @@ const minterAdditionAbi = [
         type: "address"
       }
     ],
-    name: "addMinter",
+    name: "addWhitelisted",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
@@ -57,23 +57,23 @@ module.exports = function(deployer, network, accounts) {
       specialPlanetTokenLockerAddress
     ])
 
-    await new web3.eth.Contract(minterAdditionAbi, userGoldPermanenceAddress).methods
-      .addMinter(controller.address)
+    await new web3.eth.Contract(whitelistedABI, userGoldPermanenceAddress).methods
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
 
-    await new web3.eth.Contract(minterAdditionAbi, userNormalPlanetPermanenceAddress).methods
-      .addMinter(controller.address)
+    await new web3.eth.Contract(whitelistedABI, userNormalPlanetPermanenceAddress).methods
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
 
-    await new web3.eth.Contract(minterAdditionAbi, userSpecialPlanetPermanenceAddress).methods
-      .addMinter(controller.address)
+    await new web3.eth.Contract(whitelistedABI, userSpecialPlanetPermanenceAddress).methods
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
-    await new web3.eth.Contract(minterAdditionAbi, specialPlanetIdToDataPermanenceAddress).methods
-      .addMinter(controller.address)
+    await new web3.eth.Contract(whitelistedABI, specialPlanetIdToDataPermanenceAddress).methods
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
 
-    await new web3.eth.Contract(minterAdditionAbi, specialPlanetTokenLockerAddress).methods
-      .addMinter(controller.address)
+    await new web3.eth.Contract(whitelistedABI, specialPlanetTokenLockerAddress).methods
+      .addWhitelisted(controller.address)
       .send({from: accounts[0]})
   })
 }

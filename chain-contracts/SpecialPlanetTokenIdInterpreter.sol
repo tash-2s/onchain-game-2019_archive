@@ -1,4 +1,4 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
 library SpecialPlanetTokenIdInterpreter {
   uint8 private constant _SHORT_ID_SHIFT_COUNT = 0;
@@ -26,9 +26,9 @@ library SpecialPlanetTokenIdInterpreter {
   {
     return
       (uint256(shortId) << _SHORT_ID_SHIFT_COUNT) |
-        (uint256(version) << _VERSION_SHIFT_COUNT) |
-        (uint256(kind) << _KIND_SHIFT_COUNT) |
-        (uint256(paramRate) << _PARAM_RATE_SHIFT_COUNT) |
-        (uint256(artSeed) << _ART_SEED_SHIFT_COUNT);
+      (uint256(version) << _VERSION_SHIFT_COUNT) |
+      (uint256(kind) << _KIND_SHIFT_COUNT) |
+      (uint256(paramRate) << _PARAM_RATE_SHIFT_COUNT) |
+      (uint256(artSeed) << _ART_SEED_SHIFT_COUNT);
   }
 }

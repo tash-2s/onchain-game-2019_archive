@@ -1,8 +1,8 @@
-pragma solidity 0.5.11;
+pragma solidity 0.5.13;
 
-import "@openzeppelin/contracts/access/roles/MinterRole.sol";
+import "@openzeppelin/contracts/access/roles/WhitelistedRole.sol";
 
-contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
+contract AddressToBytes32NonOrderedArrayPermanence is WhitelistedRole {
   mapping(address => bytes32[]) private _addressToBytes32Array;
 
   function read(address addr) public view returns (bytes32[] memory) {
@@ -13,12 +13,12 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
     return _addressToBytes32Array[addr].length;
   }
 
-  function update(address addr, bytes32[] memory b32Array) public onlyMinter {
+  function update(address addr, bytes32[] memory b32Array) public onlyWhitelisted {
     _addressToBytes32Array[addr] = b32Array;
   }
 
   // TODO: test
-  function deleteAll(address addr) public onlyMinter {
+  function deleteAll(address addr) public onlyWhitelisted {
     delete _addressToBytes32Array[addr];
   }
 
@@ -26,16 +26,16 @@ contract AddressToBytes32NonOrderedArrayPermanence is MinterRole {
     return _addressToBytes32Array[addr][index];
   }
 
-  function updateElement(address addr, uint256 index, bytes32 b32) public onlyMinter {
+  function updateElement(address addr, uint256 index, bytes32 b32) public onlyWhitelisted {
     _addressToBytes32Array[addr][index] = b32;
   }
 
-  function createElement(address addr, bytes32 b32) public onlyMinter returns (uint256) {
+  function createElement(address addr, bytes32 b32) public onlyWhitelisted returns (uint256) {
     return _addressToBytes32Array[addr].push(b32);
   }
 
   // This function change the order of the array.
-  function deleteElement(address addr, uint256 index) public onlyMinter {
+  function deleteElement(address addr, uint256 index) public onlyWhitelisted {
     uint256 length = _addressToBytes32Array[addr].length;
     require(length > 0, "AddressToBytes32NonOrderedArrayPermanence: illegal delete");
     _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][length - 1];
