@@ -1,10 +1,8 @@
 pragma solidity 0.5.13;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721Mintable.sol";
-
 import "./SpecialPlanetTokenBase.sol";
 
-contract SpecialPlanetToken is SpecialPlanetTokenBase, ERC721Mintable {
+contract SpecialPlanetToken is SpecialPlanetTokenBase {
   address public gateway;
 
   constructor(address _gateway) public {
@@ -13,5 +11,9 @@ contract SpecialPlanetToken is SpecialPlanetTokenBase, ERC721Mintable {
 
   function depositToGateway(uint256 id) external {
     safeTransferFrom(msg.sender, gateway, id);
+  }
+
+  function mint(address to, uint256 tokenId) external onlyWhitelisted {
+    _mint(to, tokenId);
   }
 }
