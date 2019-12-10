@@ -17,11 +17,6 @@ contract AddressToBytes32NonOrderedArrayPermanence is WhitelistedRole {
     _addressToBytes32Array[addr] = b32Array;
   }
 
-  // TODO: test
-  function deleteAll(address addr) public onlyWhitelisted {
-    delete _addressToBytes32Array[addr];
-  }
-
   function readElement(address addr, uint256 index) public view returns (bytes32) {
     return _addressToBytes32Array[addr][index];
   }
