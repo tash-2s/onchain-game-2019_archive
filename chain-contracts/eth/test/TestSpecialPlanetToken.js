@@ -1,4 +1,4 @@
-const {expectRevert} = require("@openzeppelin/test-helpers")
+const {expectRevert, constants} = require("@openzeppelin/test-helpers")
 
 const SpecialPlanetToken = artifacts.require("SpecialPlanetToken")
 
@@ -8,7 +8,7 @@ describe("SpecialPlanetToken", function() {
     this.deployer = accounts[0]
     this.stranger = accounts[1]
 
-    this.token = await SpecialPlanetToken.new("0x0000000000000000000000000000000000000000")
+    this.token = await SpecialPlanetToken.new(constants.ZERO_ADDRESS)
   })
 
   describe("#mint", function() {
