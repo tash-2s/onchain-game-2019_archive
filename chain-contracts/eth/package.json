@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@openzeppelin/contracts": "*",
+    "@openzeppelin/test-helpers": "*",
     "@truffle/hdwallet-provider": "*",
     "bip39": "*",
     "prettier-plugin-solidity": "1.0.0-alpha.34",

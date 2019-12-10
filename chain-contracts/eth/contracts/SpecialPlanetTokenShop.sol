@@ -26,7 +26,7 @@ contract SpecialPlanetTokenShop is WhitelistedRole {
     );
   }
 
-  function sell() external payable returns (uint256) {
+  function mint() external payable returns (uint256) {
     require(!Address.isContract(msg.sender), "shop: not EOA"); // unsafe but enough for this use case
     require(msg.value >= price, "shop: insufficient eth");
     price = price.add(price / 100);

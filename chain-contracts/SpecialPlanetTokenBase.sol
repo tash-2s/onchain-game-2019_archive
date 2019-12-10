@@ -58,32 +58,18 @@ contract SpecialPlanetTokenBase is
   ERC721Burnable,
   Ownable
 {
-  uint8 private constant _MAX_TOKEN_BATCH_SIZE = 100;
-
-  function tokensOfOwnerByIndex(address owner, uint256 index)
+  function tokensOfOwnerByIndex(address owner, uint256 startIndex, uint256 endIndex)
     external
     view
-    returns (uint256[] memory tokenIds, uint256 nextIndex)
+    returns (uint256[] memory)
   {
-    nextIndex = 0; // no next
-    uint256 balance = balanceOf(owner);
-    if (balance == 0) {
-      return (new uint256[](0), nextIndex);
-    }
-    require(balance > index, "too big index");
+    uint256 size = endIndex.sub(startIndex).add(1);
+    uint256[] memory tokenIds = new uint256[](size);
 
-    uint256 size = balance - index;
-    if (size > _MAX_TOKEN_BATCH_SIZE) {
-      size = _MAX_TOKEN_BATCH_SIZE;
-      nextIndex = index + _MAX_TOKEN_BATCH_SIZE;
+    for (uint256 i = 0; i < size; i++) {
+      tokenIds[i] = tokenOfOwnerByIndex(owner, startIndex.add(i));
     }
 
-    tokenIds = new uint256[](size);
-
-    for (uint256 i = index; i < (index + size); i++) {
-      tokenIds[i] = tokenOfOwnerByIndex(owner, i);
-    }
-
-    return (tokenIds, nextIndex);
+    return tokenIds;
   }
 }
