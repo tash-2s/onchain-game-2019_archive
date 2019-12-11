@@ -9,6 +9,11 @@ contract("Migration Result", function([deployer, stranger]) {
     this.idGenerator = await SpecialPlanetTokenShortIdGenerator.deployed()
   })
 
+  it("should have correct relations", async function() {
+    assert.equal(await this.shop.specialPlanetToken(), this.token.address)
+    assert.equal(await this.shop.specialPlanetTokenShortIdGenerator(), this.idGenerator.address)
+  })
+
   it("should have valid whitelisted accounts", async function() {
     assert.deepEqual(await getWhitelistedAccounts(this.token), [this.shop.address])
     assert.deepEqual(await getWhitelistedAccounts(this.shop), [deployer])
