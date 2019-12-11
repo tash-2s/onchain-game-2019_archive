@@ -46,6 +46,22 @@ contract UserNormalPlanetControllable {
     return records;
   }
 
+  function userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
+    internal
+    view
+    returns (UserNormalPlanetRecord memory, uint256)
+  {
+    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
+
+    for (uint256 i = 0; i < records.length; i++) {
+      if (records[i].id == userPlanetId) {
+        return (records[i], i);
+      }
+    }
+
+    revert("user normal planet: not found");
+  }
+
   function userNormalPlanetRecordsWithIndexesOf(address account, uint64[] memory userPlanetIds)
     internal
     view
@@ -56,15 +72,20 @@ contract UserNormalPlanetControllable {
 
     UserNormalPlanetRecord[] memory allRecords = userNormalPlanetRecordsOf(account);
 
+    uint256 counter = 0;
+
     for (uint256 i = 0; i < userPlanetIds.length; i++) {
       for (uint256 j = 0; j < allRecords.length; j++) {
         if (userPlanetIds[i] == allRecords[j].id) {
           records[i] = allRecords[j];
           indexes[i] = j;
+          counter++;
           break;
         }
       }
     }
+
+    require(userPlanetIds.length == counter, "user normal planet: not found");
 
     return (records, indexes);
   }
@@ -79,7 +100,7 @@ contract UserNormalPlanetControllable {
     returns (UserNormalPlanetRecord memory)
   {
     UserNormalPlanetRecord memory record;
-    (record, ) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
+    (record, ) = userNormalPlanetRecordWithIndexOf(account, userPlanetId);
     return record;
   }
 
@@ -116,10 +137,6 @@ contract UserNormalPlanetControllable {
     uint256 index,
     uint8 targetRank
   ) internal {
-    require(
-      targetRank > record.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
-      "invalid rank for rankup"
-    );
     userNormalPlanetPermanence.updateElement(
       account,
       index,
@@ -139,30 +156,54 @@ contract UserNormalPlanetControllable {
     );
   }
 
-  function removeNormalPlanetFromMap(address account, uint64 userPlanetId) internal {
-    uint256 index;
-    (, index) = _userNormalPlanetRecordWithIndexOf(account, userPlanetId);
-
-    userNormalPlanetPermanence.deleteElement(account, index);
+  function removeNormalsFromMap(address account, uint64[] memory userPlanetIds) internal {
+    for (uint256 i = 0; i < userPlanetIds.length; i++) {
+      // after the deletion, indexes change, so I re-take records
+      (, uint256 index) = userNormalPlanetRecordWithIndexOf(account, userPlanetIds[i]);
+      userNormalPlanetPermanence.deleteElement(account, index);
+    }
   }
 
-  function removeUserNormalPlanetFromMapIfExist(
+  function revertIfCoordinatesAreUsedByNormal(
     address account,
     int16[] memory coordinateQs,
     int16[] memory coordinateRs
-  ) internal {
-    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
+  ) internal view {
+    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(
+      account,
+      coordinateQs,
+      coordinateRs
+    );
+    require(records.length < 1, "userNormalPlanet: already used coordinates");
+  }
+
+  function userNormalPlanetRecordsOf(
+    address account,
+    int16[] memory coordinateQs,
+    int16[] memory coordinateRs
+  ) internal view returns (UserNormalPlanetRecord[] memory) {
+    UserNormalPlanetRecord[] memory allRecords = userNormalPlanetRecordsOf(account);
+
+    UserNormalPlanetRecord[] memory _records = new UserNormalPlanetRecord[](coordinateQs.length);
+    uint256 counter = 0;
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      for (uint256 j = 0; j < records.length; j++) {
-        if (
-          coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
-        ) {
-          userNormalPlanetPermanence.deleteElement(account, j);
+      for (uint256 j = 0; j < allRecords.length; j++) {
+        UserNormalPlanetRecord memory record = allRecords[j];
+        if (coordinateQs[i] == record.coordinateQ && coordinateRs[i] == record.coordinateR) {
+          _records[counter] = record;
+          counter++;
           break;
         }
       }
     }
+
+    UserNormalPlanetRecord[] memory records = new UserNormalPlanetRecord[](counter);
+    for (uint256 i = 0; i < counter; i++) {
+      records[i] = _records[i];
+    }
+
+    return records;
   }
 
   function buildUserNormalPlanetRecordFromBytes32(bytes32 b)
@@ -206,21 +247,5 @@ contract UserNormalPlanetControllable {
           (uint256(uint16(r.coordinateQ)) << _P_COORDINATE_Q_SHIFT_COUNT) |
           (uint256(uint16(r.coordinateR)) << _P_COORDINATE_R_SHIFT_COUNT)
       );
-  }
-
-  function _userNormalPlanetRecordWithIndexOf(address account, uint64 userPlanetId)
-    private
-    view
-    returns (UserNormalPlanetRecord memory, uint256)
-  {
-    UserNormalPlanetRecord[] memory records = userNormalPlanetRecordsOf(account);
-
-    for (uint256 i = 0; i < records.length; i++) {
-      if (records[i].id == userPlanetId) {
-        return (records[i], i);
-      }
-    }
-
-    revert("user normal planet is not found");
   }
 }

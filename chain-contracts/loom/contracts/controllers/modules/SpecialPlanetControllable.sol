@@ -114,39 +114,47 @@ contract SpecialPlanetControllable {
     userSpecialPlanetPermanence.deleteElement(account, index);
   }
 
-  function removeUserSpecialPlanetFromMapIfExist(
+  function revertIfCoordinatesAreUsedBySpecial(
     address account,
     int16[] memory coordinateQs,
     int16[] memory coordinateRs
-  ) internal returns (uint24[] memory) {
-    UserSpecialPlanetRecord[] memory records = userSpecialPlanetRecordsOf(account);
+  ) internal view {
+    UserSpecialPlanetRecord[] memory records = userSpecialPlanetRecordsOf(
+      account,
+      coordinateQs,
+      coordinateRs
+    );
+    require(records.length < 1, "userSpecialPlanet: already used coordinates");
+  }
 
-    uint24[] memory _ids = new uint24[](coordinateQs.length);
-    uint256 targetCount = 0;
+  function userSpecialPlanetRecordsOf(
+    address account,
+    int16[] memory coordinateQs,
+    int16[] memory coordinateRs
+  ) internal view returns (UserSpecialPlanetRecord[] memory) {
+    UserSpecialPlanetRecord[] memory allRecords = userSpecialPlanetRecordsOf(account);
+
+    UserSpecialPlanetRecord[] memory _records = new UserSpecialPlanetRecord[](coordinateQs.length);
+    uint256 counter = 0;
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {
-      for (uint16 j = 0; j < records.length; j++) {
-        if (
-          coordinateQs[i] == records[j].coordinateQ && coordinateRs[i] == records[j].coordinateR
-        ) {
-          _ids[i] = records[j].id;
-          userSpecialPlanetPermanence.deleteElement(account, j);
-          targetCount++;
+      for (uint256 j = 0; j < allRecords.length; j++) {
+        UserSpecialPlanetRecord memory record = allRecords[j];
+        if (coordinateQs[i] == record.coordinateQ && coordinateRs[i] == record.coordinateR) {
+          _records[counter] = record;
+          counter++;
           break;
         }
       }
     }
 
-    uint24[] memory ids = new uint24[](targetCount);
-    uint256 idsIndex = 0;
+    UserSpecialPlanetRecord[] memory records = new UserSpecialPlanetRecord[](counter);
 
-    for (uint256 i = 0; i < targetCount; i++) {
-      if (_ids[i] != 0) {
-        ids[idsIndex++] = _ids[i];
-      }
+    for (uint256 i = 0; i < counter; i++) {
+      records[i] = _records[i];
     }
 
-    return ids;
+    return records;
   }
 
   function buildUserSpecialPlanetRecordFromBytes32(bytes32 b)

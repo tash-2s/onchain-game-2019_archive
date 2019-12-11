@@ -79,7 +79,7 @@ contract SpecialPlanetController is UserPlanetControllable {
       ),
       "not allowed coordinate"
     );
-    removePlanetsFromMapIfExist(
+    revertIfCoordinatesAreUsed(
       msg.sender,
       _wrapWithArray(coordinateQ),
       _wrapWithArray(coordinateR)

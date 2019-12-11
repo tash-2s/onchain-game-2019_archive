@@ -142,27 +142,12 @@ contract UserPlanetControllable is
     specialPlanetTokenLocker.withdraw(shortId);
   }
 
-  function removePlanetsFromMapIfExist(
+  function revertIfCoordinatesAreUsed(
     address account,
     int16[] memory coordinateQs,
     int16[] memory coordinateRs
-  ) internal {
-    removeUserNormalPlanetFromMapIfExist(account, coordinateQs, coordinateRs);
-    removeSpecialPlanetFromMapIfExist(account, coordinateQs, coordinateRs);
-  }
-
-  function removeSpecialPlanetFromMapIfExist(
-    address account,
-    int16[] memory coordinateQs,
-    int16[] memory coordinateRs
-  ) internal {
-    uint24[] memory shortIds = removeUserSpecialPlanetFromMapIfExist(
-      account,
-      coordinateQs,
-      coordinateRs
-    );
-    for (uint256 i = 0; i < shortIds.length; i++) {
-      specialPlanetTokenLocker.withdraw(shortIds[i]);
-    }
+  ) internal view {
+    revertIfCoordinatesAreUsedByNormal(account, coordinateQs, coordinateRs);
+    revertIfCoordinatesAreUsedBySpecial(account, coordinateQs, coordinateRs);
   }
 }

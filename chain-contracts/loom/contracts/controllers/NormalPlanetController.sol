@@ -92,7 +92,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     unmintGold(msg.sender, planetPrice.mul(batchSize));
 
-    removePlanetsFromMapIfExist(msg.sender, coordinateQs, coordinateRs);
+    revertIfCoordinatesAreUsed(msg.sender, coordinateQs, coordinateRs);
 
     uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(msg.sender, batchSize);
 
@@ -130,9 +130,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
       uint8 targetRank = targetRanks[i];
       UserNormalPlanetRecord memory userPlanet = userPlanets[i];
 
-      if (targetRank <= userPlanet.rank || targetRank > MAX_USER_NORMAL_PLANET_RANK) {
-        revert("invalid targetRank");
-      }
+      require(
+        targetRank > userPlanet.rank && targetRank <= MAX_USER_NORMAL_PLANET_RANK,
+        "invalid rank for rankup"
+      );
 
       // ckeck time
       if (targetRank == uint256(userPlanet.rank).add(1)) {
@@ -162,6 +163,11 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     unmintGold(msg.sender, rankupGold);
   }
 
+  function removePlanets(uint64[] calldata userNormalPlanetIds) external {
+    confirm(msg.sender);
+    removeNormalsFromMap(msg.sender, userNormalPlanetIds);
+  }
+
   function claimInitialGold() external {
     require(
       userNormalPlanetRecordsCountOf(msg.sender) == 0 && userGoldRecordOf(msg.sender).balance == 0,
@@ -170,15 +176,8 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
 
     mintGold(
       msg.sender,
-      uint256(10).pow(normalPlanetRecordOf(1).priceGoldCommonLogarithm).add(
-        uint256(10).pow(normalPlanetRecordOf(2).priceGoldCommonLogarithm)
-      )
+      uint256(10).pow(4).add(uint256(10).pow(5)) // (id:1 price) + (id:2 price)
     );
-  }
-
-  function removePlanet(uint64 userNormalPlanetId) external {
-    confirm(msg.sender);
-    removeNormalPlanetFromMap(msg.sender, userNormalPlanetId);
   }
 
   function _requiredGoldForRankup(uint256 planetPriceGold, uint256 currentRank, uint256 targetRank)

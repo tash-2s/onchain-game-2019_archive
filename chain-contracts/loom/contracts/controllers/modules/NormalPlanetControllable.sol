@@ -18,7 +18,11 @@ contract NormalPlanetControllable {
   NormalPlanetPermanence public normalPlanetPermanence;
 
   function normalPlanetRecordOf(uint16 id) internal view returns (NormalPlanetRecord memory) {
-    return buildNormalPlanetRecord(id, normalPlanetPermanence.read(id));
+    NormalPlanetRecord memory record = buildNormalPlanetRecord(id, normalPlanetPermanence.read(id));
+
+    require(record.kind != 0, "normal planet: not found");
+
+    return record;
   }
 
   function buildNormalPlanetRecord(uint16 id, bytes32 b)
@@ -34,12 +38,6 @@ contract NormalPlanetControllable {
       uint8(ui >> _P_PARAM_SHIFT_COUNT),
       uint8(ui >> _P_PRICE_SHIFT_COUNT)
     );
-
-    if (
-      record.kind == 0 && record.paramCommonLogarithm == 0 && record.priceGoldCommonLogarithm == 0
-    ) {
-      revert("faild to build a planet record, the source is wrong");
-    }
 
     return record;
   }

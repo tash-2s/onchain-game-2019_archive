@@ -32,7 +32,8 @@ contract AddressToBytes32NonOrderedArrayPermanence is WhitelistedRole {
   // This function change the order of the array.
   function deleteElement(address addr, uint256 index) public onlyWhitelisted {
     uint256 length = _addressToBytes32Array[addr].length;
-    require(length > 0, "AddressToBytes32NonOrderedArrayPermanence: illegal delete");
+    require(index < length, "AddressToBytes32NonOrderedArrayPermanence: out of range index");
+    require(length > 0, "AddressToBytes32NonOrderedArrayPermanence: no data");
     _addressToBytes32Array[addr][index] = _addressToBytes32Array[addr][length - 1];
     _addressToBytes32Array[addr].pop();
   }
