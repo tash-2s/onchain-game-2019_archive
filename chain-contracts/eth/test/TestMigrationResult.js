@@ -2,28 +2,30 @@ const SpecialPlanetToken = artifacts.require("SpecialPlanetToken")
 const SpecialPlanetTokenShop = artifacts.require("SpecialPlanetTokenShop")
 const SpecialPlanetTokenShortIdGenerator = artifacts.require("SpecialPlanetTokenShortIdGenerator")
 
-contract("Migration Result", function([deployer, stranger]) {
+contract("Migration Result", function([admin, account]) {
+  let token, shop, idGenerator
+
   before(async function() {
-    this.token = await SpecialPlanetToken.deployed()
-    this.shop = await SpecialPlanetTokenShop.deployed()
-    this.idGenerator = await SpecialPlanetTokenShortIdGenerator.deployed()
+    token = await SpecialPlanetToken.deployed()
+    shop = await SpecialPlanetTokenShop.deployed()
+    idGenerator = await SpecialPlanetTokenShortIdGenerator.deployed()
   })
 
   it("should have correct relations", async function() {
-    assert.equal(await this.shop.specialPlanetToken(), this.token.address)
-    assert.equal(await this.shop.specialPlanetTokenShortIdGenerator(), this.idGenerator.address)
+    assert.equal(await shop.specialPlanetToken(), token.address)
+    assert.equal(await shop.specialPlanetTokenShortIdGenerator(), idGenerator.address)
   })
 
   it("should have valid whitelisted accounts", async function() {
-    assert.deepEqual(await getWhitelistedAccounts(this.token), [this.shop.address])
-    assert.deepEqual(await getWhitelistedAccounts(this.shop), [deployer])
-    assert.deepEqual(await getWhitelistedAccounts(this.idGenerator), [this.shop.address])
+    assert.deepEqual(await getWhitelistedAccounts(token), [shop.address])
+    assert.deepEqual(await getWhitelistedAccounts(shop), [admin])
+    assert.deepEqual(await getWhitelistedAccounts(idGenerator), [shop.address])
   })
 
   it("should have valid whitelistAdmin accounts", async function() {
-    assert.deepEqual(await getWhitelistAdminAccounts(this.token), [deployer])
-    assert.deepEqual(await getWhitelistAdminAccounts(this.shop), [deployer])
-    assert.deepEqual(await getWhitelistAdminAccounts(this.idGenerator), [deployer])
+    assert.deepEqual(await getWhitelistAdminAccounts(token), [admin])
+    assert.deepEqual(await getWhitelistAdminAccounts(shop), [admin])
+    assert.deepEqual(await getWhitelistAdminAccounts(idGenerator), [admin])
   })
 })
 
