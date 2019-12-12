@@ -11,7 +11,7 @@ contract SpecialPlanetToken is SpecialPlanetTokenBase {
 
   // Used by the DAppChain Gateway to mint tokens that have been deposited to the Ethereum Gateway
   function mintToGateway(uint256 id) external {
-    require(msg.sender == gateway, "only the gateway is allowed to mint");
+    require(msg.sender == gateway, "SpecialPlanetToken: only the gateway is allowed to mint");
     _mint(gateway, id);
   }
 }
