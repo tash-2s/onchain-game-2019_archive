@@ -17,7 +17,7 @@ contract SpecialPlanetController is UserPlanetControllable {
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
-    address highlightedUsersContractAddress,
+    address highlightedUsersControllerAddress,
     address specialPlanetTokenLockerAddress
   ) public {
     setupUserPlanetControllable(
@@ -26,7 +26,7 @@ contract SpecialPlanetController is UserPlanetControllable {
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress
     );
-    highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
+    highlightedUserController = HighlightedUserController(highlightedUsersControllerAddress);
     specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 

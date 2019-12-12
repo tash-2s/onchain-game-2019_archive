@@ -21,8 +21,6 @@ describe("NormalPlanetController", function() {
   let userGoldPermanence
 
   beforeEach(async function() {
-    this.timeout(5000)
-
     const accounts = await web3.eth.getAccounts()
     admin = accounts[0]
     account = accounts[1]
@@ -221,7 +219,6 @@ describe("NormalPlanetController", function() {
 
   describe("#removePlanets", function() {
     beforeEach(async function() {
-      this.timeout(5000)
       await controller.claimInitialGold()
       await controller.setPlanets(1, [0, 0, 1], [0, 1, 0])
     })

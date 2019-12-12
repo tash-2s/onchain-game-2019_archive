@@ -39,5 +39,8 @@ module.exports = {
       },
       network_id: "9545242630824"
     }
+  },
+  mocha: {
+    timeout: 5000
   }
 }
