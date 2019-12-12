@@ -1,58 +1,40 @@
 pragma solidity 0.5.13;
 
 import "truffle/Assert.sol";
-import "truffle/DeployedAddresses.sol";
 
 import "../../../contracts/controllers/modules/NormalPlanetControllable.sol";
 
-contract AssertionReporter {
-  // this event will be captured by truffle, see Assert.sol of truffle
-  event TestEvent(bool indexed result, string message);
-
-  function report(bool result, string memory message) public {
-    if (result) emit TestEvent(true, "");
-    else emit TestEvent(false, message);
-  }
-}
-
 contract TestNormalPlanetControllable is NormalPlanetControllable {
-  AssertionReporter private _reporter = new AssertionReporter();
-
-  function beforeAll() public {
-    setNormalPlanetPermanence(DeployedAddresses.NormalPlanetPermanence());
-  }
-
-  function testNormalPlanetPermanence() public {
-    Assert.equal(
-      address(normalPlanetPermanence()),
-      address(DeployedAddresses.NormalPlanetPermanence()),
-      "#normalPlanetPermanence()"
+  function beforeEach() public {
+    normalPlanetPermanence = new NormalPlanetPermanence();
+    normalPlanetPermanence.addWhitelisted(address(this));
+    normalPlanetPermanence.update(
+      1,
+      0x0000000000000000000000000000000000000000000000000000000000040302
     );
   }
 
   function testNormalPlanetRecordOf() public {
-    _assertEqual(normalPlanetRecordOf(1), NormalPlanetRecord(1, 1, 3), "#normalPlanetRecordOf(1)");
+    _assertEqual(normalPlanetRecordOf(1), NormalPlanetRecord(1, 2, 3, 4), "(1)");
+    _expectRevert(abi.encodeWithSignature("publishedNormalPlanetRecordOf(uint16)", 2), "(2)");
   }
 
-  function testBuildNormalPlanetRecordFromUint256() public {
-    (bool isSuccessed, ) = address(this).call(
-      abi.encodeWithSignature("wrappedBuildNormalPlanetRecordFromUint256(uint256)", 0)
-    );
-    Assert.isFalse(isSuccessed, "0 should fail");
-
+  function testBuildNormalPlanetRecord() public {
     _assertEqual(
-      buildNormalPlanetRecordFromUint256(
-        10000000000000000000000000000000000000000000000000000000000000000000005010003
+      buildNormalPlanetRecord(
+        1,
+        0x0000000000000000000000000000000000000000000000000000000000040302
       ),
-      NormalPlanetRecord(3, 10, 5),
-      "dummy data"
+      NormalPlanetRecord(1, 2, 3, 4),
+      "(1, 2, 3, 4)"
     );
     _assertEqual(
-      buildNormalPlanetRecordFromUint256(
-        10000000000000000000000000000000000000000000000000000000000000000000255255255
+      buildNormalPlanetRecord(
+        2,
+        0x0000000000000000000000000000000000000000000000000000000000ffffff
       ),
-      NormalPlanetRecord(~uint8(0), ~uint8(0), ~uint8(0)),
-      "maximum params data"
+      NormalPlanetRecord(2, ~uint8(0), ~uint8(0), ~uint8(0)),
+      "(2, ~uint8(0), ~uint8(0), ~uint8(0))"
     );
   }
 
@@ -61,16 +43,23 @@ contract TestNormalPlanetControllable is NormalPlanetControllable {
     NormalPlanetRecord memory r2,
     string memory message
   ) private {
-    _reporter.report(
-      r1.kind == r2.kind &&
-        r1.paramCommonLogarithm == r2.paramCommonLogarithm &&
-        r1.priceGoldCommonLogarithm == r2.priceGoldCommonLogarithm,
+    Assert.equal(
+      keccak256(
+        abi.encodePacked(r1.id, r1.kind, r1.paramCommonLogarithm, r1.priceGoldCommonLogarithm)
+      ),
+      keccak256(
+        abi.encodePacked(r2.id, r2.kind, r2.paramCommonLogarithm, r2.priceGoldCommonLogarithm)
+      ),
       message
     );
   }
 
-  // make #buildNormalPlanetRecordFromUint256() public
-  function wrappedBuildNormalPlanetRecordFromUint256(uint256 source) public pure {
-    buildNormalPlanetRecordFromUint256(source);
+  function _expectRevert(bytes memory encoded, string memory message) private {
+    (bool isSuccess, ) = address(this).call(encoded);
+    Assert.isFalse(isSuccess, message);
+  }
+
+  function publishedNormalPlanetRecordOf(uint16 id) public view {
+    normalPlanetRecordOf(id);
   }
 }
