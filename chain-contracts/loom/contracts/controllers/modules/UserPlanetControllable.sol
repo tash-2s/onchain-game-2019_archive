@@ -8,8 +8,6 @@ import "./UserNormalPlanetControllable.sol";
 import "./SpecialPlanetControllable.sol";
 import "./UserGoldControllable.sol";
 
-import "../../misc/SpecialPlanetTokenLocker.sol";
-
 contract UserPlanetControllable is
   UserNormalPlanetControllable,
   SpecialPlanetControllable,
@@ -18,14 +16,11 @@ contract UserPlanetControllable is
   using SafeMath for uint256;
   using MyMath for uint256;
 
-  SpecialPlanetTokenLocker public specialPlanetTokenLocker;
-
   function setupUserPlanetControllable(
     address userNormalPlanetPermanenceAddress,
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
-    address userGoldPermanenceAddress,
-    address specialPlanetTokenLockerAddress
+    address userGoldPermanenceAddress
   ) internal {
     userNormalPlanetPermanence = UserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
     userSpecialPlanetPermanence = UserSpecialPlanetPermanence(userSpecialPlanetPermanenceAddress);
@@ -33,7 +28,6 @@ contract UserPlanetControllable is
       specialPlanetIdToDataPermanenceAddress
     );
     userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
-    specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
   function confirm(address account) internal returns (uint256) {
@@ -135,11 +129,6 @@ contract UserPlanetControllable is
     }
 
     return (population, productivity);
-  }
-
-  function removeSpecialPlanetFromMap(address account, uint24 shortId) internal {
-    removeUserSpecialPlanetFromMap(account, shortId);
-    specialPlanetTokenLocker.withdraw(shortId);
   }
 
   function revertIfCoordinatesAreUsed(

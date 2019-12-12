@@ -5,10 +5,12 @@ import "./modules/UserPlanetControllable.sol";
 import "../libraries/UserPlanetMapUtil.sol";
 import "../libraries/SpecialPlanetTokenIdInterpreter.sol";
 
+import "../misc/SpecialPlanetTokenLocker.sol";
 import "./HighlightedUserController.sol";
 
 contract SpecialPlanetController is UserPlanetControllable {
   HighlightedUserController public highlightedUserController;
+  SpecialPlanetTokenLocker public specialPlanetTokenLocker;
 
   constructor(
     address userNormalPlanetPermanenceAddress,
@@ -22,10 +24,10 @@ contract SpecialPlanetController is UserPlanetControllable {
       userNormalPlanetPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
-      userGoldPermanenceAddress,
-      specialPlanetTokenLockerAddress
+      userGoldPermanenceAddress
     );
     highlightedUserController = HighlightedUserController(highlightedUsersContractAddress);
+    specialPlanetTokenLocker = SpecialPlanetTokenLocker(specialPlanetTokenLockerAddress);
   }
 
   function getPlanets(address account)
@@ -68,9 +70,10 @@ contract SpecialPlanetController is UserPlanetControllable {
     }
   }
 
-  // sender needs to approve the transfer of this token before call this function
+  // token's approval for locker is needed before call this function
   function setPlanet(uint256 tokenId, int16 coordinateQ, int16 coordinateR) external {
     confirm(msg.sender);
+
     require(
       UserPlanetMapUtil.isInUsableRadius(
         coordinateQ,
@@ -84,25 +87,15 @@ contract SpecialPlanetController is UserPlanetControllable {
       _wrapWithArray(coordinateQ),
       _wrapWithArray(coordinateR)
     );
-    (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = SpecialPlanetTokenIdInterpreter
-      .idToFields(tokenId);
-    _transferTokenToLocker(tokenId, shortId);
-    setUserSpecialPlanetToMap(
-      msg.sender,
-      shortId,
-      version,
-      kind,
-      paramRate,
-      artSeed,
-      coordinateQ,
-      coordinateR
-    );
+
+    _setSpecialPlanetToMap(tokenId, coordinateQ, coordinateR);
+
     highlightedUserController.tackle(msg.sender);
   }
 
   function removePlanet(uint24 shortId) external {
     confirm(msg.sender);
-    removeSpecialPlanetFromMap(msg.sender, shortId);
+    _removeSpecialPlanetFromMap(shortId);
   }
 
   function getPlanetFieldsFromTokenIds(uint256[] calldata tokenIds)
@@ -136,13 +129,26 @@ contract SpecialPlanetController is UserPlanetControllable {
     }
   }
 
-  function _transferTokenToLocker(uint256 tokenId, uint24 shortId) private {
-    specialPlanetTokenLocker.specialPlanetToken().safeTransferFrom(
+  function _setSpecialPlanetToMap(uint256 tokenId, int16 coordinateQ, int16 coordinateR) private {
+    specialPlanetTokenLocker.lock(msg.sender, tokenId);
+
+    (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = SpecialPlanetTokenIdInterpreter
+      .idToFields(tokenId);
+    setUserSpecialPlanetToMap(
       msg.sender,
-      address(specialPlanetTokenLocker),
-      tokenId
+      shortId,
+      version,
+      kind,
+      paramRate,
+      artSeed,
+      coordinateQ,
+      coordinateR
     );
-    specialPlanetTokenLocker.setup(msg.sender, tokenId, shortId);
+  }
+
+  function _removeSpecialPlanetFromMap(uint24 shortId) private {
+    specialPlanetTokenLocker.unlock(msg.sender, shortId);
+    removeUserSpecialPlanetFromMap(msg.sender, shortId);
   }
 
   function _wrapWithArray(int16 value) private pure returns (int16[] memory) {

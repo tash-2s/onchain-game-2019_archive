@@ -45,10 +45,6 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "SpecialPlanetIdToDataPermanence"
     )
-    const specialPlanetTokenLockerAddress = await helper.getRegistryContractAddress(
-      deployer.network_id,
-      "SpecialPlanetTokenLocker"
-    )
 
     const controller = await helper.deployAndRegister(deployer, network, NormalPlanetController, [
       userNormalPlanetPermanenceAddress,
@@ -56,8 +52,7 @@ module.exports = function(deployer, network, accounts) {
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
       userGoldPermanenceAddress,
-      normalPlanetPermanenceAddress,
-      specialPlanetTokenLockerAddress
+      normalPlanetPermanenceAddress
     ])
 
     await new web3.eth.Contract(whitelistedABI, userGoldPermanenceAddress).methods
@@ -78,10 +73,6 @@ module.exports = function(deployer, network, accounts) {
       .addWhitelisted(controller.address)
       .send({from: accounts[0]})
     await new web3.eth.Contract(whitelistedABI, specialPlanetIdToDataPermanenceAddress).methods
-      .addWhitelisted(controller.address)
-      .send({from: accounts[0]})
-
-    await new web3.eth.Contract(whitelistedABI, specialPlanetTokenLockerAddress).methods
       .addWhitelisted(controller.address)
       .send({from: accounts[0]})
   })

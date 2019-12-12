@@ -5,28 +5,38 @@ import "@openzeppelin/contracts/access/roles/WhitelistedRole.sol";
 
 import "../tokens/SpecialPlanetToken.sol";
 
+import "../libraries/SpecialPlanetTokenIdInterpreter.sol";
+
 contract SpecialPlanetTokenLocker is ERC721Holder, WhitelistedRole {
   SpecialPlanetToken public specialPlanetToken;
 
   mapping(uint24 => uint256) public shortIdToTokenId;
-
   mapping(uint256 => address) public tokenIdToOwner;
 
   constructor(address specialPlanetTokenAddress) public {
     specialPlanetToken = SpecialPlanetToken(specialPlanetTokenAddress);
   }
 
-  // this should be called after the transfers of tokens to this contract
-  function setup(address owner, uint256 tokenId, uint24 shortId) external onlyWhitelisted {
-    require(specialPlanetToken.ownerOf(tokenId) == address(this), "locker: wrong owner");
+  // need token's approval
+  function lock(address _owner, uint256 tokenId) external onlyWhitelisted {
+    address owner = specialPlanetToken.ownerOf(tokenId);
+    require(owner == _owner, "locker: wrong owner");
+
+    specialPlanetToken.safeTransferFrom(owner, address(this), tokenId);
+
+    (uint24 shortId, , , , ) = SpecialPlanetTokenIdInterpreter.idToFields(tokenId);
 
     shortIdToTokenId[shortId] = tokenId;
     tokenIdToOwner[tokenId] = owner;
   }
 
-  function withdraw(uint24 shortId) external onlyWhitelisted {
+  function unlock(address _owner, uint24 shortId) external onlyWhitelisted {
     uint256 tokenId = shortIdToTokenId[shortId];
-    specialPlanetToken.safeTransferFrom(address(this), tokenIdToOwner[tokenId], tokenId);
+    address owner = tokenIdToOwner[tokenId];
+
+    require(tokenId != 0 && owner != address(0) && owner == _owner, "locker: wrong owner or id");
+
+    specialPlanetToken.safeTransferFrom(address(this), owner, tokenId);
     delete tokenIdToOwner[tokenId];
   }
 }

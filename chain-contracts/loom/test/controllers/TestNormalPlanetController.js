@@ -7,8 +7,6 @@ const {
 
 const NormalPlanetController = artifacts.require("NormalPlanetController")
 
-const SpecialPlanetToken = artifacts.require("SpecialPlanetToken")
-
 const UserNormalPlanetPermanence = artifacts.require("UserNormalPlanetPermanence")
 const UserNormalPlanetIdGeneratorPermanence = artifacts.require(
   "UserNormalPlanetIdGeneratorPermanence"
@@ -17,7 +15,6 @@ const UserSpecialPlanetPermanence = artifacts.require("UserSpecialPlanetPermanen
 const SpecialPlanetIdToDataPermanence = artifacts.require("SpecialPlanetIdToDataPermanence")
 const UserGoldPermanence = artifacts.require("UserGoldPermanence")
 const NormalPlanetPermanence = artifacts.require("NormalPlanetPermanence")
-const SpecialPlanetTokenLocker = artifacts.require("SpecialPlanetTokenLocker")
 
 describe("NormalPlanetController", function() {
   let admin, account, controller
@@ -30,24 +27,20 @@ describe("NormalPlanetController", function() {
     admin = accounts[0]
     account = accounts[1]
 
-    const specialPlanetToken = await SpecialPlanetToken.new(admin)
-
     const [
       userNormalPlanetPermanence,
       userNormalPlanetIdGeneratorPermanence,
       userSpecialPlanetPermanence,
       specialPlanetIdToDataPermanence,
       _userGoldPermanence,
-      normalPlanetPermanence,
-      specialPlanetTokenLocker
+      normalPlanetPermanence
     ] = await Promise.all([
       UserNormalPlanetPermanence.new(),
       UserNormalPlanetIdGeneratorPermanence.new(),
       UserSpecialPlanetPermanence.new(),
       SpecialPlanetIdToDataPermanence.new(),
       UserGoldPermanence.new(),
-      NormalPlanetPermanence.new(),
-      SpecialPlanetTokenLocker.new(specialPlanetToken.address)
+      NormalPlanetPermanence.new()
     ])
 
     userGoldPermanence = _userGoldPermanence
@@ -58,8 +51,7 @@ describe("NormalPlanetController", function() {
       userSpecialPlanetPermanence.address,
       specialPlanetIdToDataPermanence.address,
       userGoldPermanence.address,
-      normalPlanetPermanence.address,
-      specialPlanetTokenLocker.address
+      normalPlanetPermanence.address
     )
 
     const needWhitelisted = [
@@ -67,8 +59,7 @@ describe("NormalPlanetController", function() {
       userNormalPlanetIdGeneratorPermanence,
       userSpecialPlanetPermanence,
       specialPlanetIdToDataPermanence,
-      userGoldPermanence,
-      specialPlanetTokenLocker
+      userGoldPermanence
     ]
     await Promise.all(needWhitelisted.map(c => c.addWhitelisted(controller.address)))
 
@@ -230,6 +221,7 @@ describe("NormalPlanetController", function() {
 
   describe("#removePlanets", function() {
     beforeEach(async function() {
+      this.timeout(5000)
       await controller.claimInitialGold()
       await controller.setPlanets(1, [0, 0, 1], [0, 1, 0])
     })

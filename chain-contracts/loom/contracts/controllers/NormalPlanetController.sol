@@ -24,15 +24,13 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     address userSpecialPlanetPermanenceAddress,
     address specialPlanetIdToDataPermanenceAddress,
     address userGoldPermanenceAddress,
-    address normalPlanetPermanenceAddress,
-    address specialPlanetTokenLockerAddress
+    address normalPlanetPermanenceAddress
   ) public {
     setupUserPlanetControllable(
       userNormalPlanetPermanenceAddress,
       userSpecialPlanetPermanenceAddress,
       specialPlanetIdToDataPermanenceAddress,
-      userGoldPermanenceAddress,
-      specialPlanetTokenLockerAddress
+      userGoldPermanenceAddress
     );
     normalPlanetPermanence = NormalPlanetPermanence(normalPlanetPermanenceAddress);
     userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
