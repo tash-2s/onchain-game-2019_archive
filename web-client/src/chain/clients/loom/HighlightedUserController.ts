@@ -15,8 +15,7 @@ export class HighlightedUserController {
           ],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x00ce8e3e"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.HighlightedUserController,

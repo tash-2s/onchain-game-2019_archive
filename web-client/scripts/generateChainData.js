@@ -37,7 +37,7 @@ if (!envDef) {
 const targetContractAndFunctions = {
   eth: {
     SpecialPlanetToken: ["approve", "tokensOfOwnerByIndex", "gateway", "depositToGateway"],
-    SpecialPlanetTokenShop: ["price", "sell"]
+    SpecialPlanetTokenShop: ["price", "mint"]
   },
   loom: {
     HighlightedUserController: ["getUsers"],
@@ -45,7 +45,7 @@ const targetContractAndFunctions = {
       "getPlanets",
       "setPlanets",
       "rankupPlanets",
-      "removePlanet",
+      "removePlanets",
       "claimInitialGold"
     ],
     SpecialPlanetController: [

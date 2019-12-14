@@ -15,8 +15,7 @@ export class SpecialPlanetToken {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x095ea7b3"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
@@ -36,8 +35,7 @@ export class SpecialPlanetToken {
           outputs: [{ internalType: "address", name: "", type: "address" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x116191b6"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
@@ -47,33 +45,26 @@ export class SpecialPlanetToken {
       .call()
   }
 
-  tokensOfOwnerByIndex = (
-    owner: string,
-    index: string | number
-  ): Promise<{ tokenIds: Array<string>; nextIndex: string }> => {
+  isApprovedForAll = (owner: string, operator: string): Promise<boolean> => {
     return new this.chain.web3.eth.Contract(
       [
         {
           constant: true,
           inputs: [
             { internalType: "address", name: "owner", type: "address" },
-            { internalType: "uint256", name: "index", type: "uint256" }
+            { internalType: "address", name: "operator", type: "address" }
           ],
-          name: "tokensOfOwnerByIndex",
-          outputs: [
-            { internalType: "uint256[]", name: "tokenIds", type: "uint256[]" },
-            { internalType: "uint256", name: "nextIndex", type: "uint256" }
-          ],
+          name: "isApprovedForAll",
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x4707f44f"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
       { from: this.chain.callerAddress() }
     ).methods
-      .tokensOfOwnerByIndex(owner, index)
+      .isApprovedForAll(owner, operator)
       .call()
   }
 
@@ -90,8 +81,7 @@ export class SpecialPlanetToken {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0xa22cb465"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
@@ -101,27 +91,31 @@ export class SpecialPlanetToken {
       .send(txOption)
   }
 
-  isApprovedForAll = (owner: string, operator: string): Promise<boolean> => {
+  tokensOfOwnerByIndex = (
+    owner: string,
+    startIndex: string | number,
+    endIndex: string | number
+  ): Promise<Array<string>> => {
     return new this.chain.web3.eth.Contract(
       [
         {
           constant: true,
           inputs: [
             { internalType: "address", name: "owner", type: "address" },
-            { internalType: "address", name: "operator", type: "address" }
+            { internalType: "uint256", name: "startIndex", type: "uint256" },
+            { internalType: "uint256", name: "endIndex", type: "uint256" }
           ],
-          name: "isApprovedForAll",
-          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          name: "tokensOfOwnerByIndex",
+          outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0xe985e9c5"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
       { from: this.chain.callerAddress() }
     ).methods
-      .isApprovedForAll(owner, operator)
+      .tokensOfOwnerByIndex(owner, startIndex, endIndex)
       .call()
   }
 }

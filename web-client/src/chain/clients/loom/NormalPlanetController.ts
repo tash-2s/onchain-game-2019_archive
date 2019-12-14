@@ -28,8 +28,7 @@ export class NormalPlanetController {
           ],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x2e49cca0"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.NormalPlanetController,
@@ -58,8 +57,7 @@ export class NormalPlanetController {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x9d2d2e9b"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.NormalPlanetController,
@@ -86,14 +84,33 @@ export class NormalPlanetController {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x210716fe"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.NormalPlanetController,
       { from: this.chain.callerAddress() }
     ).methods
       .rankupPlanets(userNormalPlanetIds, targetRanks)
+      .send(txOption)
+  }
+
+  removePlanets = (userNormalPlanetIds: Array<string | number>, txOption?: {}) => {
+    return new this.chain.web3.eth.Contract(
+      [
+        {
+          constant: false,
+          inputs: [{ internalType: "uint64[]", name: "userNormalPlanetIds", type: "uint64[]" }],
+          name: "removePlanets",
+          outputs: [],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function"
+        }
+      ],
+      this.chain.env.contractAddresses.NormalPlanetController,
+      { from: this.chain.callerAddress() }
+    ).methods
+      .removePlanets(userNormalPlanetIds)
       .send(txOption)
   }
 
@@ -107,35 +124,13 @@ export class NormalPlanetController {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x0349432c"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.NormalPlanetController,
       { from: this.chain.callerAddress() }
     ).methods
       .claimInitialGold()
-      .send(txOption)
-  }
-
-  removePlanet = (userNormalPlanetId: string | number, txOption?: {}) => {
-    return new this.chain.web3.eth.Contract(
-      [
-        {
-          constant: false,
-          inputs: [{ internalType: "uint64", name: "userNormalPlanetId", type: "uint64" }],
-          name: "removePlanet",
-          outputs: [],
-          payable: false,
-          stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x10135315"
-        }
-      ],
-      this.chain.env.contractAddresses.NormalPlanetController,
-      { from: this.chain.callerAddress() }
-    ).methods
-      .removePlanet(userNormalPlanetId)
       .send(txOption)
   }
 }

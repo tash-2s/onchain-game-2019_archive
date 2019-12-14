@@ -19,8 +19,7 @@ export class SpecialPlanetToken {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x095ea7b3"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
@@ -44,8 +43,7 @@ export class SpecialPlanetToken {
           outputs: [{ internalType: "address", name: "", type: "address" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x116191b6"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
@@ -57,8 +55,9 @@ export class SpecialPlanetToken {
 
   tokensOfOwnerByIndex = (
     owner: string,
-    index: string | number
-  ): Promise<{ tokenIds: Array<string>; nextIndex: string }> => {
+    startIndex: string | number,
+    endIndex: string | number
+  ): Promise<Array<string>> => {
     if (!this.chain.web3 || !this.chain.address) {
       throw new Error("not logined")
     }
@@ -69,23 +68,20 @@ export class SpecialPlanetToken {
           constant: true,
           inputs: [
             { internalType: "address", name: "owner", type: "address" },
-            { internalType: "uint256", name: "index", type: "uint256" }
+            { internalType: "uint256", name: "startIndex", type: "uint256" },
+            { internalType: "uint256", name: "endIndex", type: "uint256" }
           ],
           name: "tokensOfOwnerByIndex",
-          outputs: [
-            { internalType: "uint256[]", name: "tokenIds", type: "uint256[]" },
-            { internalType: "uint256", name: "nextIndex", type: "uint256" }
-          ],
+          outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0x4707f44f"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,
       { from: this.chain.address }
     ).methods
-      .tokensOfOwnerByIndex(owner, index)
+      .tokensOfOwnerByIndex(owner, startIndex, endIndex)
       .call()
   }
 
@@ -103,8 +99,7 @@ export class SpecialPlanetToken {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0x9267daba"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetToken,

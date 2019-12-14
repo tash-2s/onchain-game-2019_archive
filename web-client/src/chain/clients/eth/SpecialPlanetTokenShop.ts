@@ -16,8 +16,7 @@ export class SpecialPlanetTokenShop {
           outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
           payable: false,
           stateMutability: "view",
-          type: "function",
-          signature: "0xa035b1fe"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetTokenShop,
@@ -27,7 +26,7 @@ export class SpecialPlanetTokenShop {
       .call()
   }
 
-  sell = (txOption?: {}) => {
+  mint = (txOption?: {}) => {
     if (!this.chain.web3 || !this.chain.address) {
       throw new Error("not logined")
     }
@@ -37,18 +36,17 @@ export class SpecialPlanetTokenShop {
         {
           constant: false,
           inputs: [],
-          name: "sell",
+          name: "mint",
           outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
           payable: true,
           stateMutability: "payable",
-          type: "function",
-          signature: "0x45710074"
+          type: "function"
         }
       ],
       this.chain.env.contractAddresses.SpecialPlanetTokenShop,
       { from: this.chain.address }
     ).methods
-      .sell()
+      .mint()
       .send(txOption)
   }
 }
