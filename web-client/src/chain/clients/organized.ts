@@ -1,31 +1,35 @@
 import { getSpecialPlanetTokensByIds } from "./loom/organized"
 
-type TypeOfTokensOfOwnerByIndex = (
-  owner: string,
-  index: string
-) => Promise<{ tokenIds: Array<string>; nextIndex: string }>
+interface Client {
+  balanceOf: (owner: string) => Promise<string>
+  tokensOfOwnerByIndex: (
+    owner: string,
+    startIndex: number,
+    endIndex: number
+  ) => Promise<Array<string>>
+}
 
-export const getSpecialPlanetTokens = async (address: string, fn: TypeOfTokensOfOwnerByIndex) => {
-  const ids = await getSpecialPlanetTokenIds(address, fn)
+export const getSpecialPlanetTokens = async (address: string, client: Client) => {
+  const ids = await getSpecialPlanetTokenIds(address, client)
   const tokens = await getSpecialPlanetTokensByIds(ids)
   return tokens
 }
 
-const getSpecialPlanetTokenIds = async (address: string, fn: TypeOfTokensOfOwnerByIndex) => {
+const getSpecialPlanetTokenIds = async (address: string, client: Client) => {
   const ids: Array<string> = []
 
-  let index = "0"
-  while (true) {
-    const r = await fn(address, index)
+  let balance = strToNum(await client.balanceOf(address))
 
-    ids.push(...r.tokenIds)
-
-    if (r.nextIndex === "0") {
-      break
-    }
-
-    index = r.nextIndex
+  let startIndex = 0
+  while (balance > 0) {
+    const endIndex = startIndex + Math.min(balance, 100)
+    const tokenIds = await client.tokensOfOwnerByIndex(address, startIndex, endIndex)
+    ids.push(...tokenIds)
+    balance -= endIndex - startIndex
+    startIndex += 100
   }
 
   return ids
 }
+
+const strToNum = (str: string) => parseInt(str, 10)

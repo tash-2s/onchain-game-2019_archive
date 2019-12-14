@@ -56,7 +56,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
   )
   removeUserPlanet = (userPlanetId: string) => {
     this.withLoading(async () => {
-      await new NormalPlanetController(chains.loom).removePlanet(userPlanetId)
+      await new NormalPlanetController(chains.loom).removePlanets([userPlanetId])
 
       const response = await getUserNormalPlanets(loginedAddress())
 
