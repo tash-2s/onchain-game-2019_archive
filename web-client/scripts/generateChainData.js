@@ -157,6 +157,8 @@ const generateChainClients = contracts => {
 
           const args = fnABI.inputs.map(i => i.name).join(", ")
 
+          delete fnABI.signature
+
           return `
              ${fnABI.name} = (${argsWithType})${returnType} => {
                ${assertIfEth}
