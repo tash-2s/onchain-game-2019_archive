@@ -14,7 +14,7 @@ contract SpecialPlanetTokenShop is WhitelistedRole {
 
   SpecialPlanetToken public specialPlanetToken;
   SpecialPlanetTokenShortIdGenerator public specialPlanetTokenShortIdGenerator;
-  uint256 public price = 100000000000000000; // 0.1 eth
+  uint256 public price = 50000000000000000; // 0.05 eth
   bytes32 private _s;
 
   constructor(address specialPlanetTokenAddress, address specialPlanetTokenShortIdGeneratorAddress)

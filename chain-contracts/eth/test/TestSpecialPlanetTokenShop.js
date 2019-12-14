@@ -27,7 +27,7 @@ describe("SpecialPlanetTokenShop", function() {
     })
 
     it("should mint a planet when called with sufficient eth", async function() {
-      const price = new BN("100000000000000000")
+      const price = new BN("50000000000000000")
 
       assert.equal((await token.balanceOf(admin)).toString(), "0")
       const beforeBalance = await balance.current(admin)
