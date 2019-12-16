@@ -128,8 +128,8 @@ const selectFn = (
   usableRadius: number,
   isSufficientGoldForNextNormalPlanetSet: boolean
 ) => {
-  if (props.isMine) {
-    if (props.userPageUI.selectedNormalPlanetIdForSet) {
+  if (props.userPageUI.selectedNormalPlanetIdForSet) {
+    if (props.isMine && !hex.userPlanet) {
       const isAlreadySet = !!props.userPageUI.selectedPlanetHexesForSet.find(
         o => o.axialCoordinateQ === hex.q && o.axialCoordinateR === hex.r
       )
@@ -142,20 +142,21 @@ const selectFn = (
       ) {
         return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
       }
-
-      return null
     }
+    return null
+  }
 
-    if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
-      if (UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) > usableRadius) {
-        return null
-      }
-      const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
-      return () => {
-        props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
-        props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+  if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
+    if (props.isMine && !hex.userPlanet) {
+      if (UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) <= usableRadius) {
+        const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
+        return () => {
+          props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
+          props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+        }
       }
     }
+    return null
   }
 
   if (hex.userPlanet) {
