@@ -3,15 +3,21 @@ import { Store } from "redux"
 
 import { routeIds, RouteId, RouteState } from "../constants"
 import { AppActions } from "../actions/AppActions"
-import pathToRegexp from "path-to-regexp"
 
 class Route {
-  constructor(public readonly routeId: RouteId, public readonly regExp: RegExp) {}
+  readonly routeId: RouteId
+  readonly regExp: RegExp
+
+  constructor(routeId: RouteId) {
+    this.routeId = routeId
+    const _routeId = this.routeId.replace(/:\w+/, "\\w+")
+    this.regExp = new RegExp(`^${_routeId}$`)
+  }
 }
 const routes = ((): Array<Route> => {
   const rs: Array<Route> = []
   routeIds.forEach(routeId => {
-    rs.push(new Route(routeId, pathToRegexp(routeId)))
+    rs.push(new Route(routeId))
   })
   return rs
 })()
@@ -54,6 +60,12 @@ export const convertHashToRouteIdWithParams = (hash: string): RouteState => {
   return { id: routeId, params: params }
 }
 
-export const combineRouteIdAndParams = (id: RouteId, obj: object): string => {
-  return pathToRegexp.compile(id)(obj)
+export const combineRouteIdAndParams = (id: RouteId, obj: object) => {
+  let path: string = id
+
+  for (const [key, value] of Object.entries(obj)) {
+    path = path.replace(`:${key}`, value)
+  }
+
+  return path
 }

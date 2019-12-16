@@ -30,7 +30,6 @@
     "bulma": "*",
     "history": "*",
     "loom-js": "1.59.0",
-    "path-to-regexp": "*",
     "react": "*",
     "react-dom": "*",
     "react-redux": "*",
