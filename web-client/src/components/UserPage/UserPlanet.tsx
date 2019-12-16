@@ -108,6 +108,6 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   }
 
   removeButtonHandler = () => {
-    this.props.userActions.normal.removeUserPlanet(this.props.userPlanet.id)
+    this.props.userActions.normal.removeUserPlanets([this.props.userPlanet.id])
   }
 }

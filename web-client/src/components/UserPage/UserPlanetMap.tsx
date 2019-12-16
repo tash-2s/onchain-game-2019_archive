@@ -11,7 +11,7 @@ import { Modal } from "../utils/Modal"
 import { PlanetArt } from "../utils/PlanetArt"
 import { PrettyBN } from "../utils/PrettyBN"
 import { UserPlanetMapUtil } from "../../models/UserPlanetMapUtil"
-import { maxSelectableHexCountForNormalPlanetSet } from "../../constants"
+import { maxSelectablePlanetHexCount } from "../../constants"
 
 interface Props {
   user: ComputedTargetUserState
@@ -44,15 +44,36 @@ export function UserPlanetMap(props: Props) {
     props.user.userPlanetMap.shownRadius
   )
 
+  return (
+    <>
+      <UserPlanetDetailModal {...props} />
+      {props.isMine ? <NormalPlanetsSetForm {...props} /> : <></>}
+      {props.isMine ? <NormalPlanetsRemovalForm {...props} /> : <></>}
+      <div style={{ position: "relative", height: mapHeight }}>
+        <Hexes {...props} hexSize={hexSize} hexWidth={hexWidth} hexHeight={hexHeight} />
+      </div>
+    </>
+  )
+}
+
+function Hexes(props: Props & { hexSize: number; hexWidth: number; hexHeight: number }) {
   const { isSufficientGoldForNextNormalPlanetSet, usableRadius } = processForMultiPlanetSet(
     props.user,
     props.userPageUI
   )
 
   const hexes = props.user.userPlanetMap.hexes.map(h => {
-    const isHighlighted = !!props.userPageUI.selectedPlanetHexesForSet.find(
-      o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
-    )
+    const userPlanet = h.userPlanet
+
+    const isHighlighted =
+      !!props.userPageUI.selectedPlanetHexesForSet.find(
+        o => o.axialCoordinateQ === h.q && o.axialCoordinateR === h.r
+      ) ||
+      (!!props.userPageUI.selectedUserNormalPlanetIdsForRemoval &&
+        !!userPlanet &&
+        userPlanet.isNormal &&
+        !!props.userPageUI.selectedUserNormalPlanetIdsForRemoval.find(id => id === userPlanet.id))
+
     const select =
       selectFn(props, h, usableRadius, isSufficientGoldForNextNormalPlanetSet) || undefined
 
@@ -61,25 +82,19 @@ export function UserPlanetMap(props: Props) {
         key={`${h.q}/${h.r}`}
         q={h.q}
         r={h.r}
-        userPlanet={h.userPlanet}
-        shiftTop={props.user.userPlanetMap.shownRadius * hexHeight}
-        shiftLeft={props.user.userPlanetMap.shownRadius * ((hexWidth / 4) * 3)}
-        hexSize={hexSize}
-        hexWidth={hexWidth}
-        hexHeight={hexHeight}
+        userPlanet={userPlanet}
+        shiftTop={props.user.userPlanetMap.shownRadius * props.hexHeight}
+        shiftLeft={props.user.userPlanetMap.shownRadius * ((props.hexWidth / 4) * 3)}
+        hexSize={props.hexSize}
+        hexWidth={props.hexWidth}
+        hexHeight={props.hexHeight}
         isHighlighted={isHighlighted}
         select={select}
       />
     )
   })
 
-  return (
-    <>
-      <UserPlanetDetailModal {...props} />
-      <SetToMapButton {...props} />
-      <div style={{ position: "relative", height: mapHeight }}>{hexes}</div>
-    </>
-  )
+  return <>{hexes}</>
 }
 
 const calcHexSizes = (width: number, radius: number) => {
@@ -128,8 +143,8 @@ const selectFn = (
   usableRadius: number,
   isSufficientGoldForNextNormalPlanetSet: boolean
 ) => {
-  if (props.isMine) {
-    if (props.userPageUI.selectedNormalPlanetIdForSet) {
+  if (props.userPageUI.selectedNormalPlanetIdForSet) {
+    if (props.isMine && !hex.userPlanet) {
       const isAlreadySet = !!props.userPageUI.selectedPlanetHexesForSet.find(
         o => o.axialCoordinateQ === hex.q && o.axialCoordinateR === hex.r
       )
@@ -137,25 +152,41 @@ const selectFn = (
         isAlreadySet || // for unselect
         (isSufficientGoldForNextNormalPlanetSet &&
           UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) <= usableRadius &&
-          props.userPageUI.selectedPlanetHexesForSet.length <
-            maxSelectableHexCountForNormalPlanetSet)
+          props.userPageUI.selectedPlanetHexesForSet.length < maxSelectablePlanetHexCount)
       ) {
         return () => props.userPageUIActions.selectPlanetHexForSet(hex.q, hex.r)
       }
-
-      return null
     }
+    return null
+  }
 
-    if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
-      if (UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) > usableRadius) {
-        return null
-      }
-      const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
-      return () => {
-        props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
-        props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+  if (props.userPageUI.selectedSpecialPlanetTokenIdForSet) {
+    if (props.isMine && !hex.userPlanet) {
+      if (UserPlanetMapUtil.distanceFromCenter(hex.q, hex.r) <= usableRadius) {
+        const id = props.userPageUI.selectedSpecialPlanetTokenIdForSet
+        return () => {
+          props.userActions.special.setPlanetTokenToMap(id, hex.q, hex.r)
+          props.userPageUIActions.unselectSpecialPlanetTokenForSet()
+        }
       }
     }
+    return null
+  }
+
+  if (props.userPageUI.selectedUserNormalPlanetIdsForRemoval) {
+    const userPlanet = hex.userPlanet
+    if (props.isMine && userPlanet && userPlanet.isNormal) {
+      const isAlreadySelected = !!props.userPageUI.selectedUserNormalPlanetIdsForRemoval.find(
+        id => id === userPlanet.id
+      )
+      if (
+        isAlreadySelected || // for unselect
+        props.userPageUI.selectedUserNormalPlanetIdsForRemoval.length < maxSelectablePlanetHexCount
+      ) {
+        return () => props.userPageUIActions.selectUserNormalPlanetForRemoval(userPlanet.id)
+      }
+    }
+    return null
   }
 
   if (hex.userPlanet) {
@@ -216,7 +247,7 @@ function UserPlanetDetailModal(props: Props) {
   return <></>
 }
 
-function SetToMapButton(props: Props) {
+function NormalPlanetsSetForm(props: Props) {
   const planetId = props.userPageUI.selectedNormalPlanetIdForSet
   if (!planetId || props.userPageUI.selectedPlanetHexesForSet.length <= 0) {
     return <></>
@@ -238,8 +269,41 @@ function SetToMapButton(props: Props) {
       <button onClick={fn}>set to map</button>
       <button onClick={unselectFn}>cancel</button>
       <span>
-        {props.userPageUI.selectedPlanetHexesForSet.length}/
-        {maxSelectableHexCountForNormalPlanetSet}
+        {props.userPageUI.selectedPlanetHexesForSet.length}/{maxSelectablePlanetHexCount}
+      </span>
+    </div>
+  )
+}
+
+function NormalPlanetsRemovalForm(props: Props) {
+  const selectedUserNormalPlanetIds = props.userPageUI.selectedUserNormalPlanetIdsForRemoval
+
+  if (!selectedUserNormalPlanetIds) {
+    return (
+      <button onClick={props.userPageUIActions.startSelectingUserNormalPlanetForRemoval}>
+        remove normal planets
+      </button>
+    )
+  }
+
+  const removalFn =
+    selectedUserNormalPlanetIds.length > 0
+      ? () => {
+          props.userActions.normal.removeUserPlanets(selectedUserNormalPlanetIds)
+          props.userPageUIActions.endSelectingUserNormalPlanetForRemoval()
+        }
+      : undefined
+
+  return (
+    <div>
+      <button disabled={!removalFn} onClick={removalFn}>
+        remove selected normal planets
+      </button>
+      <button onClick={props.userPageUIActions.endSelectingUserNormalPlanetForRemoval}>
+        cancel
+      </button>
+      <span>
+        {selectedUserNormalPlanetIds.length}/{maxSelectablePlanetHexCount}
       </span>
     </div>
   )

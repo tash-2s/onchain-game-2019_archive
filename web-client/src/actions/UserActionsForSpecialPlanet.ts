@@ -33,8 +33,8 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     }
 
     const [ethTokens, loomTokens, receipt] = await Promise.all([
-      getSpecialPlanetTokens(ethAddress, new EthSPT(chains.eth).tokensOfOwnerByIndex),
-      getSpecialPlanetTokens(address, new LoomSPT(chains.loom).tokensOfOwnerByIndex),
+      getSpecialPlanetTokens(ethAddress, new EthSPT(chains.eth)),
+      getSpecialPlanetTokens(address, new LoomSPT(chains.loom)),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
 
@@ -70,11 +70,11 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     this.withLoading(async () => {
       const address = loginedLoomAddress()
 
-      const controllerAddress = chains.loom.env.contractAddresses.SpecialPlanetController
+      const lockerAddress = chains.loom.env.contractAddresses.SpecialPlanetTokenLocker
       const loomSPT = new LoomSPT(chains.loom)
-      const isApproved = await loomSPT.isApprovedForAll(address, controllerAddress)
+      const isApproved = await loomSPT.isApprovedForAll(address, lockerAddress)
       if (!isApproved) {
-        await loomSPT.setApprovalForAll(controllerAddress, true)
+        await loomSPT.setApprovalForAll(lockerAddress, true)
       }
 
       await new SpecialPlanetController(chains.loom).setPlanet(
@@ -118,7 +118,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
 
     const price = await shop.price()
 
-    shop.sell({ value: price }).on("transactionHash", hash => {
+    shop.mint({ value: price }).on("transactionHash", hash => {
       this.dispatch(UserActionsForSpecialPlanet.buyPlanetToken(hash))
 
       new AppActions(this.dispatch).stopLoading()

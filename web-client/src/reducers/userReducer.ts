@@ -72,7 +72,7 @@ export const createUserReducer = () =>
     }))
     .case(UserActionsForNormalPlanet.setPlanetsToMap, buildStateFromUserAndUserNormalPlanets)
     .case(UserActionsForNormalPlanet.rankupUserPlanets, buildStateFromUserAndUserNormalPlanets)
-    .case(UserActionsForNormalPlanet.removeUserPlanet, buildStateFromUserAndUserNormalPlanets)
+    .case(UserActionsForNormalPlanet.removeUserPlanets, buildStateFromUserAndUserNormalPlanets)
     .case(UserActionsForSpecialPlanet.setTargetUserPlanetTokens, (state, payload) => {
       if (!state.targetUser) {
         throw new Error("invalid state")

@@ -104,4 +104,25 @@ export class UserPageUIActions extends AbstractActions {
   unselectPlanetHexesForSet = () => {
     this.dispatch(UserPageUIActions.unselectPlanetHexesForSet())
   }
+
+  static startSelectingUserNormalPlanetForRemoval = UserPageUIActions.creator(
+    "startSelectingUserNormalPlanetForRemoval"
+  )
+  startSelectingUserNormalPlanetForRemoval = () => {
+    this.dispatch(UserPageUIActions.startSelectingUserNormalPlanetForRemoval())
+  }
+
+  static selectUserNormalPlanetForRemoval = UserPageUIActions.creator<string>(
+    "selectUserNormalPlanetForRemoval"
+  )
+  selectUserNormalPlanetForRemoval = (userPlanetId: string) => {
+    this.dispatch(UserPageUIActions.selectUserNormalPlanetForRemoval(userPlanetId))
+  }
+
+  static endSelectingUserNormalPlanetForRemoval = UserPageUIActions.creator(
+    "endSelectingUserNormalPlanetForRemoval"
+  )
+  endSelectingUserNormalPlanetForRemoval = () => {
+    this.dispatch(UserPageUIActions.endSelectingUserNormalPlanetForRemoval())
+  }
 }

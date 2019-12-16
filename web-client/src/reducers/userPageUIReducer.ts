@@ -18,7 +18,8 @@ export const initialUserPageUIState = {
   planetListVisibilityForMobile: false,
   selectedSpecialPlanetTokenIdForSet: null as string | null,
   selectedUserSpecialPlanetIdForModal: null as string | null,
-  selectedPlanetHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>
+  selectedPlanetHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
+  selectedUserNormalPlanetIdsForRemoval: null as Array<string> | null
 }
 
 export type UserPageUIState = typeof initialUserPageUIState
@@ -38,7 +39,8 @@ export const createUserPageUIReducer = () =>
       selectedUserPlanetsViewKind: "map",
       selectedNormalPlanetIdForSet: payload,
       selectedSpecialPlanetTokenIdForSet: null,
-      selectedPlanetHexesForSet: []
+      selectedPlanetHexesForSet: [],
+      selectedUserNormalPlanetIdsForRemoval: null
     }))
     .case(UserPageUIActions.unselectNormalPlanetForSet, state => ({
       ...state,
@@ -74,7 +76,8 @@ export const createUserPageUIReducer = () =>
       selectedPageViewKind: "main",
       selectedUserPlanetsViewKind: "map",
       selectedNormalPlanetIdForSet: null,
-      selectedSpecialPlanetTokenIdForSet: payload
+      selectedSpecialPlanetTokenIdForSet: payload,
+      selectedUserNormalPlanetIdsForRemoval: null
     }))
     .case(UserPageUIActions.unselectSpecialPlanetTokenForSet, state => ({
       ...state,
@@ -108,5 +111,37 @@ export const createUserPageUIReducer = () =>
     .case(UserPageUIActions.unselectPlanetHexesForSet, state => ({
       ...state,
       selectedPlanetHexesForSet: []
+    }))
+    .case(UserPageUIActions.startSelectingUserNormalPlanetForRemoval, state => ({
+      ...state,
+      selectedNormalPlanetIdForSet: null,
+      selectedSpecialPlanetTokenIdForSet: null,
+      selectedUserNormalPlanetIdsForRemoval: []
+    }))
+    .case(UserPageUIActions.selectUserNormalPlanetForRemoval, (state, payload) => {
+      if (!state.selectedUserNormalPlanetIdsForRemoval) {
+        return {
+          ...state,
+          selectedUserNormalPlanetIdsForRemoval: [payload]
+        }
+      }
+
+      // unselect if the hex is already selected
+      const removedSame = state.selectedUserNormalPlanetIdsForRemoval.filter(id => id !== payload)
+      if (removedSame.length !== state.selectedUserNormalPlanetIdsForRemoval.length) {
+        return { ...state, selectedUserNormalPlanetIdsForRemoval: removedSame }
+      }
+
+      return {
+        ...state,
+        selectedUserNormalPlanetIdsForRemoval: [
+          ...state.selectedUserNormalPlanetIdsForRemoval,
+          payload
+        ]
+      }
+    })
+    .case(UserPageUIActions.endSelectingUserNormalPlanetForRemoval, state => ({
+      ...state,
+      selectedUserNormalPlanetIdsForRemoval: null
     }))
     .build()
