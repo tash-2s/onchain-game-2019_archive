@@ -14,29 +14,29 @@
     "generate-chain-data": "node scripts/generateChainData.js"
   },
   "devDependencies": {
-    "@types/history": "^4.7.2",
+    "@types/history": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-redux": "*",
     "@types/web3": "^1.0.19",
-    "lynt": "^0.5.4",
+    "lynt": "*",
     "parcel-bundler": "*",
     "parcel-plugin-inliner": "*",
-    "prettier": "^1.15.3",
-    "sass": "^1.20.3",
+    "prettier": "*",
+    "sass": "*",
     "typescript": "3.5.3"
   },
   "dependencies": {
-    "bulma": "^0.7.5",
-    "history": "^4.7.2",
+    "bulma": "*",
+    "history": "*",
     "loom-js": "1.59.0",
-    "path-to-regexp": "^2.4.0",
+    "path-to-regexp": "*",
     "react": "*",
     "react-dom": "*",
     "react-redux": "*",
-    "redux": "^4.0.1",
+    "redux": "*",
     "typescript-fsa": "^3.0.0-beta-2",
-    "typescript-fsa-reducers": "^1.2.0"
+    "typescript-fsa-reducers": "*"
   },
   "browserslist": [
     "since 2019"
