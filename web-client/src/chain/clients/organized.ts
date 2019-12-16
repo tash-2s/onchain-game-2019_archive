@@ -18,15 +18,14 @@ export const getSpecialPlanetTokens = async (address: string, client: Client) =>
 const getSpecialPlanetTokenIds = async (address: string, client: Client) => {
   const ids: Array<string> = []
 
-  let balance = strToNum(await client.balanceOf(address))
+  const balance = strToNum(await client.balanceOf(address))
 
-  let startIndex = 0
-  while (balance > 0) {
-    const endIndex = startIndex + Math.min(balance, 100)
-    const tokenIds = await client.tokensOfOwnerByIndex(address, startIndex, endIndex)
+  const batchSize = 100
+  for (let i = 0; i < Math.ceil(balance / batchSize); i++) {
+    const startIndex = i * batchSize
+    const endIndex = startIndex + Math.min(balance, batchSize) - 1
+    const tokenIds = await client.tokensOfOwnerByIndex(address, i * batchSize, endIndex)
     ids.push(...tokenIds)
-    balance -= endIndex - startIndex
-    startIndex += 100
   }
 
   return ids
