@@ -77,9 +77,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     external
   {
     require(
-      coordinateQs.length == coordinateRs.length &&
-        coordinateQs.length > 0 &&
-        coordinateQs.length <= 1000,
+      coordinateQs.length == coordinateRs.length && coordinateQs.length > 0,
       "invalid coordinate arg"
     );
     uint16 batchSize = uint16(coordinateQs.length);
