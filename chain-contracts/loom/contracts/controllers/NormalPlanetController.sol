@@ -77,7 +77,9 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
     external
   {
     require(
-      coordinateQs.length == coordinateRs.length && coordinateQs.length <= 1000,
+      coordinateQs.length == coordinateRs.length &&
+        coordinateQs.length > 0 &&
+        coordinateQs.length <= 1000,
       "invalid coordinate arg"
     );
     uint16 batchSize = uint16(coordinateQs.length);
@@ -117,6 +119,10 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   function rankupPlanets(uint64[] calldata userNormalPlanetIds, uint8[] calldata targetRanks)
     external
   {
+    require(
+      userNormalPlanetIds.length == targetRanks.length && userNormalPlanetIds.length > 0,
+      "invalid arg"
+    );
     uint256 knowledge = confirm(msg.sender);
     (UserNormalPlanetRecord[] memory userPlanets, uint256[] memory userPlanetIndexes) = userNormalPlanetRecordsWithIndexesOf(
       msg.sender,
@@ -162,6 +168,7 @@ contract NormalPlanetController is NormalPlanetControllable, UserPlanetControlla
   }
 
   function removePlanets(uint64[] calldata userNormalPlanetIds) external {
+    require(userNormalPlanetIds.length > 0, "invalid arg");
     confirm(msg.sender);
     removeNormalsFromMap(msg.sender, userNormalPlanetIds);
   }
