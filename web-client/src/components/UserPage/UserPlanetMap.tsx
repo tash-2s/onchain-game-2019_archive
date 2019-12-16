@@ -44,6 +44,18 @@ export function UserPlanetMap(props: Props) {
     props.user.userPlanetMap.shownRadius
   )
 
+  return (
+    <>
+      <UserPlanetDetailModal {...props} />
+      <SetToMapButton {...props} />
+      <div style={{ position: "relative", height: mapHeight }}>
+        <Hexes {...props} hexSize={hexSize} hexWidth={hexWidth} hexHeight={hexHeight} />
+      </div>
+    </>
+  )
+}
+
+function Hexes(props: Props & { hexSize: number; hexWidth: number; hexHeight: number }) {
   const { isSufficientGoldForNextNormalPlanetSet, usableRadius } = processForMultiPlanetSet(
     props.user,
     props.userPageUI
@@ -62,24 +74,18 @@ export function UserPlanetMap(props: Props) {
         q={h.q}
         r={h.r}
         userPlanet={h.userPlanet}
-        shiftTop={props.user.userPlanetMap.shownRadius * hexHeight}
-        shiftLeft={props.user.userPlanetMap.shownRadius * ((hexWidth / 4) * 3)}
-        hexSize={hexSize}
-        hexWidth={hexWidth}
-        hexHeight={hexHeight}
+        shiftTop={props.user.userPlanetMap.shownRadius * props.hexHeight}
+        shiftLeft={props.user.userPlanetMap.shownRadius * ((props.hexWidth / 4) * 3)}
+        hexSize={props.hexSize}
+        hexWidth={props.hexWidth}
+        hexHeight={props.hexHeight}
         isHighlighted={isHighlighted}
         select={select}
       />
     )
   })
 
-  return (
-    <>
-      <UserPlanetDetailModal {...props} />
-      <SetToMapButton {...props} />
-      <div style={{ position: "relative", height: mapHeight }}>{hexes}</div>
-    </>
-  )
+  return <>{hexes}</>
 }
 
 const calcHexSizes = (width: number, radius: number) => {
