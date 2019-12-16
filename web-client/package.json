@@ -24,7 +24,7 @@
     "parcel-plugin-inliner": "*",
     "prettier": "*",
     "sass": "*",
-    "typescript": "3.5.3"
+    "typescript": "*"
   },
   "dependencies": {
     "bulma": "*",
@@ -34,7 +34,7 @@
     "react-dom": "*",
     "react-redux": "*",
     "redux": "*",
-    "typescript-fsa": "^3.0.0-beta-2",
+    "typescript-fsa": "*",
     "typescript-fsa-reducers": "*"
   },
   "browserslist": [

@@ -32,11 +32,16 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
       throw new Error("not logined")
     }
 
-    const [ethTokens, loomTokens, receipt] = await Promise.all([
+    const [_ethTokens, _loomTokens, receipt] = await Promise.all([
       getSpecialPlanetTokens(ethAddress, new EthSPT(chains.eth)),
       getSpecialPlanetTokens(address, new LoomSPT(chains.loom)),
       chains.getSpecialPlanetTokenTransferResumeReceipt()
     ])
+
+    // This seems typescript's issue
+    // See https://github.com/microsoft/TypeScript/issues/34925
+    const ethTokens = _ethTokens as NonNullable<typeof _ethTokens>
+    const loomTokens = _loomTokens as NonNullable<typeof _loomTokens>
 
     // Receipt removals can be delayed, so I need to check it if it's already withdrew.
     // If users transfer the token immediately after the resume, users may see wrong resume announcing...
