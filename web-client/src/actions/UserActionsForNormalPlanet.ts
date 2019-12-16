@@ -51,16 +51,16 @@ export class UserActionsForNormalPlanet extends AbstractActions {
     })
   }
 
-  static removeUserPlanet = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
-    "removeUserPlanet"
+  static removeUserPlanets = UserActionsForNormalPlanet.creator<ReturnTypeOfGetUserNormalPlanets>(
+    "removeUserPlanets"
   )
-  removeUserPlanet = (userPlanetId: string) => {
+  removeUserPlanets = (userPlanetIds: Array<string>) => {
     this.withLoading(async () => {
-      await new NormalPlanetController(chains.loom).removePlanets([userPlanetId])
+      await new NormalPlanetController(chains.loom).removePlanets(userPlanetIds)
 
       const response = await getUserNormalPlanets(loginedAddress())
 
-      this.dispatch(UserActionsForNormalPlanet.removeUserPlanet(response))
+      this.dispatch(UserActionsForNormalPlanet.removeUserPlanets(response))
     })
   }
 }
