@@ -58,6 +58,7 @@ contract SpecialPlanetTokenBase is
   ERC721Burnable,
   Ownable
 {
+  // inclusive range
   function tokensOfOwnerByIndex(address owner, uint256 startIndex, uint256 endIndex)
     external
     view
