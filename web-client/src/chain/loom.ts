@@ -83,6 +83,7 @@ export class Loom {
     )
     if (
       receipt &&
+      receipt.tokenContract &&
       receipt.tokenContract.local.toString().toLowerCase() ===
         ethSpecialPlanetTokenAddress.toLowerCase() &&
       receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()

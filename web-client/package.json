@@ -18,7 +18,7 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-redux": "*",
-    "@types/web3": "1.0.19",
+    "@types/web3": "1.0.20",
     "lynt": "*",
     "parcel-bundler": "*",
     "parcel-plugin-inliner": "*",
@@ -29,7 +29,7 @@
   "dependencies": {
     "bulma": "*",
     "history": "*",
-    "loom-js": "1.59.0",
+    "loom-js": "1.71.0",
     "react": "*",
     "react-dom": "*",
     "react-redux": "*",
