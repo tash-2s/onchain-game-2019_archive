@@ -17,7 +17,7 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import ChainEnv from "../chain/env.json"
 
-type Env = (typeof ChainEnv)["loom"]
+type Env = typeof ChainEnv["loom"]
 
 export class Loom {
   web3: Web3

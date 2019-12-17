@@ -25,7 +25,4 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
 
 export type AppProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-export const AppContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App)

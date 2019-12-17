@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 
 import ChainEnv from "../chain/env.json"
 
-type Env = (typeof ChainEnv)["eth"]
+type Env = typeof ChainEnv["eth"]
 
 export class Eth {
   web3: Web3 | null

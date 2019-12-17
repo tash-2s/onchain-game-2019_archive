@@ -16,7 +16,4 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
 
 export type UsersProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-export const UsersPageContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UsersPage)
+export const UsersPageContainer = connect(mapStateToProps, mapDispatchToProps)(UsersPage)
