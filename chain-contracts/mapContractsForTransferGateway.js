@@ -27,11 +27,11 @@ const loadEth = envName => {
   const {privateKey} = new MnemonicUtil(envName).getAddressAndPrivateKey()
   const infuraEndpoint = new InfuraUtil().getApiEndpoint()
 
-  const web3js = new Web3(infuraEndpoint)
-  const account = web3js.eth.accounts.privateKeyToAccount("0x" + privateKey)
-  web3js.eth.accounts.wallet.add(account)
+  const web3 = new Web3(infuraEndpoint)
+  const account = web3.eth.accounts.privateKeyToAccount("0x" + privateKey)
+  web3.eth.accounts.wallet.add(account)
 
-  return {account: account, web3js}
+  return {account: account, web3}
 }
 
 const loadLoom = envName => {
@@ -52,7 +52,7 @@ const loadLoom = envName => {
 
   return {
     account: util.getAddress(),
-    web3js: new Web3(new LoomProvider(client, privateKey)),
+    web3: new Web3(new LoomProvider(client, privateKey)),
     client
   }
 }
@@ -61,8 +61,8 @@ const mapContracts = async (ethEnvName, loomEnvName) => {
   const eth = loadEth(ethEnvName)
   const loom = loadLoom(loomEnvName)
 
-  const ethNetworkId = await eth.web3js.eth.net.getId()
-  const loomNetworkId = await loom.web3js.eth.net.getId()
+  const ethNetworkId = await eth.web3.eth.net.getId()
+  const loomNetworkId = await loom.web3.eth.net.getId()
 
   const tokenEthAddress = EthTokenJSON.networks[ethNetworkId].address
   const ethTxHash = EthTokenJSON.networks[ethNetworkId].transactionHash
@@ -75,7 +75,7 @@ const mapContracts = async (ethEnvName, loomEnvName) => {
     {type: "address", value: tokenEthAddress.slice(2)},
     {type: "address", value: tokenLoomAddress.slice(2)}
   )
-  const signer = new OfflineWeb3Signer(eth.web3js, eth.account)
+  const signer = new OfflineWeb3Signer(eth.web3, eth.account)
   const foreignContractCreatorSig = await signer.signAsync(hash)
 
   const foreignContractCreatorTxHash = Buffer.from(ethTxHash.slice(2), "hex")
