@@ -12,7 +12,7 @@
     "@openzeppelin/contracts": "*",
     "@openzeppelin/test-helpers": "*",
     "@truffle/contract": "*",
-    "loom-truffle-provider": "*",
+    "loom-truffle-provider": "0.14.0",
     "prettier-plugin-solidity": "1.0.0-alpha.34",
     "truffle": "*",
     "truffle-deploy-registry": "*"
