@@ -1,7 +1,7 @@
 {
   "extdev": {
     "writeUrl": "wss://extdev-plasma-us1.dappchains.com/websocket",
-    "readUrl": "wss://extdev-plasma-us1.dappchains.com/eth",
+    "readUrl": "wss://extdev-plasma-us1.dappchains.com/queryws",
     "chainId": "extdev-plasma-us1",
     "networkId": "9545242630824"
   }
