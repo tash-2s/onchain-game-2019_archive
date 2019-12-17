@@ -17,7 +17,7 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import ChainEnv from "../chain/env.json"
 
-type Env = (typeof ChainEnv)["loom"]
+type Env = typeof ChainEnv["loom"]
 
 export class Loom {
   web3: Web3
@@ -82,7 +82,7 @@ export class Loom {
       Address.fromString(`${this.env.chainId}:${this.address}`)
     )
     if (
-      receipt &&
+      receipt?.tokenContract &&
       receipt.tokenContract.local.toString().toLowerCase() ===
         ethSpecialPlanetTokenAddress.toLowerCase() &&
       receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()
@@ -132,12 +132,11 @@ export class Loom {
       throw new Error("no withdrawal receipt")
     }
 
-    const _tokenId = receipt.tokenId ? receipt.tokenId.toString() : null
-    if (!_tokenId || (tokenId && tokenId !== _tokenId)) {
+    if (!receipt.tokenId || (tokenId && tokenId !== receipt.tokenId.toString())) {
       throw new Error("wrong token")
     }
 
-    return { tokenId: _tokenId, signature: CryptoUtils.bytesToHexAddr(receipt.oracleSignature) }
+    return receipt
   }
 
   // return eth address if logined, otherwise return loom dummy address
