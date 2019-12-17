@@ -8,7 +8,7 @@ const envDefs = {
   local: {
     loom: {
       writeUrl: "ws://127.0.0.1:46658/websocket",
-      readUrl: "ws://127.0.0.1:46658/eth",
+      readUrl: "ws://127.0.0.1:46658/queryws",
       chainId: "default",
       networkId: "13654820909954"
     },
@@ -19,7 +19,7 @@ const envDefs = {
   staging: {
     loom: {
       writeUrl: "wss://extdev-plasma-us1.dappchains.com/websocket",
-      readUrl: "wss://extdev-plasma-us1.dappchains.com/eth",
+      readUrl: "wss://extdev-plasma-us1.dappchains.com/queryws",
       chainId: "extdev-plasma-us1",
       networkId: "9545242630824"
     },
