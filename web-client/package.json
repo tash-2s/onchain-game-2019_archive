@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "@types/history": "*",
-    "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-redux": "*",
     "@types/web3": "1.0.20",
