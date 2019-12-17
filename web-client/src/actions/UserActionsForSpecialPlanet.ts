@@ -15,7 +15,6 @@ import { getSpecialPlanetTokens } from "../chain/clients/organized"
 import { SpecialPlanetToken as LoomSPT } from "../chain/clients/loom/SpecialPlanetToken"
 import { SpecialPlanetToken as EthSPT } from "../chain/clients/eth/SpecialPlanetToken"
 import { SpecialPlanetTokenShop } from "../chain/clients/eth/SpecialPlanetTokenShop"
-import { Gateway } from "../chain/clients/eth/organized"
 
 export class UserActionsForSpecialPlanet extends AbstractActions {
   private static creator = UserActionsForSpecialPlanet.getActionCreator()
@@ -46,8 +45,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     // Receipt removals can be delayed, so I need to check it if it's already withdrew.
     // If users transfer the token immediately after the resume, users may see wrong resume announcing...
     const needsTransferResume =
-      !!receipt &&
-      !!receipt.tokenId &&
+      !!receipt?.tokenId &&
       (receiptTokenId => ethTokens.every(ethToken => ethToken.id !== receiptTokenId))(
         receipt.tokenId.toString()
       )
@@ -147,34 +145,27 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     "transferPlanetTokenToEth"
   )
   transferPlanetTokenToEth = async (tokenId?: string) => {
-    new AppActions(this.dispatch).startLoading()
+    this.withLoading(async () => {
+      const ethAddress = chains.eth.address
+      if (!ethAddress) {
+        throw new Error("not logined")
+      }
 
-    const ethAddress = chains.eth.address
-    if (!ethAddress) {
-      throw new Error("not logined")
-    }
+      if (tokenId) {
+        const loomSPT = new LoomSPT(chains.loom)
+        const loomGatewayAddress = await loomSPT.gateway()
+        await loomSPT.approve(loomGatewayAddress, tokenId)
+      }
+      const receipt = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
+        chains.eth.signer(),
+        chains.eth.env.contractAddresses.SpecialPlanetToken,
+        tokenId
+      )
 
-    if (tokenId) {
-      const loomSPT = new LoomSPT(chains.loom)
-      const gatewayAddress = await loomSPT.gateway()
-      await loomSPT.approve(gatewayAddress, tokenId)
-    }
-    const { tokenId: _tokenId, signature } = await chains.loom.prepareSpecialPlanetTokenWithdrawal(
-      chains.eth.signer(),
-      chains.eth.env.contractAddresses.SpecialPlanetToken,
-      tokenId
-    )
+      const ethGatewayAddress = await new EthSPT(chains.eth).gateway()
+      const txHash = await chains.eth.withdrawFromGateway(receipt, ethGatewayAddress)
 
-    const gatewayAddress = await new EthSPT(chains.eth).gateway()
-    Gateway.withdrawERC721(
-      gatewayAddress,
-      _tokenId,
-      signature,
-      chains.eth.env.contractAddresses.SpecialPlanetToken
-    ).on("transactionHash", (hash: string) => {
-      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(hash))
-
-      new AppActions(this.dispatch).stopLoading()
+      this.dispatch(UserActionsForSpecialPlanet.transferPlanetTokenToEth(txHash))
     })
   }
 }

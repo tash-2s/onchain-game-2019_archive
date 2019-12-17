@@ -1,19 +1,20 @@
 import Web3 from "web3"
 import { ethers } from "ethers"
+import { createEthereumGatewayAsync, getMetamaskSigner } from "loom-js"
 
 import ChainEnv from "../chain/env.json"
+
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 type Env = typeof ChainEnv["eth"]
 
 export class Eth {
   web3: Web3 | null
-  ethersProvider: ethers.providers.Web3Provider | null
   address: string | null
   env: Env
 
   constructor() {
     this.web3 = null
-    this.ethersProvider = null
     this.address = null
     this.env = ChainEnv.eth
   }
@@ -44,18 +45,45 @@ export class Eth {
     provider.on("networkChanged", providerChangedFn)
 
     this.web3 = new Web3(provider)
-    this.ethersProvider = new ethers.providers.Web3Provider(provider)
     this.address = await this.signer().getAddress()
 
     return true
   }
 
   signer = () => {
-    // maybe I need a hack for non metamask provider
-    // https://github.com/loomnetwork/loom-js/blob/877edfc6c5a50eb5ce432b5c798026d5cbd60256/src/solidity-helpers.ts#L24
-    if (!this.ethersProvider) {
+    if (!this.web3) {
       throw new Error("not logined")
     }
-    return this.ethersProvider.getSigner()
+    return getMetamaskSigner(this.web3.currentProvider)
+  }
+
+  withdrawFromGateway = async (receipt: IWithdrawalReceipt, gatewayAddress: string) => {
+    if (!this.web3) {
+      throw new Error("not logined")
+    }
+    const gatewayVersion = await getGatewayVersion(this.web3)
+    const ethereumGatewayContract = await createEthereumGatewayAsync(
+      gatewayVersion,
+      gatewayAddress,
+      this.signer()
+    )
+    const tx = await ethereumGatewayContract.withdrawAsync(receipt)
+    if (!tx.hash) {
+      throw new Error("this should not happen")
+    }
+    return tx.hash
+  }
+}
+
+const getGatewayVersion = async (web3: Web3) => {
+  const networkId = await web3.eth.net.getId()
+
+  switch (networkId) {
+    case 1: // Mainnet
+      return 1
+    case 4: // Rinkeby
+      return 2
+    default:
+      throw new Error("Ethereum Gateway is not deployed on network " + networkId)
   }
 }
