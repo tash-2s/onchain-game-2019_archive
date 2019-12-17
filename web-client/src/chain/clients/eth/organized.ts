@@ -33,8 +33,7 @@ export class Gateway {
           outputs: [],
           payable: false,
           stateMutability: "nonpayable",
-          type: "function",
-          signature: "0xc899a86b"
+          type: "function"
         }
       ],
       gatewayAddress,
