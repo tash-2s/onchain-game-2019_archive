@@ -3,32 +3,10 @@
 const fs = require("fs")
 
 const envName = process.argv[2]
-// TODO: use envs.json
-const envDefs = {
-  local: {
-    loom: {
-      writeUrl: "ws://127.0.0.1:46658/websocket",
-      readUrl: "ws://127.0.0.1:46658/queryws",
-      chainId: "default",
-      networkId: "13654820909954"
-    },
-    eth: {
-      networkId: "5777"
-    }
-  },
-  staging: {
-    loom: {
-      writeUrl: "wss://extdev-plasma-us1.dappchains.com/websocket",
-      readUrl: "wss://extdev-plasma-us1.dappchains.com/queryws",
-      chainId: "extdev-plasma-us1",
-      networkId: "9545242630824"
-    },
-    eth: {
-      networkId: "4"
-    }
-  }
-}
 
+const contractsRepoPath = "../k2-chain-contracts"
+
+const envDefs = JSON.parse(fs.readFileSync(`${contractsRepoPath}/envs.json`))
 const envDef = envDefs[envName]
 if (!envDef) {
   throw new Error(`undefined envName: ${envName}`)
@@ -79,7 +57,7 @@ const loadContracts = () => {
     contracts[chainName] = []
     for (const contractName of Object.keys(targetContractAndFunctions[chainName])) {
       const contract = JSON.parse(
-        fs.readFileSync(`../k2-chain-contracts/${chainName}/build/contracts/${contractName}.json`)
+        fs.readFileSync(`${contractsRepoPath}/${chainName}/build/contracts/${contractName}.json`)
       )
       contracts[chainName].push(contract)
     }
