@@ -70,6 +70,7 @@ const mapContracts = async (envName) => {
 
   const foreignContract = Address.fromString(`eth:${tokenEthAddress}`)
   const localContract = Address.fromString(`${loom.client.chainId}:${tokenLoomAddress}`)
+  // I can use `getContractMappingAsync` to check whether it already exists or not
 
   const hash = soliditySha3(
     {type: "address", value: tokenEthAddress.slice(2)},
