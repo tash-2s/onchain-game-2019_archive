@@ -6,7 +6,7 @@ import { historyLib, convertHashToRouteIdWithParams } from "../misc/route"
 const createInitialState = () => ({
   route: convertHashToRouteIdWithParams(historyLib.location.hash),
   isLoading: false,
-  isError: false
+  errorMessage: null as string | null
 })
 
 export type AppState = ReturnType<typeof createInitialState>
@@ -16,13 +16,13 @@ export const createAppReducer = () =>
     .case(AppActions.changeRoute, (state, payload) => {
       return { ...state, route: payload }
     })
-    .case(AppActions.throwError, (state, error) => {
-      return { ...state, isError: true }
-    })
     .case(AppActions.startLoading, state => {
       return { ...state, isLoading: true }
     })
     .case(AppActions.stopLoading, state => {
       return { ...state, isLoading: false }
+    })
+    .case(AppActions.showError, (state, payload) => {
+      return { ...state, errorMessage: payload }
     })
     .build()

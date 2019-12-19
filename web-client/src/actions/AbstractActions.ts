@@ -11,8 +11,8 @@ export abstract class AbstractActions {
     this.dispatch = dispatch
   }
 
-  protected handleError = (error: Error) => {
-    new AppActions(this.dispatch).throwError(error)
+  protected showError = (message: string) => {
+    new AppActions(this.dispatch).showError(message)
   }
 
   protected withLoading = async (fn: () => void) => {

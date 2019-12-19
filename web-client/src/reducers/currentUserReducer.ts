@@ -7,8 +7,7 @@ const createInitialState = () => {
   return {
     loomAddress: chains.loom.address,
     ethAddress: chains.eth.address,
-    logining: false,
-    blocked: false
+    logining: false
   }
 }
 
@@ -21,9 +20,5 @@ export const createCurrentUserReducer = () =>
       loomAddress: payload ? payload.loomAddress : null,
       ethAddress: payload ? payload.ethAddress : null,
       logining: !payload
-    }))
-    .case(CurrentUserActions.block, state => ({
-      ...state,
-      blocked: true
     }))
     .build()

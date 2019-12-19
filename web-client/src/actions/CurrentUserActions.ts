@@ -10,18 +10,16 @@ export class CurrentUserActions extends AbstractActions {
   login = async () => {
     this.dispatch(CurrentUserActions.login(null))
 
-    const result = await chains.login((window as any).ethereum, this.block)
+    const result = await chains.login((window as any).ethereum, () =>
+      this.showError("The account or the chain was changed.")
+    )
 
-    if (!result) {
-      // TODO: show message to user
-      throw new Error("failed to setup eth")
+    if (result) {
+      this.dispatch(CurrentUserActions.login(result))
+    } else {
+      this.showError(
+        "You failed to login. Please check you have a wallet like MetaMask, and you are connecting the right chain."
+      )
     }
-
-    this.dispatch(CurrentUserActions.login(result))
-  }
-
-  static block = CurrentUserActions.creator("block")
-  block = () => {
-    this.dispatch(CurrentUserActions.block())
   }
 }

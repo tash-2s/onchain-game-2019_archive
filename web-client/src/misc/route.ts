@@ -10,10 +10,11 @@ class Route {
 
   constructor(routeId: RouteId) {
     this.routeId = routeId
-    const _routeId = this.routeId.replace(/:\w+/, "\\w+")
-    this.regExp = new RegExp(`^${_routeId}$`)
+    const str = this.routeId.replace(/:\w+/, "\\w+")
+    this.regExp = new RegExp(`^${str}$`)
   }
 }
+
 const routes = ((): Array<Route> => {
   const rs: Array<Route> = []
   routeIds.forEach(routeId => {

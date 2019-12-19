@@ -10,15 +10,6 @@ export class AppActions extends AbstractActions {
     this.dispatch(AppActions.changeRoute(routeIdWithParams))
   }
 
-  static throwError = AppActions.creator<Error>("throwError")
-  throwError = (error: Error, showOnConsole = true, info?: any) => {
-    // TODO: log error to somewhere server
-    if (showOnConsole) {
-      console.error(error, info)
-    }
-    this.dispatch(AppActions.throwError(error))
-  }
-
   static startLoading = AppActions.creator("startLoading")
   startLoading = () => {
     this.dispatch(AppActions.startLoading())
@@ -27,5 +18,10 @@ export class AppActions extends AbstractActions {
   static stopLoading = AppActions.creator("stopLoading")
   stopLoading = () => {
     this.dispatch(AppActions.stopLoading())
+  }
+
+  static showError = AppActions.creator<string>("showError")
+  showError = (message: string) => {
+    this.dispatch(AppActions.showError(message))
   }
 }

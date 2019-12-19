@@ -10,6 +10,7 @@ import { CurrentUserActions } from "../../actions/CurrentUserActions"
 
 import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
+import { ModalWithoutClose } from "../utils/ModalWithoutClose"
 
 export class Template extends React.Component<{
   app: AppState
@@ -19,7 +20,16 @@ export class Template extends React.Component<{
   templateUI: TemplateUIState
   templateUIActions: TemplateUIActions
 }> {
+  state = { hasError: false }
   dialogRef = React.createRef<HTMLDialogElement>()
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, info: any) {
+    // should log error
+  }
 
   componentDidUpdate() {
     const dialog = this.dialogRef.current
@@ -37,42 +47,48 @@ export class Template extends React.Component<{
     }
   }
 
-  componentDidCatch(error: Error, info: any) {
-    if (!this.props.app.isError) {
-      this.props.appActions.throwError(error, false, info)
-    }
-  }
-
   render = () => {
     return (
       <>
-        <dialog ref={this.dialogRef}>LOADING</dialog>
+        <dialog ref={this.dialogRef}>
+          LOADING...
+          <div className="loader" />
+        </dialog>
         <Navbar
           currentUser={this.props.currentUser}
           activatedNavbarMenuForMobile={this.props.templateUI.activatedNavbarMenuForMobile}
           login={this.props.currentUserActions.login}
           toggleNavbarMenuForMobile={this.props.templateUIActions.toggleNavbarMenuForMobile}
         />
-        <section className={"section"}>
-          <div className={"container"}>{this.getErrorOrChildren()}</div>
-        </section>
+        <ChildrenOrError app={this.props.app} hasError={this.state.hasError}>
+          {this.props.children}
+        </ChildrenOrError>
         <Footer />
       </>
     )
   }
+}
 
-  getErrorOrChildren = () => {
-    if (this.props.app.isError) {
-      const clickHandle = () => location.replace(location.pathname)
-      return (
-        <div>
-          <p>Something went wrong.</p>
-
-          <button onClick={clickHandle}>Reload</button>
-        </div>
-      )
-    } else {
-      return this.props.children
-    }
+function ChildrenOrError(props: { app: AppState; hasError: boolean; children: React.ReactNode }) {
+  if (props.app.errorMessage || props.hasError) {
+    return <ErrorModal message={props.app.errorMessage || "Something went wrong."} />
   }
+
+  return (
+    <section className={"section"}>
+      <div className={"container"}>{props.children}</div>
+    </section>
+  )
+}
+
+function ErrorModal(props: { message: string }) {
+  const clickHandler = () => location.replace(location.pathname)
+  return (
+    <ModalWithoutClose>
+      <div>{props.message}</div>
+      <button className={"button"} onClick={clickHandler}>
+        Reload
+      </button>
+    </ModalWithoutClose>
+  )
 }
