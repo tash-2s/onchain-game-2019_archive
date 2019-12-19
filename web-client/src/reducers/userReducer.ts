@@ -101,7 +101,7 @@ export const createUserReducer = () =>
     })
     .case(UserActionsForSpecialPlanet.clearTargetUserPlanetTokens, state => {
       if (!state.targetUser) {
-        throw new Error("invalid state")
+        return { ...state }
       }
 
       return {
