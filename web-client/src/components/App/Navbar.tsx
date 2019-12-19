@@ -12,7 +12,6 @@ interface Props {
 }
 
 export function Navbar(props: Props) {
-  // when an error occurs, this should be un-clickable, because the store will continue to have the error state
   const mobileClass = props.activatedNavbarMenuForMobile ? "is-active" : ""
   const modal = props.currentUser.logining ? <LoginModal /> : <></>
 
