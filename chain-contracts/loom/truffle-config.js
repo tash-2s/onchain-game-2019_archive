@@ -1,5 +1,8 @@
+const fs = require("fs")
 const LoomTruffleProvider = require("loom-truffle-provider")
 const PrivateKeyUtil = require("./PrivateKeyUtil.js")
+
+const envs = JSON.parse(fs.readFileSync("../envs.json"))
 
 module.exports = {
   compilers: {
@@ -17,9 +20,9 @@ module.exports = {
     local: {
       provider: function() {
         const privateKey = new PrivateKeyUtil("local").getPrivateKeyStr()
-        const chainId = "default"
-        const writeUrl = "http://127.0.0.1:46658/rpc"
-        const readUrl = "http://127.0.0.1:46658/query"
+        const chainId = envs.local.loom.chainId
+        const writeUrl = envs.local.loom.writeUrl
+        const readUrl = envs.local.loom.readUrl
         const loomTruffleProvider = new LoomTruffleProvider(chainId, writeUrl, readUrl, privateKey)
         loomTruffleProvider.createExtraAccountsFromMnemonic(
           "gravity top burden flip student usage spell purchase hundred improve check genre",
@@ -27,17 +30,17 @@ module.exports = {
         )
         return loomTruffleProvider
       },
-      network_id: "*"
+      network_id: envs.local.loom.networkId
     },
-    extdev: {
+    staging: {
       provider: function() {
-        const privateKey = new PrivateKeyUtil("extdev").getPrivateKeyStr()
-        const chainId = "extdev-plasma-us1"
-        const writeUrl = "http://extdev-plasma-us1.dappchains.com:80/rpc"
-        const readUrl = "http://extdev-plasma-us1.dappchains.com:80/query"
+        const privateKey = new PrivateKeyUtil("staging").getPrivateKeyStr()
+        const chainId = envs.staging.loom.chainId
+        const writeUrl = envs.staging.loom.writeUrl
+        const readUrl = envs.staging.loom.readUrl
         return new LoomTruffleProvider(chainId, writeUrl, readUrl, privateKey)
       },
-      network_id: "9545242630824"
+      network_id: envs.staging.loom.networkId
     }
   },
   mocha: {

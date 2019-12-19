@@ -24,6 +24,8 @@ const HDWalletProvider = require("@truffle/hdwallet-provider")
 const MnemonicUtil = require("./MnemonicUtil.js")
 const InfuraUtil = require("./InfuraUtil.js")
 
+const envs = JSON.parse(fs.readFileSync("../envs.json"))
+
 // const HDWalletProvider = require('truffle-hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
@@ -81,14 +83,14 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
-    rinkeby: {
+    staging: {
       provider: function() {
         const infuraEndpoint = new InfuraUtil().getApiEndpoint()
-        const mnemonic = new MnemonicUtil("rinkeby").getMnemonic()
+        const mnemonic = new MnemonicUtil("staging").getMnemonic()
 
         return new HDWalletProvider(mnemonic, infuraEndpoint, 0, 10)
       },
-      network_id: 4,
+      network_id: envs.staging.networkId,
       gasPrice: 15000000001,
       skipDryRun: true
     }

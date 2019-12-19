@@ -39,7 +39,7 @@ const loadLoom = envName => {
   const util = new PrivateKeyUtil(envName)
   const {publicKey, privateKey} = util.getPublicKeyAndPrivateKey()
 
-  const env = JSON.parse(fs.readFileSync("./loom/envs.json"))[envName]
+  const env = JSON.parse(fs.readFileSync("./envs.json"))[envName].loom
   if (!env) {
     throw new Error("please define env")
   }
@@ -57,9 +57,9 @@ const loadLoom = envName => {
   }
 }
 
-const mapContracts = async (ethEnvName, loomEnvName) => {
-  const eth = loadEth(ethEnvName)
-  const loom = loadLoom(loomEnvName)
+const mapContracts = async (envName) => {
+  const eth = loadEth(envName)
+  const loom = loadLoom(envName)
 
   const ethNetworkId = await eth.web3.eth.net.getId()
   const loomNetworkId = await loom.web3.eth.net.getId()
@@ -96,5 +96,5 @@ const mapContracts = async (ethEnvName, loomEnvName) => {
 }
 
 ;(async () => {
-  await mapContracts("rinkeby", "extdev")
+  await mapContracts("staging")
 })()

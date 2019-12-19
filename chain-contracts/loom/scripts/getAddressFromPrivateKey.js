@@ -1,4 +1,4 @@
-// ex) node scripts/getAddressFromPrivateKey extdev
+// ex) node scripts/getAddressFromPrivateKey staging
 
 const PrivateKeyUtil = require("../PrivateKeyUtil.js")
 

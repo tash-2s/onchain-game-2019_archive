@@ -15,7 +15,7 @@ module.exports = function(deployer, network, accounts) {
 const getGatewayAddress = (network, myAddress) => {
   // got from client.getContractAddressAsync("gateway")
   switch (network) {
-    case "extdev":
+    case "staging":
       return "0xe754d9518bf4a9c63476891ef9aa7d91c8236a5d"
     default:
       return myAddress

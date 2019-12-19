@@ -1,4 +1,4 @@
-// ex) node scripts/generateMnemonicFile.js rinkeby
+// ex) node scripts/generateMnemonicFile.js staging
 
 const MnemonicUtil = require("../MnemonicUtil.js")
 
