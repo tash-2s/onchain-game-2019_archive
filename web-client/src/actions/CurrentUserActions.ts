@@ -1,4 +1,6 @@
 import { AbstractActions } from "./AbstractActions"
+import { AppActions } from "./AppActions"
+
 import { chains } from "../chain/chains"
 
 export class CurrentUserActions extends AbstractActions {
@@ -11,13 +13,13 @@ export class CurrentUserActions extends AbstractActions {
     this.dispatch(CurrentUserActions.login(null))
 
     const result = await chains.login((window as any).ethereum, () =>
-      this.showError("The account or the chain was changed.")
+      new AppActions(this.dispatch).showError("The account or the chain was changed.")
     )
 
     if (result) {
       this.dispatch(CurrentUserActions.login(result))
     } else {
-      this.showError(
+      new AppActions(this.dispatch).showError(
         "You failed to login. Please check you have a wallet like MetaMask, and you are connecting the right chain."
       )
     }

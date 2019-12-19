@@ -1,4 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
+
 import { RouteState } from "../constants"
 
 export class AppActions extends AbstractActions {
@@ -18,6 +19,12 @@ export class AppActions extends AbstractActions {
   static stopLoading = AppActions.creator("stopLoading")
   stopLoading = () => {
     this.dispatch(AppActions.stopLoading())
+  }
+
+  withLoading = async (fn: () => void) => {
+    this.startLoading()
+    await fn()
+    this.stopLoading()
   }
 
   static showError = AppActions.creator<string>("showError")

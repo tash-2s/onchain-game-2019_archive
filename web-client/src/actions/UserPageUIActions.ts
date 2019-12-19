@@ -1,4 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
+
 import { UserPageViewKind, UserPlanetsSortKind, PlanetKindWithAll } from "../constants"
 
 export class UserPageUIActions extends AbstractActions {

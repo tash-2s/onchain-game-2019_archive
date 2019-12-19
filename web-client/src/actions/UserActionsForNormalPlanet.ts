@@ -1,4 +1,5 @@
 import { AbstractActions } from "./AbstractActions"
+import { AppActions } from "./AppActions"
 
 import { chains } from "../chain/chains"
 import { NormalPlanetController } from "../chain/clients/loom/NormalPlanetController"
@@ -18,7 +19,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
     axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
     isInitial: boolean
   ) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       const controller = new NormalPlanetController(chains.loom)
       if (isInitial) {
         await controller.claimInitialGold()
@@ -39,7 +40,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
     "rankupUserPlanets"
   )
   rankupUserPlanets = (arr: Array<{ userNormalPlanetId: string; targetRank: number }>) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       await new NormalPlanetController(chains.loom).rankupPlanets(
         arr.map(o => o.userNormalPlanetId),
         arr.map(o => o.targetRank)
@@ -55,7 +56,7 @@ export class UserActionsForNormalPlanet extends AbstractActions {
     "removeUserPlanets"
   )
   removeUserPlanets = (userPlanetIds: Array<string>) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       await new NormalPlanetController(chains.loom).removePlanets(userPlanetIds)
 
       const response = await getUserNormalPlanets(loginedAddress())

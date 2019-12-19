@@ -70,7 +70,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     ReturnTypeOfGetUserSpecialPlanets
   >("setPlanetTokenToMap")
   setPlanetTokenToMap = (tokenId: string, axialCoordinateQ: number, axialCoordinateR: number) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       const address = loginedLoomAddress()
 
       const lockerAddress = chains.loom.env.contractAddresses.SpecialPlanetTokenLocker
@@ -100,7 +100,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     ReturnTypeOfGetUserSpecialPlanets
   >("removeUserPlanetFromMap")
   removeUserPlanetFromMap = (userSpecialPlanetId: string) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       await new SpecialPlanetController(chains.loom).removePlanet(userSpecialPlanetId)
 
       const response = await getUserSpecialPlanets(loginedLoomAddress())
@@ -145,7 +145,7 @@ export class UserActionsForSpecialPlanet extends AbstractActions {
     "transferPlanetTokenToEth"
   )
   transferPlanetTokenToEth = async (tokenId?: string) => {
-    this.withLoading(async () => {
+    new AppActions(this.dispatch).withLoading(async () => {
       const ethAddress = chains.eth.address
       if (!ethAddress) {
         throw new Error("not logined")
