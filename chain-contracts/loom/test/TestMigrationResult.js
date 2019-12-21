@@ -1,59 +1,59 @@
 // controllers
 const HighlightedUserController = artifacts.require("HighlightedUserController")
-const NormalPlanetController = artifacts.require("NormalPlanetController")
-const SpecialPlanetController = artifacts.require("SpecialPlanetController")
+const InGameAsteriskController = artifacts.require("InGameAsteriskController")
+const TradableAsteriskController = artifacts.require("TradableAsteriskController")
 
 // misc
-const SpecialPlanetTokenLocker = artifacts.require("SpecialPlanetTokenLocker")
+const TradableAsteriskTokenLocker = artifacts.require("TradableAsteriskTokenLocker")
 
 // permanences
-const NormalPlanetPermanence = artifacts.require("NormalPlanetPermanence")
-const SpecialPlanetIdToDataPermanence = artifacts.require("SpecialPlanetIdToDataPermanence")
+const InGameAsteriskPermanence = artifacts.require("InGameAsteriskPermanence")
+const TradableAsteriskIdToDataPermanence = artifacts.require("TradableAsteriskIdToDataPermanence")
 const UserGoldPermanence = artifacts.require("UserGoldPermanence")
-const UserNormalPlanetIdGeneratorPermanence = artifacts.require(
-  "UserNormalPlanetIdGeneratorPermanence"
+const UserInGameAsteriskIdGeneratorPermanence = artifacts.require(
+  "UserInGameAsteriskIdGeneratorPermanence"
 )
-const UserNormalPlanetPermanence = artifacts.require("UserNormalPlanetPermanence")
-const UserSpecialPlanetPermanence = artifacts.require("UserSpecialPlanetPermanence")
+const UserInGameAsteriskPermanence = artifacts.require("UserInGameAsteriskPermanence")
+const UserTradableAsteriskPermanence = artifacts.require("UserTradableAsteriskPermanence")
 
 // tokens
-const SpecialPlanetToken = artifacts.require("SpecialPlanetToken")
+const TradableAsteriskToken = artifacts.require("TradableAsteriskToken")
 
 contract("Migration Result", function([admin, account]) {
-  let highlightedUserController, normalPlanetController, specialPlanetController
-  let specialPlanetTokenLocker
-  let normalPlanetPermanence,
-    specialPlanetIdToDataPermanence,
+  let highlightedUserController, inGameAsteriskController, tradableAsteriskController
+  let tradableAsteriskTokenLocker
+  let inGameAsteriskPermanence,
+    tradableAsteriskIdToDataPermanence,
     userGoldPermanence,
-    userNormalPlanetIdGeneratorPermanence,
-    userNormalPlanetPermanence,
-    userSpecialPlanetPermanence
-  let specialPlanetToken
+    userInGameAsteriskIdGeneratorPermanence,
+    userInGameAsteriskPermanence,
+    userTradableAsteriskPermanence
+  let tradableAsteriskToken
 
   before(async function() {
     highlightedUserController = await HighlightedUserController.deployed()
-    normalPlanetController = await NormalPlanetController.deployed()
-    specialPlanetController = await SpecialPlanetController.deployed()
+    inGameAsteriskController = await InGameAsteriskController.deployed()
+    tradableAsteriskController = await TradableAsteriskController.deployed()
 
-    specialPlanetTokenLocker = await SpecialPlanetTokenLocker.deployed()
+    tradableAsteriskTokenLocker = await TradableAsteriskTokenLocker.deployed()
 
-    normalPlanetPermanence = await NormalPlanetPermanence.deployed()
-    specialPlanetIdToDataPermanence = await SpecialPlanetIdToDataPermanence.deployed()
+    inGameAsteriskPermanence = await InGameAsteriskPermanence.deployed()
+    tradableAsteriskIdToDataPermanence = await TradableAsteriskIdToDataPermanence.deployed()
     userGoldPermanence = await UserGoldPermanence.deployed()
-    userNormalPlanetIdGeneratorPermanence = await UserNormalPlanetIdGeneratorPermanence.deployed()
-    userNormalPlanetPermanence = await UserNormalPlanetPermanence.deployed()
-    userSpecialPlanetPermanence = await UserSpecialPlanetPermanence.deployed()
+    userInGameAsteriskIdGeneratorPermanence = await UserInGameAsteriskIdGeneratorPermanence.deployed()
+    userInGameAsteriskPermanence = await UserInGameAsteriskPermanence.deployed()
+    userTradableAsteriskPermanence = await UserTradableAsteriskPermanence.deployed()
 
-    specialPlanetToken = await SpecialPlanetToken.deployed()
+    tradableAsteriskToken = await TradableAsteriskToken.deployed()
   })
 
   it("should have correct relations", async function() {
-    assert.equal(await specialPlanetTokenLocker.specialPlanetToken(), specialPlanetToken.address)
+    assert.equal(await tradableAsteriskTokenLocker.tradableAsteriskToken(), tradableAsteriskToken.address)
   })
 
   it("should have valid whitelisted accounts", async function() {
-    assert.deepEqual(await getWhitelistedAccounts(specialPlanetTokenLocker), [
-      specialPlanetController.address
+    assert.deepEqual(await getWhitelistedAccounts(tradableAsteriskTokenLocker), [
+      tradableAsteriskController.address
     ])
   })
 })
