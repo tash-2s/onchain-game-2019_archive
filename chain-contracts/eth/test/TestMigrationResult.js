@@ -1,19 +1,21 @@
-const SpecialPlanetToken = artifacts.require("SpecialPlanetToken")
-const SpecialPlanetTokenShop = artifacts.require("SpecialPlanetTokenShop")
-const SpecialPlanetTokenShortIdGenerator = artifacts.require("SpecialPlanetTokenShortIdGenerator")
+const TradableAsteriskToken = artifacts.require("TradableAsteriskToken")
+const TradableAsteriskTokenShop = artifacts.require("TradableAsteriskTokenShop")
+const TradableAsteriskTokenShortIdGenerator = artifacts.require(
+  "TradableAsteriskTokenShortIdGenerator"
+)
 
 contract("Migration Result", function([admin, account]) {
   let token, shop, idGenerator
 
   before(async function() {
-    token = await SpecialPlanetToken.deployed()
-    shop = await SpecialPlanetTokenShop.deployed()
-    idGenerator = await SpecialPlanetTokenShortIdGenerator.deployed()
+    token = await TradableAsteriskToken.deployed()
+    shop = await TradableAsteriskTokenShop.deployed()
+    idGenerator = await TradableAsteriskTokenShortIdGenerator.deployed()
   })
 
   it("should have correct relations", async function() {
-    assert.equal(await shop.specialPlanetToken(), token.address)
-    assert.equal(await shop.specialPlanetTokenShortIdGenerator(), idGenerator.address)
+    assert.equal(await shop.tradableAsteriskToken(), token.address)
+    assert.equal(await shop.tradableAsteriskTokenShortIdGenerator(), idGenerator.address)
   })
 
   it("should have valid whitelisted accounts", async function() {

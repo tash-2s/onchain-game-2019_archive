@@ -17,8 +17,8 @@ const {
 } = require("loom-js")
 const BN = require("bn.js")
 
-const EthTokenJSON = require("./eth/build/contracts/SpecialPlanetToken.json")
-const LoomTokenJSON = require("./loom/build/contracts/SpecialPlanetToken.json")
+const EthTokenJSON = require("./eth/build/contracts/TradableAsteriskToken.json")
+const LoomTokenJSON = require("./loom/build/contracts/TradableAsteriskToken.json")
 
 const loadEth = envName => {
   const MnemonicUtil = require("./eth/MnemonicUtil.js")

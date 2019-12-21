@@ -1,24 +1,26 @@
 pragma solidity 0.5.13;
 
 import "./modules/UserGoldControllable.sol";
-import "./modules/UserNormalPlanetControllable.sol";
+import "./modules/UserInGameAsteriskControllable.sol";
 
-import "../permanences/UserNormalPlanetIdGeneratorPermanence.sol";
+import "../permanences/UserInGameAsteriskIdGeneratorPermanence.sol";
 
-import "../libraries/SpecialPlanetTokenIdInterpreter.sol";
+import "../libraries/TradableAsteriskTokenIdInterpreter.sol";
 
-contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
-  UserNormalPlanetIdGeneratorPermanence public userNormalPlanetIdGeneratorPermanence;
+contract DebugController is UserGoldControllable, UserInGameAsteriskControllable {
+  UserInGameAsteriskIdGeneratorPermanence public userInGameAsteriskIdGeneratorPermanence;
 
   constructor(
     address userGoldPermanenceAddress,
-    address userNormalPlanetPermanenceAddress,
-    address userNormalPlanetIdGeneratorPermanenceAddress
+    address userInGameAsteriskPermanenceAddress,
+    address userInGameAsteriskIdGeneratorPermanenceAddress
   ) public {
     userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
-    userNormalPlanetPermanence = UserNormalPlanetPermanence(userNormalPlanetPermanenceAddress);
-    userNormalPlanetIdGeneratorPermanence = UserNormalPlanetIdGeneratorPermanence(
-      userNormalPlanetIdGeneratorPermanenceAddress
+    userInGameAsteriskPermanence = UserInGameAsteriskPermanence(
+      userInGameAsteriskPermanenceAddress
+    );
+    userInGameAsteriskIdGeneratorPermanence = UserInGameAsteriskIdGeneratorPermanence(
+      userInGameAsteriskIdGeneratorPermanenceAddress
     );
   }
 
@@ -30,21 +32,29 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     mintGold(account, ~uint256(0));
   }
 
-  function debugMintUserNormalPlanet(
+  function debugMintUserInGameAsterisk(
     address account,
-    uint16 normalPlanetId,
+    uint16 inGameAsteriskId,
     uint8 kind,
     uint8 param,
     int16 coordinateQ,
     int16 coordinateR
   ) external {
-    uint64[] memory ids = userNormalPlanetIdGeneratorPermanence.generate(msg.sender, 1);
-    setNormalPlanetToMap(account, ids[0], normalPlanetId, kind, param, coordinateQ, coordinateR);
+    uint64[] memory ids = userInGameAsteriskIdGeneratorPermanence.generate(msg.sender, 1);
+    setInGameAsteriskToMap(
+      account,
+      ids[0],
+      inGameAsteriskId,
+      kind,
+      param,
+      coordinateQ,
+      coordinateR
+    );
   }
 
-  function debugMintMaxUserNormalPlanets(address account) external {
-    uint64 counter = uint64(userNormalPlanetIdGeneratorPermanence.read(account));
-    require(userNormalPlanetRecordsCountOf(account) == 0, "you must not have planets");
+  function debugMintMaxUserInGameAsterisks(address account) external {
+    uint64 counter = uint64(userInGameAsteriskIdGeneratorPermanence.read(account));
+    require(userInGameAsteriskRecordsCountOf(account) == 0, "you must not have asterisks");
 
     bytes32[] memory arr = new bytes32[](919);
 
@@ -53,7 +63,7 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
     int256 start;
     int256 end;
     uint256 i = 0;
-    uint16 normalPlanetId;
+    uint16 inGameAsteriskId;
     uint8 kind;
     uint8 param;
 
@@ -71,23 +81,23 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
 
       for (r = start; r <= end; r++) {
         if (i < 400) {
-          normalPlanetId = 11;
+          inGameAsteriskId = 11;
           kind = 1;
           param = 10;
         } else if (i < 800) {
-          normalPlanetId = 12;
+          inGameAsteriskId = 12;
           kind = 2;
           param = 11;
         } else {
-          normalPlanetId = 15;
+          inGameAsteriskId = 15;
           kind = 3;
           param = 4;
         }
 
-        arr[i++] = buildBytes32FromUserNormalPlanetRecord(
-          UserNormalPlanetRecord(
+        arr[i++] = buildBytes32FromUserInGameAsteriskRecord(
+          UserInGameAsteriskRecord(
             ++counter,
-            normalPlanetId,
+            inGameAsteriskId,
             kind,
             param,
             30,
@@ -100,15 +110,15 @@ contract DebugController is UserGoldControllable, UserNormalPlanetControllable {
       }
     }
 
-    userNormalPlanetPermanence.update(account, arr);
-    userNormalPlanetIdGeneratorPermanence.update(account, counter + 1);
+    userInGameAsteriskPermanence.update(account, arr);
+    userInGameAsteriskIdGeneratorPermanence.update(account, counter + 1);
   }
 
-  function createSpecialPlanetTokenIds(uint256 count) external pure returns (uint256[] memory) {
+  function createTradableAsteriskTokenIds(uint256 count) external pure returns (uint256[] memory) {
     uint256[] memory ids = new uint256[](count);
     uint24 shortId = 1000; // to avoid collision
     for (uint256 i = 0; i < count; i++) {
-      ids[i] = SpecialPlanetTokenIdInterpreter.fieldsToId(
+      ids[i] = TradableAsteriskTokenIdInterpreter.fieldsToId(
         shortId,
         1,
         uint8((i % 2) + 1),

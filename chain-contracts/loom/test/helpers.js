@@ -1,6 +1,6 @@
 module.exports = {
   // see migrations
-  buildNormalPlanetPermanenceBytes32: (kind, param, price) => {
+  buildInGameAsteriskPermanenceBytes32: (kind, param, price) => {
     const d = (kind | (param << 8) | (price << 16)).toString(16)
     return "0x" + zeroPadding(d, 64)
   },

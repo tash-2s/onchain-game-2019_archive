@@ -31,36 +31,36 @@ module.exports = function(deployer, network, accounts) {
       deployer.network_id,
       "UserGoldPermanence"
     )
-    const userNormalPlanetPermanenceAddress = await helper.getRegistryContractAddress(
+    const userInGameAsteriskPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "UserNormalPlanetPermanence"
+      "UserInGameAsteriskPermanence"
     )
-    const userNormalPlanetIdGeneratorPermanenceAddress = await helper.getRegistryContractAddress(
+    const userInGameAsteriskIdGeneratorPermanenceAddress = await helper.getRegistryContractAddress(
       deployer.network_id,
-      "UserNormalPlanetIdGeneratorPermanence"
+      "UserInGameAsteriskIdGeneratorPermanence"
     )
 
     const controller = await deployer.deploy(
       DebugController,
       userGoldPermanenceAddress,
-      userNormalPlanetPermanenceAddress,
-      userNormalPlanetIdGeneratorPermanenceAddress
+      userInGameAsteriskPermanenceAddress,
+      userInGameAsteriskIdGeneratorPermanenceAddress
     )
 
     const UserGoldPermanence = new web3.eth.Contract(whitelistedABI, userGoldPermanenceAddress)
     await UserGoldPermanence.methods.addWhitelisted(controller.address).send({from: accounts[0]})
 
-    const UserNormalPlanet = new web3.eth.Contract(
+    const UserInGameAsterisk = new web3.eth.Contract(
       whitelistedABI,
-      userNormalPlanetPermanenceAddress
+      userInGameAsteriskPermanenceAddress
     )
-    await UserNormalPlanet.methods.addWhitelisted(controller.address).send({from: accounts[0]})
+    await UserInGameAsterisk.methods.addWhitelisted(controller.address).send({from: accounts[0]})
 
-    const UserNormalPlanetIdGenerator = new web3.eth.Contract(
+    const UserInGameAsteriskIdGenerator = new web3.eth.Contract(
       whitelistedABI,
-      userNormalPlanetIdGeneratorPermanenceAddress
+      userInGameAsteriskIdGeneratorPermanenceAddress
     )
-    await UserNormalPlanetIdGenerator.methods
+    await UserInGameAsteriskIdGenerator.methods
       .addWhitelisted(controller.address)
       .send({from: accounts[0]})
   })
