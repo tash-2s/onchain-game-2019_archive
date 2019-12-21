@@ -72,7 +72,9 @@ function Hexes(props: Props & { hexSize: number; hexWidth: number; hexHeight: nu
       (!!props.userPageUI.selectedUserInGameAsteriskIdsForRemoval &&
         !!userAsterisk &&
         userAsterisk.isInGame &&
-        !!props.userPageUI.selectedUserInGameAsteriskIdsForRemoval.find(id => id === userAsterisk.id))
+        !!props.userPageUI.selectedUserInGameAsteriskIdsForRemoval.find(
+          id => id === userAsterisk.id
+        ))
 
     const select =
       selectFn(props, h, usableRadius, isSufficientGoldForNextInGameAsteriskSet) || undefined
@@ -119,7 +121,9 @@ const processForMultiAsteriskSet = (user: ComputedTargetUserState, userPageUI: U
     !!userPageUI.selectedInGameAsteriskIdForSet &&
     userPageUI.selectedAsteriskHexesForSet.length > 0
   ) {
-    const asterisk = user.inGameAsterisks.find(p => p.id === userPageUI.selectedInGameAsteriskIdForSet)
+    const asterisk = user.inGameAsterisks.find(
+      p => p.id === userPageUI.selectedInGameAsteriskIdForSet
+    )
     if (!asterisk) {
       throw new Error("unknown asterisk")
     }
@@ -181,7 +185,8 @@ const selectFn = (
       )
       if (
         isAlreadySelected || // for unselect
-        props.userPageUI.selectedUserInGameAsteriskIdsForRemoval.length < maxSelectableAsteriskHexCount
+        props.userPageUI.selectedUserInGameAsteriskIdsForRemoval.length <
+          maxSelectableAsteriskHexCount
       ) {
         return () => props.userPageUIActions.selectUserInGameAsteriskForRemoval(userAsterisk.id)
       }

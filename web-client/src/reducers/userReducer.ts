@@ -71,8 +71,14 @@ export const createUserReducer = () =>
       targetUser: null
     }))
     .case(UserActionsForInGameAsterisk.setAsterisksToMap, buildStateFromUserAndUserInGameAsterisks)
-    .case(UserActionsForInGameAsterisk.rankupUserAsterisks, buildStateFromUserAndUserInGameAsterisks)
-    .case(UserActionsForInGameAsterisk.removeUserAsterisks, buildStateFromUserAndUserInGameAsterisks)
+    .case(
+      UserActionsForInGameAsterisk.rankupUserAsterisks,
+      buildStateFromUserAndUserInGameAsterisks
+    )
+    .case(
+      UserActionsForInGameAsterisk.removeUserAsterisks,
+      buildStateFromUserAndUserInGameAsterisks
+    )
     .case(UserActionsForTradableAsterisk.setTargetUserAsteriskTokens, (state, payload) => {
       if (!state.targetUser) {
         throw new Error("invalid state")
@@ -112,7 +118,10 @@ export const createUserReducer = () =>
         }
       }
     })
-    .case(UserActionsForTradableAsterisk.setAsteriskTokenToMap, buildStateFromUserAndUserTradableAsterisks)
+    .case(
+      UserActionsForTradableAsterisk.setAsteriskTokenToMap,
+      buildStateFromUserAndUserTradableAsterisks
+    )
     .case(
       UserActionsForTradableAsterisk.removeUserAsteriskFromMap,
       buildStateFromUserAndUserTradableAsterisks

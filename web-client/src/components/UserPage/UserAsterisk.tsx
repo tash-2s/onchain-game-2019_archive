@@ -94,7 +94,10 @@ class UserAsteriskButtons extends React.Component<UserAsteriskProps> {
 
   rankupButtonHandler = () => {
     this.props.userActions.inGame.rankupUserAsterisks([
-      { userInGameAsteriskId: this.props.userAsterisk.id, targetRank: this.props.userAsterisk.rank + 1 }
+      {
+        userInGameAsteriskId: this.props.userAsterisk.id,
+        targetRank: this.props.userAsterisk.rank + 1
+      }
     ])
   }
 

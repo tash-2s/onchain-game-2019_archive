@@ -39,7 +39,8 @@ export function Tokens(props: {
     ? `Transfer requested. After the confirmation of eth tx (${props.user.tradableAsteriskToken.transferToLoomTx}), it takes additional 15 minutes to see the token on loom`
     : ""
   const loomTokens = props.user.tradableAsteriskToken.loomTokens.map(token => {
-    const transferFn = () => props.userActionsForTradableAsterisk.transferAsteriskTokenToEth(token.id)
+    const transferFn = () =>
+      props.userActionsForTradableAsterisk.transferAsteriskTokenToEth(token.id)
     const selectForSetFn = () => props.userPageUIActions.selectTradableAsteriskTokenForSet(token.id)
     return (
       <li key={token.id}>
@@ -70,7 +71,9 @@ export function Tokens(props: {
       <h2 className={"title is-6"}>eth</h2>
       <ul>{ethTokens}</ul>
       <div>{msg1}</div>
-      <button onClick={props.userActionsForTradableAsterisk.buyAsteriskToken}>buy a asterisk</button>
+      <button onClick={props.userActionsForTradableAsterisk.buyAsteriskToken}>
+        buy a asterisk
+      </button>
       <div>{props.user.tradableAsteriskToken.buyTx}</div>
 
       <h2 className={"title is-6"}>loom</h2>

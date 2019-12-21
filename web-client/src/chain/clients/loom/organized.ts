@@ -64,7 +64,9 @@ export const getTradableAsteriskTokensByIds = async (tokenIds: Array<string>) =>
 }
 
 const _getTradableAsteriskTokensByIds = async (tokenIds: Array<string>) => {
-  const r = await new TradableAsteriskController(chains.loom).getAsteriskFieldsFromTokenIds(tokenIds)
+  const r = await new TradableAsteriskController(chains.loom).getAsteriskFieldsFromTokenIds(
+    tokenIds
+  )
 
   return tokenIds.map((id, i) => ({
     id: id,

@@ -15,7 +15,9 @@ export class UserPageUIActions extends AbstractActions {
     this.dispatch(UserPageUIActions.toggleUserAsterisksViewKind())
   }
 
-  static selectInGameAsteriskForSet = UserPageUIActions.creator<number>("selectInGameAsteriskForSet")
+  static selectInGameAsteriskForSet = UserPageUIActions.creator<number>(
+    "selectInGameAsteriskForSet"
+  )
   selectInGameAsteriskForSet = (asteriskId: number) => {
     this.dispatch(UserPageUIActions.selectInGameAsteriskForSet(asteriskId))
   }

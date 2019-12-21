@@ -11,9 +11,9 @@ import {
 export class UserActionsForInGameAsterisk extends AbstractActions {
   private static creator = UserActionsForInGameAsterisk.getActionCreator()
 
-  static setAsterisksToMap = UserActionsForInGameAsterisk.creator<ReturnTypeOfGetUserInGameAsterisks>(
-    "setAsterisksToMap"
-  )
+  static setAsterisksToMap = UserActionsForInGameAsterisk.creator<
+    ReturnTypeOfGetUserInGameAsterisks
+  >("setAsterisksToMap")
   setAsterisksToMap = (
     asteriskId: number,
     axialCoordinates: Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
@@ -36,9 +36,9 @@ export class UserActionsForInGameAsterisk extends AbstractActions {
     })
   }
 
-  static rankupUserAsterisks = UserActionsForInGameAsterisk.creator<ReturnTypeOfGetUserInGameAsterisks>(
-    "rankupUserAsterisks"
-  )
+  static rankupUserAsterisks = UserActionsForInGameAsterisk.creator<
+    ReturnTypeOfGetUserInGameAsterisks
+  >("rankupUserAsterisks")
   rankupUserAsterisks = (arr: Array<{ userInGameAsteriskId: string; targetRank: number }>) => {
     new AppActions(this.dispatch).withLoading(async () => {
       await new InGameAsteriskController(chains.loom).rankupAsterisks(
@@ -52,9 +52,9 @@ export class UserActionsForInGameAsterisk extends AbstractActions {
     })
   }
 
-  static removeUserAsterisks = UserActionsForInGameAsterisk.creator<ReturnTypeOfGetUserInGameAsterisks>(
-    "removeUserAsterisks"
-  )
+  static removeUserAsterisks = UserActionsForInGameAsterisk.creator<
+    ReturnTypeOfGetUserInGameAsterisks
+  >("removeUserAsterisks")
   removeUserAsterisks = (userAsteriskIds: Array<string>) => {
     new AppActions(this.dispatch).withLoading(async () => {
       await new InGameAsteriskController(chains.loom).removeAsterisks(userAsteriskIds)

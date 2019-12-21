@@ -13,10 +13,10 @@ export const computeUserAsteriskMap = <T1 extends Coordinates, T2 extends Coordi
   userTradableAsterisks: Array<T2>
 ) => {
   const usableRadius = UserAsteriskMapUtil.mapRadiusFromGold(gold)
-  const { userAsterisksByCoordinates, userAsterisksBiggestRadius } = userAsterisksAndThierBiggestRadius(
-    userInGameAsterisks,
-    userTradableAsterisks
-  )
+  const {
+    userAsterisksByCoordinates,
+    userAsterisksBiggestRadius
+  } = userAsterisksAndThierBiggestRadius(userInGameAsterisks, userTradableAsterisks)
   const shownRadius = Math.max(userAsterisksBiggestRadius, usableRadius)
   const hexes = UserAsteriskMapUtil.hexesFromMapRadius(shownRadius).map(h => {
     const q = h[0]
@@ -44,7 +44,10 @@ const userAsterisksAndThierBiggestRadius = <T1 extends Coordinates, T2 extends C
   let userAsterisksBiggestRadius = 0
 
   const tackleBiggestRadius = (up: T1 | T2) => {
-    const distance = UserAsteriskMapUtil.distanceFromCenter(up.axialCoordinateQ, up.axialCoordinateR)
+    const distance = UserAsteriskMapUtil.distanceFromCenter(
+      up.axialCoordinateQ,
+      up.axialCoordinateR
+    )
     if (userAsterisksBiggestRadius < distance) {
       userAsterisksBiggestRadius = distance
     }

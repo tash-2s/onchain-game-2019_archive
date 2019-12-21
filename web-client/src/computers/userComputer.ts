@@ -1,7 +1,11 @@
 import BN from "bn.js"
 
 import { UserState, TargetUserState } from "../reducers/userReducer"
-import { InGameAsterisks, initialInGameAsteriskIds, getInGameAsterisk } from "../data/InGameAsterisks"
+import {
+  InGameAsterisks,
+  initialInGameAsteriskIds,
+  getInGameAsterisk
+} from "../data/InGameAsterisks"
 import {
   computeUserInGameAsteriskParams,
   computeUserInGameAsteriskRankStatuses
@@ -62,7 +66,11 @@ export const computeUserState = (state: UserState, now: number) => {
       productivity: productivity,
       knowledge: knowledge,
       goldPerSec: goldPerSec,
-      userAsteriskMap: computeUserAsteriskMap(ongoingGold, computedUserAsterisks, userTradableAsterisks),
+      userAsteriskMap: computeUserAsteriskMap(
+        ongoingGold,
+        computedUserAsterisks,
+        userTradableAsterisks
+      ),
       inGameAsterisks: computeInGameAsterisks(ongoingGold, computedUserAsterisks.length),
       tradableAsteriskToken: computeTradableAsteriskToken(state.targetUser.tradableAsteriskToken)
     }
@@ -89,7 +97,10 @@ const computeInGameAsterisks = (gold: BN, userAsteriskCount: number) => {
   if (gold.eqn(0) && userAsteriskCount === 0) {
     onlyAvailableId = initialInGameAsteriskIds[0]
   }
-  if (gold.eq(getInGameAsterisk(initialInGameAsteriskIds[1]).priceGold) && userAsteriskCount === 1) {
+  if (
+    gold.eq(getInGameAsterisk(initialInGameAsteriskIds[1]).priceGold) &&
+    userAsteriskCount === 1
+  ) {
     onlyAvailableId = initialInGameAsteriskIds[1]
   }
 

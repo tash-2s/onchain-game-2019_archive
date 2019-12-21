@@ -2,7 +2,10 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { BNFormatter } from "../models/BNFormatter"
-import { getTradableAsteriskTokensByIds, TradableAsteriskToken } from "../chain/clients/loom/organized"
+import {
+  getTradableAsteriskTokensByIds,
+  TradableAsteriskToken
+} from "../chain/clients/loom/organized"
 import { AsteriskArt } from "./utils/AsteriskArt"
 
 export function TradableAsteriskTokenMetadataPage(props: { params: Array<string> }) {
