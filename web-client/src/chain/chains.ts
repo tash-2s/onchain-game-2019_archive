@@ -13,7 +13,7 @@ class Chains {
     return this.loom.login(this.eth.signer())
   }
 
-  getSpecialPlanetTokenTransferResumeReceipt = async () => {
+  getTradableAsteriskTokenTransferResumeReceipt = async () => {
     const ethAddress = this.eth.address
     if (!ethAddress) {
       throw new Error("not logined")
@@ -25,9 +25,9 @@ class Chains {
     }
 
     return this.loom.withGateway(this.eth.signer(), async gateway => {
-      const receipt = await this.loom.getSpecialPlanetTokenWithdrawalReceipt(
+      const receipt = await this.loom.getTradableAsteriskTokenWithdrawalReceipt(
         ethAddress,
-        this.eth.env.contractAddresses.SpecialPlanetToken,
+        this.eth.env.contractAddresses.TradableAsteriskToken,
         gateway
       )
 

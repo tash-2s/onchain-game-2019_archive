@@ -1,20 +1,20 @@
-export const planetKinds = ["residence", "goldmine", "technology"] as const
-export type PlanetKind = typeof planetKinds[number]
-export const planetKindNumToKind = (kindNum: number) => {
-  if (kindNum > planetKinds.length) {
+export const asteriskKinds = ["residence", "goldmine", "technology"] as const
+export type AsteriskKind = typeof asteriskKinds[number]
+export const asteriskKindNumToKind = (kindNum: number) => {
+  if (kindNum > asteriskKinds.length) {
     throw new Error("invalid kindNum")
   }
-  return planetKinds[kindNum - 1]
+  return asteriskKinds[kindNum - 1]
 }
-export const planetKindsWithAll = ["all", "residence", "goldmine", "technology"] as const
-export type PlanetKindWithAll = typeof planetKindsWithAll[number]
+export const asteriskKindsWithAll = ["all", "residence", "goldmine", "technology"] as const
+export type AsteriskKindWithAll = typeof asteriskKindsWithAll[number]
 
 export const routeIds = [
   "/",
   "/users",
   "/:address",
   "/about",
-  "/special_planet_token_metadata/:fields",
+  "/tradable_asterisk_token_metadata/:fields",
   "/not_found"
 ] as const
 export type RouteId = typeof routeIds[number]
@@ -26,10 +26,10 @@ export interface RouteState {
 export const userPageViewKinds = ["main", "tokens"] as const
 export type UserPageViewKind = typeof userPageViewKinds[number]
 
-export const userPlanetsViewKinds = ["map", "list"] as const
-export type UserPlanetsViewKind = typeof userPlanetsViewKinds[number]
+export const userAsterisksViewKinds = ["map", "list"] as const
+export type UserAsterisksViewKind = typeof userAsterisksViewKinds[number]
 
-export const userPlanetsSortKinds = ["Newest", "Oldest"] as const
-export type UserPlanetsSortKind = typeof userPlanetsSortKinds[number]
+export const userAsterisksSortKinds = ["Newest", "Oldest"] as const
+export type UserAsterisksSortKind = typeof userAsterisksSortKinds[number]
 
-export const maxSelectablePlanetHexCount = 50
+export const maxSelectableAsteriskHexCount = 50

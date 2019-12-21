@@ -1,6 +1,6 @@
 import { AbstractActions } from "./AbstractActions"
 
-import { UserPageViewKind, UserPlanetsSortKind, PlanetKindWithAll } from "../constants"
+import { UserPageViewKind, UserAsterisksSortKind, AsteriskKindWithAll } from "../constants"
 
 export class UserPageUIActions extends AbstractActions {
   private static creator = UserPageUIActions.getActionCreator()
@@ -10,54 +10,54 @@ export class UserPageUIActions extends AbstractActions {
     this.dispatch(UserPageUIActions.selectPageViewKind(kind))
   }
 
-  static toggleUserPlanetsViewKind = UserPageUIActions.creator("toggleUserPlanetsViewKind")
-  toggleUserPlanetsViewKind = () => {
-    this.dispatch(UserPageUIActions.toggleUserPlanetsViewKind())
+  static toggleUserAsterisksViewKind = UserPageUIActions.creator("toggleUserAsterisksViewKind")
+  toggleUserAsterisksViewKind = () => {
+    this.dispatch(UserPageUIActions.toggleUserAsterisksViewKind())
   }
 
-  static selectNormalPlanetForSet = UserPageUIActions.creator<number>("selectNormalPlanetForSet")
-  selectNormalPlanetForSet = (planetId: number) => {
-    this.dispatch(UserPageUIActions.selectNormalPlanetForSet(planetId))
+  static selectInGameAsteriskForSet = UserPageUIActions.creator<number>("selectInGameAsteriskForSet")
+  selectInGameAsteriskForSet = (asteriskId: number) => {
+    this.dispatch(UserPageUIActions.selectInGameAsteriskForSet(asteriskId))
   }
 
-  static unselectNormalPlanetForSet = UserPageUIActions.creator("unselectNormalPlanetForSet")
-  unselectNormalPlanetForSet = () => {
-    this.dispatch(UserPageUIActions.unselectNormalPlanetForSet())
+  static unselectInGameAsteriskForSet = UserPageUIActions.creator("unselectInGameAsteriskForSet")
+  unselectInGameAsteriskForSet = () => {
+    this.dispatch(UserPageUIActions.unselectInGameAsteriskForSet())
   }
 
-  static selectUserNormalPlanetForModal = UserPageUIActions.creator<string>(
-    "selectUserNormalPlanetForModal"
+  static selectUserInGameAsteriskForModal = UserPageUIActions.creator<string>(
+    "selectUserInGameAsteriskForModal"
   )
-  selectUserNormalPlanetForModal = (userPlanetId: string) => {
-    this.dispatch(UserPageUIActions.selectUserNormalPlanetForModal(userPlanetId))
+  selectUserInGameAsteriskForModal = (userAsteriskId: string) => {
+    this.dispatch(UserPageUIActions.selectUserInGameAsteriskForModal(userAsteriskId))
   }
 
-  static unselectUserNormalPlanetForModal = UserPageUIActions.creator(
-    "unselectUserNormalPlanetForModal"
+  static unselectUserInGameAsteriskForModal = UserPageUIActions.creator(
+    "unselectUserInGameAsteriskForModal"
   )
-  unselectUserNormalPlanetForModal = () => {
-    this.dispatch(UserPageUIActions.unselectUserNormalPlanetForModal())
+  unselectUserInGameAsteriskForModal = () => {
+    this.dispatch(UserPageUIActions.unselectUserInGameAsteriskForModal())
   }
 
-  static selectPlanetKindForUserPlanetList = UserPageUIActions.creator<PlanetKindWithAll>(
-    "selectPlanetKindForUserPlanetList"
+  static selectAsteriskKindForUserAsteriskList = UserPageUIActions.creator<AsteriskKindWithAll>(
+    "selectAsteriskKindForUserAsteriskList"
   )
-  selectPlanetKindForUserPlanetList = (kind: PlanetKindWithAll) => {
-    this.dispatch(UserPageUIActions.selectPlanetKindForUserPlanetList(kind))
+  selectAsteriskKindForUserAsteriskList = (kind: AsteriskKindWithAll) => {
+    this.dispatch(UserPageUIActions.selectAsteriskKindForUserAsteriskList(kind))
   }
 
-  static selectSortKindForUserPlanetList = UserPageUIActions.creator<UserPlanetsSortKind>(
-    "selectSortKindForUserPlanetList"
+  static selectSortKindForUserAsteriskList = UserPageUIActions.creator<UserAsterisksSortKind>(
+    "selectSortKindForUserAsteriskList"
   )
-  selectSortKindForUserPlanetList = (kind: UserPlanetsSortKind) => {
-    this.dispatch(UserPageUIActions.selectSortKindForUserPlanetList(kind))
+  selectSortKindForUserAsteriskList = (kind: UserAsterisksSortKind) => {
+    this.dispatch(UserPageUIActions.selectSortKindForUserAsteriskList(kind))
   }
 
-  static togglePlanetListVisibilityForMobile = UserPageUIActions.creator(
-    "togglePlanetListVisibilityForMobile"
+  static toggleAsteriskListVisibilityForMobile = UserPageUIActions.creator(
+    "toggleAsteriskListVisibilityForMobile"
   )
-  togglePlanetListVisibilityForMobile = () => {
-    this.dispatch(UserPageUIActions.togglePlanetListVisibilityForMobile())
+  toggleAsteriskListVisibilityForMobile = () => {
+    this.dispatch(UserPageUIActions.toggleAsteriskListVisibilityForMobile())
   }
 
   static clear = UserPageUIActions.creator("clear")
@@ -65,65 +65,65 @@ export class UserPageUIActions extends AbstractActions {
     this.dispatch(UserPageUIActions.clear())
   }
 
-  static selectSpecialPlanetTokenForSet = UserPageUIActions.creator<string>(
-    "selectSpecialPlanetTokenForSet"
+  static selectTradableAsteriskTokenForSet = UserPageUIActions.creator<string>(
+    "selectTradableAsteriskTokenForSet"
   )
-  selectSpecialPlanetTokenForSet = (tokenId: string) => {
-    this.dispatch(UserPageUIActions.selectSpecialPlanetTokenForSet(tokenId))
+  selectTradableAsteriskTokenForSet = (tokenId: string) => {
+    this.dispatch(UserPageUIActions.selectTradableAsteriskTokenForSet(tokenId))
   }
 
-  static unselectSpecialPlanetTokenForSet = UserPageUIActions.creator(
-    "unselectSpecialPlanetTokenForSet"
+  static unselectTradableAsteriskTokenForSet = UserPageUIActions.creator(
+    "unselectTradableAsteriskTokenForSet"
   )
-  unselectSpecialPlanetTokenForSet = () => {
-    this.dispatch(UserPageUIActions.unselectSpecialPlanetTokenForSet())
+  unselectTradableAsteriskTokenForSet = () => {
+    this.dispatch(UserPageUIActions.unselectTradableAsteriskTokenForSet())
   }
 
-  static selectUserSpecialPlanetForModal = UserPageUIActions.creator<string>(
-    "selectUserSpecialPlanetForModal"
+  static selectUserTradableAsteriskForModal = UserPageUIActions.creator<string>(
+    "selectUserTradableAsteriskForModal"
   )
-  selectUserSpecialPlanetForModal = (userSpecialPlanetId: string) => {
-    this.dispatch(UserPageUIActions.selectUserSpecialPlanetForModal(userSpecialPlanetId))
+  selectUserTradableAsteriskForModal = (userTradableAsteriskId: string) => {
+    this.dispatch(UserPageUIActions.selectUserTradableAsteriskForModal(userTradableAsteriskId))
   }
 
-  static unselectUserSpecialPlanetForModal = UserPageUIActions.creator(
-    "unselectUserSpecialPlanetForModal"
+  static unselectUserTradableAsteriskForModal = UserPageUIActions.creator(
+    "unselectUserTradableAsteriskForModal"
   )
-  unselectUserSpecialPlanetForModal = () => {
-    this.dispatch(UserPageUIActions.unselectUserSpecialPlanetForModal())
+  unselectUserTradableAsteriskForModal = () => {
+    this.dispatch(UserPageUIActions.unselectUserTradableAsteriskForModal())
   }
 
-  static selectPlanetHexForSet = UserPageUIActions.creator<{
+  static selectAsteriskHexForSet = UserPageUIActions.creator<{
     axialCoordinateQ: number
     axialCoordinateR: number
-  }>("selectPlanetHexForSet")
-  selectPlanetHexForSet = (axialCoordinateQ: number, axialCoordinateR: number) => {
-    this.dispatch(UserPageUIActions.selectPlanetHexForSet({ axialCoordinateQ, axialCoordinateR }))
+  }>("selectAsteriskHexForSet")
+  selectAsteriskHexForSet = (axialCoordinateQ: number, axialCoordinateR: number) => {
+    this.dispatch(UserPageUIActions.selectAsteriskHexForSet({ axialCoordinateQ, axialCoordinateR }))
   }
 
-  static unselectPlanetHexesForSet = UserPageUIActions.creator("unselectPlanetHexesForSet")
-  unselectPlanetHexesForSet = () => {
-    this.dispatch(UserPageUIActions.unselectPlanetHexesForSet())
+  static unselectAsteriskHexesForSet = UserPageUIActions.creator("unselectAsteriskHexesForSet")
+  unselectAsteriskHexesForSet = () => {
+    this.dispatch(UserPageUIActions.unselectAsteriskHexesForSet())
   }
 
-  static startSelectingUserNormalPlanetForRemoval = UserPageUIActions.creator(
-    "startSelectingUserNormalPlanetForRemoval"
+  static startSelectingUserInGameAsteriskForRemoval = UserPageUIActions.creator(
+    "startSelectingUserInGameAsteriskForRemoval"
   )
-  startSelectingUserNormalPlanetForRemoval = () => {
-    this.dispatch(UserPageUIActions.startSelectingUserNormalPlanetForRemoval())
+  startSelectingUserInGameAsteriskForRemoval = () => {
+    this.dispatch(UserPageUIActions.startSelectingUserInGameAsteriskForRemoval())
   }
 
-  static selectUserNormalPlanetForRemoval = UserPageUIActions.creator<string>(
-    "selectUserNormalPlanetForRemoval"
+  static selectUserInGameAsteriskForRemoval = UserPageUIActions.creator<string>(
+    "selectUserInGameAsteriskForRemoval"
   )
-  selectUserNormalPlanetForRemoval = (userPlanetId: string) => {
-    this.dispatch(UserPageUIActions.selectUserNormalPlanetForRemoval(userPlanetId))
+  selectUserInGameAsteriskForRemoval = (userAsteriskId: string) => {
+    this.dispatch(UserPageUIActions.selectUserInGameAsteriskForRemoval(userAsteriskId))
   }
 
-  static endSelectingUserNormalPlanetForRemoval = UserPageUIActions.creator(
-    "endSelectingUserNormalPlanetForRemoval"
+  static endSelectingUserInGameAsteriskForRemoval = UserPageUIActions.creator(
+    "endSelectingUserInGameAsteriskForRemoval"
   )
-  endSelectingUserNormalPlanetForRemoval = () => {
-    this.dispatch(UserPageUIActions.endSelectingUserNormalPlanetForRemoval())
+  endSelectingUserInGameAsteriskForRemoval = () => {
+    this.dispatch(UserPageUIActions.endSelectingUserInGameAsteriskForRemoval())
   }
 }

@@ -1,4 +1,4 @@
-import { getSpecialPlanetTokensByIds } from "./loom/organized"
+import { getTradableAsteriskTokensByIds } from "./loom/organized"
 
 interface Client {
   balanceOf: (owner: string) => Promise<string>
@@ -9,13 +9,13 @@ interface Client {
   ) => Promise<Array<string>>
 }
 
-export const getSpecialPlanetTokens = async (address: string, client: Client) => {
-  const ids = await getSpecialPlanetTokenIds(address, client)
-  const tokens = await getSpecialPlanetTokensByIds(ids)
+export const getTradableAsteriskTokens = async (address: string, client: Client) => {
+  const ids = await getTradableAsteriskTokenIds(address, client)
+  const tokens = await getTradableAsteriskTokensByIds(ids)
   return tokens
 }
 
-const getSpecialPlanetTokenIds = async (address: string, client: Client) => {
+const getTradableAsteriskTokenIds = async (address: string, client: Client) => {
   const ids: Array<string> = []
 
   const balance = strToNum(await client.balanceOf(address))

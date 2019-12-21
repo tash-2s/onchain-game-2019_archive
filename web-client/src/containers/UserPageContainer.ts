@@ -10,8 +10,8 @@ import { computeUserPageUIState } from "../computers/userPageUIComputer"
 import { UserPage } from "../components/UserPage"
 
 import { UserActions } from "../actions/UserActions"
-import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
-import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
+import { UserActionsForInGameAsterisk } from "../actions/UserActionsForInGameAsterisk"
+import { UserActionsForTradableAsterisk } from "../actions/UserActionsForTradableAsterisk"
 import { UserPageUIActions } from "../actions/UserPageUIActions"
 
 const mapStateToProps = (state: RootState) => {
@@ -31,8 +31,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return {
     userActions: {
       main: new UserActions(dispatch),
-      normal: new UserActionsForNormalPlanet(dispatch),
-      special: new UserActionsForSpecialPlanet(dispatch)
+      inGame: new UserActionsForInGameAsterisk(dispatch),
+      tradable: new UserActionsForTradableAsterisk(dispatch)
     },
     userPageUIActions: new UserPageUIActions(dispatch)
   }

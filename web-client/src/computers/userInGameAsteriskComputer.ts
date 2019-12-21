@@ -1,31 +1,31 @@
 import BN from "bn.js"
 
-import { UserNormalPlanet } from "../reducers/userReducer"
-import { getNormalPlanet } from "../data/NormalPlanets"
+import { UserInGameAsterisk } from "../reducers/userReducer"
+import { getInGameAsterisk } from "../data/InGameAsterisks"
 
-export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPlanet>) => {
+export const computeUserInGameAsteriskParams = (rawUserAsterisks: Array<UserInGameAsterisk>) => {
   const population = new BN(0)
   const productivity = new BN(0)
   const knowledge = new BN(0)
 
-  let biggestUserNormalPlanetPopulation = new BN(0)
-  let biggestUserNormalPlanetProductivity = new BN(0)
+  let biggestUserInGameAsteriskPopulation = new BN(0)
+  let biggestUserInGameAsteriskProductivity = new BN(0)
 
-  const userNormalPlanets = rawUserPlanets.map(up => {
-    const p = getNormalPlanet(up.normalPlanetId)
+  const userInGameAsterisks = rawUserAsterisks.map(up => {
+    const p = getInGameAsterisk(up.inGameAsteriskId)
     const param = paramBasedOnRank(p.param, up.rank)
 
     switch (p.kind) {
       case "residence":
         population.iadd(param)
-        if (param.gt(biggestUserNormalPlanetPopulation)) {
-          biggestUserNormalPlanetPopulation = param
+        if (param.gt(biggestUserInGameAsteriskPopulation)) {
+          biggestUserInGameAsteriskPopulation = param
         }
         break
       case "goldmine":
         productivity.iadd(param)
-        if (param.gt(biggestUserNormalPlanetProductivity)) {
-          biggestUserNormalPlanetProductivity = param
+        if (param.gt(biggestUserInGameAsteriskProductivity)) {
+          biggestUserInGameAsteriskProductivity = param
         }
         break
       case "technology":
@@ -38,27 +38,27 @@ export const computeUserNormalPlanetParams = (rawUserPlanets: Array<UserNormalPl
     return {
       ...up,
       param: param,
-      planet: p
+      asterisk: p
     }
   })
 
   return {
-    userNormalPlanets,
+    userInGameAsterisks,
     population,
     productivity,
     knowledge: knowledge.toNumber(),
-    biggestUserNormalPlanetPopulation,
-    biggestUserNormalPlanetProductivity
+    biggestUserInGameAsteriskPopulation,
+    biggestUserInGameAsteriskProductivity
   }
 }
 
-export const computeUserNormalPlanetRankStatuses = (
-  userPlanets: ReturnType<typeof computeUserNormalPlanetParams>["userNormalPlanets"],
+export const computeUserInGameAsteriskRankStatuses = (
+  userAsterisks: ReturnType<typeof computeUserInGameAsteriskParams>["userInGameAsterisks"],
   gold: BN,
   knowledge: number,
   now: number
 ) => {
-  return userPlanets.map(up => {
+  return userAsterisks.map(up => {
     const { withKnowledge, withoutKnowledge } = remainingSecForRankup(
       up.rank,
       up.rankupedAt,
@@ -70,7 +70,7 @@ export const computeUserNormalPlanetRankStatuses = (
       up.rank,
       up.rankupedAt,
       MAX_RANK,
-      up.planet.priceGold,
+      up.asterisk.priceGold,
       gold,
       knowledge,
       now
@@ -80,7 +80,7 @@ export const computeUserNormalPlanetRankStatuses = (
       ...up,
       maxRank: MAX_RANK,
       rankupableCount: count,
-      requiredGoldForRankup: requiredGoldForRankup(up.rank, up.planet.priceGold),
+      requiredGoldForRankup: requiredGoldForRankup(up.rank, up.asterisk.priceGold),
       requiredGoldForBulkRankup: requiredGold,
       remainingSecForRankup: withKnowledge,
       remainingSecForRankupWithoutKnowledge: withoutKnowledge
@@ -88,14 +88,14 @@ export const computeUserNormalPlanetRankStatuses = (
   })
 }
 
-const paramBasedOnRank = (planetParam: BN, currentRank: number) => {
+const paramBasedOnRank = (asteriskParam: BN, currentRank: number) => {
   const previousRank = new BN(currentRank - 1)
-  return planetParam.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
+  return asteriskParam.mul(new BN(13).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
-const requiredGoldForRankup = (currentRank: number, planetPriceGold: BN) => {
+const requiredGoldForRankup = (currentRank: number, asteriskPriceGold: BN) => {
   const previousRank = new BN(currentRank - 1)
-  return planetPriceGold.mul(new BN(14).pow(previousRank)).div(new BN(10).pow(previousRank))
+  return asteriskPriceGold.mul(new BN(14).pow(previousRank)).div(new BN(10).pow(previousRank))
 }
 
 const remainingSecForRankup = (
@@ -118,10 +118,10 @@ const requiredSecForRankup = (currentRank: number) => {
 }
 
 const rankupableCount = (
-  userPlanetCurrentRank: number,
-  userPlanetRankupedAt: number,
-  userPlanetMaxRank: number,
-  planetOriginalPriceGold: BN,
+  userAsteriskCurrentRank: number,
+  userAsteriskRankupedAt: number,
+  userAsteriskMaxRank: number,
+  asteriskOriginalPriceGold: BN,
   gold: BN,
   knowledge: number,
   now: number
@@ -130,12 +130,12 @@ const rankupableCount = (
   let remainingGold = gold
 
   while (true) {
-    const rank = userPlanetCurrentRank + rankupableCount
-    if (rank >= userPlanetMaxRank) {
+    const rank = userAsteriskCurrentRank + rankupableCount
+    if (rank >= userAsteriskMaxRank) {
       break
     }
 
-    const requiredGold = requiredGoldForRankup(rank, planetOriginalPriceGold)
+    const requiredGold = requiredGoldForRankup(rank, asteriskOriginalPriceGold)
     if (requiredGold.gt(remainingGold)) {
       break
     }
@@ -144,7 +144,7 @@ const rankupableCount = (
       if (rankupableCount !== 0) {
         break
       }
-      if (remainingSecForRankup(rank, userPlanetRankupedAt, knowledge, now).withKnowledge > 0) {
+      if (remainingSecForRankup(rank, userAsteriskRankupedAt, knowledge, now).withKnowledge > 0) {
         break
       }
     }

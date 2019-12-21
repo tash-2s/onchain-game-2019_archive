@@ -1,12 +1,12 @@
 import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { PlanetArt } from "../utils/PlanetArt"
+import { AsteriskArt } from "../utils/AsteriskArt"
 
-export function PlanetHex(props: {
+export function AsteriskHex(props: {
   q: number
   r: number
-  userPlanet: ComputedTargetUserState["userPlanetMap"]["hexes"][number]["userPlanet"]
+  userAsterisk: ComputedTargetUserState["userAsteriskMap"]["hexes"][number]["userAsterisk"]
   shiftTop: number
   shiftLeft: number
   hexSize: number
@@ -17,7 +17,7 @@ export function PlanetHex(props: {
 }) {
   const x = props.hexSize * ((3 / 2) * props.q)
   const y = props.hexSize * ((Math.sqrt(3) / 2) * props.q + Math.sqrt(3) * props.r)
-  const up = props.userPlanet
+  const up = props.userAsterisk
 
   const hexStyle: React.CSSProperties = {
     left: Math.floor(x + props.shiftLeft),
@@ -36,9 +36,9 @@ export function PlanetHex(props: {
   }
   const size = Math.min(props.hexWidth, props.hexHeight)
   const art = up ? (
-    <PlanetArt
-      kind={up.isNormal ? up.planet.kind : up.kind}
-      artSeed={up.isNormal ? up.planet.artSeed : up.artSeed}
+    <AsteriskArt
+      kind={up.isInGame ? up.asterisk.kind : up.kind}
+      artSeed={up.isInGame ? up.asterisk.artSeed : up.artSeed}
       canvasSize={size}
     />
   ) : (

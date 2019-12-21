@@ -2,15 +2,15 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { BNFormatter } from "../models/BNFormatter"
-import { getSpecialPlanetTokensByIds, SpecialPlanetToken } from "../chain/clients/loom/organized"
-import { PlanetArt } from "./utils/PlanetArt"
+import { getTradableAsteriskTokensByIds, TradableAsteriskToken } from "../chain/clients/loom/organized"
+import { AsteriskArt } from "./utils/AsteriskArt"
 
-export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> }) {
+export function TradableAsteriskTokenMetadataPage(props: { params: Array<string> }) {
   const tokenId = props.params[0]
-  const [token, setToken] = React.useState<null | SpecialPlanetToken>(null)
+  const [token, setToken] = React.useState<null | TradableAsteriskToken>(null)
 
   React.useEffect(() => {
-    getSpecialPlanetTokensByIds([tokenId]).then(tokens => {
+    getTradableAsteriskTokensByIds([tokenId]).then(tokens => {
       setToken(tokens[0])
     })
   }, [tokenId])
@@ -20,9 +20,9 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
 
     return (
       <div>
-        <div id={"planet-json"}>{json}</div>
-        <div id={"planet-art"}>
-          <PlanetArt kind={token.kind} artSeed={new BN(token.artSeed)} canvasSize={500} />
+        <div id={"asterisk-json"}>{json}</div>
+        <div id={"asterisk-art"}>
+          <AsteriskArt kind={token.kind} artSeed={new BN(token.artSeed)} canvasSize={500} />
         </div>
       </div>
     )
@@ -31,7 +31,7 @@ export function SpecialPlanetTokenMetadataPage(props: { params: Array<string> })
   }
 }
 
-const buildJSON = (tokenId: string, token: SpecialPlanetToken) => {
+const buildJSON = (tokenId: string, token: TradableAsteriskToken) => {
   const obj = {
     name: `Fuga #${token.shortId}`,
     description: `Full ID: ${tokenId}`,

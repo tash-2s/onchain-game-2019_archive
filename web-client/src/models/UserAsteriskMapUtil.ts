@@ -1,7 +1,7 @@
 import BN from "bn.js"
 
 const RADIUS_GOLD_THRESHOLD = [
-  "100001", // to avoid radius up by initial planet
+  "100001", // to avoid radius up by initial asterisk
   "10000000",
   "10000000000",
   "100000000000000",
@@ -19,7 +19,7 @@ const RADIUS_GOLD_THRESHOLD = [
   "1000000000000000000000000000000000000000000000"
 ].map(s => new BN(s))
 
-export class UserPlanetMapUtil {
+export class UserAsteriskMapUtil {
   static distanceFromCenter = (q: number, r: number) => {
     const x = q
     const z = r

@@ -34,7 +34,7 @@ export function UserPage(props: UserPageProps) {
       return (
         <Tokens
           user={props.user.targetUser}
-          userActionsForSpecialPlanet={props.userActions.special}
+          userActionsForTradableAsterisk={props.userActions.tradable}
           userPageUIActions={props.userPageUIActions}
         />
       )

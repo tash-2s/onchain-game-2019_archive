@@ -1,14 +1,14 @@
 import BN from "bn.js"
 
 import { UserState, TargetUserState } from "../reducers/userReducer"
-import { NormalPlanets, initialNormalPlanetIds, getNormalPlanet } from "../data/NormalPlanets"
+import { InGameAsterisks, initialInGameAsteriskIds, getInGameAsterisk } from "../data/InGameAsterisks"
 import {
-  computeUserNormalPlanetParams,
-  computeUserNormalPlanetRankStatuses
-} from "./userNormalPlanetComputer"
-import { computeUserSpecialPlanets } from "./userSpecialPlanetComputer"
+  computeUserInGameAsteriskParams,
+  computeUserInGameAsteriskRankStatuses
+} from "./userInGameAsteriskComputer"
+import { computeUserTradableAsterisks } from "./userTradableAsteriskComputer"
 import { computeGold } from "./goldComputer"
-import { computeUserPlanetMap } from "./userPlanetMapComputer"
+import { computeUserAsteriskMap } from "./userAsteriskMapComputer"
 
 export type ComputedUserState = ReturnType<typeof computeUserState>
 export type ComputedTargetUserState = NonNullable<ComputedUserState["targetUser"]>
@@ -19,24 +19,24 @@ export const computeUserState = (state: UserState, now: number) => {
   }
 
   const {
-    userNormalPlanets,
-    population: normalPopulation,
-    productivity: normalProductivity,
+    userInGameAsterisks,
+    population: inGamePopulation,
+    productivity: inGameProductivity,
     knowledge,
-    biggestUserNormalPlanetPopulation,
-    biggestUserNormalPlanetProductivity
-  } = computeUserNormalPlanetParams(state.targetUser.userNormalPlanets)
+    biggestUserInGameAsteriskPopulation,
+    biggestUserInGameAsteriskProductivity
+  } = computeUserInGameAsteriskParams(state.targetUser.userInGameAsterisks)
   const {
-    userSpecialPlanets,
-    population: specialPopulation,
-    productivity: specialProductivity
-  } = computeUserSpecialPlanets(
-    state.targetUser.userSpecialPlanets,
-    biggestUserNormalPlanetPopulation,
-    biggestUserNormalPlanetProductivity
+    userTradableAsterisks,
+    population: tradablePopulation,
+    productivity: tradableProductivity
+  } = computeUserTradableAsterisks(
+    state.targetUser.userTradableAsterisks,
+    biggestUserInGameAsteriskPopulation,
+    biggestUserInGameAsteriskProductivity
   )
-  const population = normalPopulation.add(specialPopulation)
-  const productivity = normalProductivity.add(specialProductivity)
+  const population = inGamePopulation.add(tradablePopulation)
+  const productivity = inGameProductivity.add(tradableProductivity)
 
   const { goldPerSec, ongoingGold } = computeGold(
     population,
@@ -45,8 +45,8 @@ export const computeUserState = (state: UserState, now: number) => {
     now
   )
 
-  const computedUserPlanets = computeUserNormalPlanetRankStatuses(
-    userNormalPlanets,
+  const computedUserAsterisks = computeUserInGameAsteriskRankStatuses(
+    userInGameAsterisks,
     ongoingGold,
     knowledge,
     now
@@ -56,20 +56,20 @@ export const computeUserState = (state: UserState, now: number) => {
     targetUser: {
       address: state.targetUser.address,
       gold: ongoingGold,
-      userNormalPlanets: computedUserPlanets.sort((a, b) => a.createdAt - b.createdAt),
-      userSpecialPlanets: userSpecialPlanets,
+      userInGameAsterisks: computedUserAsterisks.sort((a, b) => a.createdAt - b.createdAt),
+      userTradableAsterisks: userTradableAsterisks,
       population: population,
       productivity: productivity,
       knowledge: knowledge,
       goldPerSec: goldPerSec,
-      userPlanetMap: computeUserPlanetMap(ongoingGold, computedUserPlanets, userSpecialPlanets),
-      normalPlanets: computeNormalPlanets(ongoingGold, computedUserPlanets.length),
-      specialPlanetToken: computeSpecialPlanetToken(state.targetUser.specialPlanetToken)
+      userAsteriskMap: computeUserAsteriskMap(ongoingGold, computedUserAsterisks, userTradableAsterisks),
+      inGameAsterisks: computeInGameAsterisks(ongoingGold, computedUserAsterisks.length),
+      tradableAsteriskToken: computeTradableAsteriskToken(state.targetUser.tradableAsteriskToken)
     }
   }
 }
 
-const computeSpecialPlanetToken = (token: TargetUserState["specialPlanetToken"]) => {
+const computeTradableAsteriskToken = (token: TargetUserState["tradableAsteriskToken"]) => {
   if (!token) {
     return null
   }
@@ -80,20 +80,20 @@ const computeSpecialPlanetToken = (token: TargetUserState["specialPlanetToken"])
   }
 }
 
-const computeNormalPlanets = (gold: BN, userPlanetCount: number) => {
-  if (initialNormalPlanetIds.length !== 2) {
+const computeInGameAsterisks = (gold: BN, userAsteriskCount: number) => {
+  if (initialInGameAsteriskIds.length !== 2) {
     throw new Error("you need to check this impl")
   }
 
   let onlyAvailableId: null | number = null
-  if (gold.eqn(0) && userPlanetCount === 0) {
-    onlyAvailableId = initialNormalPlanetIds[0]
+  if (gold.eqn(0) && userAsteriskCount === 0) {
+    onlyAvailableId = initialInGameAsteriskIds[0]
   }
-  if (gold.eq(getNormalPlanet(initialNormalPlanetIds[1]).priceGold) && userPlanetCount === 1) {
-    onlyAvailableId = initialNormalPlanetIds[1]
+  if (gold.eq(getInGameAsterisk(initialInGameAsteriskIds[1]).priceGold) && userAsteriskCount === 1) {
+    onlyAvailableId = initialInGameAsteriskIds[1]
   }
 
-  return NormalPlanets.map(p => {
+  return InGameAsterisks.map(p => {
     let gettable = false
     if (onlyAvailableId) {
       gettable = onlyAvailableId === p.id

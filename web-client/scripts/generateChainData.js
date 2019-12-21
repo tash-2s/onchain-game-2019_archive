@@ -14,31 +14,31 @@ if (!envDef) {
 
 const targetContractAndFunctions = {
   eth: {
-    SpecialPlanetToken: [
+    TradableAsteriskToken: [
       "balanceOf",
       "approve",
       "tokensOfOwnerByIndex",
       "gateway",
       "depositToGateway"
     ],
-    SpecialPlanetTokenShop: ["price", "mint"]
+    TradableAsteriskTokenShop: ["price", "mint"]
   },
   loom: {
     HighlightedUserController: ["getUsers"],
-    NormalPlanetController: [
-      "getPlanets",
-      "setPlanets",
-      "rankupPlanets",
-      "removePlanets",
+    InGameAsteriskController: [
+      "getAsterisks",
+      "setAsterisks",
+      "rankupAsterisks",
+      "removeAsterisks",
       "claimInitialGold"
     ],
-    SpecialPlanetController: [
-      "getPlanets",
-      "setPlanet",
-      "removePlanet",
-      "getPlanetFieldsFromTokenIds"
+    TradableAsteriskController: [
+      "getAsterisks",
+      "setAsterisk",
+      "removeAsterisk",
+      "getAsteriskFieldsFromTokenIds"
     ],
-    SpecialPlanetToken: [
+    TradableAsteriskToken: [
       "balanceOf",
       "approve",
       "isApprovedForAll",
@@ -46,7 +46,7 @@ const targetContractAndFunctions = {
       "tokensOfOwnerByIndex",
       "gateway"
     ],
-    SpecialPlanetTokenLocker: []
+    TradableAsteriskTokenLocker: []
   }
 }
 

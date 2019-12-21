@@ -8,9 +8,9 @@ import { UserPageUIActions } from "../../actions/UserPageUIActions"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
 import { UserProfile } from "./UserProfile"
-import { UserPlanetList } from "./UserPlanetList"
-import { UserPlanetMap } from "./UserPlanetMap"
-import { PlanetList } from "./PlanetList"
+import { UserAsteriskList } from "./UserAsteriskList"
+import { UserAsteriskMap } from "./UserAsteriskMap"
+import { AsteriskList } from "./AsteriskList"
 
 export function TargetUser(props: {
   currentUser: CurrentUserState
@@ -42,7 +42,7 @@ export function TargetUser(props: {
       <div className={"columns is-desktop"}>
         <div className={"column"}>
           <UserProfile user={props.targetUser} isMine={isMine} />
-          <WrappedPlanetList
+          <WrappedAsteriskList
             targetUser={props.targetUser}
             userPageUI={props.userPageUI}
             userPageUIActions={props.userPageUIActions}
@@ -66,7 +66,7 @@ export function TargetUser(props: {
   )
 }
 
-function WrappedPlanetList(props: {
+function WrappedAsteriskList(props: {
   targetUser: ComputedTargetUserState
   userPageUI: ComputedUserPageUIState
   userPageUIActions: UserPageUIActions
@@ -84,16 +84,16 @@ function WrappedPlanetList(props: {
       >
         <button
           className={"button is-small is-primary"}
-          onClick={props.userPageUIActions.togglePlanetListVisibilityForMobile}
+          onClick={props.userPageUIActions.toggleAsteriskListVisibilityForMobile}
         >
-          {props.userPageUI.planetListVisibilityForMobile ? "Hide" : "Show"} Planet List
+          {props.userPageUI.asteriskListVisibilityForMobile ? "Hide" : "Show"} Asterisk List
         </button>
       </div>
 
-      <div className={props.userPageUI.planetListVisibilityForMobile ? "" : "is-hidden-touch"}>
-        <PlanetList
-          planets={props.targetUser.normalPlanets}
-          setPlanetToGet={props.userPageUIActions.selectNormalPlanetForSet}
+      <div className={props.userPageUI.asteriskListVisibilityForMobile ? "" : "is-hidden-touch"}>
+        <AsteriskList
+          asterisks={props.targetUser.inGameAsterisks}
+          setAsteriskToGet={props.userPageUIActions.selectInGameAsteriskForSet}
           userPageUI={props.userPageUI}
         />
       </div>
@@ -109,10 +109,10 @@ function ViewKindRouter(props: {
   now: number
   isMine: boolean
 }) {
-  switch (props.userPageUI.selectedUserPlanetsViewKind) {
+  switch (props.userPageUI.selectedUserAsterisksViewKind) {
     case "map":
       return (
-        <UserPlanetMap
+        <UserAsteriskMap
           user={props.targetUser}
           userActions={props.userActions}
           userPageUI={props.userPageUI}
@@ -123,7 +123,7 @@ function ViewKindRouter(props: {
       )
     case "list":
       return (
-        <UserPlanetList
+        <UserAsteriskList
           user={props.targetUser}
           userActions={props.userActions}
           userPageUI={props.userPageUI}
@@ -140,7 +140,7 @@ function Buttons(props: { actions: UserPageUIActions }) {
     <nav className={"level"}>
       <div className={"level-left"}>
         <div className={"level-item"}>
-          <button className={"button is-small"} onClick={props.actions.toggleUserPlanetsViewKind}>
+          <button className={"button is-small"} onClick={props.actions.toggleUserAsterisksViewKind}>
             Toggle View
           </button>
         </div>

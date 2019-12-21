@@ -3,7 +3,7 @@ import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { PrettyBN } from "../utils/PrettyBN"
-import { initialNormalPlanetIds, getNormalPlanet } from "../../data/NormalPlanets"
+import { initialInGameAsteriskIds, getInGameAsterisk } from "../../data/InGameAsterisks"
 
 export function UserProfile(props: { user: ComputedTargetUserState; isMine: boolean }) {
   return (
@@ -21,18 +21,18 @@ export function UserProfile(props: { user: ComputedTargetUserState; isMine: bool
 }
 
 function OngoingUserStatus(props: { user: ComputedTargetUserState }) {
-  const radius = props.user.userPlanetMap.usableRadius
+  const radius = props.user.userAsteriskMap.usableRadius
   let requiredGoldText: JSX.Element
-  if (props.user.userPlanetMap.requiredGoldForNextRadius) {
-    requiredGoldText = <PrettyBN bn={props.user.userPlanetMap.requiredGoldForNextRadius} />
+  if (props.user.userAsteriskMap.requiredGoldForNextRadius) {
+    requiredGoldText = <PrettyBN bn={props.user.userAsteriskMap.requiredGoldForNextRadius} />
   } else {
     requiredGoldText = <span>already maximum</span>
   }
 
   let gold: BN
-  if (props.user.gold.eqn(0) && props.user.userNormalPlanets.length === 0) {
-    gold = getNormalPlanet(initialNormalPlanetIds[0]).priceGold.add(
-      getNormalPlanet(initialNormalPlanetIds[1]).priceGold
+  if (props.user.gold.eqn(0) && props.user.userInGameAsterisks.length === 0) {
+    gold = getInGameAsterisk(initialInGameAsteriskIds[0]).priceGold.add(
+      getInGameAsterisk(initialInGameAsteriskIds[1]).priceGold
     )
   } else {
     gold = props.user.gold

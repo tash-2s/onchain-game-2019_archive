@@ -2,21 +2,21 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { PrettyBN } from "../utils/PrettyBN"
-import { PlanetParam } from "../utils/PlanetParam"
+import { AsteriskParam } from "../utils/AsteriskParam"
 import { UserPageUIState } from "../../reducers/userPageUIReducer"
 
-export class PlanetList extends React.Component<{
-  planets: ComputedTargetUserState["normalPlanets"]
-  setPlanetToGet: (planetId: number) => void
+export class AsteriskList extends React.Component<{
+  asterisks: ComputedTargetUserState["inGameAsterisks"]
+  setAsteriskToGet: (asteriskId: number) => void
   userPageUI: UserPageUIState
 }> {
   render = () => {
     const buttonText = "Get"
-    const planets = this.props.planets.map(p => {
+    const asterisks = this.props.asterisks.map(p => {
       let button
       if (p.gettable) {
         button = (
-          <button className={"button is-primary"} onClick={this.setPlanetToGet(p.id)}>
+          <button className={"button is-primary"} onClick={this.setAsteriskToGet(p.id)}>
             {buttonText}
           </button>
         )
@@ -29,7 +29,7 @@ export class PlanetList extends React.Component<{
       }
 
       let activeClass = ""
-      if (p.id === this.props.userPageUI.selectedNormalPlanetIdForSet) {
+      if (p.id === this.props.userPageUI.selectedInGameAsteriskIdForSet) {
         activeClass = "is-active"
       }
 
@@ -40,7 +40,7 @@ export class PlanetList extends React.Component<{
             Gold <PrettyBN bn={p.priceGold} />
           </div>
           <div>
-            Param <PlanetParam kind={p.kind} param={p.param} />
+            Param <AsteriskParam kind={p.kind} param={p.param} />
           </div>
           <div>{button}</div>
         </div>
@@ -49,15 +49,15 @@ export class PlanetList extends React.Component<{
 
     return (
       <nav className={"panel"}>
-        <p className={"panel-heading"}>Planet List</p>
-        {planets}
+        <p className={"panel-heading"}>Asterisk List</p>
+        {asterisks}
       </nav>
     )
   }
 
-  setPlanetToGet = (planetId: number) => {
+  setAsteriskToGet = (asteriskId: number) => {
     return () => {
-      this.props.setPlanetToGet(planetId)
+      this.props.setAsteriskToGet(asteriskId)
     }
   }
 }
