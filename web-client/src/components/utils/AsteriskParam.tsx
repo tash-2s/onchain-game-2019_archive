@@ -2,9 +2,9 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { PrettyBN } from "./PrettyBN"
-import { PlanetKind } from "../../constants"
+import { AsteriskKind } from "../../constants"
 
-export function PlanetParam(props: { kind: PlanetKind; param: BN }) {
+export function AsteriskParam(props: { kind: AsteriskKind; param: BN }) {
   if (props.kind === "technology") {
     return <span>{props.param.toNumber().toLocaleString()}</span>
   } else {

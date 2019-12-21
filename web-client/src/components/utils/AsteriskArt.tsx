@@ -2,10 +2,10 @@ import * as React from "react"
 import BN from "bn.js"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
-import { draw } from "../../misc/planetArt"
-import { PlanetKind } from "../../constants"
+import { draw } from "../../misc/asteriskArt"
+import { AsteriskKind } from "../../constants"
 
-export function PlanetArt(props: { kind: PlanetKind; artSeed: BN; canvasSize: number }) {
+export function AsteriskArt(props: { kind: AsteriskKind; artSeed: BN; canvasSize: number }) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
   React.useEffect(() => {

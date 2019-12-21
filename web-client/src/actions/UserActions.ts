@@ -1,10 +1,10 @@
 import { AbstractActions } from "./AbstractActions"
 
 import {
-  getUserNormalPlanets,
-  ReturnTypeOfGetUserNormalPlanets,
-  getUserSpecialPlanets,
-  ReturnTypeOfGetUserSpecialPlanets
+  getUserInGameAsterisks,
+  ReturnTypeOfGetUserInGameAsterisks,
+  getUserTradableAsterisks,
+  ReturnTypeOfGetUserTradableAsterisks
 } from "../chain/clients/loom/organized"
 
 export class UserActions extends AbstractActions {
@@ -12,20 +12,20 @@ export class UserActions extends AbstractActions {
 
   static setTargetUser = UserActions.creator<{
     address: string
-    normal: ReturnTypeOfGetUserNormalPlanets
-    special: ReturnTypeOfGetUserSpecialPlanets
+    inGame: ReturnTypeOfGetUserInGameAsterisks
+    tradable: ReturnTypeOfGetUserTradableAsterisks
   }>("setTargetUser")
   setTargetUser = async (address: string) => {
-    const [normal, special] = await Promise.all([
-      getUserNormalPlanets(address),
-      getUserSpecialPlanets(address)
+    const [inGame, tradable] = await Promise.all([
+      getUserInGameAsterisks(address),
+      getUserTradableAsterisks(address)
     ])
 
     this.dispatch(
       UserActions.setTargetUser({
         address,
-        normal,
-        special
+        inGame,
+        tradable
       })
     )
   }

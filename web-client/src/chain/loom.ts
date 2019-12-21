@@ -73,9 +73,9 @@ export class Loom {
     return result
   }
 
-  getSpecialPlanetTokenWithdrawalReceipt = async (
+  getTradableAsteriskTokenWithdrawalReceipt = async (
     ethAddress: string,
-    ethSpecialPlanetTokenAddress: string,
+    ethTradableAsteriskTokenAddress: string,
     gateway: Contracts.TransferGateway
   ) => {
     const receipt = await gateway.withdrawalReceiptAsync(
@@ -84,7 +84,7 @@ export class Loom {
     if (
       receipt?.tokenContract &&
       receipt.tokenContract.local.toString().toLowerCase() ===
-        ethSpecialPlanetTokenAddress.toLowerCase() &&
+        ethTradableAsteriskTokenAddress.toLowerCase() &&
       receipt.tokenOwner.local.toString().toLowerCase() === ethAddress.toLowerCase()
     ) {
       return receipt
@@ -92,9 +92,9 @@ export class Loom {
     return null
   }
 
-  prepareSpecialPlanetTokenWithdrawal = async (
+  prepareTradableAsteriskTokenWithdrawal = async (
     ethSigner: ethers.Signer,
-    ethSpecialPlanetTokenAddress: string,
+    ethTradableAsteriskTokenAddress: string,
     tokenId?: string
   ) => {
     const ethAddress = await ethSigner.getAddress()
@@ -104,7 +104,7 @@ export class Loom {
         await gateway.withdrawERC721Async(
           new BN(tokenId),
           Address.fromString(
-            `${this.env.chainId}:${this.env.contractAddresses.SpecialPlanetToken}`
+            `${this.env.chainId}:${this.env.contractAddresses.TradableAsteriskToken}`
           ),
           Address.fromString(`eth:${ethAddress}`)
         )
@@ -114,9 +114,9 @@ export class Loom {
       let receipt: IWithdrawalReceipt | null = null
       for (let i = 0; i < 20; i++) {
         // console.log(`signature check polling count: ${i + 1}`)
-        receipt = await this.getSpecialPlanetTokenWithdrawalReceipt(
+        receipt = await this.getTradableAsteriskTokenWithdrawalReceipt(
           ethAddress,
-          ethSpecialPlanetTokenAddress,
+          ethTradableAsteriskTokenAddress,
           gateway
         )
         // check it's signed

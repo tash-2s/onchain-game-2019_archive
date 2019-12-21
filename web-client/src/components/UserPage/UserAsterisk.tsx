@@ -1,32 +1,32 @@
 import * as React from "react"
 
 import { PrettyBN } from "../utils/PrettyBN"
-import { PlanetParam } from "../utils/PlanetParam"
+import { AsteriskParam } from "../utils/AsteriskParam"
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
-interface UserPlanetProps {
-  userPlanet: ComputedTargetUserState["userNormalPlanets"][number]
+interface UserAsteriskProps {
+  userAsterisk: ComputedTargetUserState["userInGameAsterisks"][number]
   knowledge: number
   userActions: UserPageActionsProps["userActions"]
   now: number
   isMine: boolean
 }
 
-export function UserPlanet(props: UserPlanetProps) {
-  const up = props.userPlanet
+export function UserAsterisk(props: UserAsteriskProps) {
+  const up = props.userAsterisk
   const rankuped =
     up.createdAt === up.rankupedAt ? (
       <></>
     ) : (
       <div>Rankuped: {props.now - up.rankupedAt} sec ago</div>
     )
-  const param = <PlanetParam kind={up.planet.kind} param={up.param} />
+  const param = <AsteriskParam kind={up.asterisk.kind} param={up.param} />
 
   return (
     <>
       <div>
-        Kind: {up.planet.kind}
+        Kind: {up.asterisk.kind}
         <br />
         Rank: {up.rank}/{up.maxRank}
         <br />
@@ -36,14 +36,14 @@ export function UserPlanet(props: UserPlanetProps) {
         <br />
         {rankuped}
       </div>
-      {props.isMine ? <UserPlanetButtons {...props} /> : <></>}
+      {props.isMine ? <UserAsteriskButtons {...props} /> : <></>}
     </>
   )
 }
 
-class UserPlanetButtons extends React.Component<UserPlanetProps> {
+class UserAsteriskButtons extends React.Component<UserAsteriskProps> {
   render = () => {
-    const up = this.props.userPlanet
+    const up = this.props.userAsterisk
     let rankupButton: JSX.Element
     let bulkRankupButton: JSX.Element
 
@@ -93,21 +93,24 @@ class UserPlanetButtons extends React.Component<UserPlanetProps> {
   }
 
   rankupButtonHandler = () => {
-    this.props.userActions.normal.rankupUserPlanets([
-      { userNormalPlanetId: this.props.userPlanet.id, targetRank: this.props.userPlanet.rank + 1 }
+    this.props.userActions.inGame.rankupUserAsterisks([
+      {
+        userInGameAsteriskId: this.props.userAsterisk.id,
+        targetRank: this.props.userAsterisk.rank + 1
+      }
     ])
   }
 
   bulkRankupButtonHandler = () => {
-    this.props.userActions.normal.rankupUserPlanets([
+    this.props.userActions.inGame.rankupUserAsterisks([
       {
-        userNormalPlanetId: this.props.userPlanet.id,
-        targetRank: this.props.userPlanet.rank + this.props.userPlanet.rankupableCount
+        userInGameAsteriskId: this.props.userAsterisk.id,
+        targetRank: this.props.userAsterisk.rank + this.props.userAsterisk.rankupableCount
       }
     ])
   }
 
   removeButtonHandler = () => {
-    this.props.userActions.normal.removeUserPlanets([this.props.userPlanet.id])
+    this.props.userActions.inGame.removeUserAsterisks([this.props.userAsterisk.id])
   }
 }

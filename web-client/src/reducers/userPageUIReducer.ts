@@ -3,23 +3,23 @@ import { reducerWithInitialState } from "typescript-fsa-reducers"
 import { UserPageUIActions } from "../actions/UserPageUIActions"
 import {
   UserPageViewKind,
-  UserPlanetsViewKind,
-  PlanetKindWithAll,
-  UserPlanetsSortKind
+  UserAsterisksViewKind,
+  AsteriskKindWithAll,
+  UserAsterisksSortKind
 } from "../constants"
 
 export const initialUserPageUIState = {
   selectedPageViewKind: "main" as UserPageViewKind,
-  selectedUserPlanetsViewKind: "map" as UserPlanetsViewKind,
-  selectedNormalPlanetIdForSet: null as number | null,
-  selectedUserNormalPlanetIdForModal: null as string | null,
-  selectedPlanetKindForUserPlanetList: "all" as PlanetKindWithAll,
-  selectedSortKindForUserPlanetList: "Newest" as UserPlanetsSortKind,
-  planetListVisibilityForMobile: false,
-  selectedSpecialPlanetTokenIdForSet: null as string | null,
-  selectedUserSpecialPlanetIdForModal: null as string | null,
-  selectedPlanetHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
-  selectedUserNormalPlanetIdsForRemoval: null as Array<string> | null
+  selectedUserAsterisksViewKind: "map" as UserAsterisksViewKind,
+  selectedInGameAsteriskIdForSet: null as number | null,
+  selectedUserInGameAsteriskIdForModal: null as string | null,
+  selectedAsteriskKindForUserAsteriskList: "all" as AsteriskKindWithAll,
+  selectedSortKindForUserAsteriskList: "Newest" as UserAsterisksSortKind,
+  asteriskListVisibilityForMobile: false,
+  selectedTradableAsteriskTokenIdForSet: null as string | null,
+  selectedUserTradableAsteriskIdForModal: null as string | null,
+  selectedAsteriskHexesForSet: [] as Array<{ axialCoordinateQ: number; axialCoordinateR: number }>,
+  selectedUserInGameAsteriskIdsForRemoval: null as Array<string> | null
 }
 
 export type UserPageUIState = typeof initialUserPageUIState
@@ -30,118 +30,118 @@ export const createUserPageUIReducer = () =>
       ...state,
       selectedPageViewKind: payload
     }))
-    .case(UserPageUIActions.toggleUserPlanetsViewKind, state => ({
+    .case(UserPageUIActions.toggleUserAsterisksViewKind, state => ({
       ...state,
-      selectedUserPlanetsViewKind: state.selectedUserPlanetsViewKind === "map" ? "list" : "map"
+      selectedUserAsterisksViewKind: state.selectedUserAsterisksViewKind === "map" ? "list" : "map"
     }))
-    .case(UserPageUIActions.selectNormalPlanetForSet, (state, payload) => ({
+    .case(UserPageUIActions.selectInGameAsteriskForSet, (state, payload) => ({
       ...state,
-      selectedUserPlanetsViewKind: "map",
-      selectedNormalPlanetIdForSet: payload,
-      selectedSpecialPlanetTokenIdForSet: null,
-      selectedPlanetHexesForSet: [],
-      selectedUserNormalPlanetIdsForRemoval: null
+      selectedUserAsterisksViewKind: "map",
+      selectedInGameAsteriskIdForSet: payload,
+      selectedTradableAsteriskTokenIdForSet: null,
+      selectedAsteriskHexesForSet: [],
+      selectedUserInGameAsteriskIdsForRemoval: null
     }))
-    .case(UserPageUIActions.unselectNormalPlanetForSet, state => ({
+    .case(UserPageUIActions.unselectInGameAsteriskForSet, state => ({
       ...state,
-      selectedNormalPlanetIdForSet: null
+      selectedInGameAsteriskIdForSet: null
     }))
-    .case(UserPageUIActions.selectUserNormalPlanetForModal, (state, payload) => ({
+    .case(UserPageUIActions.selectUserInGameAsteriskForModal, (state, payload) => ({
       ...state,
-      selectedUserNormalPlanetIdForModal: payload,
-      selectedUserSpecialPlanetIdForModal: null
+      selectedUserInGameAsteriskIdForModal: payload,
+      selectedUserTradableAsteriskIdForModal: null
     }))
-    .case(UserPageUIActions.unselectUserNormalPlanetForModal, state => ({
+    .case(UserPageUIActions.unselectUserInGameAsteriskForModal, state => ({
       ...state,
-      selectedUserNormalPlanetIdForModal: null
+      selectedUserInGameAsteriskIdForModal: null
     }))
-    .case(UserPageUIActions.selectPlanetKindForUserPlanetList, (state, payload) => ({
+    .case(UserPageUIActions.selectAsteriskKindForUserAsteriskList, (state, payload) => ({
       ...state,
-      selectedPlanetKindForUserPlanetList: payload
+      selectedAsteriskKindForUserAsteriskList: payload
     }))
-    .case(UserPageUIActions.selectSortKindForUserPlanetList, (state, payload) => ({
+    .case(UserPageUIActions.selectSortKindForUserAsteriskList, (state, payload) => ({
       ...state,
-      selectedSortKindForUserPlanetList: payload
+      selectedSortKindForUserAsteriskList: payload
     }))
-    .case(UserPageUIActions.togglePlanetListVisibilityForMobile, state => ({
+    .case(UserPageUIActions.toggleAsteriskListVisibilityForMobile, state => ({
       ...state,
-      planetListVisibilityForMobile: !state.planetListVisibilityForMobile
+      asteriskListVisibilityForMobile: !state.asteriskListVisibilityForMobile
     }))
     .case(UserPageUIActions.clear, state => ({
       ...state,
       ...initialUserPageUIState
     }))
-    .case(UserPageUIActions.selectSpecialPlanetTokenForSet, (state, payload) => ({
+    .case(UserPageUIActions.selectTradableAsteriskTokenForSet, (state, payload) => ({
       ...state,
       selectedPageViewKind: "main",
-      selectedUserPlanetsViewKind: "map",
-      selectedNormalPlanetIdForSet: null,
-      selectedSpecialPlanetTokenIdForSet: payload,
-      selectedUserNormalPlanetIdsForRemoval: null
+      selectedUserAsterisksViewKind: "map",
+      selectedInGameAsteriskIdForSet: null,
+      selectedTradableAsteriskTokenIdForSet: payload,
+      selectedUserInGameAsteriskIdsForRemoval: null
     }))
-    .case(UserPageUIActions.unselectSpecialPlanetTokenForSet, state => ({
+    .case(UserPageUIActions.unselectTradableAsteriskTokenForSet, state => ({
       ...state,
-      selectedSpecialPlanetTokenIdForSet: null
+      selectedTradableAsteriskTokenIdForSet: null
     }))
-    .case(UserPageUIActions.selectUserSpecialPlanetForModal, (state, payload) => ({
+    .case(UserPageUIActions.selectUserTradableAsteriskForModal, (state, payload) => ({
       ...state,
-      selectedUserNormalPlanetIdForModal: null,
-      selectedUserSpecialPlanetIdForModal: payload
+      selectedUserInGameAsteriskIdForModal: null,
+      selectedUserTradableAsteriskIdForModal: payload
     }))
-    .case(UserPageUIActions.unselectUserSpecialPlanetForModal, state => ({
+    .case(UserPageUIActions.unselectUserTradableAsteriskForModal, state => ({
       ...state,
-      selectedUserSpecialPlanetIdForModal: null
+      selectedUserTradableAsteriskIdForModal: null
     }))
-    .case(UserPageUIActions.selectPlanetHexForSet, (state, payload) => {
+    .case(UserPageUIActions.selectAsteriskHexForSet, (state, payload) => {
       // unselect if the hex is already selected
-      const removedSame = state.selectedPlanetHexesForSet.filter(
+      const removedSame = state.selectedAsteriskHexesForSet.filter(
         o =>
           o.axialCoordinateQ !== payload.axialCoordinateQ ||
           o.axialCoordinateR !== payload.axialCoordinateR
       )
-      if (removedSame.length !== state.selectedPlanetHexesForSet.length) {
-        return { ...state, selectedPlanetHexesForSet: removedSame }
+      if (removedSame.length !== state.selectedAsteriskHexesForSet.length) {
+        return { ...state, selectedAsteriskHexesForSet: removedSame }
       }
 
       return {
         ...state,
-        selectedPlanetHexesForSet: [...state.selectedPlanetHexesForSet, payload]
+        selectedAsteriskHexesForSet: [...state.selectedAsteriskHexesForSet, payload]
       }
     })
-    .case(UserPageUIActions.unselectPlanetHexesForSet, state => ({
+    .case(UserPageUIActions.unselectAsteriskHexesForSet, state => ({
       ...state,
-      selectedPlanetHexesForSet: []
+      selectedAsteriskHexesForSet: []
     }))
-    .case(UserPageUIActions.startSelectingUserNormalPlanetForRemoval, state => ({
+    .case(UserPageUIActions.startSelectingUserInGameAsteriskForRemoval, state => ({
       ...state,
-      selectedNormalPlanetIdForSet: null,
-      selectedSpecialPlanetTokenIdForSet: null,
-      selectedUserNormalPlanetIdsForRemoval: []
+      selectedInGameAsteriskIdForSet: null,
+      selectedTradableAsteriskTokenIdForSet: null,
+      selectedUserInGameAsteriskIdsForRemoval: []
     }))
-    .case(UserPageUIActions.selectUserNormalPlanetForRemoval, (state, payload) => {
-      if (!state.selectedUserNormalPlanetIdsForRemoval) {
+    .case(UserPageUIActions.selectUserInGameAsteriskForRemoval, (state, payload) => {
+      if (!state.selectedUserInGameAsteriskIdsForRemoval) {
         return {
           ...state,
-          selectedUserNormalPlanetIdsForRemoval: [payload]
+          selectedUserInGameAsteriskIdsForRemoval: [payload]
         }
       }
 
       // unselect if the hex is already selected
-      const removedSame = state.selectedUserNormalPlanetIdsForRemoval.filter(id => id !== payload)
-      if (removedSame.length !== state.selectedUserNormalPlanetIdsForRemoval.length) {
-        return { ...state, selectedUserNormalPlanetIdsForRemoval: removedSame }
+      const removedSame = state.selectedUserInGameAsteriskIdsForRemoval.filter(id => id !== payload)
+      if (removedSame.length !== state.selectedUserInGameAsteriskIdsForRemoval.length) {
+        return { ...state, selectedUserInGameAsteriskIdsForRemoval: removedSame }
       }
 
       return {
         ...state,
-        selectedUserNormalPlanetIdsForRemoval: [
-          ...state.selectedUserNormalPlanetIdsForRemoval,
+        selectedUserInGameAsteriskIdsForRemoval: [
+          ...state.selectedUserInGameAsteriskIdsForRemoval,
           payload
         ]
       }
     })
-    .case(UserPageUIActions.endSelectingUserNormalPlanetForRemoval, state => ({
+    .case(UserPageUIActions.endSelectingUserInGameAsteriskForRemoval, state => ({
       ...state,
-      selectedUserNormalPlanetIdsForRemoval: null
+      selectedUserInGameAsteriskIdsForRemoval: null
     }))
     .build()

@@ -1,20 +1,20 @@
 import BN from "bn.js"
 
-import { PlanetKind } from "../constants"
+import { AsteriskKind } from "../constants"
 
 const canvasCache: { [key: string]: HTMLCanvasElement } = {}
 
 export const draw = (
   canvas: HTMLCanvasElement,
   size: number,
-  planetKind: PlanetKind,
+  asteriskKind: AsteriskKind,
   artVersion: number,
   artRarity: number,
   artSeed: BN
 ) => {
   const cssSize = Math.floor(size)
   const physicalSize = cssSize * window.devicePixelRatio
-  const cacheKey = `${physicalSize}-${planetKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
+  const cacheKey = `${physicalSize}-${asteriskKind}-${artVersion}-${artRarity}-${artSeed.toString()}`
 
   if (!canvasCache[cacheKey]) {
     if (artVersion !== 0) {
@@ -22,7 +22,7 @@ export const draw = (
     }
     canvasCache[cacheKey] = drawV0(
       physicalSize,
-      planetKind,
+      asteriskKind,
       artRarity,
       new SeededRandomish(artSeed)
     )
@@ -40,7 +40,7 @@ export const draw = (
 
 const drawV0 = (
   physicalSize: number,
-  kind: PlanetKind,
+  kind: AsteriskKind,
   rarity: number,
   r: SeededRandomish,
   debugStr?: string

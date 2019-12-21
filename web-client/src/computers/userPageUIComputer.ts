@@ -7,19 +7,19 @@ export const computeUserPageUIState = (
   state: UserPageUIState,
   targetUser: ComputedUserState["targetUser"]
 ) => {
-  if (!targetUser || state.selectedUserPlanetsViewKind === "map") {
-    return { ...state, listedUserNormalPlanets: [], batchRankupable: [] }
+  if (!targetUser || state.selectedUserAsterisksViewKind === "map") {
+    return { ...state, listedUserInGameAsterisks: [], batchRankupable: [] }
   }
 
-  const listedUserNormalPlanets = targetUser.userNormalPlanets
+  const listedUserInGameAsterisks = targetUser.userInGameAsterisks
     .filter(up => {
-      if (state.selectedPlanetKindForUserPlanetList === "all") {
+      if (state.selectedAsteriskKindForUserAsteriskList === "all") {
         return true
       }
-      return up.planet.kind === state.selectedPlanetKindForUserPlanetList
+      return up.asterisk.kind === state.selectedAsteriskKindForUserAsteriskList
     })
     .sort((a, b) => {
-      switch (state.selectedSortKindForUserPlanetList) {
+      switch (state.selectedSortKindForUserAsteriskList) {
         case "Newest":
           return b.createdAt - a.createdAt
         case "Oldest":
@@ -29,14 +29,14 @@ export const computeUserPageUIState = (
       }
     })
 
-  const batchRankupable: Array<{ userNormalPlanetId: string; targetRank: number }> = []
+  const batchRankupable: Array<{ userInGameAsteriskId: string; targetRank: number }> = []
   let gold = targetUser.gold
-  for (const up of listedUserNormalPlanets) {
+  for (const up of listedUserInGameAsterisks) {
     if (up.rankupableCount > 0) {
       const requiredGold = up.requiredGoldForBulkRankup
       if (gold.gte(requiredGold)) {
         batchRankupable.push({
-          userNormalPlanetId: up.id,
+          userInGameAsteriskId: up.id,
           targetRank: up.rank + up.rankupableCount
         })
         gold = gold.sub(requiredGold)
@@ -44,5 +44,5 @@ export const computeUserPageUIState = (
     }
   }
 
-  return { ...state, listedUserNormalPlanets, batchRankupable }
+  return { ...state, listedUserInGameAsterisks, batchRankupable }
 }

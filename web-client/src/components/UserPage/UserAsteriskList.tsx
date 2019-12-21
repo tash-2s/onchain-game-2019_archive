@@ -2,12 +2,12 @@ import * as React from "react"
 
 import { ComputedTargetUserState } from "../../computers/userComputer"
 import { ComputedUserPageUIState } from "../../computers/userPageUIComputer"
-import { UserPlanet } from "./UserPlanet"
-import { userPlanetsSortKinds, planetKindsWithAll } from "../../constants"
+import { UserAsterisk } from "./UserAsterisk"
+import { userAsterisksSortKinds, asteriskKindsWithAll } from "../../constants"
 import { UserPageUIActions } from "../../actions/UserPageUIActions"
 import { UserPageActionsProps } from "../../containers/UserPageContainer"
 
-export function UserPlanetList(props: {
+export function UserAsteriskList(props: {
   user: ComputedTargetUserState
   userActions: UserPageActionsProps["userActions"]
   userPageUI: ComputedUserPageUIState
@@ -15,12 +15,12 @@ export function UserPlanetList(props: {
   now: number
   isMine: boolean
 }) {
-  const selectedKind = props.userPageUI.selectedPlanetKindForUserPlanetList
-  const userPlanets = props.userPageUI.listedUserNormalPlanets.map(up => (
+  const selectedKind = props.userPageUI.selectedAsteriskKindForUserAsteriskList
+  const userAsterisks = props.userPageUI.listedUserInGameAsterisks.map(up => (
     <tr key={up.id}>
       <td>
-        <UserPlanet
-          userPlanet={up}
+        <UserAsterisk
+          userAsterisk={up}
           isMine={props.isMine}
           knowledge={props.user.knowledge}
           now={props.now}
@@ -32,7 +32,7 @@ export function UserPlanetList(props: {
 
   let batchRankupButton = <></>
   if (props.isMine && props.userPageUI.batchRankupable.length > 0) {
-    const fn = () => props.userActions.normal.rankupUserPlanets(props.userPageUI.batchRankupable)
+    const fn = () => props.userActions.inGame.rankupUserAsterisks(props.userPageUI.batchRankupable)
     batchRankupButton = <button onClick={fn}>batch rankup</button>
   }
 
@@ -41,26 +41,26 @@ export function UserPlanetList(props: {
       <Controller state={props.userPageUI} actions={props.userPageUIActions} />
       <div>{batchRankupButton}</div>
       <table className={"table is-bordered is-fullwidth"}>
-        <tbody>{userPlanets}</tbody>
+        <tbody>{userAsterisks}</tbody>
       </table>
     </>
   )
 }
 
 function Controller(props: { state: ComputedUserPageUIState; actions: UserPageUIActions }) {
-  const planetKind = props.state.selectedPlanetKindForUserPlanetList
-  const sortKind = props.state.selectedSortKindForUserPlanetList
-  const selectKind = (_kind: typeof planetKind) => () =>
-    props.actions.selectPlanetKindForUserPlanetList(_kind)
+  const asteriskKind = props.state.selectedAsteriskKindForUserAsteriskList
+  const sortKind = props.state.selectedSortKindForUserAsteriskList
+  const selectKind = (_kind: typeof asteriskKind) => () =>
+    props.actions.selectAsteriskKindForUserAsteriskList(_kind)
 
-  const sortItems = userPlanetsSortKinds.map(k => {
+  const sortItems = userAsterisksSortKinds.map(k => {
     const cls = k === sortKind ? "is-active" : ""
     const fn =
       k === sortKind
         ? () => {
             /* nop */
           }
-        : () => props.actions.selectSortKindForUserPlanetList(k)
+        : () => props.actions.selectSortKindForUserAsteriskList(k)
 
     return (
       <a key={k} onClick={fn} className={`dropdown-item ${cls}`}>
@@ -69,9 +69,9 @@ function Controller(props: { state: ComputedUserPageUIState; actions: UserPageUI
     )
   })
 
-  const kinds = planetKindsWithAll.map(k => {
+  const kinds = asteriskKindsWithAll.map(k => {
     return (
-      <li key={k} className={planetKind === k ? "is-active" : ""}>
+      <li key={k} className={asteriskKind === k ? "is-active" : ""}>
         <a onClick={selectKind(k)}>{k.slice(0, 1).toUpperCase() + k.slice(1)}</a>
       </li>
     )

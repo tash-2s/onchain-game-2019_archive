@@ -1,13 +1,13 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers"
 
 import { UserActions } from "../actions/UserActions"
-import { UserActionsForNormalPlanet } from "../actions/UserActionsForNormalPlanet"
-import { UserActionsForSpecialPlanet } from "../actions/UserActionsForSpecialPlanet"
-import { PlanetKind, planetKinds, planetKindNumToKind } from "../constants"
+import { UserActionsForInGameAsterisk } from "../actions/UserActionsForInGameAsterisk"
+import { UserActionsForTradableAsterisk } from "../actions/UserActionsForTradableAsterisk"
+import { AsteriskKind, asteriskKinds, asteriskKindNumToKind } from "../constants"
 import {
-  SpecialPlanetToken,
-  ReturnTypeOfGetUserSpecialPlanets,
-  ReturnTypeOfGetUserNormalPlanets
+  TradableAsteriskToken,
+  ReturnTypeOfGetUserTradableAsterisks,
+  ReturnTypeOfGetUserInGameAsterisks
 } from "../chain/clients/loom/organized"
 
 export interface UserState {
@@ -17,11 +17,11 @@ export interface UserState {
 export interface TargetUserState {
   address: string
   gold: { confirmed: string; confirmedAt: number }
-  userNormalPlanets: Array<UserNormalPlanet>
-  userSpecialPlanets: Array<UserSpecialPlanet>
-  specialPlanetToken: {
-    ethTokens: Array<SpecialPlanetToken>
-    loomTokens: Array<SpecialPlanetToken>
+  userInGameAsterisks: Array<UserInGameAsterisk>
+  userTradableAsterisks: Array<UserTradableAsterisk>
+  tradableAsteriskToken: {
+    ethTokens: Array<TradableAsteriskToken>
+    loomTokens: Array<TradableAsteriskToken>
     needsTransferResume: boolean
     buyTx: string | null
     transferToLoomTx: string | null
@@ -29,9 +29,9 @@ export interface TargetUserState {
   } | null
 }
 
-export interface UserNormalPlanet {
+export interface UserInGameAsterisk {
   id: string
-  normalPlanetId: number
+  inGameAsteriskId: number
   rank: number
   createdAt: number
   rankupedAt: number
@@ -39,9 +39,9 @@ export interface UserNormalPlanet {
   axialCoordinateR: number
 }
 
-export interface UserSpecialPlanet {
+export interface UserTradableAsterisk {
   id: string // short id, not token id
-  kind: PlanetKind
+  kind: AsteriskKind
   paramRate: number
   createdAt: number
   rankupedAt: number
@@ -59,21 +59,27 @@ export const createUserReducer = () =>
     .case(UserActions.setTargetUser, (state, payload) => ({
       ...state,
       targetUser: {
-        ...buildUser(payload.normal.user),
+        ...buildUser(payload.inGame.user),
         address: payload.address,
-        userNormalPlanets: payload.normal.userNormalPlanets,
-        userSpecialPlanets: payload.special.userSpecialPlanets,
-        specialPlanetToken: null
+        userInGameAsterisks: payload.inGame.userInGameAsterisks,
+        userTradableAsterisks: payload.tradable.userTradableAsterisks,
+        tradableAsteriskToken: null
       }
     }))
     .case(UserActions.clearTargetUser, state => ({
       ...state,
       targetUser: null
     }))
-    .case(UserActionsForNormalPlanet.setPlanetsToMap, buildStateFromUserAndUserNormalPlanets)
-    .case(UserActionsForNormalPlanet.rankupUserPlanets, buildStateFromUserAndUserNormalPlanets)
-    .case(UserActionsForNormalPlanet.removeUserPlanets, buildStateFromUserAndUserNormalPlanets)
-    .case(UserActionsForSpecialPlanet.setTargetUserPlanetTokens, (state, payload) => {
+    .case(UserActionsForInGameAsterisk.setAsterisksToMap, buildStateFromUserAndUserInGameAsterisks)
+    .case(
+      UserActionsForInGameAsterisk.rankupUserAsterisks,
+      buildStateFromUserAndUserInGameAsterisks
+    )
+    .case(
+      UserActionsForInGameAsterisk.removeUserAsterisks,
+      buildStateFromUserAndUserInGameAsterisks
+    )
+    .case(UserActionsForTradableAsterisk.setTargetUserAsteriskTokens, (state, payload) => {
       if (!state.targetUser) {
         throw new Error("invalid state")
       }
@@ -82,24 +88,24 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetToken: {
+          tradableAsteriskToken: {
             ethTokens: payload.ethTokens,
             loomTokens: payload.loomTokens,
             needsTransferResume: payload.needsTransferResume,
-            buyTx: state.targetUser.specialPlanetToken
-              ? state.targetUser.specialPlanetToken.buyTx
+            buyTx: state.targetUser.tradableAsteriskToken
+              ? state.targetUser.tradableAsteriskToken.buyTx
               : null,
-            transferToLoomTx: state.targetUser.specialPlanetToken
-              ? state.targetUser.specialPlanetToken.transferToLoomTx
+            transferToLoomTx: state.targetUser.tradableAsteriskToken
+              ? state.targetUser.tradableAsteriskToken.transferToLoomTx
               : null,
-            transferToEthTx: state.targetUser.specialPlanetToken
-              ? state.targetUser.specialPlanetToken.transferToEthTx
+            transferToEthTx: state.targetUser.tradableAsteriskToken
+              ? state.targetUser.tradableAsteriskToken.transferToEthTx
               : null
           }
         }
       }
     })
-    .case(UserActionsForSpecialPlanet.clearTargetUserPlanetTokens, state => {
+    .case(UserActionsForTradableAsterisk.clearTargetUserAsteriskTokens, state => {
       if (!state.targetUser) {
         return { ...state }
       }
@@ -108,17 +114,20 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetToken: null
+          tradableAsteriskToken: null
         }
       }
     })
-    .case(UserActionsForSpecialPlanet.setPlanetTokenToMap, buildStateFromUserAndUserSpecialPlanets)
     .case(
-      UserActionsForSpecialPlanet.removeUserPlanetFromMap,
-      buildStateFromUserAndUserSpecialPlanets
+      UserActionsForTradableAsterisk.setAsteriskTokenToMap,
+      buildStateFromUserAndUserTradableAsterisks
     )
-    .case(UserActionsForSpecialPlanet.buyPlanetToken, (state, payload) => {
-      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+    .case(
+      UserActionsForTradableAsterisk.removeUserAsteriskFromMap,
+      buildStateFromUserAndUserTradableAsterisks
+    )
+    .case(UserActionsForTradableAsterisk.buyAsteriskToken, (state, payload) => {
+      if (!state.targetUser || !state.targetUser.tradableAsteriskToken) {
         throw new Error("invalid state")
       }
 
@@ -126,15 +135,15 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetToken: {
-            ...state.targetUser.specialPlanetToken,
+          tradableAsteriskToken: {
+            ...state.targetUser.tradableAsteriskToken,
             buyTx: payload
           }
         }
       }
     })
-    .case(UserActionsForSpecialPlanet.transferPlanetTokenToLoom, (state, payload) => {
-      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+    .case(UserActionsForTradableAsterisk.transferAsteriskTokenToLoom, (state, payload) => {
+      if (!state.targetUser || !state.targetUser.tradableAsteriskToken) {
         throw new Error("invalid state")
       }
 
@@ -142,15 +151,15 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetToken: {
-            ...state.targetUser.specialPlanetToken,
+          tradableAsteriskToken: {
+            ...state.targetUser.tradableAsteriskToken,
             transferToLoomTx: payload
           }
         }
       }
     })
-    .case(UserActionsForSpecialPlanet.transferPlanetTokenToEth, (state, payload) => {
-      if (!state.targetUser || !state.targetUser.specialPlanetToken) {
+    .case(UserActionsForTradableAsterisk.transferAsteriskTokenToEth, (state, payload) => {
+      if (!state.targetUser || !state.targetUser.tradableAsteriskToken) {
         throw new Error("invalid state")
       }
 
@@ -158,8 +167,8 @@ export const createUserReducer = () =>
         ...state,
         targetUser: {
           ...state.targetUser,
-          specialPlanetToken: {
-            ...state.targetUser.specialPlanetToken,
+          tradableAsteriskToken: {
+            ...state.targetUser.tradableAsteriskToken,
             needsTransferResume: false,
             transferToEthTx: payload
           }
@@ -180,9 +189,9 @@ const buildUser = (obj: {
   }
 }
 
-const buildStateFromUserAndUserNormalPlanets = (
+const buildStateFromUserAndUserInGameAsterisks = (
   state: UserState,
-  payload: ReturnTypeOfGetUserNormalPlanets
+  payload: ReturnTypeOfGetUserInGameAsterisks
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -193,14 +202,14 @@ const buildStateFromUserAndUserNormalPlanets = (
     targetUser: {
       ...state.targetUser,
       ...buildUser(payload.user),
-      userNormalPlanets: payload.userNormalPlanets
+      userInGameAsterisks: payload.userInGameAsterisks
     }
   }
 }
 
-const buildStateFromUserAndUserSpecialPlanets = (
+const buildStateFromUserAndUserTradableAsterisks = (
   state: UserState,
-  payload: ReturnTypeOfGetUserSpecialPlanets
+  payload: ReturnTypeOfGetUserTradableAsterisks
 ): UserState => {
   if (!state.targetUser) {
     throw new Error("invalid state")
@@ -211,8 +220,8 @@ const buildStateFromUserAndUserSpecialPlanets = (
     targetUser: {
       ...state.targetUser,
       ...buildUser(payload.user),
-      userSpecialPlanets: payload.userSpecialPlanets,
-      specialPlanetToken: null
+      userTradableAsterisks: payload.userTradableAsterisks,
+      tradableAsteriskToken: null
     }
   }
 }

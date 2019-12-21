@@ -1,16 +1,16 @@
-import { planetKindNumToKind } from "../../../constants"
-import { SpecialPlanetController } from "./SpecialPlanetController"
-import { NormalPlanetController } from "./NormalPlanetController"
+import { asteriskKindNumToKind } from "../../../constants"
+import { TradableAsteriskController } from "./TradableAsteriskController"
+import { InGameAsteriskController } from "./InGameAsteriskController"
 import { chains } from "../../chains"
 
 type ExtractFromPromise<T> = T extends Promise<infer R> ? R : never
 
-export const getUserNormalPlanets = async (address: string) => {
-  const r = await new NormalPlanetController(chains.loom).getPlanets(address)
+export const getUserInGameAsterisks = async (address: string) => {
+  const r = await new InGameAsteriskController(chains.loom).getAsterisks(address)
 
-  const userNormalPlanets = r.ranks.map((_, i) => ({
+  const userInGameAsterisks = r.ranks.map((_, i) => ({
     id: r.ids[i * 2],
-    normalPlanetId: strToNum(r.ids[i * 2 + 1]),
+    inGameAsteriskId: strToNum(r.ids[i * 2 + 1]),
     rank: strToNum(r.ranks[i]),
     rankupedAt: strToNum(r.times[i * 2]),
     createdAt: strToNum(r.times[i * 2 + 1]),
@@ -20,19 +20,19 @@ export const getUserNormalPlanets = async (address: string) => {
 
   return {
     user: { confirmedGold: r.confirmedGold, goldConfirmedAt: strToNum(r.goldConfirmedAt) },
-    userNormalPlanets
+    userInGameAsterisks
   }
 }
-export type ReturnTypeOfGetUserNormalPlanets = ExtractFromPromise<
-  ReturnType<typeof getUserNormalPlanets>
+export type ReturnTypeOfGetUserInGameAsterisks = ExtractFromPromise<
+  ReturnType<typeof getUserInGameAsterisks>
 >
 
-export const getUserSpecialPlanets = async (address: string) => {
-  const r = await new SpecialPlanetController(chains.loom).getPlanets(address)
+export const getUserTradableAsterisks = async (address: string) => {
+  const r = await new TradableAsteriskController(chains.loom).getAsterisks(address)
 
-  const userSpecialPlanets = r.ids.map((_, i) => ({
+  const userTradableAsterisks = r.ids.map((_, i) => ({
     id: r.ids[i],
-    kind: planetKindNumToKind(strToNum(r.kinds[i])),
+    kind: asteriskKindNumToKind(strToNum(r.kinds[i])),
     paramRate: strToNum(r.paramRates[i]),
     rankupedAt: strToNum(r.times[i * 2]),
     createdAt: strToNum(r.times[i * 2 + 1]),
@@ -43,40 +43,42 @@ export const getUserSpecialPlanets = async (address: string) => {
 
   return {
     user: { confirmedGold: r.confirmedGold, goldConfirmedAt: strToNum(r.goldConfirmedAt) },
-    userSpecialPlanets
+    userTradableAsterisks
   }
 }
-export type ReturnTypeOfGetUserSpecialPlanets = ExtractFromPromise<
-  ReturnType<typeof getUserSpecialPlanets>
+export type ReturnTypeOfGetUserTradableAsterisks = ExtractFromPromise<
+  ReturnType<typeof getUserTradableAsterisks>
 >
 
-export const getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
-  const fields: Array<SpecialPlanetToken> = []
+export const getTradableAsteriskTokensByIds = async (tokenIds: Array<string>) => {
+  const fields: Array<TradableAsteriskToken> = []
   const batchSize = 100
 
   for (let i = 0; i < tokenIds.length; i += batchSize) {
     const ids = tokenIds.slice(i, i + batchSize)
-    const fs = await _getSpecialPlanetTokensByIds(ids)
+    const fs = await _getTradableAsteriskTokensByIds(ids)
     fields.push(...fs)
   }
 
   return fields
 }
 
-const _getSpecialPlanetTokensByIds = async (tokenIds: Array<string>) => {
-  const r = await new SpecialPlanetController(chains.loom).getPlanetFieldsFromTokenIds(tokenIds)
+const _getTradableAsteriskTokensByIds = async (tokenIds: Array<string>) => {
+  const r = await new TradableAsteriskController(chains.loom).getAsteriskFieldsFromTokenIds(
+    tokenIds
+  )
 
   return tokenIds.map((id, i) => ({
     id: id,
     shortId: r.shortIds[i],
     version: strToNum(r.versions[i]),
-    kind: planetKindNumToKind(strToNum(r.kinds[i])),
+    kind: asteriskKindNumToKind(strToNum(r.kinds[i])),
     paramRate: strToNum(r.paramRates[i]),
     artSeed: r.artSeeds[i]
   }))
 }
-export type SpecialPlanetToken = ExtractFromPromise<
-  ReturnType<typeof _getSpecialPlanetTokensByIds>
+export type TradableAsteriskToken = ExtractFromPromise<
+  ReturnType<typeof _getTradableAsteriskTokensByIds>
 >[number]
 
 const strToNum = (str: string) => parseInt(str, 10)

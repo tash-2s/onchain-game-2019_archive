@@ -21,7 +21,7 @@ export function Navbar(props: Props) {
         <div className={"container"}>
           <div className={"navbar-brand"}>
             <InternalLink className={"navbar-item"} to={"/"}>
-              <strong>k2</strong>
+              <strong>CryptoGenerativeAsterism</strong>
             </InternalLink>
 
             <a onClick={props.toggleNavbarMenuForMobile} className={`navbar-burger ${mobileClass}`}>
