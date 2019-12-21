@@ -73,9 +73,11 @@ contract InGameAsteriskController is InGameAsteriskControllable, UserAsteriskCon
     }
   }
 
-  function setAsterisks(uint16 asteriskId, int16[] calldata coordinateQs, int16[] calldata coordinateRs)
-    external
-  {
+  function setAsterisks(
+    uint16 asteriskId,
+    int16[] calldata coordinateQs,
+    int16[] calldata coordinateRs
+  ) external {
     require(
       coordinateQs.length == coordinateRs.length && coordinateQs.length > 0,
       "invalid coordinate arg"
@@ -173,7 +175,8 @@ contract InGameAsteriskController is InGameAsteriskControllable, UserAsteriskCon
 
   function claimInitialGold() external {
     require(
-      userInGameAsteriskRecordsCountOf(msg.sender) == 0 && userGoldRecordOf(msg.sender).balance == 0,
+      userInGameAsteriskRecordsCountOf(msg.sender) == 0 &&
+        userGoldRecordOf(msg.sender).balance == 0,
       "false condition for initial gold"
     );
 
@@ -183,11 +186,11 @@ contract InGameAsteriskController is InGameAsteriskControllable, UserAsteriskCon
     );
   }
 
-  function _requiredGoldForRankup(uint256 asteriskPriceGold, uint256 currentRank, uint256 targetRank)
-    private
-    pure
-    returns (uint256)
-  {
+  function _requiredGoldForRankup(
+    uint256 asteriskPriceGold,
+    uint256 currentRank,
+    uint256 targetRank
+  ) private pure returns (uint256) {
     uint256 requiredGold = 0;
     uint256 tmpRank = currentRank;
 

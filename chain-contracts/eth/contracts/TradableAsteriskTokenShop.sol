@@ -17,9 +17,10 @@ contract TradableAsteriskTokenShop is WhitelistedRole {
   uint256 public price = 50000000000000000; // 0.05 eth
   bytes32 private _s;
 
-  constructor(address tradableAsteriskTokenAddress, address tradableAsteriskTokenShortIdGeneratorAddress)
-    public
-  {
+  constructor(
+    address tradableAsteriskTokenAddress,
+    address tradableAsteriskTokenShortIdGeneratorAddress
+  ) public {
     tradableAsteriskToken = TradableAsteriskToken(tradableAsteriskTokenAddress);
     tradableAsteriskTokenShortIdGenerator = TradableAsteriskTokenShortIdGenerator(
       tradableAsteriskTokenShortIdGeneratorAddress

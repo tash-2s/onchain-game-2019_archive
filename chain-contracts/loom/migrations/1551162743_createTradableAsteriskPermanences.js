@@ -1,6 +1,8 @@
 const helper = require("../migrationHelper")
 
-const UserTradableAsteriskPermanence = artifacts.require("./permanences/UserTradableAsteriskPermanence") // TODO: fix
+const UserTradableAsteriskPermanence = artifacts.require(
+  "./permanences/UserTradableAsteriskPermanence"
+) // TODO: fix
 const TradableAsteriskIdToDataPermanence = artifacts.require(
   "./permanences/TradableAsteriskIdToDataPermanence"
 ) // TODO: fix

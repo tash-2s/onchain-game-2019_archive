@@ -2,7 +2,9 @@ const {expectRevert, balance, BN} = require("@openzeppelin/test-helpers")
 
 const TradableAsteriskTokenShop = artifacts.require("TradableAsteriskTokenShop")
 const TradableAsteriskToken = artifacts.require("TradableAsteriskToken")
-const TradableAsteriskTokenShortIdGenerator = artifacts.require("TradableAsteriskTokenShortIdGenerator")
+const TradableAsteriskTokenShortIdGenerator = artifacts.require(
+  "TradableAsteriskTokenShortIdGenerator"
+)
 
 describe("TradableAsteriskTokenShop", function() {
   let admin, account

@@ -67,7 +67,9 @@ contract UserInGameAsteriskControllable {
     view
     returns (UserInGameAsteriskRecord[] memory, uint256[] memory)
   {
-    UserInGameAsteriskRecord[] memory records = new UserInGameAsteriskRecord[](userAsteriskIds.length);
+    UserInGameAsteriskRecord[] memory records = new UserInGameAsteriskRecord[](
+      userAsteriskIds.length
+    );
     uint256[] memory indexes = new uint256[](userAsteriskIds.length);
 
     UserInGameAsteriskRecord[] memory allRecords = userInGameAsteriskRecordsOf(account);
@@ -184,7 +186,9 @@ contract UserInGameAsteriskControllable {
   ) internal view returns (UserInGameAsteriskRecord[] memory) {
     UserInGameAsteriskRecord[] memory allRecords = userInGameAsteriskRecordsOf(account);
 
-    UserInGameAsteriskRecord[] memory _records = new UserInGameAsteriskRecord[](coordinateQs.length);
+    UserInGameAsteriskRecord[] memory _records = new UserInGameAsteriskRecord[](
+      coordinateQs.length
+    );
     uint256 counter = 0;
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {

@@ -39,7 +39,9 @@ contract TradableAsteriskControllable {
     returns (UserTradableAsteriskRecord[] memory)
   {
     bytes32[] memory rawRecords = userTradableAsteriskPermanence.read(account);
-    UserTradableAsteriskRecord[] memory records = new UserTradableAsteriskRecord[](rawRecords.length);
+    UserTradableAsteriskRecord[] memory records = new UserTradableAsteriskRecord[](
+      rawRecords.length
+    );
 
     for (uint256 i = 0; i < rawRecords.length; i++) {
       records[i] = buildUserTradableAsteriskRecordFromBytes32(rawRecords[i]);
@@ -54,7 +56,9 @@ contract TradableAsteriskControllable {
     returns (UserTradableAsteriskRecord memory)
   {
     return
-      buildUserTradableAsteriskRecordFromBytes32(tradableAsteriskIdToDataPermanence.read(userAsteriskId));
+      buildUserTradableAsteriskRecordFromBytes32(
+        tradableAsteriskIdToDataPermanence.read(userAsteriskId)
+      );
   }
 
   function setUserTradableAsteriskToMap(
@@ -86,7 +90,9 @@ contract TradableAsteriskControllable {
       );
       tradableAsteriskIdToDataPermanence.update(userAsteriskId, newUserAsteriskData);
     } else {
-      UserTradableAsteriskRecord memory r = buildUserTradableAsteriskRecordFromBytes32(userAsteriskData);
+      UserTradableAsteriskRecord memory r = buildUserTradableAsteriskRecordFromBytes32(
+        userAsteriskData
+      );
       newUserAsteriskData = buildBytes32FromUserTradableAsteriskRecord(
         UserTradableAsteriskRecord(
           r.id,
@@ -134,7 +140,9 @@ contract TradableAsteriskControllable {
   ) internal view returns (UserTradableAsteriskRecord[] memory) {
     UserTradableAsteriskRecord[] memory allRecords = userTradableAsteriskRecordsOf(account);
 
-    UserTradableAsteriskRecord[] memory _records = new UserTradableAsteriskRecord[](coordinateQs.length);
+    UserTradableAsteriskRecord[] memory _records = new UserTradableAsteriskRecord[](
+      coordinateQs.length
+    );
     uint256 counter = 0;
 
     for (uint256 i = 0; i < coordinateQs.length; i++) {

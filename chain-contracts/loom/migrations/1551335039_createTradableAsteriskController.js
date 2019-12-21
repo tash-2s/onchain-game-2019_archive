@@ -48,14 +48,19 @@ module.exports = function(deployer, network, accounts) {
       "TradableAsteriskTokenLocker"
     )
 
-    const controller = await helper.deployAndRegister(deployer, network, TradableAsteriskController, [
-      userInGameAsteriskPermanenceAddress,
-      userTradableAsteriskPermanenceAddress,
-      tradableAsteriskIdToDataPermanenceAddress,
-      userGoldPermanenceAddress,
-      highlightedUsersAddress,
-      tradableAsteriskTokenLockerAddress
-    ])
+    const controller = await helper.deployAndRegister(
+      deployer,
+      network,
+      TradableAsteriskController,
+      [
+        userInGameAsteriskPermanenceAddress,
+        userTradableAsteriskPermanenceAddress,
+        tradableAsteriskIdToDataPermanenceAddress,
+        userGoldPermanenceAddress,
+        highlightedUsersAddress,
+        tradableAsteriskTokenLockerAddress
+      ]
+    )
 
     await new web3.eth.Contract(whitelistedABI, userGoldPermanenceAddress).methods
       .addWhitelisted(controller.address)

@@ -48,7 +48,9 @@ contract TradableAsteriskController is UserAsteriskControllable {
     confirmedGold = goldRecord.balance;
     goldConfirmedAt = goldRecord.confirmedAt;
 
-    UserTradableAsteriskRecord[] memory userAsteriskRecords = userTradableAsteriskRecordsOf(account);
+    UserTradableAsteriskRecord[] memory userAsteriskRecords = userTradableAsteriskRecordsOf(
+      account
+    );
     uint256 userAsterisksCount = userAsteriskRecords.length;
 
     ids = new uint24[](userAsterisksCount);
@@ -129,7 +131,9 @@ contract TradableAsteriskController is UserAsteriskControllable {
     }
   }
 
-  function _setTradableAsteriskToMap(uint256 tokenId, int16 coordinateQ, int16 coordinateR) private {
+  function _setTradableAsteriskToMap(uint256 tokenId, int16 coordinateQ, int16 coordinateR)
+    private
+  {
     tradableAsteriskTokenLocker.lock(msg.sender, tokenId);
 
     (uint24 shortId, uint8 version, uint8 kind, uint8 paramRate, uint64 artSeed) = TradableAsteriskTokenIdInterpreter

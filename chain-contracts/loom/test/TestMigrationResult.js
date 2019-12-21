@@ -48,7 +48,10 @@ contract("Migration Result", function([admin, account]) {
   })
 
   it("should have correct relations", async function() {
-    assert.equal(await tradableAsteriskTokenLocker.tradableAsteriskToken(), tradableAsteriskToken.address)
+    assert.equal(
+      await tradableAsteriskTokenLocker.tradableAsteriskToken(),
+      tradableAsteriskToken.address
+    )
   })
 
   it("should have valid whitelisted accounts", async function() {

@@ -1,6 +1,8 @@
 const TradableAsteriskToken = artifacts.require("TradableAsteriskToken")
 const TradableAsteriskTokenShop = artifacts.require("TradableAsteriskTokenShop")
-const TradableAsteriskTokenShortIdGenerator = artifacts.require("TradableAsteriskTokenShortIdGenerator")
+const TradableAsteriskTokenShortIdGenerator = artifacts.require(
+  "TradableAsteriskTokenShortIdGenerator"
+)
 
 module.exports = function(deployer, network, [account]) {
   deployer.then(async function() {

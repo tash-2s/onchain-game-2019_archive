@@ -18,7 +18,10 @@ contract InGameAsteriskControllable {
   InGameAsteriskPermanence public inGameAsteriskPermanence;
 
   function inGameAsteriskRecordOf(uint16 id) internal view returns (InGameAsteriskRecord memory) {
-    InGameAsteriskRecord memory record = buildInGameAsteriskRecord(id, inGameAsteriskPermanence.read(id));
+    InGameAsteriskRecord memory record = buildInGameAsteriskRecord(
+      id,
+      inGameAsteriskPermanence.read(id)
+    );
 
     require(record.kind != 0, "inGame asterisk: not found");
 

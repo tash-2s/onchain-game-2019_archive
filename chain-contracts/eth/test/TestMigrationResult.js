@@ -1,6 +1,8 @@
 const TradableAsteriskToken = artifacts.require("TradableAsteriskToken")
 const TradableAsteriskTokenShop = artifacts.require("TradableAsteriskTokenShop")
-const TradableAsteriskTokenShortIdGenerator = artifacts.require("TradableAsteriskTokenShortIdGenerator")
+const TradableAsteriskTokenShortIdGenerator = artifacts.require(
+  "TradableAsteriskTokenShortIdGenerator"
+)
 
 contract("Migration Result", function([admin, account]) {
   let token, shop, idGenerator

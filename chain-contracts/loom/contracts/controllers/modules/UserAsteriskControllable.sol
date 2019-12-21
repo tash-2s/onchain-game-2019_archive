@@ -22,8 +22,12 @@ contract UserAsteriskControllable is
     address tradableAsteriskIdToDataPermanenceAddress,
     address userGoldPermanenceAddress
   ) internal {
-    userInGameAsteriskPermanence = UserInGameAsteriskPermanence(userInGameAsteriskPermanenceAddress);
-    userTradableAsteriskPermanence = UserTradableAsteriskPermanence(userTradableAsteriskPermanenceAddress);
+    userInGameAsteriskPermanence = UserInGameAsteriskPermanence(
+      userInGameAsteriskPermanenceAddress
+    );
+    userTradableAsteriskPermanence = UserTradableAsteriskPermanence(
+      userTradableAsteriskPermanenceAddress
+    );
     tradableAsteriskIdToDataPermanence = TradableAsteriskIdToDataPermanence(
       tradableAsteriskIdToDataPermanenceAddress
     );
@@ -118,7 +122,9 @@ contract UserAsteriskControllable is
       UserTradableAsteriskRecord memory userAsterisk = userAsterisks[i];
 
       if (userAsterisk.kind == 1) {
-        population = population.add(biggestUserInGameAsteriskPopulation.mul(userAsterisk.paramRate));
+        population = population.add(
+          biggestUserInGameAsteriskPopulation.mul(userAsterisk.paramRate)
+        );
       } else if (userAsterisk.kind == 2) {
         productivity = productivity.add(
           biggestUserInGameAsteriskProductivity.mul(userAsterisk.paramRate)

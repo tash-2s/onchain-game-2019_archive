@@ -16,7 +16,9 @@ contract DebugController is UserGoldControllable, UserInGameAsteriskControllable
     address userInGameAsteriskIdGeneratorPermanenceAddress
   ) public {
     userGoldPermanence = UserGoldPermanence(userGoldPermanenceAddress);
-    userInGameAsteriskPermanence = UserInGameAsteriskPermanence(userInGameAsteriskPermanenceAddress);
+    userInGameAsteriskPermanence = UserInGameAsteriskPermanence(
+      userInGameAsteriskPermanenceAddress
+    );
     userInGameAsteriskIdGeneratorPermanence = UserInGameAsteriskIdGeneratorPermanence(
       userInGameAsteriskIdGeneratorPermanenceAddress
     );
@@ -39,7 +41,15 @@ contract DebugController is UserGoldControllable, UserInGameAsteriskControllable
     int16 coordinateR
   ) external {
     uint64[] memory ids = userInGameAsteriskIdGeneratorPermanence.generate(msg.sender, 1);
-    setInGameAsteriskToMap(account, ids[0], inGameAsteriskId, kind, param, coordinateQ, coordinateR);
+    setInGameAsteriskToMap(
+      account,
+      ids[0],
+      inGameAsteriskId,
+      kind,
+      param,
+      coordinateQ,
+      coordinateR
+    );
   }
 
   function debugMintMaxUserInGameAsterisks(address account) external {
