@@ -48,12 +48,12 @@ describe("TradableAsteriskToken", function() {
       await token.addWhitelisted(admin)
       assert.equal(
         await token.tokenURI(1),
-        "https://d3fivknrylrhff.cloudfront.net/tradable-asterisk-token-jsons/1.json"
+        "https://example.com/tradable-asterisk-token-jsons/1.json"
       )
 
-      await token.updateTokenURIAffixes("https://example.com/", ".json")
+      await token.updateTokenURIAffixes("https://example.net/", ".json")
 
-      assert.equal(await token.tokenURI(1), "https://example.com/1.json")
+      assert.equal(await token.tokenURI(1), "https://example.net/1.json")
     })
   })
 
