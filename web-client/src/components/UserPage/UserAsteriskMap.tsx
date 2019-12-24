@@ -269,13 +269,19 @@ function InGameAsterisksSetForm(props: Props) {
     )
     unselectFn()
   }
+  const msg =
+    props.user.userAsteriskMap.shownRadius === props.user.userAsteriskMap.usableRadius
+      ? ""
+      : `usable radius: ${props.user.userAsteriskMap.usableRadius} (shown radius: ${props.user.userAsteriskMap.shownRadius})`
+
   return (
-    <div>
+    <div className={"box"}>
       <button onClick={fn}>set to map</button>
       <button onClick={unselectFn}>cancel</button>
       <span>
         {props.userPageUI.selectedAsteriskHexesForSet.length}/{maxSelectableAsteriskHexCount}
       </span>
+      <div>{msg}</div>
     </div>
   )
 }
