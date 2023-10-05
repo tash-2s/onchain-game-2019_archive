@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "kind": "residence",
+    "paramCommonLogarithm": 1,
+    "priceGoldCommonLogarithm": 4
+  },
+  {
+    "id": 2,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 2,
+    "priceGoldCommonLogarithm": 5
+  },
+  {
+    "id": 3,
+    "kind": "residence",
+    "paramCommonLogarithm": 3,
+    "priceGoldCommonLogarithm": 8
+  },
+  {
+    "id": 4,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 4,
+    "priceGoldCommonLogarithm": 9
+  },
+  {
+    "id": 5,
+    "kind": "residence",
+    "paramCommonLogarithm": 5,
+    "priceGoldCommonLogarithm": 13
+  },
+  {
+    "id": 6,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 6,
+    "priceGoldCommonLogarithm": 14
+  },
+  {
+    "id": 7,
+    "kind": "residence",
+    "paramCommonLogarithm": 7,
+    "priceGoldCommonLogarithm": 19
+  },
+  {
+    "id": 8,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 8,
+    "priceGoldCommonLogarithm": 20
+  },
+  {
+    "id": 9,
+    "kind": "residence",
+    "paramCommonLogarithm": 9,
+    "priceGoldCommonLogarithm": 26
+  },
+  {
+    "id": 10,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 10,
+    "priceGoldCommonLogarithm": 27
+  },
+  {
+    "id": 11,
+    "kind": "residence",
+    "paramCommonLogarithm": 11,
+    "priceGoldCommonLogarithm": 33
+  },
+  {
+    "id": 12,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 12,
+    "priceGoldCommonLogarithm": 34
+  },
+  {
+    "id": 13,
+    "kind": "residence",
+    "paramCommonLogarithm": 13,
+    "priceGoldCommonLogarithm": 40
+  },
+  {
+    "id": 14,
+    "kind": "goldmine",
+    "paramCommonLogarithm": 14,
+    "priceGoldCommonLogarithm": 41
+  },
+  {
+    "id": 15,
+    "kind": "technology",
+    "paramCommonLogarithm": 1,
+    "priceGoldCommonLogarithm": 12
+  }
+]

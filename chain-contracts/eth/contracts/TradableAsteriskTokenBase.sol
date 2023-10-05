@@ -1,0 +1,1 @@
+../../TradableAsteriskTokenBase.sol

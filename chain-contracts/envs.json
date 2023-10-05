@@ -1,0 +1,28 @@
+{
+  "local": {
+    "eth": {
+      "chainId": "1337",
+      "networkId": "5777"
+    },
+    "loom": {
+      "writeUrl": "ws://127.0.0.1:46658/websocket",
+      "readUrl": "ws://127.0.0.1:46658/queryws",
+      "chainId": "default",
+      "networkId": "13654820909954"
+    }
+  },
+  "staging": {
+    "eth": {
+      "chainId": "4",
+      "networkId": "4"
+    },
+    "loom": {
+      "writeUrl": "wss://extdev-plasma-us1.dappchains.com/websocket",
+      "readUrl": "wss://extdev-plasma-us1.dappchains.com/queryws",
+      "chainId": "extdev-plasma-us1",
+      "networkId": "9545242630824"
+    }
+  },
+  "production": {
+  }
+}

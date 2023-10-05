@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "license": "UNLICENSED",
+  "name": "eth",
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "prettier '{*.js,migrations/**/*,scripts/**/*,contracts/**/*,test/**/*}' --write",
+    "test": "truffle test"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "*",
+    "@openzeppelin/test-helpers": "*",
+    "@truffle/hdwallet-provider": "*",
+    "bip39": "*",
+    "prettier-plugin-solidity": "1.0.0-alpha.34",
+    "truffle": "*"
+  }
+}
