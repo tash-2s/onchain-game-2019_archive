@@ -1,0 +1,22 @@
+{
+  "loom": {
+    "writeUrl": "wss://extdev-plasma-us1.dappchains.com/websocket",
+    "readUrl": "wss://extdev-plasma-us1.dappchains.com/queryws",
+    "chainId": "extdev-plasma-us1",
+    "networkId": "9545242630824"
+  },
+  "eth": {
+    "networkId": "4"
+  },
+  "loomContractAddresses": {
+    "NormalPlanetController": "0x2EAaF50B4a78781fe0a8BdF99EbB6a5051e6F6E4",
+    "RemarkableUserController": "0x90743Fe12F758A63Db7119Fc4FF450f0303CF4aD",
+    "SpecialPlanetController": "0x3fff02b4C815f9aAb893FB6181A924e051C63ED1",
+    "SpecialPlanetToken": "0x5D0D3C5c82771094d2A6844fE6eab95972d41F4B",
+    "UserController": "0x3164E4b5796f750e778603e6Ba14b25bA26Bcbd0"
+  },
+  "ethContractAddresses": {
+    "SpecialPlanetToken": "0x34c944c46f196bD1b525438DAd87Ac95d343988F",
+    "SpecialPlanetTokenShop": "0x3B893cfDc929107Ee5DCCdFFd199b63717199A06"
+  }
+}
